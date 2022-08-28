@@ -24,7 +24,7 @@ namespace BlockSystem
             this.z = z;
         }
 
-        public BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
+        public static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
         {
             return new BlockCoordinate(
                 cc.x * WorldSettings.LocalBlockSide + lc.x,

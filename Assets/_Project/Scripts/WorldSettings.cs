@@ -8,9 +8,7 @@ namespace WorldSystem
         public const int WorldChunkSideY = 16;
 
         /// <summary>プレイヤーの周りの読み込み距離(チャンク換算)</summary>
-        public const int LoadChunkRadius = 4;
-        /// <summary>プレイヤーの周りの読み込み範囲の立方体の一辺の長さ(チャンク換算)</summary>
-        public const int LoadChunkSide = LoadChunkRadius * 2 + 1;
+        public const int LoadChunkRadius = 2;
 
         /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
         public const int LocalBlockSide = 16;
