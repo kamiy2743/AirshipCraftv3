@@ -7,5 +7,11 @@ namespace BlockSystem
 {
     public class ChunkData
     {
+        public ChunkCoordinate ChunkCoordinate { get; private set; }
+
+        public ChunkData(ChunkCoordinate cc)
+        {
+            ChunkCoordinate = cc;
+        }
     }
 }

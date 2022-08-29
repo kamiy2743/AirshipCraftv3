@@ -12,9 +12,9 @@ namespace BlockSystem
     public class UpdateChunkSystem : MonoBehaviour
     {
         [SerializeField] private Transform player;
+        [SerializeField] private ChunkDataStore chunkDataStore;
 
         private ChunkCoordinate lastPlayerChunk;
-        private ChunkDataStore chunkDataStore = new ChunkDataStore();
 
         private Queue<ChunkCoordinate> loadChunkQueue = new Queue<ChunkCoordinate>();
 
@@ -87,7 +87,8 @@ namespace BlockSystem
             if (!loadedChunkList.Contains(cc))
             {
                 loadChunkQueue.Enqueue(cc);
-                Debug.Log(cc);
+                var chunkData = chunkDataStore.GetChunkData(cc);
+                var chunkObject = chunkDataStore.CreateChunkObject(chunkData);
             }
         }
     }
