@@ -43,11 +43,12 @@ namespace BlockSystem
             var loadedChunkList = chunkDataStore.LoadedChunks.Keys.ToList();
             var radius = WorldSettings.LoadChunkRadius;
 
-            EnqueueLoadChunkHelper(pc.x, pc.y, pc.z, loadedChunkList);
-
             // 下から順に更新
             for (int y = -radius; y <= radius; y++)
             {
+                // 中心
+                EnqueueLoadChunkHelper(pc.x, y, pc.z, loadedChunkList);
+
                 // 内側から順に更新
                 for (int r = 1; r <= radius; r++)
                 {
