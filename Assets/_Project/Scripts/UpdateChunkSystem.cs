@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using WorldSystem;
+using Cysharp.Threading.Tasks;
 
 namespace BlockSystem
 {
@@ -87,8 +88,25 @@ namespace BlockSystem
             if (!loadedChunkList.Contains(cc))
             {
                 loadChunkQueue.Enqueue(cc);
+                if (loadChunkQueue.Count == 1)
+                {
+                    LoadChunkFromQueue().Forget();
+                }
+            }
+        }
+
+        /// <summary>
+        /// キューにあるチャンクを順次読み込み
+        /// </summary>
+        private async UniTask LoadChunkFromQueue()
+        {
+            while (loadChunkQueue.Count > 0)
+            {
+                var cc = loadChunkQueue.Peek();
                 var chunkData = chunkDataStore.GetChunkData(cc);
+                await UniTask.Delay(100);
                 var chunkObject = chunkDataStore.CreateChunkObject(chunkData);
+                loadChunkQueue.Dequeue();
             }
         }
     }
