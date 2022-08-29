@@ -5,28 +5,27 @@ using UnityEngine;
 namespace BlockSystem
 {
     /// <summary>
-    /// 読み込み済みチャンクのデータを管理
-    /// 読み込み範囲外のチャンクの保持も想定
+    /// チャンクデータとオブジェクトを管理
     /// </summary>
     public class ChunkDataStore : MonoBehaviour
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
-        public IReadOnlyDictionary<ChunkCoordinate, ChunkData> LoadedChunks => _loadedChunks;
-        private readonly Dictionary<ChunkCoordinate, ChunkData> _loadedChunks = new Dictionary<ChunkCoordinate, ChunkData>();
+        public IReadOnlyDictionary<ChunkCoordinate, ChunkData> Chunks => _chunks;
+        private readonly Dictionary<ChunkCoordinate, ChunkData> _chunks = new Dictionary<ChunkCoordinate, ChunkData>();
 
         /// <summary>
         /// チャンクデータ取得、無ければ作成
         /// </summary>
         public ChunkData GetChunkData(ChunkCoordinate cc)
         {
-            if (_loadedChunks.ContainsKey(cc))
+            if (_chunks.ContainsKey(cc))
             {
-                return _loadedChunks[cc];
+                return _chunks[cc];
             }
 
             var chunk = new ChunkData(cc);
-            _loadedChunks[cc] = chunk;
+            _chunks[cc] = chunk;
             return chunk;
         }
 

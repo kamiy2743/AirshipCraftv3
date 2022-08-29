@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 namespace BlockSystem
 {
     /// <summary>
-    /// プレイヤーの周りのチャンクを更新する
+    /// プレイヤーの周りのチャンクオブジェクトを作成、破棄する
     /// </summary>
     public class UpdateChunkSystem : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace BlockSystem
 
         private ChunkCoordinate lastPlayerChunk;
 
-        private Queue<ChunkCoordinate> loadChunkQueue = new Queue<ChunkCoordinate>();
+        private Queue<ChunkCoordinate> waitingChunkQueue = new Queue<ChunkCoordinate>();
 
         void Start()
         {
@@ -37,18 +37,18 @@ namespace BlockSystem
         }
 
         /// <summary>
-        /// プレイヤーのいるチャンクを中心とする立方体を更新する
+        /// プレイヤーのいるチャンクを中心とする立方体を作成する
         /// </summary>
         private void UpdateAroundPlayer(ChunkCoordinate pc)
         {
-            var loadedChunkList = chunkDataStore.LoadedChunks.Keys.ToList();
+            var createdChunkList = chunkDataStore.Chunks.Keys.ToList();
             var radius = WorldSettings.LoadChunkRadius;
 
             // 下から順に更新
             for (int y = -radius; y <= radius; y++)
             {
                 // 中心
-                EnqueueLoadChunkHelper(pc.x, y, pc.z, loadedChunkList);
+                EnqueueLoadChunkHelper(pc.x, y, pc.z, createdChunkList);
 
                 // 内側から順に更新
                 for (int r = 1; r <= radius; r++)
@@ -56,57 +56,57 @@ namespace BlockSystem
                     // 上から見てx+方向
                     for (int x = pc.x - r; x < pc.x + r; x++)
                     {
-                        EnqueueLoadChunkHelper(x, y, pc.z + r, loadedChunkList);
+                        EnqueueLoadChunkHelper(x, y, pc.z + r, createdChunkList);
                     }
                     // z-方向
                     for (int z = pc.z + r; z > pc.z - r; z--)
                     {
-                        EnqueueLoadChunkHelper(pc.x + r, y, z, loadedChunkList);
+                        EnqueueLoadChunkHelper(pc.x + r, y, z, createdChunkList);
                     }
                     // x-方向
                     for (int x = pc.x + r; x > pc.x - r; x--)
                     {
-                        EnqueueLoadChunkHelper(x, y, pc.z - r, loadedChunkList);
+                        EnqueueLoadChunkHelper(x, y, pc.z - r, createdChunkList);
                     }
                     // z+方向
                     for (int z = pc.z - r; z < pc.z + r; z++)
                     {
-                        EnqueueLoadChunkHelper(pc.x - r, y, z, loadedChunkList);
+                        EnqueueLoadChunkHelper(pc.x - r, y, z, createdChunkList);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// 読み込みしていないチャンクならキューに追加
+        /// 作成していないチャンクならキューに追加
         /// </summary>
-        private void EnqueueLoadChunkHelper(int x, int y, int z, IReadOnlyList<ChunkCoordinate> loadedChunkList)
+        private void EnqueueLoadChunkHelper(int x, int y, int z, IReadOnlyList<ChunkCoordinate> createdChunkList)
         {
             if (!ChunkCoordinate.IsValid(x, y, z)) return;
 
             var cc = new ChunkCoordinate(x, y, z);
-            if (!loadedChunkList.Contains(cc))
+            if (!createdChunkList.Contains(cc))
             {
-                loadChunkQueue.Enqueue(cc);
-                if (loadChunkQueue.Count == 1)
+                waitingChunkQueue.Enqueue(cc);
+                if (waitingChunkQueue.Count == 1)
                 {
-                    LoadChunkFromQueue().Forget();
+                    CreateFromWaitingQueue().Forget();
                 }
             }
         }
 
         /// <summary>
-        /// キューにあるチャンクを順次読み込み
+        /// キューにあるチャンクを順次作成
         /// </summary>
-        private async UniTask LoadChunkFromQueue()
+        private async UniTask CreateFromWaitingQueue()
         {
-            while (loadChunkQueue.Count > 0)
+            while (waitingChunkQueue.Count > 0)
             {
-                var cc = loadChunkQueue.Peek();
+                var cc = waitingChunkQueue.Peek();
                 var chunkData = chunkDataStore.GetChunkData(cc);
                 await UniTask.Delay(100);
                 var chunkObject = chunkDataStore.CreateChunkObject(chunkData);
-                loadChunkQueue.Dequeue();
+                waitingChunkQueue.Dequeue();
             }
         }
     }
