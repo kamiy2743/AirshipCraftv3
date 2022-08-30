@@ -5,12 +5,12 @@ namespace MasterData.Util
     public static class CubeMesh
     {
         public static readonly Vector3[] Vertices = {
-            // left
+            // right
             new Vector3(1, 0, 0),
             new Vector3(1, 1, 0),
             new Vector3(1, 1, 1),
             new Vector3(1, 0, 1),
-            // right
+            // left
             new Vector3(0, 0, 1),
             new Vector3(0, 1, 1),
             new Vector3(0, 1, 0),
@@ -26,22 +26,22 @@ namespace MasterData.Util
             new Vector3(1, 0, 0),
             new Vector3(1, 0, 1),
             // forward
-            new Vector3(0, 0, 0),
-            new Vector3(0, 1, 0),
-            new Vector3(1, 1, 0),
-            new Vector3(1, 0, 0),
-            // back
             new Vector3(1, 0, 1),
             new Vector3(1, 1, 1),
             new Vector3(0, 1, 1),
-            new Vector3(0, 0, 1)
+            new Vector3(0, 0, 1),
+            // back
+            new Vector3(0, 0, 0),
+            new Vector3(0, 1, 0),
+            new Vector3(1, 1, 0),
+            new Vector3(1, 0, 0)
         };
 
         public static readonly int[] Triangles = {
-            // left 
+            // right
             0, 1, 2,
             2, 3, 0, 
-            // right
+            // left 
             4, 5, 6,
             6, 7, 4, 
             // top
