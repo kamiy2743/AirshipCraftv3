@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MasterData
+namespace MasterData.Util
 {
     public static class CubeMesh
     {
