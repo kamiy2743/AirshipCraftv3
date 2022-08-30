@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WorldSystem;
+using MasterData.Block;
 
 namespace BlockSystem
 {
@@ -31,7 +32,9 @@ namespace BlockSystem
                 {
                     for (int x = 0; x < BlockSide; x++)
                     {
-                        meshCombiner.AddMeshData(CubeMesh.Vertices, CubeMesh.Triangles, new Vector3(x, y, z));
+                        var blockData = chunkData.GetBlockData(new LocalCoordinate(x, y, z));
+                        var meshData = MasterBlockDataStore.Instance.GetData(blockData.ID).MeshData;
+                        meshCombiner.AddMeshData(meshData, new Vector3(x, y, z));
                     }
                 }
             }
