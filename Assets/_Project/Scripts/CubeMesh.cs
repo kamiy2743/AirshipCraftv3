@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BlockSystem
+namespace MasterData
 {
     public static class CubeMesh
     {
