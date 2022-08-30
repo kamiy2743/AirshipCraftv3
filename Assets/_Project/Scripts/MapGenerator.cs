@@ -7,14 +7,14 @@ namespace BlockSystem
 {
     internal class MapGenerator
     {
-        public static MapGenerator Instance => _instance;
+        internal static MapGenerator Instance => _instance;
         private static MapGenerator _instance = new MapGenerator();
 
         private float seedX;
         private float seedZ;
         private float relief = 80;
 
-        public MapGenerator()
+        internal MapGenerator()
         {
             seedX = Random.value * 100f;
             seedZ = Random.value * 100f;
