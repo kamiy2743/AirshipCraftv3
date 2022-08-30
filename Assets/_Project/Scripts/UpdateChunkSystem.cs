@@ -45,7 +45,7 @@ namespace BlockSystem
             var radius = WorldSettings.LoadChunkRadius;
 
             // 下から順に更新
-            for (int y = -radius; y <= radius; y++)
+            for (int y = pc.y - radius; y <= pc.y + radius; y++)
             {
                 // 中心
                 EnqueueLoadChunkHelper(pc.x, y, pc.z, createdChunkList);
@@ -104,7 +104,7 @@ namespace BlockSystem
             {
                 var cc = waitingChunkQueue.Peek();
                 var chunkData = chunkDataStore.GetChunkData(cc);
-                await UniTask.Delay(100);
+                await UniTask.Delay(10);
                 var chunkObject = chunkDataStore.CreateChunkObject(chunkData);
                 waitingChunkQueue.Dequeue();
             }
