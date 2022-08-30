@@ -34,6 +34,7 @@ namespace BlockSystem
         public Mesh Combine()
         {
             var mesh = new Mesh();
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.SetVertices(batchedVertices);
             mesh.SetTriangles(batchedTriangles, 0);
             mesh.RecalculateNormals();
