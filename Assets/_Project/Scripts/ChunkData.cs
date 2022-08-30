@@ -25,7 +25,8 @@ namespace BlockSystem
                     {
                         var lc = new LocalCoordinate(x, y, z);
                         var bc = BlockCoordinate.FromChunkAndLocal(cc, lc);
-                        SetBlockData(lc, new BlockData(0, bc));
+                        var id = MapGenerator.Instance.GetBlockID(bc);
+                        SetBlockData(lc, new BlockData(id, bc));
                     }
                 }
             }

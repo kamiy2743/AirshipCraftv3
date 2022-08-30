@@ -36,6 +36,7 @@ namespace BlockSystem
             var mesh = new Mesh();
             mesh.SetVertices(batchedVertices);
             mesh.SetTriangles(batchedTriangles, 0);
+            mesh.RecalculateNormals();
             return mesh;
         }
     }
