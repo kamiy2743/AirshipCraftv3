@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,8 +19,13 @@ namespace BlockSystem
 
         private Queue<ChunkCoordinate> waitingChunkQueue = new Queue<ChunkCoordinate>();
 
+        private UniTask createFromWaitingQueueTask = UniTask.CompletedTask;
+        private CancellationToken _cancellationToken;
+
         void Start()
         {
+            _cancellationToken = this.GetCancellationTokenOnDestroy();
+
             lastPlayerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
             UpdateAroundPlayer(lastPlayerChunk);
         }
@@ -88,9 +93,10 @@ namespace BlockSystem
             if (!createdChunkList.Contains(cc))
             {
                 waitingChunkQueue.Enqueue(cc);
-                if (waitingChunkQueue.Count == 1)
+                // タスクを開始していなければ開始
+                if (createFromWaitingQueueTask.Equals(UniTask.CompletedTask))
                 {
-                    CreateFromWaitingQueue().Forget();
+                    createFromWaitingQueueTask = CreateFromWaitingQueue();
                 }
             }
         }
@@ -104,10 +110,13 @@ namespace BlockSystem
             {
                 var cc = waitingChunkQueue.Peek();
                 var chunkData = chunkDataStore.GetChunkData(cc);
-                await UniTask.Delay(10);
                 var chunkObject = chunkDataStore.CreateChunkObject(chunkData);
                 waitingChunkQueue.Dequeue();
+                await UniTask.DelayFrame(1, cancellationToken: _cancellationToken);
             }
+
+            // タスク終了
+            createFromWaitingQueueTask = UniTask.CompletedTask;
         }
     }
 }
