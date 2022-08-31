@@ -47,37 +47,32 @@ namespace BlockSystem
         private void UpdateAroundPlayer(ChunkCoordinate pc)
         {
             var createdChunkList = chunkDataStore.Chunks.Keys.ToList();
-            var radius = WorldSettings.LoadChunkRadius;
 
-            // 下から順に更新
-            for (int y = pc.y - radius; y <= pc.y + radius; y++)
+            // 中心
+            EnqueueLoadChunkHelper(pc.x, pc.z, pc.y, createdChunkList);
+
+            // 内側から順に作成
+            for (int r = 1; r <= WorldSettings.LoadChunkRadius; r++)
             {
-                // 中心
-                EnqueueLoadChunkHelper(pc.x, y, pc.z, createdChunkList);
-
-                // 内側から順に更新
-                for (int r = 1; r <= radius; r++)
+                // 上から見てx+方向
+                for (int x = pc.x - r; x < pc.x + r; x++)
                 {
-                    // 上から見てx+方向
-                    for (int x = pc.x - r; x < pc.x + r; x++)
-                    {
-                        EnqueueLoadChunkHelper(x, y, pc.z + r, createdChunkList);
-                    }
-                    // z-方向
-                    for (int z = pc.z + r; z > pc.z - r; z--)
-                    {
-                        EnqueueLoadChunkHelper(pc.x + r, y, z, createdChunkList);
-                    }
-                    // x-方向
-                    for (int x = pc.x + r; x > pc.x - r; x--)
-                    {
-                        EnqueueLoadChunkHelper(x, y, pc.z - r, createdChunkList);
-                    }
-                    // z+方向
-                    for (int z = pc.z - r; z < pc.z + r; z++)
-                    {
-                        EnqueueLoadChunkHelper(pc.x - r, y, z, createdChunkList);
-                    }
+                    EnqueueLoadChunkHelper(x, pc.z + r, pc.y, createdChunkList);
+                }
+                // z-方向
+                for (int z = pc.z + r; z > pc.z - r; z--)
+                {
+                    EnqueueLoadChunkHelper(pc.x + r, z, pc.y, createdChunkList);
+                }
+                // x-方向
+                for (int x = pc.x + r; x > pc.x - r; x--)
+                {
+                    EnqueueLoadChunkHelper(x, pc.z - r, pc.y, createdChunkList);
+                }
+                // z+方向
+                for (int z = pc.z - r; z < pc.z + r; z++)
+                {
+                    EnqueueLoadChunkHelper(pc.x - r, z, pc.y, createdChunkList);
                 }
             }
         }
@@ -85,14 +80,20 @@ namespace BlockSystem
         /// <summary>
         /// 作成していないチャンクならキューに追加
         /// </summary>
-        private void EnqueueLoadChunkHelper(int x, int y, int z, IReadOnlyList<ChunkCoordinate> createdChunkList)
+        private void EnqueueLoadChunkHelper(int x, int z, int playerChunkY, IReadOnlyList<ChunkCoordinate> createdChunkList)
         {
-            if (!ChunkCoordinate.IsValid(x, y, z)) return;
+            var radius = WorldSettings.LoadChunkRadius;
 
-            var cc = new ChunkCoordinate(x, y, z);
-            if (!createdChunkList.Contains(cc))
+            // 下から順に作成
+            for (int y = playerChunkY - radius; y <= playerChunkY + radius; y++)
             {
+                if (!ChunkCoordinate.IsValid(x, y, z)) continue;
+
+                var cc = new ChunkCoordinate(x, y, z);
+                if (createdChunkList.Contains(cc)) continue;
+
                 waitingChunkQueue.Enqueue(cc);
+
                 // タスクを開始していなければ開始
                 if (createFromWaitingQueueTask.Equals(UniTask.CompletedTask))
                 {
