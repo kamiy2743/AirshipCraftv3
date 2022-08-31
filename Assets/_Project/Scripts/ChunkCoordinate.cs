@@ -56,5 +56,21 @@ namespace BlockSystem
         {
             return !(cc1 == cc2);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = obj as ChunkCoordinate;
+            return this == other;
+        }
+
+        public override int GetHashCode()
+        {
+            return System.HashCode.Combine(this.x, this.y, this.z);
+        }
     }
 }

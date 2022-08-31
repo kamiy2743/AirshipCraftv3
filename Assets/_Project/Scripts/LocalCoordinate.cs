@@ -21,5 +21,14 @@ namespace BlockSystem
             this.y = y;
             this.z = z;
         }
+
+        public static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        {
+            return new LocalCoordinate(
+                bc.x % WorldSettings.LocalBlockSide,
+                bc.y % WorldSettings.LocalBlockSide,
+                bc.z % WorldSettings.LocalBlockSide
+            );
+        }
     }
 }

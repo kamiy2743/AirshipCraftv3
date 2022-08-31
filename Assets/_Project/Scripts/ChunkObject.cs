@@ -33,6 +33,15 @@ namespace BlockSystem
                     for (int x = 0; x < BlockSide; x++)
                     {
                         var blockData = chunkData.GetBlockData(new LocalCoordinate(x, y, z));
+
+                        // 空気に接している面を計算
+                        var contactAirSurfaces = ContactSurfaceSolver.Instance.GetContactAirSurfaces(blockData.BlockCoordinate);
+                        blockData.SetContactSurfaces(contactAirSurfaces);
+
+                        // 空気に接していない = 見えないので描画しない
+                        if (!blockData.IsContactAir) continue;
+
+                        // ブロックのメッシュデータを追加
                         var meshData = MasterBlockDataStore.Instance.GetData(blockData.ID).MeshData;
                         meshCombiner.AddMeshData(meshData, new Vector3(x, y, z));
                     }
