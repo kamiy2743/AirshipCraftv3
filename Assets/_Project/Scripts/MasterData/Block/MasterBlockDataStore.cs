@@ -5,21 +5,18 @@ using System.Linq;
 
 namespace MasterData.Block
 {
-    public class MasterBlockDataStore : MonoBehaviour
+    [CreateAssetMenu(fileName = "MasterBlockDataStore", menuName = "ScriptableObjects/MasterBlockDataStore")]
+    public class MasterBlockDataStore : ScriptableObject
     {
-        [SerializeField] private MasterBlockDataStoreScriptableObject resource;
+        [SerializeField] private List<MasterBlockData> masterBlockDataList;
 
-        public static MasterBlockDataStore Instance => _instance;
-        private static MasterBlockDataStore _instance;
+        private static MasterBlockDataStore _entity;
+        private static MasterBlockDataStore Entity => _entity ??=
+            Resources.Load<MasterBlockDataStore>(nameof(MasterBlockDataStore));
 
-        void Awake()
+        public static MasterBlockData GetData(int id)
         {
-            _instance = this;
-        }
-
-        public MasterBlockData GetData(int id)
-        {
-            return resource.MasterBlockDataList.First(d => d.ID == id);
+            return Entity.masterBlockDataList.First(d => d.ID == id);
         }
     }
 }

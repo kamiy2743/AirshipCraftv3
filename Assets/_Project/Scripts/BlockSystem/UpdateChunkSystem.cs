@@ -85,8 +85,9 @@ namespace BlockSystem
                 if (createFromWaitingQueueTask.Equals(UniTask.CompletedTask))
                 {
                     // TODO エラーが出ない
-                    createFromWaitingQueueTask = new UniTask();
-                    CreateFromWaitingQueue().Forget();
+                    // createFromWaitingQueueTask = new UniTask();
+                    // CreateFromWaitingQueue().Forget();
+                    createFromWaitingQueueTask = CreateFromWaitingQueue();
                 }
             }
         }
