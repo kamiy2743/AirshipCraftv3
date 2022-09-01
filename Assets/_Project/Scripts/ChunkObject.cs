@@ -21,10 +21,9 @@ namespace BlockSystem
             meshRenderer = GetComponent<MeshRenderer>();
 
             ChunkData = chunkData;
-            var cc = chunkData.ChunkCoordinate;
-            transform.position = new Vector3(cc.x, cc.y, cc.z) * BlockSide;
 
             var meshCombiner = new MeshCombiner();
+
             // メッシュをバッチングする
             for (int y = 0; y < BlockSide; y++)
             {
@@ -41,9 +40,7 @@ namespace BlockSystem
                         // 空気に接していない = 見えないので描画しない
                         if (!blockData.IsContactAir) continue;
 
-                        // ブロックのメッシュデータを追加
-                        var meshData = MasterBlockDataStore.Instance.GetData(blockData.ID).MeshData;
-                        meshCombiner.AddMeshData(meshData, new Vector3(x, y, z));
+                        meshCombiner.AddBlock(blockData);
                     }
                 }
             }
