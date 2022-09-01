@@ -27,12 +27,14 @@ namespace BlockSystem
             return true;
         }
 
+        private const float InverseBlockSide = 1f / WorldSettings.LocalBlockSide;
         public static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new ChunkCoordinate(
-                bc.x / WorldSettings.LocalBlockSide,
-                bc.y / WorldSettings.LocalBlockSide,
-                bc.z / WorldSettings.LocalBlockSide
+                // BlockSideで割り算
+                (int)(bc.x * InverseBlockSide),
+                (int)(bc.y * InverseBlockSide),
+                (int)(bc.z * InverseBlockSide)
             );
         }
 

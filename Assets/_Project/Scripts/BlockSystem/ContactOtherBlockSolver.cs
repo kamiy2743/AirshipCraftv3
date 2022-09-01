@@ -21,7 +21,7 @@ namespace BlockSystem
         {
             var surfaces = new List<SurfaceNormal>();
 
-            foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
+            foreach (var surface in SurfaceNormalExt.List)
             {
                 if (IsContactOtherBlock(surface, bc))
                 {

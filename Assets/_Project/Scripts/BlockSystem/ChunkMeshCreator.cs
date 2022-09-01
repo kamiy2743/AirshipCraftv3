@@ -22,15 +22,19 @@ namespace BlockSystem
                 {
                     for (int x = 0; x < WorldSettings.LocalBlockSide; x++)
                     {
+                        // 1くらい
                         var blockData = chunkData.GetBlockData(new LocalCoordinate(x, y, z));
 
                         // 他のブロックに接している面を計算
+                        // 45くらい
                         var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blockData.BlockCoordinate);
+                        // 5くらい
                         blockData.SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
 
                         // 空気に接していない = 見えないので描画しない
                         if (!blockData.IsContactAir) continue;
 
+                        // 20くらい
                         meshCombiner.AddBlock(blockData);
                     }
                 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Util
 {
@@ -14,7 +15,19 @@ namespace Util
 
     public static class SurfaceNormalExt
     {
-        public static int EnumCount = System.Enum.GetValues(typeof(SurfaceNormal)).Length;
+        public static readonly int EnumCount = System.Enum.GetValues(typeof(SurfaceNormal)).Length;
+
+        public static readonly IReadOnlyList<SurfaceNormal> List = _list ??= ToList();
+        private static List<SurfaceNormal> _list;
+        private static List<SurfaceNormal> ToList()
+        {
+            var list = new List<SurfaceNormal>(EnumCount);
+            foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
+            {
+                list.Add(surface);
+            }
+            return list;
+        }
 
         public static Vector3 ToVector3(this SurfaceNormal surface)
         {
