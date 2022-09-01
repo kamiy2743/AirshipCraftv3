@@ -14,6 +14,8 @@ namespace Util
 
     public static class SurfaceNormalExt
     {
+        public static int EnumCount = System.Enum.GetValues(typeof(SurfaceNormal)).Length;
+
         public static Vector3 ToVector3(this SurfaceNormal surface)
         {
             switch (surface)

@@ -33,9 +33,9 @@ namespace BlockSystem
                     {
                         var blockData = chunkData.GetBlockData(new LocalCoordinate(x, y, z));
 
-                        // 空気に接している面を計算
-                        var contactAirSurfaces = ContactSurfaceSolver.Instance.GetContactAirSurfaces(blockData.BlockCoordinate);
-                        blockData.SetContactSurfaces(contactAirSurfaces);
+                        // 他のブロックに接している面を計算
+                        var contactOtherBlockSurfaces = ContactOtherBlockSolver.Instance.GetContactOtherBlockSurfaces(blockData.BlockCoordinate);
+                        blockData.SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
 
                         // 空気に接していない = 見えないので描画しない
                         if (!blockData.IsContactAir) continue;
