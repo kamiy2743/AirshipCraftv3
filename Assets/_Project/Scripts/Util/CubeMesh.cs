@@ -1,9 +1,11 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-namespace MasterData.Util
+namespace Util
 {
     public static class CubeMesh
     {
+        // 外部から書き換え可能だけど、Mesh関係はほとんどVector3[]が引数なのでIReadOnlyCollectionで公開すると扱いが面倒
         public static readonly Vector3[] Vertices = {
             // right
             new Vector3(1, 0, 0),

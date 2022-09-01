@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MasterData.Block
+namespace Util
 {
-    public class BlockMeshData
+    public class MeshData
     {
         public readonly Vector3[] Vertices;
         public readonly int[] Triangles;
 
-        public BlockMeshData(Vector3[] vertices, int[] triangles)
+        public MeshData(Vector3[] vertices, int[] triangles)
         {
             Vertices = vertices;
             Triangles = triangles;

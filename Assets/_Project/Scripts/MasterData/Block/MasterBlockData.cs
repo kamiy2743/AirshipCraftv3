@@ -1,5 +1,5 @@
 using UnityEngine;
-using MasterData.Util;
+using Util;
 
 namespace MasterData.Block
 {
@@ -8,11 +8,11 @@ namespace MasterData.Block
     {
         [SerializeField] private int id;
         [SerializeField] private string name;
-        private BlockMeshData meshData;
+        private MeshData meshData;
 
         public int ID => id;
         public string Name => name;
-        public BlockMeshData MeshData
+        public MeshData MeshData
         {
             get
             {
@@ -21,11 +21,11 @@ namespace MasterData.Block
                 // Airの場合
                 if (id == 0)
                 {
-                    meshData = new BlockMeshData(new Vector3[0], new int[0]);
+                    meshData = new MeshData(new Vector3[0], new int[0]);
                     return meshData;
                 }
 
-                meshData = new BlockMeshData(CubeMesh.Vertices, CubeMesh.Triangles);
+                meshData = new MeshData(CubeMesh.Vertices, CubeMesh.Triangles);
                 return meshData;
             }
         }

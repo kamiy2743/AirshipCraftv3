@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace BlockSystem
+namespace Util
 {
-    public enum BlockSurface
+    public enum SurfaceNormal
     {
         Right,
         Left,
@@ -12,23 +12,23 @@ namespace BlockSystem
         Back
     }
 
-    public static class BlockSurfaceExt
+    public static class SurfaceNormalExt
     {
-        public static Vector3 ToVector3(this BlockSurface surface)
+        public static Vector3 ToVector3(this SurfaceNormal surface)
         {
             switch (surface)
             {
-                case BlockSurface.Right:
+                case SurfaceNormal.Right:
                     return Vector3.right;
-                case BlockSurface.Left:
+                case SurfaceNormal.Left:
                     return Vector3.left;
-                case BlockSurface.Top:
+                case SurfaceNormal.Top:
                     return Vector3.up;
-                case BlockSurface.Bottom:
+                case SurfaceNormal.Bottom:
                     return Vector3.down;
-                case BlockSurface.Forward:
+                case SurfaceNormal.Forward:
                     return Vector3.forward;
-                case BlockSurface.Back:
+                case SurfaceNormal.Back:
                     return Vector3.back;
             }
 

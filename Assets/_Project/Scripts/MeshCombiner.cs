@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MasterData.Block;
+using Util;
 
 namespace BlockSystem
 {
@@ -13,7 +13,7 @@ namespace BlockSystem
         private List<Vector3> batchedVertices = new List<Vector3>();
         private List<int> batchedTriangles = new List<int>();
 
-        public void AddMeshData(BlockMeshData meshData, Vector3 position)
+        public void AddMeshData(MeshData meshData, Vector3 position)
         {
             // triangleはインデックスのため、現在の頂点数を加算しないといけない
             var vc = batchedVertices.Count;

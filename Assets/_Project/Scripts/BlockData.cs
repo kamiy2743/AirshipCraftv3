@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Util;
 
 namespace BlockSystem
 {
@@ -9,8 +10,8 @@ namespace BlockSystem
         public BlockCoordinate BlockCoordinate { get; private set; }
 
         public bool IsContactAir => _contactAirSurfaces.Count > 0;
-        public IReadOnlyList<BlockSurface> ContactAirSurfaces => _contactAirSurfaces;
-        private List<BlockSurface> _contactAirSurfaces = new List<BlockSurface>();
+        public IReadOnlyList<SurfaceNormal> ContactAirSurfaces => _contactAirSurfaces;
+        private List<SurfaceNormal> _contactAirSurfaces = new List<SurfaceNormal>();
 
         public BlockData(int id, BlockCoordinate bc)
         {
@@ -18,7 +19,7 @@ namespace BlockSystem
             BlockCoordinate = bc;
         }
 
-        public void SetContactSurfaces(List<BlockSurface> contactAirSurfaces)
+        public void SetContactSurfaces(List<SurfaceNormal> contactAirSurfaces)
         {
             _contactAirSurfaces = contactAirSurfaces;
         }

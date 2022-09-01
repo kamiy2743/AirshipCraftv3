@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WorldSystem;
+using Util;
 
 namespace BlockSystem
 {
@@ -17,11 +17,11 @@ namespace BlockSystem
             _instance = this;
         }
 
-        public List<BlockSurface> GetContactAirSurfaces(BlockCoordinate bc)
+        public List<SurfaceNormal> GetContactAirSurfaces(BlockCoordinate bc)
         {
-            var surfaces = new List<BlockSurface>();
+            var surfaces = new List<SurfaceNormal>();
 
-            foreach (BlockSurface surface in System.Enum.GetValues(typeof(BlockSurface)))
+            foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
             {
                 if (IsContactAir(surface, bc))
                 {
@@ -41,7 +41,7 @@ namespace BlockSystem
             return blockData.ID == 0;
         }
 
-        private bool IsContactAir(BlockSurface surface, BlockCoordinate bc)
+        private bool IsContactAir(SurfaceNormal surface, BlockCoordinate bc)
         {
             var checkCoordinate = bc.ToVector3() + surface.ToVector3();
             if (BlockCoordinate.IsValid(checkCoordinate))
