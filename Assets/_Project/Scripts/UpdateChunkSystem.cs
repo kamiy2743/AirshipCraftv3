@@ -97,6 +97,7 @@ namespace BlockSystem
                 // タスクを開始していなければ開始
                 if (createFromWaitingQueueTask.Equals(UniTask.CompletedTask))
                 {
+                    // TODO エラーが出ない
                     createFromWaitingQueueTask = CreateFromWaitingQueue();
                 }
             }
