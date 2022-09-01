@@ -4,19 +4,12 @@ namespace BlockSystem
 {
     public class ChunkObject : MonoBehaviour
     {
-        public ChunkData ChunkData { get; private set; }
+        [SerializeField] private MeshFilter meshFilter;
+        [SerializeField] private MeshRenderer meshRenderer;
 
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
-
-        internal void Initial(ChunkData chunkData)
+        internal void SetMesh(Mesh mesh)
         {
-            meshFilter = GetComponent<MeshFilter>();
-            meshRenderer = GetComponent<MeshRenderer>();
-
-            ChunkData = chunkData;
-
-            meshFilter.mesh = ChunkMeshCreator.CreateMesh(chunkData);
+            meshFilter.mesh = mesh;
         }
     }
 }

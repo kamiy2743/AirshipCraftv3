@@ -8,16 +8,13 @@ namespace BlockSystem
     /// <summary>
     /// 他のブロックと接している面を取得する
     /// </summary>
-    public class ContactOtherBlockSolver : MonoBehaviour
+    public class ContactOtherBlockSolver
     {
-        [SerializeField] private ChunkDataStore chunkDataStore;
+        private ChunkDataStore _chunkDataStore;
 
-        public static ContactOtherBlockSolver Instance => _instance;
-        private static ContactOtherBlockSolver _instance;
-
-        void Awake()
+        public ContactOtherBlockSolver(ChunkDataStore chunkDataStore)
         {
-            _instance = this;
+            _chunkDataStore = chunkDataStore;
         }
 
         public List<SurfaceNormal> GetContactOtherBlockSurfaces(BlockCoordinate bc)
@@ -39,7 +36,7 @@ namespace BlockSystem
         {
             var cc = ChunkCoordinate.FromBlockCoordinate(bc);
             var lc = LocalCoordinate.FromBlockCoordinate(bc);
-            var chunkData = chunkDataStore.GetChunkData(cc);
+            var chunkData = _chunkDataStore.GetChunkData(cc);
             var blockData = chunkData.GetBlockData(lc);
             return blockData.ID == 0;
         }

@@ -9,35 +9,23 @@ namespace BlockSystem
     /// <summary>
     /// プレイヤーの周りのチャンクオブジェクトを作成、破棄する
     /// </summary>
-    public class UpdateChunkSystem : MonoBehaviour
+    public class UpdateChunkSystem
     {
-        [SerializeField] private Transform player;
-        [SerializeField] private ChunkDataStore chunkDataStore;
-
-        private ChunkCoordinate lastPlayerChunk;
-
         private Queue<ChunkCoordinate> waitingChunkQueue = new Queue<ChunkCoordinate>();
 
         private UniTask createFromWaitingQueueTask = UniTask.CompletedTask;
         private CancellationToken _cancellationToken;
 
-        void Start()
-        {
-            _cancellationToken = this.GetCancellationTokenOnDestroy();
+        private ChunkDataStore _chunkDataStore;
+        private ChunkObjectStore _chunkObjectStore;
 
-            lastPlayerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
-            UpdateAroundPlayer(lastPlayerChunk);
-        }
-
-        void Update()
+        internal UpdateChunkSystem(Transform player, ChunkDataStore chunkDataStore, ChunkObjectStore chunkObjectStore)
         {
-            // プレイヤーがチャンクをまたいだときのみ更新処理をする
+            _chunkDataStore = chunkDataStore;
+            _chunkObjectStore = chunkObjectStore;
+
             var playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
-            if (playerChunk == lastPlayerChunk) return;
-
             UpdateAroundPlayer(playerChunk);
-
-            lastPlayerChunk = playerChunk;
         }
 
         /// <summary>
@@ -45,7 +33,7 @@ namespace BlockSystem
         /// </summary>
         private void UpdateAroundPlayer(ChunkCoordinate pc)
         {
-            var createdChunkList = chunkDataStore.Chunks.Keys.ToList();
+            var createdChunkList = _chunkDataStore.Chunks.Keys.ToList();
 
             // 中心
             EnqueueLoadChunkHelper(pc.x, pc.z, pc.y, createdChunkList);
@@ -97,7 +85,8 @@ namespace BlockSystem
                 if (createFromWaitingQueueTask.Equals(UniTask.CompletedTask))
                 {
                     // TODO エラーが出ない
-                    createFromWaitingQueueTask = CreateFromWaitingQueue();
+                    createFromWaitingQueueTask = new UniTask();
+                    CreateFromWaitingQueue().Forget();
                 }
             }
         }
@@ -110,8 +99,8 @@ namespace BlockSystem
             while (waitingChunkQueue.Count > 0)
             {
                 var cc = waitingChunkQueue.Peek();
-                var chunkData = chunkDataStore.GetChunkData(cc);
-                var chunkObject = chunkDataStore.CreateChunkObject(chunkData);
+                var chunkData = _chunkDataStore.GetChunkData(cc);
+                var chunkObject = _chunkObjectStore.CreateChunkObject(chunkData);
                 waitingChunkQueue.Dequeue();
                 await UniTask.DelayFrame(1, cancellationToken: _cancellationToken);
             }
