@@ -34,7 +34,7 @@ namespace BlockSystem
                         // 空気に接していない = 見えないので描画しない
                         if (!blockData.IsContactAir) continue;
 
-                        // 20くらい
+                        // 15くらい
                         meshCombiner.AddBlock(blockData);
                     }
                 }

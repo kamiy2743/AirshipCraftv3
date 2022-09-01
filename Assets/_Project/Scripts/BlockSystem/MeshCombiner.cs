@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MasterData.Block;
@@ -38,9 +37,10 @@ namespace BlockSystem
                 }
             }
 
-            foreach (var v in meshData.Vertices)
+            var blockCoordinate = blockData.BlockCoordinate.ToVector3();
+            for (int i = 0; i < meshData.Vertices.Length; i++)
             {
-                batchedVertices.Add(v + blockData.BlockCoordinate.ToVector3());
+                batchedVertices.Add(meshData.Vertices[i] + blockCoordinate);
             }
         }
 
