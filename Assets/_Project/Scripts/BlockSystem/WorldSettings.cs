@@ -1,4 +1,4 @@
-namespace WorldSystem
+namespace BlockSystem
 {
     public static class WorldSettings
     {

@@ -1,0 +1,18 @@
+{
+    "name": "BlockSystem",
+    "rootNamespace": "BlockSystem",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:da37531d2dab97b4e932cb397036697d",
+        "GUID:71a0fa64a93d7d9409ff635cbe6f0d54"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
