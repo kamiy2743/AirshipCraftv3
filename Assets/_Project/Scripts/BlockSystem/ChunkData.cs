@@ -7,7 +7,7 @@ namespace BlockSystem
         private BlockData[] blocks;
         private int BlockSide => WorldSettings.LocalBlockSide;
 
-        public ChunkData(ChunkCoordinate cc)
+        public ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
             blocks = new BlockData[BlockSide * BlockSide * BlockSide];
@@ -20,7 +20,7 @@ namespace BlockSystem
                     {
                         var lc = new LocalCoordinate(x, y, z);
                         var bc = BlockCoordinate.FromChunkAndLocal(cc, lc);
-                        var id = MapGenerator.Instance.GetBlockID(bc);
+                        var id = mapGenerator.GetBlockID(bc);
                         SetBlockData(lc, new BlockData(id, bc));
                     }
                 }

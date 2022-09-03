@@ -12,6 +12,13 @@ namespace BlockSystem
         public IReadOnlyDictionary<ChunkCoordinate, ChunkData> Chunks => _chunks;
         private readonly Dictionary<ChunkCoordinate, ChunkData> _chunks = new Dictionary<ChunkCoordinate, ChunkData>();
 
+        private MapGenerator _mapGenerator;
+
+        public ChunkDataStore(MapGenerator mapGenerator)
+        {
+            _mapGenerator = mapGenerator;
+        }
+
         /// <summary>
         /// チャンクデータ取得、無ければ作成
         /// </summary>
@@ -22,7 +29,7 @@ namespace BlockSystem
                 return _chunks[cc];
             }
 
-            var chunk = new ChunkData(cc);
+            var chunk = new ChunkData(cc, _mapGenerator);
             _chunks[cc] = chunk;
             return chunk;
         }

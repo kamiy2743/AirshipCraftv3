@@ -2,25 +2,23 @@ using UnityEngine;
 
 namespace BlockSystem
 {
-    internal class MapGenerator
+    public class MapGenerator
     {
-        internal static MapGenerator Instance => _instance;
-        private static MapGenerator _instance = new MapGenerator();
-
         private float seedX;
         private float seedZ;
-        private float relief = 80;
+        private float _relief;
 
-        internal MapGenerator()
+        public MapGenerator(float relief)
         {
             seedX = Random.value * 100f;
             seedZ = Random.value * 100f;
+            _relief = relief;
         }
 
-        internal int GetBlockID(BlockCoordinate bc)
+        public int GetBlockID(BlockCoordinate bc)
         {
-            float xSample = (bc.x + seedX) / relief;
-            float zSample = (bc.z + seedZ) / relief;
+            float xSample = (bc.x + seedX) / _relief;
+            float zSample = (bc.z + seedZ) / _relief;
 
             float noise = Mathf.PerlinNoise(xSample, zSample);
 
