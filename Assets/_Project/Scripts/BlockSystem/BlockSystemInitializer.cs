@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MasterData.Block;
 
 namespace BlockSystem
 {
@@ -14,6 +15,8 @@ namespace BlockSystem
 
         private void Start()
         {
+            MasterBlockDataStore.InitialLoad();
+
             var chunkDataStore = new ChunkDataStore();
             var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);

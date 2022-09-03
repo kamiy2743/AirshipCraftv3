@@ -10,13 +10,16 @@ namespace MasterData.Block
     {
         [SerializeField] private List<MasterBlockData> masterBlockDataList;
 
-        private static MasterBlockDataStore _entity;
-        private static MasterBlockDataStore Entity => _entity ??=
-            Resources.Load<MasterBlockDataStore>(nameof(MasterBlockDataStore));
+        private static MasterBlockDataStore entity;
+
+        public static void InitialLoad()
+        {
+            entity = Resources.Load<MasterBlockDataStore>(nameof(MasterBlockDataStore));
+        }
 
         public static MasterBlockData GetData(int id)
         {
-            return Entity.masterBlockDataList.First(d => d.ID == id);
+            return entity.masterBlockDataList.First(d => d.ID == id);
         }
     }
 }

@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "BlockSystem",
         "UniTask",
-        "Util"
+        "Util",
+        "MasterData"
     ],
     "includePlatforms": [
         "Editor"

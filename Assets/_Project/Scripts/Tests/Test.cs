@@ -6,21 +6,24 @@ using UnityEngine.TestTools;
 using BlockSystem;
 using Cysharp.Threading.Tasks;
 using Util;
+using MasterData.Block;
 
 public class Test
 {
     [UnityTest]
     public IEnumerator チャンク生成のシステム部分の実行速度計測()
     {
+        MasterBlockDataStore.InitialLoad();
+
         var chunkDataStore = new ChunkDataStore();
         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
 
-        for (int x = 0; x < WorldSettings.WorldChunkSideXZ; x++)
+        for (int x = 0; x < 4; x++)
         {
-            for (int y = 0; y < WorldSettings.WorldChunkSideY; y++)
+            for (int y = 0; y < 4; y++)
             {
-                for (int z = 0; z < WorldSettings.WorldChunkSideXZ; z++)
+                for (int z = 0; z < 4; z++)
                 {
                     chunkMeshCreator.CreateMesh(chunkDataStore.GetChunkData(new ChunkCoordinate(x, y, z)));
                     yield return UniTask.DelayFrame(1).ToCoroutine();
