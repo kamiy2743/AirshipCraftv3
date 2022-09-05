@@ -41,7 +41,7 @@ namespace BlockSystem
             EnqueueLoadChunkHelper(pc.x, pc.z, pc.y, createdChunkList);
 
             // 内側から順に作成
-            for (int r = 1; r <= WorldSettings.LoadChunkRadius; r++)
+            for (int r = 1; r <= World.LoadChunkRadius; r++)
             {
                 // 上から見てx+方向
                 for (int x = pc.x - r; x < pc.x + r; x++)
@@ -71,7 +71,7 @@ namespace BlockSystem
         /// </summary>
         private void EnqueueLoadChunkHelper(int x, int z, int playerChunkY, IReadOnlyList<ChunkCoordinate> createdChunkList)
         {
-            var radius = WorldSettings.LoadChunkRadius;
+            var radius = World.LoadChunkRadius;
 
             // 下から順に作成
             for (int y = playerChunkY - radius; y <= playerChunkY + radius; y++)

@@ -22,7 +22,7 @@ namespace BlockSystem
 
             float noise = Mathf.PerlinNoise(xSample, zSample);
 
-            var y = WorldSettings.WorldBlockSideY * noise;
+            var y = World.WorldBlockSideY * noise;
             return (bc.y <= y ? 1 : 0);
         }
     }

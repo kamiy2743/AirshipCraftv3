@@ -16,11 +16,11 @@ namespace BlockSystem
             var meshData = new MeshData();
 
             // メッシュをバッチングする
-            for (int y = 0; y < WorldSettings.LocalBlockSide; y++)
+            for (int y = 0; y < World.ChunkBlockSide; y++)
             {
-                for (int z = 0; z < WorldSettings.LocalBlockSide; z++)
+                for (int z = 0; z < World.ChunkBlockSide; z++)
                 {
-                    for (int x = 0; x < WorldSettings.LocalBlockSide; x++)
+                    for (int x = 0; x < World.ChunkBlockSide; x++)
                     {
                         var blockData = chunkData.GetBlockData(new LocalCoordinate(x, y, z));
 

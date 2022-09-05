@@ -21,13 +21,13 @@ namespace BlockSystem
 
         public static bool IsValid(int x, int y, int z)
         {
-            if (x < 0 || x >= WorldSettings.WorldChunkSideXZ) return false;
-            if (y < 0 || y >= WorldSettings.WorldChunkSideY) return false;
-            if (z < 0 || z >= WorldSettings.WorldChunkSideXZ) return false;
+            if (x < 0 || x >= World.WorldChunkSideXZ) return false;
+            if (y < 0 || y >= World.WorldChunkSideY) return false;
+            if (z < 0 || z >= World.WorldChunkSideXZ) return false;
             return true;
         }
 
-        private const float InverseBlockSide = 1f / WorldSettings.LocalBlockSide;
+        private const float InverseBlockSide = 1f / World.ChunkBlockSide;
         public static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new ChunkCoordinate(

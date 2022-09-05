@@ -27,18 +27,18 @@ namespace BlockSystem
         }
         public static bool IsValid(int x, int y, int z)
         {
-            if (x < 0 || x >= WorldSettings.WorldBlockSideXZ) return false;
-            if (y < 0 || y >= WorldSettings.WorldBlockSideY) return false;
-            if (z < 0 || z >= WorldSettings.WorldBlockSideXZ) return false;
+            if (x < 0 || x >= World.WorldBlockSideXZ) return false;
+            if (y < 0 || y >= World.WorldBlockSideY) return false;
+            if (z < 0 || z >= World.WorldBlockSideXZ) return false;
             return true;
         }
 
         public static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
         {
             return new BlockCoordinate(
-                cc.x * WorldSettings.LocalBlockSide + lc.x,
-                cc.y * WorldSettings.LocalBlockSide + lc.y,
-                cc.z * WorldSettings.LocalBlockSide + lc.z
+                cc.x * World.ChunkBlockSide + lc.x,
+                cc.y * World.ChunkBlockSide + lc.y,
+                cc.z * World.ChunkBlockSide + lc.z
             );
         }
 
