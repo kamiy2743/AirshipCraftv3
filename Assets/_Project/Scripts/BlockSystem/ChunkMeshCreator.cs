@@ -11,9 +11,9 @@ namespace BlockSystem
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
-        public MeshCombiner CreateMesh(ChunkData chunkData)
+        public MeshData CreateMesh(ChunkData chunkData)
         {
-            var meshCombiner = new MeshCombiner();
+            var meshData = new MeshData();
 
             // メッシュをバッチングする
             for (int y = 0; y < WorldSettings.LocalBlockSide; y++)
@@ -22,25 +22,21 @@ namespace BlockSystem
                 {
                     for (int x = 0; x < WorldSettings.LocalBlockSide; x++)
                     {
-                        // 1くらい
                         var blockData = chunkData.GetBlockData(new LocalCoordinate(x, y, z));
 
                         // 他のブロックに接している面を計算
-                        // 45くらい
                         var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blockData.BlockCoordinate);
-                        // 5くらい
                         blockData.SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
 
                         // 空気に接していない = 見えないので描画しない
                         if (!blockData.IsContactAir) continue;
 
-                        // 15くらい
-                        meshCombiner.AddBlock(blockData);
+                        meshData.AddBlock(blockData);
                     }
                 }
             }
 
-            return meshCombiner;
+            return meshData;
         }
     }
 }

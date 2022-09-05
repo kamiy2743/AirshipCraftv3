@@ -5,10 +5,7 @@ using Util;
 
 namespace BlockSystem
 {
-    /// <summary>
-    /// メッシュをバッチングする
-    /// </summary>
-    public class MeshCombiner
+    public class MeshData
     {
         private List<Vector3> batchedVertices = new List<Vector3>();
         private List<int> batchedTriangles = new List<int>();
@@ -45,9 +42,9 @@ namespace BlockSystem
         }
 
         /// <summary>
-        /// すべてのメッシュデータをバッチングしたメッシュを作成する
+        /// バッチングしたメッシュを新規作成する
         /// </summary>
-        public Mesh Combine()
+        public Mesh ToMesh()
         {
             var mesh = new Mesh();
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;

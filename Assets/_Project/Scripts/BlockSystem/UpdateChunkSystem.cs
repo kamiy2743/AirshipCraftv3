@@ -114,7 +114,7 @@ namespace BlockSystem
                 // UnityApiを使う処理をするのでメインスレッドに戻す
                 await UniTask.SwitchToMainThread(_cancellationToken);
 
-                _chunkObjectStore.CreateChunkObject(meshData.Combine());
+                _chunkObjectStore.CreateChunkObject(meshData.ToMesh());
             }
         }
     }
