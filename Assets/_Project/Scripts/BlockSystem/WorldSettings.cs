@@ -12,6 +12,8 @@ namespace BlockSystem
 
         /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
         public const int LocalBlockSide = 16;
+        /// <summary>チャンク内のブロックの総数</summary>
+        public const int BlockCountInChunk = LocalBlockSide * LocalBlockSide * LocalBlockSide;
 
         /// <summary>ワールドの横の長さ(ブロック換算)</summary>
         public const int WorldBlockSideXZ = WorldChunkSideXZ * LocalBlockSide;

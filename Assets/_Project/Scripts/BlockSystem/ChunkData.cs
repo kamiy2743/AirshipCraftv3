@@ -5,18 +5,17 @@ namespace BlockSystem
         public ChunkCoordinate ChunkCoordinate { get; private set; }
 
         private BlockData[] blocks;
-        private int BlockSide => WorldSettings.LocalBlockSide;
 
         public ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            blocks = new BlockData[BlockSide * BlockSide * BlockSide];
+            blocks = new BlockData[WorldSettings.BlockCountInChunk];
 
-            for (int x = 0; x < BlockSide; x++)
+            for (int x = 0; x < WorldSettings.LocalBlockSide; x++)
             {
-                for (int y = 0; y < BlockSide; y++)
+                for (int y = 0; y < WorldSettings.LocalBlockSide; y++)
                 {
-                    for (int z = 0; z < BlockSide; z++)
+                    for (int z = 0; z < WorldSettings.LocalBlockSide; z++)
                     {
                         var lc = new LocalCoordinate(x, y, z);
                         var bc = BlockCoordinate.FromChunkAndLocal(cc, lc);
@@ -29,7 +28,7 @@ namespace BlockSystem
 
         private int ToIndex(LocalCoordinate lc)
         {
-            return (lc.y * BlockSide * BlockSide) + (lc.z * BlockSide) + lc.x;
+            return (lc.y * WorldSettings.LocalBlockSide * WorldSettings.LocalBlockSide) + (lc.z * WorldSettings.LocalBlockSide) + lc.x;
         }
 
         private void SetBlockData(LocalCoordinate lc, BlockData blockData)
