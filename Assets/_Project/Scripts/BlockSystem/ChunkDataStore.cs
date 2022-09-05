@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace BlockSystem
@@ -10,7 +11,7 @@ namespace BlockSystem
     public class ChunkDataStore
     {
         public IReadOnlyDictionary<ChunkCoordinate, ChunkData> Chunks => _chunks;
-        private readonly Dictionary<ChunkCoordinate, ChunkData> _chunks = new Dictionary<ChunkCoordinate, ChunkData>();
+        private readonly ConcurrentDictionary<ChunkCoordinate, ChunkData> _chunks = new ConcurrentDictionary<ChunkCoordinate, ChunkData>();
 
         private MapGenerator _mapGenerator;
 

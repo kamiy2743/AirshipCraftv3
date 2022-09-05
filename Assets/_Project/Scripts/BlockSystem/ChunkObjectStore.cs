@@ -11,20 +11,14 @@ namespace BlockSystem
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
-        private ChunkMeshCreator _chunkMeshCreator;
-
-        internal void StartInitial(ChunkMeshCreator chunkMeshCreator)
-        {
-            _chunkMeshCreator = chunkMeshCreator;
-        }
-
         /// <summary>
-        /// ChunkDataをもとにChunkObjectを作成します
+        /// ChunkObjectを作成します
+        /// メインスレッドのみ
         /// </summary>
-        public ChunkObject CreateChunkObject(ChunkData chunkData)
+        public ChunkObject CreateChunkObject(Mesh mesh)
         {
             var chunkObject = GameObject.Instantiate(chunkObjectPrefab, parent: transform);
-            chunkObject.SetMesh(_chunkMeshCreator.CreateMesh(chunkData));
+            chunkObject.SetMesh(mesh);
             return chunkObject;
         }
     }

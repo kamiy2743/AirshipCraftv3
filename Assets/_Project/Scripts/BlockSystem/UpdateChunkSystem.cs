@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
@@ -11,18 +12,19 @@ namespace BlockSystem
     /// </summary>
     public class UpdateChunkSystem
     {
-        private Queue<ChunkCoordinate> waitingChunkQueue = new Queue<ChunkCoordinate>();
+        private ConcurrentQueue<ChunkCoordinate> createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
 
-        private UniTask createFromWaitingQueueTask = UniTask.CompletedTask;
         private CancellationToken _cancellationToken;
 
         private ChunkDataStore _chunkDataStore;
         private ChunkObjectStore _chunkObjectStore;
+        private ChunkMeshCreator _chunkMeshCreator;
 
-        internal UpdateChunkSystem(Transform player, ChunkDataStore chunkDataStore, ChunkObjectStore chunkObjectStore)
+        internal UpdateChunkSystem(Transform player, ChunkDataStore chunkDataStore, ChunkObjectStore chunkObjectStore, ChunkMeshCreator chunkMeshCreator)
         {
             _chunkDataStore = chunkDataStore;
             _chunkObjectStore = chunkObjectStore;
+            _chunkMeshCreator = chunkMeshCreator;
 
             var playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
             UpdateAroundPlayer(playerChunk);
@@ -79,13 +81,12 @@ namespace BlockSystem
                 var cc = new ChunkCoordinate(x, y, z);
                 if (createdChunkList.Contains(cc)) continue;
 
-                waitingChunkQueue.Enqueue(cc);
+                createChunkQueue.Enqueue(cc);
 
                 // タスクを開始していなければ開始
-                if (createFromWaitingQueueTask.Equals(UniTask.CompletedTask))
+                if (createChunkQueue.Count == 1)
                 {
-                    createFromWaitingQueueTask = CreateFromWaitingQueue();
-                    createFromWaitingQueueTask.Forget();
+                    CreateChunkFromQueue().Forget();
                 }
             }
         }
@@ -93,19 +94,28 @@ namespace BlockSystem
         /// <summary>
         /// キューにあるチャンクを順次作成
         /// </summary>
-        private async UniTask CreateFromWaitingQueue()
+        private async UniTask CreateChunkFromQueue()
         {
-            while (waitingChunkQueue.Count > 0)
+            while (createChunkQueue.Count > 0)
             {
-                var cc = waitingChunkQueue.Peek();
-                var chunkData = _chunkDataStore.GetChunkData(cc);
-                var chunkObject = _chunkObjectStore.CreateChunkObject(chunkData);
-                waitingChunkQueue.Dequeue();
-                await UniTask.DelayFrame(1, cancellationToken: _cancellationToken);
-            }
+                // 別スレッドに退避
+                await UniTask.SwitchToThreadPool();
 
-            // タスク終了
-            createFromWaitingQueueTask = UniTask.CompletedTask;
+                var isSuccess = createChunkQueue.TryDequeue(out ChunkCoordinate cc);
+                if (!isSuccess)
+                {
+                    Debug.LogError("failed");
+                    break;
+                }
+
+                var chunkData = _chunkDataStore.GetChunkData(cc);
+                var meshData = _chunkMeshCreator.CreateMesh(chunkData);
+
+                // UnityApiを使う処理をするのでメインスレッドに戻す
+                await UniTask.SwitchToMainThread(_cancellationToken);
+
+                _chunkObjectStore.CreateChunkObject(meshData.Combine());
+            }
         }
     }
 }

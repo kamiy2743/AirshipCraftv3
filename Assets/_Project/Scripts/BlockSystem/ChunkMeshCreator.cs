@@ -11,7 +11,7 @@ namespace BlockSystem
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
-        public Mesh CreateMesh(ChunkData chunkData)
+        public MeshCombiner CreateMesh(ChunkData chunkData)
         {
             var meshCombiner = new MeshCombiner();
 
@@ -40,7 +40,7 @@ namespace BlockSystem
                 }
             }
 
-            return meshCombiner.Combine();
+            return meshCombiner;
         }
     }
 }
