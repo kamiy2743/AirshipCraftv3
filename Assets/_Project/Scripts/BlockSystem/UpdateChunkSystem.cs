@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using UnityEngine;
+using UniRx;
 using Cysharp.Threading.Tasks;
 
 namespace BlockSystem
@@ -27,8 +28,25 @@ namespace BlockSystem
             _chunkObjectStore = chunkObjectStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            var playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
-            UpdateAroundPlayer(playerChunk);
+
+            ChunkCoordinate lastPlayerChunk = null;
+
+            // 最初の一回
+            CheckUpdate();
+            // 毎フレーム監視
+            Observable.EveryUpdate()
+                .Subscribe(_ => CheckUpdate());
+
+            void CheckUpdate()
+            {
+                if (!BlockCoordinate.IsValid(player.position)) return;
+                var playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
+
+                if (playerChunk == lastPlayerChunk) return;
+                lastPlayerChunk = playerChunk;
+
+                UpdateAroundPlayer(playerChunk);
+            }
         }
 
         /// <summary>

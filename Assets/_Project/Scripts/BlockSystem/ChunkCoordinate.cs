@@ -45,6 +45,7 @@ namespace BlockSystem
 
         public static bool operator ==(ChunkCoordinate cc1, ChunkCoordinate cc2)
         {
+            if (cc1 is null || cc2 is null) return false;
             if (cc1.x != cc2.x) return false;
             if (cc1.y != cc2.y) return false;
             if (cc1.z != cc2.z) return false;
