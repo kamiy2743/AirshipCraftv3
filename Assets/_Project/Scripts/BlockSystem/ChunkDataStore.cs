@@ -25,14 +25,7 @@ namespace BlockSystem
         /// </summary>
         public ChunkData GetChunkData(ChunkCoordinate cc)
         {
-            if (_chunks.ContainsKey(cc))
-            {
-                return _chunks[cc];
-            }
-
-            var chunk = new ChunkData(cc, _mapGenerator);
-            _chunks[cc] = chunk;
-            return chunk;
+            return _chunks.GetOrAdd(cc, _ => new ChunkData(cc, _mapGenerator));
         }
     }
 }

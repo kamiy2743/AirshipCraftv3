@@ -13,6 +13,7 @@ namespace BlockSystem
     public class UpdateChunkSystem
     {
         private ConcurrentQueue<ChunkCoordinate> createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
+        private UniTask createChunkTask = UniTask.CompletedTask;
 
         private CancellationToken _cancellationToken;
 
@@ -84,9 +85,10 @@ namespace BlockSystem
                 createChunkQueue.Enqueue(cc);
 
                 // タスクを開始していなければ開始
-                if (createChunkQueue.Count == 1)
+                if (createChunkTask.Equals(UniTask.CompletedTask))
                 {
-                    CreateChunkFromQueue().Forget();
+                    createChunkTask = CreateChunkFromQueue();
+                    createChunkTask.Forget();
                 }
             }
         }
@@ -101,8 +103,7 @@ namespace BlockSystem
                 // 別スレッドに退避
                 await UniTask.SwitchToThreadPool();
 
-                var isSuccess = createChunkQueue.TryDequeue(out ChunkCoordinate cc);
-                if (!isSuccess)
+                if (!createChunkQueue.TryDequeue(out ChunkCoordinate cc))
                 {
                     Debug.LogError("failed");
                     break;
@@ -116,6 +117,9 @@ namespace BlockSystem
 
                 _chunkObjectStore.CreateChunkObject(meshData.ToMesh());
             }
+
+            // タスク終了
+            createChunkTask = UniTask.CompletedTask;
         }
     }
 }
