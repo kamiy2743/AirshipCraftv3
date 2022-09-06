@@ -7,6 +7,8 @@ namespace BlockSystem
 {
     public class MeshData
     {
+        public bool IsEmpty => batchedVertices.Count == 0;
+
         private List<Vector3> batchedVertices = new List<Vector3>();
         private List<int> batchedTriangles = new List<int>();
 
