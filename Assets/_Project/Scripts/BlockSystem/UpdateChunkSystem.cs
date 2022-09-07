@@ -16,10 +16,10 @@ namespace BlockSystem
         private CancellationTokenSource createChunkTaskCancellationTokenSource;
 
         private ChunkDataStore _chunkDataStore;
-        private ChunkObjectStore _chunkObjectStore;
+        private ChunkObjectPool _chunkObjectStore;
         private ChunkMeshCreator _chunkMeshCreator;
 
-        internal UpdateChunkSystem(Transform player, ChunkDataStore chunkDataStore, ChunkObjectStore chunkObjectStore, ChunkMeshCreator chunkMeshCreator)
+        internal UpdateChunkSystem(Transform player, ChunkDataStore chunkDataStore, ChunkObjectPool chunkObjectStore, ChunkMeshCreator chunkMeshCreator)
         {
             _chunkDataStore = chunkDataStore;
             _chunkObjectStore = chunkObjectStore;
@@ -53,13 +53,13 @@ namespace BlockSystem
             // タスク実行中であればキャンセル
             createChunkTaskCancellationTokenSource?.Cancel();
 
-            // 読みこみ範囲外のチャンクオブジェクトを破棄する
+            // 読みこみ範囲外のチャンクオブジェクトを解放する
             foreach (var cc in _chunkObjectStore.ChunkObjects.Keys.ToList())
             {
                 var distance = new Vector3Int(Mathf.Abs(cc.x - pc.x), Mathf.Abs(cc.y - pc.y), Mathf.Abs(cc.z - pc.z));
                 if (distance.x > World.LoadChunkRadius || distance.y > World.LoadChunkRadius || distance.z > World.LoadChunkRadius)
                 {
-                    _chunkObjectStore.DisposeChunkObject(cc);
+                    _chunkObjectStore.ReleaseChunkObject(cc);
                 }
             }
 
@@ -128,8 +128,7 @@ namespace BlockSystem
 
                 if (!createChunkQueue.TryDequeue(out ChunkCoordinate cc))
                 {
-                    Debug.LogError("failed");
-                    break;
+                    throw new System.Exception("failed");
                 }
 
                 var chunkData = _chunkDataStore.GetChunkData(cc);
@@ -141,7 +140,8 @@ namespace BlockSystem
                 // UnityApiを使う処理をするのでメインスレッドに戻す
                 await UniTask.SwitchToMainThread(ct);
 
-                _chunkObjectStore.CreateChunkObject(cc, meshData.Mesh);
+                var chunkObject = _chunkObjectStore.GetChunkObject(cc);
+                chunkObject.SetMesh(meshData.Mesh);
             }
         }
     }

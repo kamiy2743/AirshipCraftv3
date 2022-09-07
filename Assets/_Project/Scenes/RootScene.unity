@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 125769954}
   - component: {fileID: 125769955}
   m_Layer: 0
-  m_Name: ChunkObjectStore
+  m_Name: ChunkObjectPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 920373323}
-  chunkObjectStore: {fileID: 125769955}
+  chunkObjectPool: {fileID: 125769955}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,7 +449,6 @@ GameObject:
   - component: {fileID: 1855767554}
   - component: {fileID: 1855767557}
   - component: {fileID: 1855767556}
-  - component: {fileID: 1855767555}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -472,20 +471,6 @@ Transform:
   m_Father: {fileID: 920373323}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1855767555
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855767553}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1855767556
 MeshRenderer:
   m_ObjectHideFlags: 0
