@@ -8,12 +8,19 @@ namespace BlockSystem
     public class MeshData
     {
         public bool IsEmpty => batchedVertices.Count == 0;
+        public Mesh Mesh => _mesh ??= ToMesh();
+        private Mesh _mesh;
 
         private List<Vector3> batchedVertices = new List<Vector3>();
         private List<int> batchedTriangles = new List<int>();
 
         public void AddBlock(BlockData blockData)
         {
+            if (_mesh != null)
+            {
+                throw new System.Exception("Mesh作成済みのためBlockを追加することはできません");
+            }
+
             var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
             if (meshData.Vertices.Length == 0) return;
 
@@ -46,13 +53,17 @@ namespace BlockSystem
         /// <summary>
         /// バッチングしたメッシュを新規作成する
         /// </summary>
-        public Mesh ToMesh()
+        private Mesh ToMesh()
         {
             var mesh = new Mesh();
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.SetVertices(batchedVertices);
             mesh.SetTriangles(batchedTriangles, 0);
             mesh.RecalculateNormals();
+
+            batchedVertices.Clear();
+            batchedTriangles.Clear();
+
             return mesh;
         }
     }

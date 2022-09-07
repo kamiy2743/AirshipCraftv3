@@ -1,15 +1,20 @@
+using System.Collections.Generic;
+
 namespace BlockSystem
 {
     public class ChunkData
     {
         public ChunkCoordinate ChunkCoordinate { get; private set; }
 
-        private BlockData[] blocks;
+        public IReadOnlyCollection<BlockData> Blocks => _blocks;
+        private BlockData[] _blocks;
+
+        public MeshData MeshData { get; private set; }
 
         public ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            blocks = new BlockData[World.BlockCountInChunk];
+            _blocks = new BlockData[World.BlockCountInChunk];
 
             for (int x = 0; x < World.ChunkBlockSide; x++)
             {
@@ -33,12 +38,17 @@ namespace BlockSystem
 
         private void SetBlockData(LocalCoordinate lc, BlockData blockData)
         {
-            blocks[ToIndex(lc)] = blockData;
+            _blocks[ToIndex(lc)] = blockData;
         }
 
         public BlockData GetBlockData(LocalCoordinate lc)
         {
-            return blocks[ToIndex(lc)];
+            return _blocks[ToIndex(lc)];
+        }
+
+        public void SetMeshData(MeshData meshData)
+        {
+            MeshData = meshData;
         }
     }
 }

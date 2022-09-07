@@ -128,13 +128,15 @@ namespace BlockSystem
                 }
 
                 var chunkData = _chunkDataStore.GetChunkData(cc);
-                var meshData = _chunkMeshCreator.CreateMesh(chunkData);
+                var meshData = _chunkMeshCreator.CreateMeshData(chunkData.Blocks);
+                chunkData.SetMeshData(meshData);
+
                 if (meshData.IsEmpty) continue;
 
                 // UnityApiを使う処理をするのでメインスレッドに戻す
                 await UniTask.SwitchToMainThread(_cancellationToken);
 
-                _chunkObjectStore.CreateChunkObject(meshData.ToMesh());
+                _chunkObjectStore.CreateChunkObject(meshData.Mesh);
             }
 
             // タスク終了

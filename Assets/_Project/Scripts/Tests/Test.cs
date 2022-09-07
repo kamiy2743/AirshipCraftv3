@@ -26,7 +26,7 @@ public class Test
             {
                 for (int z = 0; z < 4; z++)
                 {
-                    chunkMeshCreator.CreateMesh(chunkDataStore.GetChunkData(new ChunkCoordinate(x, y, z)));
+                    // chunkMeshCreator.CreateMesh(chunkDataStore.GetChunkData(new ChunkCoordinate(x, y, z)));
                     yield return UniTask.DelayFrame(1).ToCoroutine();
                 }
             }
