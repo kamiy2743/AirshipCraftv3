@@ -26,5 +26,11 @@ namespace BlockSystem
 
             return chunkObject;
         }
+
+        public void DisposeChunkObject(ChunkCoordinate cc)
+        {
+            Destroy(_chunkObjects[cc].gameObject);
+            _chunkObjects.Remove(cc);
+        }
     }
 }

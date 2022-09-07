@@ -48,10 +48,20 @@ namespace BlockSystem
         /// <summary>
         /// プレイヤーのいるチャンクを中心とする立方体を作成する
         /// </summary>
-        private async void UpdateAroundPlayer(ChunkCoordinate pc)
+        private void UpdateAroundPlayer(ChunkCoordinate pc)
         {
             // タスク実行中であればキャンセル
             createChunkTaskCancellationTokenSource?.Cancel();
+
+            // 読みこみ範囲外のチャンクオブジェクトを破棄する
+            foreach (var cc in _chunkObjectStore.ChunkObjects.Keys.ToList())
+            {
+                var distance = new Vector3Int(Mathf.Abs(cc.x - pc.x), Mathf.Abs(cc.y - pc.y), Mathf.Abs(cc.z - pc.z));
+                if (distance.x > World.LoadChunkRadius || distance.y > World.LoadChunkRadius || distance.z > World.LoadChunkRadius)
+                {
+                    _chunkObjectStore.DisposeChunkObject(cc);
+                }
+            }
 
             // 作成済みチャンクのリスト
             var createdChunkList = _chunkObjectStore.ChunkObjects.Keys.ToList();
