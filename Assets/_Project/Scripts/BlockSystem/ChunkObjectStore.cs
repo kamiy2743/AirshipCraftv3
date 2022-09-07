@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,14 +11,19 @@ namespace BlockSystem
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
+        public IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
+        private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>();
+
         /// <summary>
         /// ChunkObjectを作成します
         /// メインスレッドのみ
         /// </summary>
-        public ChunkObject CreateChunkObject(Mesh mesh)
+        public ChunkObject CreateChunkObject(ChunkCoordinate cc, Mesh mesh)
         {
             var chunkObject = GameObject.Instantiate(chunkObjectPrefab, parent: transform);
             chunkObject.SetMesh(mesh);
+            _chunkObjects.Add(cc, chunkObject);
+
             return chunkObject;
         }
     }

@@ -13,10 +13,7 @@ namespace BlockSystem
     /// </summary>
     public class UpdateChunkSystem
     {
-        private ConcurrentQueue<ChunkCoordinate> createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
-        private UniTask createChunkTask = UniTask.CompletedTask;
-
-        private CancellationToken _cancellationToken;
+        private CancellationTokenSource createChunkTaskCancellationTokenSource;
 
         private ChunkDataStore _chunkDataStore;
         private ChunkObjectStore _chunkObjectStore;
@@ -27,7 +24,6 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
             _chunkObjectStore = chunkObjectStore;
             _chunkMeshCreator = chunkMeshCreator;
-
 
             ChunkCoordinate lastPlayerChunk = null;
 
@@ -52,12 +48,33 @@ namespace BlockSystem
         /// <summary>
         /// プレイヤーのいるチャンクを中心とする立方体を作成する
         /// </summary>
-        private void UpdateAroundPlayer(ChunkCoordinate pc)
+        private async void UpdateAroundPlayer(ChunkCoordinate pc)
         {
-            var createdChunkList = _chunkDataStore.Chunks.Keys.ToList();
+            // タスク実行中であればキャンセル
+            createChunkTaskCancellationTokenSource?.Cancel();
+
+            // 作成済みチャンクのリスト
+            var createdChunkList = _chunkObjectStore.ChunkObjects.Keys.ToList();
+            // 作成するチャンクのキュー
+            var createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
+
+            // 指定されたxzにあるチャンクを下から順に作成キューに追加する
+            void EnqueueChunk(int x, int z)
+            {
+                // 下から順に追加
+                for (int y = pc.y - World.LoadChunkRadius; y <= pc.y + World.LoadChunkRadius; y++)
+                {
+                    if (!ChunkCoordinate.IsValid(x, y, z)) continue;
+
+                    var cc = new ChunkCoordinate(x, y, z);
+                    if (createdChunkList.Contains(cc)) continue;
+
+                    createChunkQueue.Enqueue(cc);
+                }
+            }
 
             // 中心
-            EnqueueLoadChunkHelper(pc.x, pc.z, pc.y, createdChunkList);
+            EnqueueChunk(pc.x, pc.z);
 
             // 内側から順に作成
             for (int r = 1; r <= World.LoadChunkRadius; r++)
@@ -65,56 +82,34 @@ namespace BlockSystem
                 // 上から見てx+方向
                 for (int x = pc.x - r; x < pc.x + r; x++)
                 {
-                    EnqueueLoadChunkHelper(x, pc.z + r, pc.y, createdChunkList);
+                    EnqueueChunk(x, pc.z + r);
                 }
                 // z-方向
                 for (int z = pc.z + r; z > pc.z - r; z--)
                 {
-                    EnqueueLoadChunkHelper(pc.x + r, z, pc.y, createdChunkList);
+                    EnqueueChunk(pc.x + r, z);
                 }
                 // x-方向
                 for (int x = pc.x + r; x > pc.x - r; x--)
                 {
-                    EnqueueLoadChunkHelper(x, pc.z - r, pc.y, createdChunkList);
+                    EnqueueChunk(x, pc.z - r);
                 }
                 // z+方向
                 for (int z = pc.z - r; z < pc.z + r; z++)
                 {
-                    EnqueueLoadChunkHelper(pc.x - r, z, pc.y, createdChunkList);
+                    EnqueueChunk(pc.x - r, z);
                 }
             }
-        }
 
-        /// <summary>
-        /// 作成していないチャンクならキューに追加
-        /// </summary>
-        private void EnqueueLoadChunkHelper(int x, int z, int playerChunkY, IReadOnlyList<ChunkCoordinate> createdChunkList)
-        {
-            var radius = World.LoadChunkRadius;
-
-            // 下から順に作成
-            for (int y = playerChunkY - radius; y <= playerChunkY + radius; y++)
-            {
-                if (!ChunkCoordinate.IsValid(x, y, z)) continue;
-
-                var cc = new ChunkCoordinate(x, y, z);
-                if (createdChunkList.Contains(cc)) continue;
-
-                createChunkQueue.Enqueue(cc);
-
-                // タスクを開始していなければ開始
-                if (createChunkTask.Equals(UniTask.CompletedTask))
-                {
-                    createChunkTask = CreateChunkFromQueue();
-                    createChunkTask.Forget();
-                }
-            }
+            // タスク開始
+            createChunkTaskCancellationTokenSource = new CancellationTokenSource();
+            CreateChunkFromQueue(createChunkQueue, createChunkTaskCancellationTokenSource.Token).Forget();
         }
 
         /// <summary>
         /// キューにあるチャンクを順次作成
         /// </summary>
-        private async UniTask CreateChunkFromQueue()
+        private async UniTask CreateChunkFromQueue(ConcurrentQueue<ChunkCoordinate> createChunkQueue, CancellationToken ct)
         {
             while (createChunkQueue.Count > 0)
             {
@@ -134,13 +129,10 @@ namespace BlockSystem
                 if (meshData.IsEmpty) continue;
 
                 // UnityApiを使う処理をするのでメインスレッドに戻す
-                await UniTask.SwitchToMainThread(_cancellationToken);
+                await UniTask.SwitchToMainThread(ct);
 
-                _chunkObjectStore.CreateChunkObject(meshData.Mesh);
+                _chunkObjectStore.CreateChunkObject(cc, meshData.Mesh);
             }
-
-            // タスク終了
-            createChunkTask = UniTask.CompletedTask;
         }
     }
 }
