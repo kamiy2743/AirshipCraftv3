@@ -16,7 +16,7 @@ public class Test
     {
         MasterBlockDataStore.InitialLoad();
 
-        var mapGenerator = new MapGenerator(80);
+        var mapGenerator = new MapGenerator(1024, 80);
         var chunkDataStore = new ChunkDataStore(mapGenerator);
         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
@@ -131,5 +131,19 @@ public class Test
         }
 
         Debug.Log(Convert.ToString(surfaces.value, 2));
+    }
+
+    [Test]
+    public void IndexからLocalCoordinateへの変換()
+    {
+        for (int index = 0; index < World.BlockCountInChunk; index++)
+        {
+            var localY = index / (World.ChunkBlockSide * World.ChunkBlockSide);
+            var xz = index - (localY * (World.ChunkBlockSide * World.ChunkBlockSide));
+            var localX = xz % World.ChunkBlockSide;
+            var localZ = xz / World.ChunkBlockSide;
+            var localCoordinate = new Vector3Int(localX, localY, localZ);
+            Debug.Log(localCoordinate);
+        }
     }
 }

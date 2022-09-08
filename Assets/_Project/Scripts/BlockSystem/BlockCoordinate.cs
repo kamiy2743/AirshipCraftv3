@@ -5,7 +5,7 @@ namespace BlockSystem
     /// <summary>
     /// ワールド内のブロックの座標
     /// </summary>
-    public class BlockCoordinate
+    public struct BlockCoordinate
     {
         public readonly int x;
         public readonly int y;

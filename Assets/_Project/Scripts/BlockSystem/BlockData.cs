@@ -4,18 +4,19 @@ using Util;
 
 namespace BlockSystem
 {
-    public class BlockData
+    public struct BlockData
     {
         public int ID { get; private set; }
         public BlockCoordinate BlockCoordinate { get; private set; }
 
-        private ContactSurfaces contactOtherBlockSurfaces = new ContactSurfaces();
+        private ContactSurfaces contactOtherBlockSurfaces;
         public bool IsContactAir => !contactOtherBlockSurfaces.IsFull;
 
         public BlockData(int id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;
+            contactOtherBlockSurfaces = new ContactSurfaces();
         }
 
         public void SetContactOtherBlockSurfaces(ContactSurfaces surfaces)

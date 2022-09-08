@@ -1,29 +1,32 @@
-using UnityEngine;
+using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
 namespace BlockSystem
 {
-    public class MapGenerator
+    public struct MapGenerator
     {
+        private Random random;
         private float seedX;
         private float seedZ;
-        private float _relief;
+        private float inverseRelief;
 
-        public MapGenerator(float relief)
+        public MapGenerator(uint seed, float relief)
         {
-            seedX = Random.value * 100f;
-            seedZ = Random.value * 100f;
-            _relief = relief;
+            random = new Random(seed);
+            seedX = random.NextFloat(0, 1) * 100f;
+            seedZ = random.NextFloat(0, 1) * 100f;
+            inverseRelief = 1 / relief;
         }
 
-        public int GetBlockID(BlockCoordinate bc)
+        public int GetBlockID(int x, int y, int z)
         {
-            float xSample = (bc.x + seedX) / _relief;
-            float zSample = (bc.z + seedZ) / _relief;
+            float xSample = (x + seedX) * inverseRelief;
+            float zSample = (z + seedZ) * inverseRelief;
+            var noiseValue = noise.snoise(new float2(xSample, zSample));
+            noiseValue = (noiseValue + 1) * 0.5f;
 
-            float noise = Mathf.PerlinNoise(xSample, zSample);
-
-            var y = World.WorldBlockSideY * noise;
-            return (bc.y <= y ? 1 : 0);
+            var resultY = World.WorldBlockSideY * noiseValue;
+            return (resultY <= y ? 0 : 1);
         }
     }
 }

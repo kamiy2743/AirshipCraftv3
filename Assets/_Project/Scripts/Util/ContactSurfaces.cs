@@ -1,6 +1,6 @@
 namespace Util
 {
-    public class ContactSurfaces
+    public struct ContactSurfaces
     {
         private static readonly uint[] Masks = new uint[] {
             0b100000,
@@ -12,7 +12,7 @@ namespace Util
         };
         private const uint FullValue = 0b111111;
 
-        public uint value = 0;
+        public uint value;
 
         public bool IsFull => value == FullValue;
 
