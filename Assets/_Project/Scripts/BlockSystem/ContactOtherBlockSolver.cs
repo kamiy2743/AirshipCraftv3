@@ -17,9 +17,9 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
         }
 
-        public List<SurfaceNormal> GetContactOtherBlockSurfaces(BlockCoordinate bc)
+        public ContactSurfaces GetContactOtherBlockSurfaces(BlockCoordinate bc)
         {
-            var surfaces = new List<SurfaceNormal>(SurfaceNormalExt.EnumCount);
+            var surfaces = new ContactSurfaces();
 
             foreach (var surface in SurfaceNormalExt.List)
             {

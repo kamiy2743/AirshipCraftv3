@@ -9,8 +9,8 @@ namespace BlockSystem
         public int ID { get; private set; }
         public BlockCoordinate BlockCoordinate { get; private set; }
 
-        public bool IsContactAir { get; private set; }
-        private bool[] isContactOtherBlock = new bool[SurfaceNormalExt.EnumCount];
+        private ContactSurfaces contactOtherBlockSurfaces = new ContactSurfaces();
+        public bool IsContactAir => !contactOtherBlockSurfaces.IsFull;
 
         public BlockData(int id, BlockCoordinate bc)
         {
@@ -18,24 +18,14 @@ namespace BlockSystem
             BlockCoordinate = bc;
         }
 
-        public void SetContactOtherBlockSurfaces(List<SurfaceNormal> surfaces)
+        public void SetContactOtherBlockSurfaces(ContactSurfaces surfaces)
         {
-            for (int i = 0; i < isContactOtherBlock.Length; i++)
-            {
-                isContactOtherBlock[i] = false;
-            }
-
-            foreach (int surface in surfaces)
-            {
-                isContactOtherBlock[surface] = true;
-            }
-
-            IsContactAir = (surfaces.Count < SurfaceNormalExt.EnumCount);
+            contactOtherBlockSurfaces = surfaces;
         }
 
         public bool IsContactOtherBlock(SurfaceNormal surface)
         {
-            return isContactOtherBlock[(int)surface];
+            return contactOtherBlockSurfaces.Contains(surface);
         }
     }
 }

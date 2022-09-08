@@ -7,6 +7,7 @@ using BlockSystem;
 using Cysharp.Threading.Tasks;
 using Util;
 using MasterData.Block;
+using System;
 
 public class Test
 {
@@ -107,5 +108,28 @@ public class Test
         }
         sw2.Stop();
         Debug.Log(sw2.Elapsed);
+    }
+
+    [Test]
+    public void ContactSurfacesの動作確認()
+    {
+        var surfaces = new ContactSurfaces();
+
+        surfaces.Add(SurfaceNormal.Right);
+        surfaces.Add(SurfaceNormal.Left);
+        // surfaces.Add(SurfaceNormal.Top);
+        surfaces.Add(SurfaceNormal.Bottom);
+        surfaces.Add(SurfaceNormal.Forward);
+        surfaces.Add(SurfaceNormal.Back);
+
+        foreach (var surface in SurfaceNormalExt.List)
+        {
+            if (surfaces.Contains(surface))
+            {
+                Debug.Log(surface);
+            }
+        }
+
+        Debug.Log(Convert.ToString(surfaces.value, 2));
     }
 }
