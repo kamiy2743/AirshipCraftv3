@@ -13,7 +13,7 @@ namespace BlockSystem
 
         public IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private ConcurrentDictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new ConcurrentDictionary<ChunkCoordinate, ChunkObject>();
-        private ConcurrentQueue<ChunkObject> availableChunkObjects = new ConcurrentQueue<ChunkObject>();
+        private ConcurrentBag<ChunkObject> availableChunkObjects = new ConcurrentBag<ChunkObject>();
 
         internal void StartInitial()
         {
@@ -21,7 +21,7 @@ namespace BlockSystem
             {
                 var chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
                 chunkObject.gameObject.SetActive(false);
-                availableChunkObjects.Enqueue(chunkObject);
+                availableChunkObjects.Add(chunkObject);
             }
         }
 
@@ -36,7 +36,7 @@ namespace BlockSystem
                 throw new System.Exception("ChunkObjectプールが空です");
             }
 
-            if (!availableChunkObjects.TryDequeue(out ChunkObject chunkObject))
+            if (!availableChunkObjects.TryTake(out ChunkObject chunkObject))
             {
                 throw new System.Exception("failed");
             }
@@ -63,7 +63,7 @@ namespace BlockSystem
             }
 
             chunkObject.gameObject.SetActive(false);
-            availableChunkObjects.Enqueue(chunkObject);
+            availableChunkObjects.Add(chunkObject);
         }
     }
 }
