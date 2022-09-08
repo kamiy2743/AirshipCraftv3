@@ -133,7 +133,7 @@ namespace BlockSystem
 
                 var chunkData = _chunkDataStore.GetChunkData(cc);
                 var meshData = _chunkMeshCreator.CreateMeshData(chunkData.Blocks);
-                chunkData.SetMeshData(meshData);
+                chunkData.SetChunkMeshData(meshData);
 
                 if (meshData.IsEmpty) continue;
 

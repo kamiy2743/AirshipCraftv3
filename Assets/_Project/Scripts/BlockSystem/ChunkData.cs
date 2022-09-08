@@ -9,7 +9,7 @@ namespace BlockSystem
         public IReadOnlyCollection<BlockData> Blocks => _blocks;
         private BlockData[] _blocks;
 
-        public MeshData MeshData { get; private set; }
+        public ChunkMeshData ChunkMeshData { get; private set; }
 
         public ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
@@ -46,9 +46,9 @@ namespace BlockSystem
             return _blocks[ToIndex(lc)];
         }
 
-        public void SetMeshData(MeshData meshData)
+        public void SetChunkMeshData(ChunkMeshData chunkMeshData)
         {
-            MeshData = meshData;
+            ChunkMeshData = chunkMeshData;
         }
     }
 }

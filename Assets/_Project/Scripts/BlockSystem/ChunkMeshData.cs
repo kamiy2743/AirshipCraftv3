@@ -5,14 +5,20 @@ using Util;
 
 namespace BlockSystem
 {
-    public class MeshData
+    public class ChunkMeshData
     {
         public bool IsEmpty => batchedVertices.Count == 0;
         public Mesh Mesh => _mesh ??= ToMesh();
         private Mesh _mesh;
 
-        private List<Vector3> batchedVertices = new List<Vector3>();
-        private List<int> batchedTriangles = new List<int>();
+        private List<Vector3> batchedVertices;
+        private List<int> batchedTriangles;
+
+        public ChunkMeshData(int maxVerticesCount, int maxTrianglesCount)
+        {
+            batchedVertices = new List<Vector3>(maxVerticesCount);
+            batchedTriangles = new List<int>(maxTrianglesCount);
+        }
 
         public void AddBlock(BlockData blockData)
         {

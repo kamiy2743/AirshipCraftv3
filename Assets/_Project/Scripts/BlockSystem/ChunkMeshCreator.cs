@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using MasterData.Block;
 
 namespace BlockSystem
 {
@@ -12,9 +13,19 @@ namespace BlockSystem
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
-        public MeshData CreateMeshData(IReadOnlyCollection<BlockData> blocksInChunk)
+        public ChunkMeshData CreateMeshData(IReadOnlyCollection<BlockData> blocksInChunk)
         {
-            var meshData = new MeshData();
+            int maxVerticesCount = 0;
+            int maxTrianglesCount = 0;
+
+            foreach (var block in blocksInChunk)
+            {
+                var blockMeshData = MasterBlockDataStore.GetData(block.ID).MeshData;
+                maxVerticesCount += blockMeshData.Vertices.Length;
+                maxTrianglesCount += blockMeshData.Triangles.Length;
+            }
+
+            var meshData = new ChunkMeshData(maxVerticesCount, maxTrianglesCount);
 
             foreach (var blockData in blocksInChunk)
             {

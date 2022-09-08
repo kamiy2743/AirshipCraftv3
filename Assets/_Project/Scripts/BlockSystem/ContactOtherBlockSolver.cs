@@ -19,7 +19,7 @@ namespace BlockSystem
 
         public List<SurfaceNormal> GetContactOtherBlockSurfaces(BlockCoordinate bc)
         {
-            var surfaces = new List<SurfaceNormal>();
+            var surfaces = new List<SurfaceNormal>(SurfaceNormalExt.EnumCount);
 
             foreach (var surface in SurfaceNormalExt.List)
             {
