@@ -25,24 +25,39 @@ namespace BlockSystem
             _chunkObjectStore = chunkObjectStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            ChunkCoordinate lastPlayerChunk = null;
+            // 初回の更新
+            if (!TryGetPlayerChunk(player.position, out ChunkCoordinate firstPlayerChunk))
+            {
+                throw new System.Exception("最初は必ずワールドの範囲内にいてください");
+            }
+            UpdateAroundPlayer(firstPlayerChunk);
 
-            // 最初の一回
-            CheckUpdate();
+            // 前回の更新時のプレイヤーチャンクを保持
+            ChunkCoordinate lastPlayerChunk = firstPlayerChunk;
+
             // 毎フレーム監視
             Observable.EveryUpdate()
-                .Subscribe(_ => CheckUpdate());
+                .Subscribe(_ =>
+                {
+                    // プレイヤーチャンクが変化したら更新
+                    if (!TryGetPlayerChunk(player.position, out ChunkCoordinate playerChunk)) return;
+                    if (playerChunk == lastPlayerChunk) return;
 
-            void CheckUpdate()
+                    UpdateAroundPlayer(playerChunk);
+                    lastPlayerChunk = playerChunk;
+                });
+        }
+
+        private bool TryGetPlayerChunk(Vector3 playerPosition, out ChunkCoordinate playerChunk)
+        {
+            if (!BlockCoordinate.IsValid(playerPosition))
             {
-                if (!BlockCoordinate.IsValid(player.position)) return;
-                var playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(player.position));
-
-                if (playerChunk == lastPlayerChunk) return;
-                lastPlayerChunk = playerChunk;
-
-                UpdateAroundPlayer(playerChunk);
+                playerChunk = default;
+                return false;
             }
+
+            playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(playerPosition));
+            return true;
         }
 
         /// <summary>

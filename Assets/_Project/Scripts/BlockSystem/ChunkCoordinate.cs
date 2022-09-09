@@ -1,10 +1,12 @@
+using System;
+
 namespace BlockSystem
 {
     /// <summary>
     /// ワールド内のチャンクの座標
     /// 座標というよりはインデックスに近い
     /// </summary>
-    public class ChunkCoordinate
+    public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
         public readonly int x;
         public readonly int y;
@@ -43,34 +45,32 @@ namespace BlockSystem
             return $"Chunk({x}, {y}, {z})";
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is ChunkCoordinate data && Equals(data);
+        }
+
+        public bool Equals(ChunkCoordinate other)
+        {
+            if (this.x != other.x) return false;
+            if (this.y != other.y) return false;
+            if (this.z != other.z) return false;
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.x, this.y, this.z);
+        }
+
         public static bool operator ==(ChunkCoordinate cc1, ChunkCoordinate cc2)
         {
-            if (cc1 is null || cc2 is null) return false;
-            if (cc1.x != cc2.x) return false;
-            if (cc1.y != cc2.y) return false;
-            if (cc1.z != cc2.z) return false;
-            return true;
+            return cc1.Equals(cc2);
         }
 
         public static bool operator !=(ChunkCoordinate cc1, ChunkCoordinate cc2)
         {
             return !(cc1 == cc2);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = obj as ChunkCoordinate;
-            return this == other;
-        }
-
-        public override int GetHashCode()
-        {
-            return System.HashCode.Combine(this.x, this.y, this.z);
         }
     }
 }
