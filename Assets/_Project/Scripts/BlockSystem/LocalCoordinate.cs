@@ -3,7 +3,7 @@ namespace BlockSystem
     /// <summary>
     /// チャンク内のブロックの座標
     /// </summary>
-    public class LocalCoordinate
+    public struct LocalCoordinate
     {
         public readonly int x;
         public readonly int y;
