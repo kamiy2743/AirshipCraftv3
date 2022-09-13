@@ -67,6 +67,7 @@ namespace BlockSystem
         {
             // タスク実行中であればキャンセル
             createChunkTaskCancellationTokenSource?.Cancel();
+            createChunkTaskCancellationTokenSource?.Dispose();
 
             // 読みこみ範囲外のチャンクオブジェクトを解放する
             foreach (var cc in _chunkObjectStore.ChunkObjects.Keys.ToList())
@@ -136,6 +137,8 @@ namespace BlockSystem
         /// </summary>
         private async UniTask CreateChunkFromQueue(ConcurrentQueue<ChunkCoordinate> createChunkQueue, CancellationToken ct)
         {
+            ChunkMeshData meshData = null;
+
             while (createChunkQueue.Count > 0)
             {
                 // 別スレッドに退避
@@ -147,7 +150,7 @@ namespace BlockSystem
                 }
 
                 var chunkData = _chunkDataStore.GetChunkData(cc);
-                var meshData = _chunkMeshCreator.CreateMeshData(chunkData.Blocks);
+                meshData = _chunkMeshCreator.CreateMeshData(chunkData.Blocks, meshData);
                 chunkData.SetChunkMeshData(meshData);
 
                 if (meshData.IsEmpty) continue;
@@ -156,7 +159,8 @@ namespace BlockSystem
                 await UniTask.SwitchToMainThread(ct);
 
                 var chunkObject = _chunkObjectStore.GetChunkObject(cc);
-                chunkObject.SetMesh(meshData.Mesh);
+                chunkObject.SetMesh(meshData);
+                meshData.Clear();
             }
         }
     }
