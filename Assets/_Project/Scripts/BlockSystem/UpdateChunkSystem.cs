@@ -153,8 +153,6 @@ namespace BlockSystem
                 meshData = _chunkMeshCreator.CreateMeshData(chunkData.Blocks, meshData);
                 chunkData.SetChunkMeshData(meshData);
 
-                if (meshData.IsEmpty) continue;
-
                 // UnityApiを使う処理をするのでメインスレッドに戻す
                 await UniTask.SwitchToMainThread(ct);
 
