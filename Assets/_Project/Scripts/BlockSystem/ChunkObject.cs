@@ -23,6 +23,7 @@ namespace BlockSystem
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.SetVertices(meshData.Vertices);
             mesh.SetTriangles(meshData.Triangles, 0);
+            mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
 
             meshCollider.sharedMesh = mesh;

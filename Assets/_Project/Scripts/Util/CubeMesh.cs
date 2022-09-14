@@ -59,5 +59,39 @@ namespace Util
             20, 21, 22,
             22, 23, 20
         };
+
+        private static float xi = 1 / 6f;
+        public static readonly Vector2[] UVs = {
+            // right
+            new Vector2(0, 0),
+            new Vector2(0, 1),
+            new Vector2(xi, 1),
+            new Vector2(xi, 0),
+            // left
+            new Vector2(xi, 0),
+            new Vector2(xi, 1),
+            new Vector2(xi*2, 1),
+            new Vector2(xi*2, 0),
+            // top
+            new Vector2(xi*2, 0),
+            new Vector2(xi*2, 1),
+            new Vector2(xi*3, 1),
+            new Vector2(xi*3, 0),
+            // bottom
+            new Vector2(xi*3, 0),
+            new Vector2(xi*3, 1),
+            new Vector2(xi*4, 1),
+            new Vector2(xi*4, 0),
+            // forward
+            new Vector2(xi*4, 0),
+            new Vector2(xi*4, 1),
+            new Vector2(xi*5, 1),
+            new Vector2(xi*5, 0),
+            // back
+            new Vector2(xi*5, 0),
+            new Vector2(xi*5, 1),
+            new Vector2(1, 1),
+            new Vector2(1, 0)
+        };
     }
 }

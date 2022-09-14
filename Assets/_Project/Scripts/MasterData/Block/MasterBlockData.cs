@@ -21,11 +21,11 @@ namespace MasterData.Block
                 // Airの場合
                 if (id == 0)
                 {
-                    meshData = new MeshData(new Vector3[0], new int[0]);
+                    meshData = new MeshData(new Vector3[0], new int[0], new Vector2[0]);
                     return meshData;
                 }
 
-                meshData = new MeshData(CubeMesh.Vertices, CubeMesh.Triangles);
+                meshData = new MeshData(CubeMesh.Vertices, CubeMesh.Triangles, CubeMesh.UVs);
                 return meshData;
             }
         }

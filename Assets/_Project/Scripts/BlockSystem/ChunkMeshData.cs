@@ -9,12 +9,15 @@ namespace BlockSystem
     {
         public List<Vector3> Vertices;
         public List<int> Triangles;
+        public List<Vector2> UVs;
+
         public bool IsEmpty => Vertices.Count == 0;
 
-        public ChunkMeshData(int maxVerticesCount, int maxTrianglesCount)
+        public ChunkMeshData(int maxVerticesCount, int maxTrianglesCount, int maxUVsCount)
         {
             Vertices = new List<Vector3>(maxVerticesCount);
             Triangles = new List<int>(maxTrianglesCount);
+            UVs = new List<Vector2>(maxUVsCount);
         }
 
         public void AddBlock(BlockData blockData)
@@ -41,6 +44,8 @@ namespace BlockSystem
                 }
             }
 
+            UVs.AddRange(meshData.UVs);
+
             var blockCoordinate = blockData.BlockCoordinate.ToVector3();
             for (int i = 0; i < meshData.Vertices.Length; i++)
             {
@@ -52,6 +57,7 @@ namespace BlockSystem
         {
             Vertices.Clear();
             Triangles.Clear();
+            UVs.Clear();
         }
     }
 }
