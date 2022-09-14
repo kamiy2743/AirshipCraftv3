@@ -53,6 +53,7 @@ namespace BlockSystem
             if (!BlockCoordinate.IsValid(playerPosition))
             {
                 playerChunk = default;
+                Debug.Log("チャンク生成範囲外です");
                 return false;
             }
 
