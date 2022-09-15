@@ -22,7 +22,7 @@ namespace BlockSystem
 
         public void AddBlock(BlockData blockData)
         {
-            var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
+            var meshData = MasterBlockDataStore.GetData(blockData.ID.value).MeshData;
             if (meshData.Vertices.Length == 0) return;
 
             // triangleはインデックスのため、現在の頂点数を加算しないといけない

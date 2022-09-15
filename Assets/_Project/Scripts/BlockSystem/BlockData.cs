@@ -6,13 +6,13 @@ namespace BlockSystem
 {
     public struct BlockData
     {
-        public int ID { get; private set; }
-        public BlockCoordinate BlockCoordinate { get; private set; }
+        public readonly BlockID ID;
+        public readonly BlockCoordinate BlockCoordinate;
 
         private ContactSurfaces contactOtherBlockSurfaces;
         public bool IsContactAir => !contactOtherBlockSurfaces.IsFull;
 
-        public BlockData(int id, BlockCoordinate bc)
+        public BlockData(BlockID id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;

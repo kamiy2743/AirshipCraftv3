@@ -18,7 +18,7 @@ namespace BlockSystem
             inverseRelief = 1 / relief;
         }
 
-        public int GetBlockID(int x, int y, int z)
+        public BlockID GetBlockID(int x, int y, int z)
         {
             float xSample = (x + seedX) * inverseRelief;
             float zSample = (z + seedZ) * inverseRelief;
@@ -26,7 +26,7 @@ namespace BlockSystem
             noiseValue = (noiseValue + 1) * 0.5f;
 
             var resultY = World.WorldBlockSideY * noiseValue;
-            return (resultY <= y ? 0 : 1);
+            return new BlockID(resultY <= y ? 0 : 1);
         }
     }
 }
