@@ -27,8 +27,9 @@ namespace BlockSystem
 
             var resultY = (int)math.floor(World.WorldBlockSideY * noiseValue);
 
-            if (resultY == y) return new BlockID(2);
-            return new BlockID(resultY < y ? 0 : 1);
+            if (resultY == y) return BlockID.Grass;
+            if (resultY > y) return BlockID.Dirt;
+            return BlockID.Air;
         }
     }
 }

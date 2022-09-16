@@ -17,7 +17,7 @@ namespace BlockSystem
 
         private Texture2D GenerateTexture()
         {
-            var side = Mathf.CeilToInt(Mathf.Sqrt(BlockID.Max + 1));
+            var side = Mathf.CeilToInt(Mathf.Sqrt(BlockIDExt.MaxValue + 1));
             var texture = new Texture2D(blockTextureSize * side, blockTextureSize * side, TextureFormat.RGBA32, false);
 
             for (int y = 0; y < side; y++)
@@ -33,7 +33,7 @@ namespace BlockSystem
                     }
                     else
                     {
-                        blockTexture = MasterBlockDataStore.GetData(BlockID.EmptyID).Texture;
+                        blockTexture = MasterBlockDataStore.GetData((int)BlockID.Empty).Texture;
                     }
 
                     texture.SetPixels(

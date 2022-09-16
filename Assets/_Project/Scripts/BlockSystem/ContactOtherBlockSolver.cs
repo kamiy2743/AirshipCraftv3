@@ -38,7 +38,7 @@ namespace BlockSystem
             var lc = LocalCoordinate.FromBlockCoordinate(bc);
             var chunkData = _chunkDataStore.GetChunkData(cc);
             var blockData = chunkData.GetBlockData(lc);
-            return blockData.ID.IsAir;
+            return blockData.ID == BlockID.Air;
         }
 
         private bool IsContactOtherBlock(SurfaceNormal surface, BlockCoordinate bc)
