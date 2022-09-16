@@ -20,13 +20,15 @@ namespace BlockSystem
 
         public BlockID GetBlockID(int x, int y, int z)
         {
-            float xSample = (x + seedX) * inverseRelief;
-            float zSample = (z + seedZ) * inverseRelief;
+            var xSample = (x + seedX) * inverseRelief;
+            var zSample = (z + seedZ) * inverseRelief;
             var noiseValue = noise.snoise(new float2(xSample, zSample));
             noiseValue = (noiseValue + 1) * 0.5f;
 
-            var resultY = World.WorldBlockSideY * noiseValue;
-            return new BlockID(resultY <= y ? 0 : 1);
+            var resultY = (int)math.floor(World.WorldBlockSideY * noiseValue);
+
+            if (resultY == y) return new BlockID(2);
+            return new BlockID(resultY < y ? 0 : 1);
         }
     }
 }
