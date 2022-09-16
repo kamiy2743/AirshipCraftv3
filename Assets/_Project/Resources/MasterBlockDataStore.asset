@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: MasterBlockDataStore
   m_EditorClassIdentifier: 
   masterBlockDataList:
+  - id: -1
+    name: Empty
+    texture: {fileID: 2800000, guid: 832efa5bc6f75904898f5b21ad57c705, type: 3}
   - id: 0
     name: Air
+    texture: {fileID: 2800000, guid: 1ed4cde8e03fd6445adaac4059a29b0f, type: 3}
   - id: 1
     name: Dirt
+    texture: {fileID: 2800000, guid: a4d13ff20c5fe9a4fbaf2999c1c03af3, type: 3}

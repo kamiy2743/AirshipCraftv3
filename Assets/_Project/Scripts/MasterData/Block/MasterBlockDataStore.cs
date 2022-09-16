@@ -24,6 +24,7 @@ namespace MasterData.Block
 
         public static MasterBlockData GetData(int id)
         {
+            if (!masterBlockDataDictionary.ContainsKey(id)) return null;
             return masterBlockDataDictionary[id];
         }
     }

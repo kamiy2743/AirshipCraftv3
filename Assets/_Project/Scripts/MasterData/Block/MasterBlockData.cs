@@ -8,10 +8,12 @@ namespace MasterData.Block
     {
         [SerializeField] private int id;
         [SerializeField] private string name;
+        [SerializeField] private Texture2D texture;
         private MeshData meshData;
 
         public int ID => id;
         public string Name => name;
+        public Texture2D Texture => texture;
         public MeshData MeshData
         {
             get

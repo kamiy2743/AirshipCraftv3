@@ -396,6 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 694688719}
   - component: {fileID: 694688721}
+  - component: {fileID: 694688722}
   m_Layer: 0
   m_Name: BlockSystem
   m_TagString: Untagged
@@ -431,7 +432,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 920373323}
+  setUpBlockMaterial: {fileID: 694688722}
   chunkObjectPool: {fileID: 125769955}
+--- !u!114 &694688722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694688718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 902f99734bbb73040be4f851b93f05d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockMaterial: {fileID: 2100000, guid: 5be8c191c0023074c95b33d82bf40ef9, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

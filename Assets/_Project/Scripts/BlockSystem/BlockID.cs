@@ -6,8 +6,10 @@ namespace BlockSystem
 {
     public struct BlockID
     {
-        public readonly int value;
+        public const int Max = 255;
+        public const int EmptyID = -1;
 
+        public readonly int value;
         public bool IsAir => value == 0;
 
         public BlockID(int value)
@@ -19,7 +21,7 @@ namespace BlockSystem
 
         private static bool IsValid(int value)
         {
-            if (value < 0 || value >= 256) return false;
+            if (value < 0 || value > Max) return false;
             return true;
         }
     }
