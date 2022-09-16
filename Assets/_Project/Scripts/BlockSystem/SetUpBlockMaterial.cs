@@ -45,6 +45,7 @@ namespace BlockSystem
                 }
             }
 
+            texture.Apply();
             return texture;
         }
     }
