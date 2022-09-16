@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using UnityEditor;
+using System.IO;
 
 namespace MasterData.Block
 {
@@ -26,6 +27,36 @@ namespace MasterData.Block
         {
             if (!masterBlockDataDictionary.ContainsKey(id)) return null;
             return masterBlockDataDictionary[id];
+        }
+
+        private const string BlockIDScriptPath = "Assets/_Project/Scripts/BlockSystem/BlockID.cs";
+        public void GenerateBlockIDScript()
+        {
+            var code = "namespace BlockSystem { public enum BlockID { ";
+
+            foreach (var masterBlockData in masterBlockDataList)
+            {
+                code += $"{masterBlockData.Name} = {masterBlockData.ID},";
+            }
+
+            code += "}}";
+            File.WriteAllText(BlockIDScriptPath, code);
+            AssetDatabase.Refresh();
+        }
+    }
+
+    [CustomEditor(typeof(MasterBlockDataStore))]
+    public class MasterBlockDataStoreEditorExt : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if (GUILayout.Button("Apply"))
+            {
+                var s = target as MasterBlockDataStore;
+                s.GenerateBlockIDScript();
+            }
         }
     }
 }
