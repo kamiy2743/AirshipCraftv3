@@ -1,1 +1,0 @@
-namespace BlockSystem { public enum BlockID { Empty = -1,Air = 0,Dirt = 1,Grass = 2,AA = 3,}}

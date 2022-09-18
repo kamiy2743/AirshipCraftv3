@@ -9,6 +9,7 @@ namespace MasterData.Block
     [CreateAssetMenu(fileName = "MasterBlockDataStore", menuName = "ScriptableObjects/MasterBlockDataStore")]
     public class MasterBlockDataStore : ScriptableObject
     {
+        [SerializeField] private Material blockMaterial;
         [SerializeField] private List<MasterBlockData> masterBlockDataList;
 
         private static Dictionary<int, MasterBlockData> masterBlockDataDictionary = new Dictionary<int, MasterBlockData>();
@@ -16,27 +17,38 @@ namespace MasterData.Block
         public static void InitialLoad()
         {
             var entity = Resources.Load<MasterBlockDataStore>(nameof(MasterBlockDataStore));
+            var blockCount = entity.masterBlockDataList.Count;
 
-            foreach (var masterBlockData in entity.masterBlockDataList)
+            for (int i = 0; i < entity.masterBlockDataList.Count; i++)
             {
-                masterBlockDataDictionary.Add(masterBlockData.ID, masterBlockData);
+                var masterBlockData = entity.masterBlockDataList[i];
+                masterBlockData.Init(i, blockCount);
+                masterBlockDataDictionary.Add((int)masterBlockData.ID, masterBlockData);
             }
+
+            // マテリアルにテクスチャをセット
+            new BlockMaterialInitializer(entity.blockMaterial, blockCount);
         }
 
-        public static MasterBlockData GetData(int id)
+        public static MasterBlockData GetData(BlockID blockID)
         {
-            if (!masterBlockDataDictionary.ContainsKey(id)) return null;
-            return masterBlockDataDictionary[id];
+            return GetData((int)blockID);
         }
 
-        private const string BlockIDScriptPath = "Assets/_Project/Scripts/BlockSystem/BlockID.cs";
+        internal static MasterBlockData GetData(int blockID)
+        {
+            if (!masterBlockDataDictionary.ContainsKey(blockID)) return null;
+            return masterBlockDataDictionary[blockID];
+        }
+
+        private const string BlockIDScriptPath = "Assets/_Project/Scripts/MasterData/Block/BlockID.cs";
         public void GenerateBlockIDScript()
         {
-            var code = "namespace BlockSystem { public enum BlockID { ";
+            var code = "namespace MasterData.Block { public enum BlockID { ";
 
             foreach (var masterBlockData in masterBlockDataList)
             {
-                code += $"{masterBlockData.Name} = {masterBlockData.ID},";
+                code += $"{masterBlockData.Name},";
             }
 
             code += "}}";

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c97fe46292bcf54384cbfcdf2e910d2, type: 3}
   m_Name: MasterBlockDataStore
   m_EditorClassIdentifier: 
+  blockMaterial: {fileID: 2100000, guid: 5be8c191c0023074c95b33d82bf40ef9, type: 2}
   masterBlockDataList:
   - id: -1
     name: Empty

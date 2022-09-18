@@ -11,7 +11,6 @@ namespace BlockSystem
     public class BlockSystemInitializer : MonoBehaviour
     {
         [SerializeField] private Transform player;
-        [SerializeField] private SetUpBlockMaterial setUpBlockMaterial;
         [SerializeField] private ChunkObjectPool chunkObjectPool;
 
         private void Start()
@@ -22,7 +21,6 @@ namespace BlockSystem
             var chunkDataStore = new ChunkDataStore(mapGenerator);
             var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
-            setUpBlockMaterial.StartInitial();
             chunkObjectPool.StartInitial();
 
             new UpdateChunkSystem(player, chunkDataStore, chunkObjectPool, chunkMeshCreator);

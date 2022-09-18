@@ -13,9 +13,6 @@ namespace BlockSystem
 
         public bool IsEmpty => Vertices.Count == 0;
 
-        private static readonly float uvSide = Mathf.CeilToInt(Mathf.Sqrt(BlockIDExt.MaxValue + 1));
-        private static readonly float uvUnit = 1 / uvSide;
-
         public ChunkMeshData(int maxVerticesCount, int maxTrianglesCount, int maxUVsCount)
         {
             Vertices = new List<Vector3>(maxVerticesCount);
@@ -27,7 +24,7 @@ namespace BlockSystem
         {
             if (blockData.ID == BlockID.Air) return;
 
-            var meshData = MasterBlockDataStore.GetData((int)blockData.ID).MeshData;
+            var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
 
             // triangleはインデックスのため、現在の頂点数を加算しないといけない
             var vc = Vertices.Count;
@@ -48,18 +45,7 @@ namespace BlockSystem
                 }
             }
 
-
-            // CubeMeshじゃないと動かない
-            // 6面に同じuvを設定
-            var uvX = (int)((int)blockData.ID % uvSide);
-            var uvY = (int)((int)blockData.ID / uvSide);
-            for (int i = 0; i < 6; i++)
-            {
-                UVs.Add(new Vector2(uvX, uvY) * uvUnit);
-                UVs.Add(new Vector2(uvX, uvY + 1) * uvUnit);
-                UVs.Add(new Vector2(uvX + 1, uvY + 1) * uvUnit);
-                UVs.Add(new Vector2(uvX + 1, uvY) * uvUnit);
-            }
+            UVs.AddRange(meshData.UVs);
 
             var blockCoordinate = blockData.BlockCoordinate.ToVector3();
             for (int i = 0; i < meshData.Vertices.Length; i++)

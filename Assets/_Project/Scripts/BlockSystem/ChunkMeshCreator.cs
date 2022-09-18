@@ -23,7 +23,7 @@ namespace BlockSystem
 
                 foreach (var block in blocksInChunk)
                 {
-                    var blockMeshData = MasterBlockDataStore.GetData((int)block.ID).MeshData;
+                    var blockMeshData = MasterBlockDataStore.GetData(block.ID).MeshData;
                     maxVerticesCount += blockMeshData.Vertices.Length;
                     maxTrianglesCount += blockMeshData.Triangles.Length;
                     maxUVsCount += blockMeshData.UVs.Length;
