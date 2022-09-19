@@ -18,7 +18,7 @@ namespace Util
     public static class SurfaceNormalExt
     {
         private static List<SurfaceNormal> _list;
-        public static IReadOnlyList<SurfaceNormal> List
+        public static List<SurfaceNormal> List
         {
             get
             {
