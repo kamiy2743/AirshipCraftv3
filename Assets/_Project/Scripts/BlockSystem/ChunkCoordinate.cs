@@ -63,14 +63,14 @@ namespace BlockSystem
             return HashCode.Combine(this.x, this.y, this.z);
         }
 
-        public static bool operator ==(ChunkCoordinate cc1, ChunkCoordinate cc2)
+        public static bool operator ==(ChunkCoordinate left, ChunkCoordinate right)
         {
-            return cc1.Equals(cc2);
+            return left.Equals(right);
         }
 
-        public static bool operator !=(ChunkCoordinate cc1, ChunkCoordinate cc2)
+        public static bool operator !=(ChunkCoordinate left, ChunkCoordinate right)
         {
-            return !(cc1 == cc2);
+            return !(left == right);
         }
     }
 }

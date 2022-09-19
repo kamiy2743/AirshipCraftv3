@@ -579,8 +579,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 920373326}
   moveSpeed: 3.5
-  jumpForce: 10
-  gravity: 9.8
+  jumpForce: 9
+  gravity: 25
   debugMoveSpeed: 10
 --- !u!114 &920373325
 MonoBehaviour:

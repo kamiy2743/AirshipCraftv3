@@ -34,5 +34,15 @@ namespace Input
         {
             return InputActions.Player.Jump.triggered;
         }
+
+        public static bool PlaceBlock()
+        {
+            return InputActions.Player.PlaceBlock.ReadValue<float>() > 0;
+        }
+
+        public static bool BreakBlock()
+        {
+            return InputActions.Player.BreakBlock.ReadValue<float>() > 0;
+        }
     }
 }

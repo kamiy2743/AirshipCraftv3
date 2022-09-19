@@ -1,11 +1,12 @@
 using UnityEngine;
+using System;
 
 namespace BlockSystem
 {
     /// <summary>
     /// ワールド内のブロックの座標
     /// </summary>
-    public struct BlockCoordinate
+    public struct BlockCoordinate : IEquatable<BlockCoordinate>
     {
         internal readonly int x;
         internal readonly int y;
@@ -50,6 +51,34 @@ namespace BlockSystem
         public override string ToString()
         {
             return $"Block({x}, {y}, {z})";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is BlockCoordinate data && Equals(data);
+        }
+
+        public bool Equals(BlockCoordinate other)
+        {
+            if (this.x != other.x) return false;
+            if (this.y != other.y) return false;
+            if (this.z != other.z) return false;
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.x, this.y, this.z);
+        }
+
+        public static bool operator ==(BlockCoordinate left, BlockCoordinate right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(BlockCoordinate left, BlockCoordinate right)
+        {
+            return !(left == right);
         }
     }
 }

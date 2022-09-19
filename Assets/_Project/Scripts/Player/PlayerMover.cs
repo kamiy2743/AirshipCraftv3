@@ -16,7 +16,7 @@ namespace Player
         [Space(20)]
         [SerializeField] private float debugMoveSpeed;
 
-        private Rigidbody rigidbody;
+        new private Rigidbody rigidbody;
 
         private void Awake()
         {
@@ -36,7 +36,6 @@ namespace Player
 
             if (InputProvider.Jump())
             {
-                Debug.Log("jump");
                 rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
 

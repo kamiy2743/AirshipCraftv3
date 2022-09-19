@@ -73,6 +73,24 @@ namespace Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlaceBlock"",
+                    ""type"": ""Button"",
+                    ""id"": ""1b30bbe9-32f7-45c0-a48f-0e2c6756189e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BreakBlock"",
+                    ""type"": ""Button"",
+                    ""id"": ""5280ed39-6963-43d9-8bf9-5ac8d53be249"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -381,6 +399,28 @@ namespace Input
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8da0f22c-692f-4aac-a9ed-cafa60d1eec9"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""PlaceBlock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b944c2e6-fde6-491c-9f87-c77ef20c8523"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""BreakBlock"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -973,6 +1013,8 @@ namespace Input
             m_Player_DebugMoveHorizontal = m_Player.FindAction("DebugMoveHorizontal", throwIfNotFound: true);
             m_Player_DebugMoveVertical = m_Player.FindAction("DebugMoveVertical", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+            m_Player_PlaceBlock = m_Player.FindAction("PlaceBlock", throwIfNotFound: true);
+            m_Player_BreakBlock = m_Player.FindAction("BreakBlock", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1049,6 +1091,8 @@ namespace Input
         private readonly InputAction m_Player_DebugMoveHorizontal;
         private readonly InputAction m_Player_DebugMoveVertical;
         private readonly InputAction m_Player_Jump;
+        private readonly InputAction m_Player_PlaceBlock;
+        private readonly InputAction m_Player_BreakBlock;
         public struct PlayerActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1058,6 +1102,8 @@ namespace Input
             public InputAction @DebugMoveHorizontal => m_Wrapper.m_Player_DebugMoveHorizontal;
             public InputAction @DebugMoveVertical => m_Wrapper.m_Player_DebugMoveVertical;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
+            public InputAction @PlaceBlock => m_Wrapper.m_Player_PlaceBlock;
+            public InputAction @BreakBlock => m_Wrapper.m_Player_BreakBlock;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1082,6 +1128,12 @@ namespace Input
                     @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                     @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                     @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                    @PlaceBlock.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPlaceBlock;
+                    @PlaceBlock.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPlaceBlock;
+                    @PlaceBlock.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPlaceBlock;
+                    @BreakBlock.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreakBlock;
+                    @BreakBlock.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreakBlock;
+                    @BreakBlock.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreakBlock;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1101,6 +1153,12 @@ namespace Input
                     @Jump.started += instance.OnJump;
                     @Jump.performed += instance.OnJump;
                     @Jump.canceled += instance.OnJump;
+                    @PlaceBlock.started += instance.OnPlaceBlock;
+                    @PlaceBlock.performed += instance.OnPlaceBlock;
+                    @PlaceBlock.canceled += instance.OnPlaceBlock;
+                    @BreakBlock.started += instance.OnBreakBlock;
+                    @BreakBlock.performed += instance.OnBreakBlock;
+                    @BreakBlock.canceled += instance.OnBreakBlock;
                 }
             }
         }
@@ -1262,6 +1320,8 @@ namespace Input
             void OnDebugMoveHorizontal(InputAction.CallbackContext context);
             void OnDebugMoveVertical(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
+            void OnPlaceBlock(InputAction.CallbackContext context);
+            void OnBreakBlock(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
