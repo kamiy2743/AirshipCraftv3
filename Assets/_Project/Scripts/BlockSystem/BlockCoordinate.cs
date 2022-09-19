@@ -5,7 +5,7 @@ namespace BlockSystem
     /// <summary>
     /// ワールド内のブロックの座標
     /// </summary>
-    internal struct BlockCoordinate
+    public struct BlockCoordinate
     {
         internal readonly int x;
         internal readonly int y;
@@ -42,9 +42,14 @@ namespace BlockSystem
             );
         }
 
-        internal Vector3 ToVector3()
+        public Vector3 ToVector3()
         {
             return new Vector3(x, y, z);
+        }
+
+        public override string ToString()
+        {
+            return $"Block({x}, {y}, {z})";
         }
     }
 }

@@ -15,11 +15,12 @@ namespace BlockSystem
         private ConcurrentDictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new ConcurrentDictionary<ChunkCoordinate, ChunkObject>();
         private ConcurrentBag<ChunkObject> availableChunkObjects = new ConcurrentBag<ChunkObject>();
 
-        internal void StartInitial()
+        internal void StartInitial(ChunkDataStore chunkDataStore)
         {
             for (int i = 0; i < World.LoadChunkCount; i++)
             {
                 var chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
+                chunkObject.Init(chunkDataStore);
                 chunkObject.gameObject.SetActive(false);
                 availableChunkObjects.Add(chunkObject);
             }

@@ -3,10 +3,10 @@ using MasterData.Block;
 
 namespace BlockSystem
 {
-    internal struct BlockData
+    public struct BlockData
     {
-        internal readonly BlockID ID;
-        internal readonly BlockCoordinate BlockCoordinate;
+        public readonly BlockID ID;
+        public readonly BlockCoordinate BlockCoordinate;
 
         private SurfaceNormal contactOtherBlockSurfaces;
         internal bool IsContactAir => !contactOtherBlockSurfaces.IsFull();

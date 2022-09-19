@@ -2,11 +2,18 @@ using UnityEngine;
 
 namespace BlockSystem
 {
-    public class ChunkObject : MonoBehaviour
+    internal class ChunkObject : MonoBehaviour, IBlockDataAccessor
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private MeshCollider meshCollider;
+
+        private ChunkDataStore _chunkDataStore;
+
+        internal void Init(ChunkDataStore chunkDataStore)
+        {
+            _chunkDataStore = chunkDataStore;
+        }
 
         internal void SetMesh(ChunkMeshData meshData)
         {
@@ -28,6 +35,16 @@ namespace BlockSystem
 
             meshCollider.sharedMesh = mesh;
             meshCollider.enabled = true;
+        }
+
+        public BlockData GetBlockData(Vector3 position)
+        {
+            var bc = new BlockCoordinate(position);
+            var cc = ChunkCoordinate.FromBlockCoordinate(bc);
+            var lc = LocalCoordinate.FromBlockCoordinate(bc);
+            var chunkData = _chunkDataStore.GetChunkData(cc);
+
+            return chunkData.GetBlockData(lc);
         }
     }
 }

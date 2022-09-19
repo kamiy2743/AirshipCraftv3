@@ -21,7 +21,7 @@ namespace BlockSystem
             var chunkDataStore = new ChunkDataStore(mapGenerator);
             var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
-            chunkObjectPool.StartInitial();
+            chunkObjectPool.StartInitial(chunkDataStore);
 
             new UpdateChunkSystem(player, chunkDataStore, chunkObjectPool, chunkMeshCreator);
         }
