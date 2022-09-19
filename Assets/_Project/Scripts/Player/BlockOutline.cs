@@ -8,7 +8,12 @@ namespace Player
 {
     internal class BlockOutline : MonoBehaviour
     {
-        [SerializeField] private MeshFilter meshFilter;
+        private MeshFilter meshFilter;
+
+        private void Awake()
+        {
+            meshFilter = GetComponent<MeshFilter>();
+        }
 
         internal void SetMesh(MeshData meshData)
         {
