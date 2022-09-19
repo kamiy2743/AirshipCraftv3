@@ -8,17 +8,17 @@ namespace BlockSystem
         public readonly BlockID ID;
         public readonly BlockCoordinate BlockCoordinate;
 
-        private ContactSurfaces contactOtherBlockSurfaces;
-        public bool IsContactAir => !contactOtherBlockSurfaces.IsFull;
+        private SurfaceNormal contactOtherBlockSurfaces;
+        public bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
 
         public BlockData(BlockID id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;
-            contactOtherBlockSurfaces = new ContactSurfaces();
+            contactOtherBlockSurfaces = SurfaceNormal.None;
         }
 
-        public void SetContactOtherBlockSurfaces(ContactSurfaces surfaces)
+        public void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
             contactOtherBlockSurfaces = surfaces;
         }

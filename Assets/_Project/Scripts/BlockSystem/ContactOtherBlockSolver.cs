@@ -15,15 +15,15 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
         }
 
-        public ContactSurfaces GetContactOtherBlockSurfaces(BlockCoordinate bc)
+        public SurfaceNormal GetContactOtherBlockSurfaces(BlockCoordinate bc)
         {
-            var surfaces = new ContactSurfaces();
+            var surfaces = SurfaceNormal.None;
 
             foreach (var surface in SurfaceNormalExt.List)
             {
                 if (IsContactOtherBlock(surface, bc))
                 {
-                    surfaces.Add(surface);
+                    surfaces = surfaces.Add(surface);
                 }
             }
 

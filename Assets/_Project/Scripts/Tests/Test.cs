@@ -89,51 +89,6 @@ public class Test
     }
 
     [Test]
-    public void EnumGetValuesの速度計測()
-    {
-        var sw1 = new System.Diagnostics.Stopwatch();
-        sw1.Start();
-        foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
-        {
-            // Debug.Log(surface);
-        }
-        sw1.Stop();
-        Debug.Log(sw1.Elapsed);
-
-        var sw2 = new System.Diagnostics.Stopwatch();
-        sw2.Start();
-        foreach (var surface in SurfaceNormalExt.List)
-        {
-            // Debug.Log(surface);
-        }
-        sw2.Stop();
-        Debug.Log(sw2.Elapsed);
-    }
-
-    [Test]
-    public void ContactSurfacesの動作確認()
-    {
-        var surfaces = new ContactSurfaces();
-
-        surfaces.Add(SurfaceNormal.Right);
-        surfaces.Add(SurfaceNormal.Left);
-        // surfaces.Add(SurfaceNormal.Top);
-        surfaces.Add(SurfaceNormal.Bottom);
-        surfaces.Add(SurfaceNormal.Forward);
-        surfaces.Add(SurfaceNormal.Back);
-
-        foreach (var surface in SurfaceNormalExt.List)
-        {
-            if (surfaces.Contains(surface))
-            {
-                Debug.Log(surface);
-            }
-        }
-
-        Debug.Log(Convert.ToString(surfaces.value, 2));
-    }
-
-    [Test]
     public void IndexからLocalCoordinateへの変換()
     {
         for (int index = 0; index < World.BlockCountInChunk; index++)

@@ -33,7 +33,7 @@ namespace BlockSystem
             for (int i = 0; i < 6; i++)
             {
                 // 他のブロックに面していれば描画しない
-                if (blockData.IsContactOtherBlock((SurfaceNormal)i))
+                if (blockData.IsContactOtherBlock(SurfaceNormalExt.FromIndex(i)))
                 {
                     continue;
                 }
