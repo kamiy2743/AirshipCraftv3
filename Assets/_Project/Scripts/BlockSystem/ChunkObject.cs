@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BlockSystem
 {
-    internal class ChunkObject : MonoBehaviour
+    public class ChunkObject : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;

@@ -11,7 +11,7 @@ namespace Player
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private float moveSpeed;
 
-        void Update()
+        private void Update()
         {
             transform.position += playerCamera.HorizontalRotation * (InputProvider.DebugMove() * moveSpeed * Time.deltaTime);
         }
