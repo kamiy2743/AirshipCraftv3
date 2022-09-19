@@ -4,16 +4,16 @@ using MasterData.Block;
 
 namespace BlockSystem
 {
-    public class ChunkMeshCreator
+    internal class ChunkMeshCreator
     {
         private ContactOtherBlockSolver _contactOtherBlockSolver;
 
-        public ChunkMeshCreator(ContactOtherBlockSolver contactOtherBlockSolver)
+        internal ChunkMeshCreator(ContactOtherBlockSolver contactOtherBlockSolver)
         {
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
-        public ChunkMeshData CreateMeshData(IReadOnlyCollection<BlockData> blocksInChunk, ChunkMeshData meshData = null)
+        internal ChunkMeshData CreateMeshData(IReadOnlyCollection<BlockData> blocksInChunk, ChunkMeshData meshData = null)
         {
             if (meshData == null)
             {

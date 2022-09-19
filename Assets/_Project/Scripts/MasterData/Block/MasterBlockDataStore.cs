@@ -35,14 +35,14 @@ namespace MasterData.Block
             return GetData((int)blockID);
         }
 
-        internal static MasterBlockData GetData(int blockID)
+        public static MasterBlockData GetData(int blockID)
         {
             if (!masterBlockDataDictionary.ContainsKey(blockID)) return null;
             return masterBlockDataDictionary[blockID];
         }
 
         private const string BlockIDScriptPath = "Assets/_Project/Scripts/MasterData/Block/BlockID.cs";
-        public void GenerateBlockIDScript()
+        internal void GenerateBlockIDScript()
         {
             var code = "namespace MasterData.Block { public enum BlockID { ";
 
@@ -58,7 +58,7 @@ namespace MasterData.Block
     }
 
     [CustomEditor(typeof(MasterBlockDataStore))]
-    public class MasterBlockDataStoreEditorExt : Editor
+    internal class MasterBlockDataStoreEditorExt : Editor
     {
         public override void OnInspectorGUI()
         {

@@ -5,14 +5,14 @@ namespace BlockSystem
     /// <summary>
     /// ワールド内のブロックの座標
     /// </summary>
-    public struct BlockCoordinate
+    internal struct BlockCoordinate
     {
-        public readonly int x;
-        public readonly int y;
-        public readonly int z;
+        internal readonly int x;
+        internal readonly int y;
+        internal readonly int z;
 
-        public BlockCoordinate(Vector3 position) : this((int)position.x, (int)position.y, (int)position.z) { }
-        public BlockCoordinate(int x, int y, int z)
+        internal BlockCoordinate(Vector3 position) : this((int)position.x, (int)position.y, (int)position.z) { }
+        internal BlockCoordinate(int x, int y, int z)
         {
             if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
 
@@ -21,11 +21,11 @@ namespace BlockSystem
             this.z = z;
         }
 
-        public static bool IsValid(Vector3 position)
+        internal static bool IsValid(Vector3 position)
         {
             return IsValid((int)position.x, (int)position.y, (int)position.z);
         }
-        public static bool IsValid(int x, int y, int z)
+        internal static bool IsValid(int x, int y, int z)
         {
             if (x < 0 || x >= World.WorldBlockSideXZ) return false;
             if (y < 0 || y >= World.WorldBlockSideY) return false;
@@ -33,7 +33,7 @@ namespace BlockSystem
             return true;
         }
 
-        public static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
+        internal static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
         {
             return new BlockCoordinate(
                 cc.x * World.ChunkBlockSide + lc.x,
@@ -42,7 +42,7 @@ namespace BlockSystem
             );
         }
 
-        public Vector3 ToVector3()
+        internal Vector3 ToVector3()
         {
             return new Vector3(x, y, z);
         }

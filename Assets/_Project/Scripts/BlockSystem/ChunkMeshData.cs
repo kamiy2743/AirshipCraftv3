@@ -5,22 +5,22 @@ using Util;
 
 namespace BlockSystem
 {
-    public class ChunkMeshData
+    internal class ChunkMeshData
     {
-        public List<Vector3> Vertices;
-        public List<int> Triangles;
-        public List<Vector2> UVs;
+        internal List<Vector3> Vertices;
+        internal List<int> Triangles;
+        internal List<Vector2> UVs;
 
-        public bool IsEmpty => Vertices.Count == 0;
+        internal bool IsEmpty => Vertices.Count == 0;
 
-        public ChunkMeshData(int maxVerticesCount, int maxTrianglesCount, int maxUVsCount)
+        internal ChunkMeshData(int maxVerticesCount, int maxTrianglesCount, int maxUVsCount)
         {
             Vertices = new List<Vector3>(maxVerticesCount);
             Triangles = new List<int>(maxTrianglesCount);
             UVs = new List<Vector2>(maxUVsCount);
         }
 
-        public void AddBlock(BlockData blockData)
+        internal void AddBlock(BlockData blockData)
         {
             if (blockData.ID == BlockID.Air) return;
 
@@ -54,7 +54,7 @@ namespace BlockSystem
             }
         }
 
-        public void Clear()
+        internal void Clear()
         {
             Vertices.Clear();
             Triangles.Clear();

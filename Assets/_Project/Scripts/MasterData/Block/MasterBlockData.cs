@@ -15,7 +15,7 @@ namespace MasterData.Block
         public Texture2D Texture => texture;
         public MeshData MeshData { get; private set; }
 
-        public void Init(int index, int blockCount)
+        internal void Init(int index, int blockCount)
         {
             ID = (BlockID)System.Enum.Parse(typeof(BlockID), name);
 

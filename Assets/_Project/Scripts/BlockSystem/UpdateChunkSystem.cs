@@ -11,7 +11,7 @@ namespace BlockSystem
     /// <summary>
     /// プレイヤーの周りのチャンクオブジェクトを作成、破棄する
     /// </summary>
-    public class UpdateChunkSystem
+    internal class UpdateChunkSystem
     {
         private CancellationTokenSource createChunkTaskCancellationTokenSource;
 

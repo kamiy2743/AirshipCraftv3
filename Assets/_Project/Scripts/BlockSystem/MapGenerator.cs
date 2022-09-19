@@ -4,14 +4,14 @@ using MasterData.Block;
 
 namespace BlockSystem
 {
-    public struct MapGenerator
+    internal struct MapGenerator
     {
         private Random random;
         private float seedX;
         private float seedZ;
         private float inverseRelief;
 
-        public MapGenerator(uint seed, float relief)
+        internal MapGenerator(uint seed, float relief)
         {
             random = new Random(seed);
             seedX = random.NextFloat(0, 1) * 100f;
@@ -19,7 +19,7 @@ namespace BlockSystem
             inverseRelief = 1 / relief;
         }
 
-        public BlockID GetBlockID(int x, int y, int z)
+        internal BlockID GetBlockID(int x, int y, int z)
         {
             var xSample = (x + seedX) * inverseRelief;
             var zSample = (z + seedZ) * inverseRelief;

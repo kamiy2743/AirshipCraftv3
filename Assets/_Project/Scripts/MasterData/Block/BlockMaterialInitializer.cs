@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace MasterData.Block
 {
-    public class BlockMaterialInitializer
+    internal class BlockMaterialInitializer
     {
-        public BlockMaterialInitializer(Material blockMaterial, int blockCount)
+        internal BlockMaterialInitializer(Material blockMaterial, int blockCount)
         {
             blockMaterial.mainTexture = GenerateTexture(blockCount);
         }

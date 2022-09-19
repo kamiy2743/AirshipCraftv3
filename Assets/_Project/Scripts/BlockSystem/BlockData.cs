@@ -3,27 +3,27 @@ using MasterData.Block;
 
 namespace BlockSystem
 {
-    public struct BlockData
+    internal struct BlockData
     {
-        public readonly BlockID ID;
-        public readonly BlockCoordinate BlockCoordinate;
+        internal readonly BlockID ID;
+        internal readonly BlockCoordinate BlockCoordinate;
 
         private SurfaceNormal contactOtherBlockSurfaces;
-        public bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
+        internal bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
 
-        public BlockData(BlockID id, BlockCoordinate bc)
+        internal BlockData(BlockID id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;
             contactOtherBlockSurfaces = SurfaceNormal.None;
         }
 
-        public void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
+        internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
             contactOtherBlockSurfaces = surfaces;
         }
 
-        public bool IsContactOtherBlock(SurfaceNormal surface)
+        internal bool IsContactOtherBlock(SurfaceNormal surface)
         {
             return contactOtherBlockSurfaces.Contains(surface);
         }

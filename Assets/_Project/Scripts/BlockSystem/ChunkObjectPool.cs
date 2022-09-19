@@ -7,11 +7,11 @@ namespace BlockSystem
     /// <summary>
     /// チャンクオブジェクトを管理
     /// </summary>
-    public class ChunkObjectPool : MonoBehaviour
+    internal class ChunkObjectPool : MonoBehaviour
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
-        public IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
+        internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private ConcurrentDictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new ConcurrentDictionary<ChunkCoordinate, ChunkObject>();
         private ConcurrentBag<ChunkObject> availableChunkObjects = new ConcurrentBag<ChunkObject>();
 
@@ -29,7 +29,7 @@ namespace BlockSystem
         /// オブジェクトプールから取得
         /// メインスレッドのみ
         /// </summary>
-        public ChunkObject GetChunkObject(ChunkCoordinate cc)
+        internal ChunkObject GetChunkObject(ChunkCoordinate cc)
         {
             if (availableChunkObjects.Count == 0)
             {
@@ -55,7 +55,7 @@ namespace BlockSystem
         /// オブジェクトプールに投げる
         /// メインスレッドのみ
         /// </summary>
-        public void ReleaseChunkObject(ChunkCoordinate cc)
+        internal void ReleaseChunkObject(ChunkCoordinate cc)
         {
             if (!_chunkObjects.TryRemove(cc, out ChunkObject chunkObject))
             {

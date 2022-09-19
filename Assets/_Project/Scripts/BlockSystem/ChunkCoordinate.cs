@@ -6,13 +6,13 @@ namespace BlockSystem
     /// ワールド内のチャンクの座標
     /// 座標というよりはインデックスに近い
     /// </summary>
-    public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
+    internal struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
-        public readonly int x;
-        public readonly int y;
-        public readonly int z;
+        internal readonly int x;
+        internal readonly int y;
+        internal readonly int z;
 
-        public ChunkCoordinate(int x, int y, int z)
+        internal ChunkCoordinate(int x, int y, int z)
         {
             if (!IsValid(x, y, y)) throw new System.Exception($"chunk({x}, {y}, {z}) is invalid");
 
@@ -21,7 +21,7 @@ namespace BlockSystem
             this.z = z;
         }
 
-        public static bool IsValid(int x, int y, int z)
+        internal static bool IsValid(int x, int y, int z)
         {
             if (x < 0 || x >= World.WorldChunkSideXZ) return false;
             if (y < 0 || y >= World.WorldChunkSideY) return false;
@@ -30,7 +30,7 @@ namespace BlockSystem
         }
 
         private const float InverseBlockSide = 1f / World.ChunkBlockSide;
-        public static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        internal static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new ChunkCoordinate(
                 // BlockSideで割り算

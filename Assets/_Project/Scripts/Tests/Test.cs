@@ -9,33 +9,10 @@ using Util;
 using MasterData.Block;
 using System;
 
-public class Test
+internal class Test
 {
-    [UnityTest]
-    public IEnumerator チャンク生成のシステム部分の実行速度計測()
-    {
-        MasterBlockDataStore.InitialLoad();
-
-        var mapGenerator = new MapGenerator(1024, 80);
-        var chunkDataStore = new ChunkDataStore(mapGenerator);
-        var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
-        var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
-
-        for (int x = 0; x < 4; x++)
-        {
-            for (int y = 0; y < 4; y++)
-            {
-                for (int z = 0; z < 4; z++)
-                {
-                    // chunkMeshCreator.CreateMesh(chunkDataStore.GetChunkData(new ChunkCoordinate(x, y, z)));
-                    yield return UniTask.DelayFrame(1).ToCoroutine();
-                }
-            }
-        }
-    }
-
     [Test]
-    public void 割り算速度計測()
+    internal void 割り算速度計測()
     {
         int a = 164;
         int b = 16;
@@ -61,7 +38,7 @@ public class Test
     }
 
     [Test]
-    public void mod速度計測()
+    internal void mod速度計測()
     {
         int a = 164;
         int b = 16;
@@ -86,19 +63,5 @@ public class Test
         sw3.Stop();
         Debug.Log($"a - (int)(a * c): " + sw3.Elapsed);
         Debug.Log(a - ((int)(a * c) * b));
-    }
-
-    [Test]
-    public void IndexからLocalCoordinateへの変換()
-    {
-        for (int index = 0; index < World.BlockCountInChunk; index++)
-        {
-            var localY = index / (World.ChunkBlockSide * World.ChunkBlockSide);
-            var xz = index - (localY * (World.ChunkBlockSide * World.ChunkBlockSide));
-            var localX = xz % World.ChunkBlockSide;
-            var localZ = xz / World.ChunkBlockSide;
-            var localCoordinate = new Vector3Int(localX, localY, localZ);
-            Debug.Log(localCoordinate);
-        }
     }
 }

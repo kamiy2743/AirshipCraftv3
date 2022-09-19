@@ -6,7 +6,7 @@ using Cinemachine;
 
 namespace Player
 {
-    public class PlayerMover : MonoBehaviour
+    internal class PlayerMover : MonoBehaviour
     {
         [SerializeField] private CinemachineVirtualCamera playerCamera;
         [SerializeField] private float moveSpeed;

@@ -6,16 +6,16 @@ namespace BlockSystem
     /// <summary>
     /// 他のブロックと接している面を取得する
     /// </summary>
-    public class ContactOtherBlockSolver
+    internal class ContactOtherBlockSolver
     {
         private ChunkDataStore _chunkDataStore;
 
-        public ContactOtherBlockSolver(ChunkDataStore chunkDataStore)
+        internal ContactOtherBlockSolver(ChunkDataStore chunkDataStore)
         {
             _chunkDataStore = chunkDataStore;
         }
 
-        public SurfaceNormal GetContactOtherBlockSurfaces(BlockCoordinate bc)
+        internal SurfaceNormal GetContactOtherBlockSurfaces(BlockCoordinate bc)
         {
             var surfaces = SurfaceNormal.None;
 

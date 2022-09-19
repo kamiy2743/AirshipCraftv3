@@ -7,16 +7,16 @@ using MasterData.Block;
 
 namespace BlockSystem
 {
-    public class ChunkData
+    internal class ChunkData
     {
-        public ChunkCoordinate ChunkCoordinate { get; private set; }
+        internal ChunkCoordinate ChunkCoordinate { get; private set; }
 
-        public IReadOnlyCollection<BlockData> Blocks => _blocks;
+        internal IReadOnlyCollection<BlockData> Blocks => _blocks;
         private BlockData[] _blocks;
 
-        public ChunkMeshData ChunkMeshData { get; private set; }
+        internal ChunkMeshData ChunkMeshData { get; private set; }
 
-        public ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
+        internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
             _blocks = new BlockData[World.BlockCountInChunk];
@@ -50,12 +50,12 @@ namespace BlockSystem
             _blocks[ToIndex(lc)] = blockData;
         }
 
-        public BlockData GetBlockData(LocalCoordinate lc)
+        internal BlockData GetBlockData(LocalCoordinate lc)
         {
             return _blocks[ToIndex(lc)];
         }
 
-        public void SetChunkMeshData(ChunkMeshData chunkMeshData)
+        internal void SetChunkMeshData(ChunkMeshData chunkMeshData)
         {
             ChunkMeshData = chunkMeshData;
         }

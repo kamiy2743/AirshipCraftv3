@@ -8,7 +8,7 @@ namespace BlockSystem
     /// <summary>
     /// 依存関係の解決を行う
     /// </summary>
-    public class BlockSystemInitializer : MonoBehaviour
+    internal class BlockSystemInitializer : MonoBehaviour
     {
         [SerializeField] private Transform player;
         [SerializeField] private ChunkObjectPool chunkObjectPool;

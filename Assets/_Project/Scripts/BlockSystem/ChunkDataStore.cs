@@ -8,14 +8,14 @@ namespace BlockSystem
     /// <summary>
     /// チャンクデータを管理
     /// </summary>
-    public class ChunkDataStore
+    internal class ChunkDataStore
     {
-        public IReadOnlyDictionary<ChunkCoordinate, ChunkData> Chunks => _chunks;
+        internal IReadOnlyDictionary<ChunkCoordinate, ChunkData> Chunks => _chunks;
         private readonly ConcurrentDictionary<ChunkCoordinate, ChunkData> _chunks = new ConcurrentDictionary<ChunkCoordinate, ChunkData>();
 
         private MapGenerator _mapGenerator;
 
-        public ChunkDataStore(MapGenerator mapGenerator)
+        internal ChunkDataStore(MapGenerator mapGenerator)
         {
             _mapGenerator = mapGenerator;
         }
@@ -23,7 +23,7 @@ namespace BlockSystem
         /// <summary>
         /// チャンクデータ取得、無ければ作成
         /// </summary>
-        public ChunkData GetChunkData(ChunkCoordinate cc)
+        internal ChunkData GetChunkData(ChunkCoordinate cc)
         {
             return _chunks.GetOrAdd(cc, _ => new ChunkData(cc, _mapGenerator));
         }

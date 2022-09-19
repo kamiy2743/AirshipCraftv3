@@ -3,13 +3,13 @@ namespace BlockSystem
     /// <summary>
     /// チャンク内のブロックの座標
     /// </summary>
-    public struct LocalCoordinate
+    internal struct LocalCoordinate
     {
-        public readonly int x;
-        public readonly int y;
-        public readonly int z;
+        internal readonly int x;
+        internal readonly int y;
+        internal readonly int z;
 
-        public LocalCoordinate(int x, int y, int z)
+        internal LocalCoordinate(int x, int y, int z)
         {
             if (x < 0 || x >= World.ChunkBlockSide) throw new System.Exception("ローカルx座標が不正です: " + x);
             if (y < 0 || y >= World.ChunkBlockSide) throw new System.Exception("ローカルy座標が不正です: " + y);
@@ -21,7 +21,7 @@ namespace BlockSystem
         }
 
         private const float InverseBlockSide = 1f / World.ChunkBlockSide;
-        public static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        internal static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new LocalCoordinate(
                 // BlockSideで割った余り
