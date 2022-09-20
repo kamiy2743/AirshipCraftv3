@@ -13,6 +13,11 @@ namespace BlockSystem
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
+        /// <summary>
+        /// チャンク内のブロックメッシュを合成したメッシュを作成します
+        /// </summary>
+        /// <param name="meshData">使いまわし用のChunkMeshData</param>
+        /// <returns></returns>
         internal ChunkMeshData CreateMeshData(ref BlockData[] blocksInChunk, ChunkMeshData meshData = null)
         {
             for (int i = 0; i < blocksInChunk.Length; i++)

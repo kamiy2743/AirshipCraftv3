@@ -15,15 +15,13 @@ namespace BlockSystem
     {
         private CancellationTokenSource createChunkTaskCancellationTokenSource;
 
-        private ChunkDataStore _chunkDataStore;
-        private ChunkObjectPool _chunkObjectStore;
-        private ChunkMeshCreator _chunkMeshCreator;
+        private ChunkObjectPool _chunkObjectPool;
+        private ChunkObjectCreator _chunkObjectCreator;
 
-        internal UpdateChunkSystem(Transform player, ChunkDataStore chunkDataStore, ChunkObjectPool chunkObjectStore, ChunkMeshCreator chunkMeshCreator)
+        internal UpdateChunkSystem(Transform player, ChunkObjectPool chunkObjectPool, ChunkObjectCreator chunkObjectCreator)
         {
-            _chunkDataStore = chunkDataStore;
-            _chunkObjectStore = chunkObjectStore;
-            _chunkMeshCreator = chunkMeshCreator;
+            _chunkObjectPool = chunkObjectPool;
+            _chunkObjectCreator = chunkObjectCreator;
 
             // 初回の更新
             if (!TryGetPlayerChunk(player.position, out ChunkCoordinate firstPlayerChunk))
@@ -71,17 +69,17 @@ namespace BlockSystem
             createChunkTaskCancellationTokenSource?.Dispose();
 
             // 読みこみ範囲外のチャンクオブジェクトを解放する
-            foreach (var cc in _chunkObjectStore.ChunkObjects.Keys.ToList())
+            foreach (var cc in _chunkObjectPool.ChunkObjects.Keys.ToList())
             {
                 var distance = new Vector3Int(Mathf.Abs(cc.x - pc.x), Mathf.Abs(cc.y - pc.y), Mathf.Abs(cc.z - pc.z));
                 if (distance.x > World.LoadChunkRadius || distance.y > World.LoadChunkRadius || distance.z > World.LoadChunkRadius)
                 {
-                    _chunkObjectStore.ReleaseChunkObject(cc);
+                    _chunkObjectPool.ReleaseChunkObject(cc);
                 }
             }
 
             // 作成済みチャンクのリスト
-            var createdChunkList = _chunkObjectStore.ChunkObjects.Keys.ToList();
+            var createdChunkList = _chunkObjectPool.ChunkObjects.Keys.ToList();
             // 作成するチャンクのキュー
             var createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
 
@@ -142,23 +140,13 @@ namespace BlockSystem
 
             while (createChunkQueue.Count > 0)
             {
-                // 別スレッドに退避
-                await UniTask.SwitchToThreadPool();
-
                 if (!createChunkQueue.TryDequeue(out ChunkCoordinate cc))
                 {
                     throw new System.Exception("failed");
                 }
 
-                var chunkData = _chunkDataStore.GetChunkData(cc);
-                meshData = _chunkMeshCreator.CreateMeshData(ref chunkData.Blocks, meshData);
-
-                // UnityApiを使う処理をするのでメインスレッドに戻す
-                await UniTask.SwitchToMainThread(ct);
-
-                var chunkObject = _chunkObjectStore.GetChunkObject(cc);
-                chunkObject.SetMesh(meshData);
-                meshData.Clear();
+                var (_, newMeshData) = await _chunkObjectCreator.CreateChunkObject(cc, ct, meshData);
+                meshData = newMeshData;
             }
         }
     }
