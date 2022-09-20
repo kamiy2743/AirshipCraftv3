@@ -12,7 +12,7 @@ using System;
 public class BlockSystemTest
 {
     [Test]
-    public void チャンクメッシュ生成速度計測()
+    public void チャンクメッシュ生成速度計測_1チャンク()
     {
         MasterBlockDataStore.InitialLoad();
 
@@ -21,12 +21,35 @@ public class BlockSystemTest
         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
 
-        const int size = 4;
-        for (int x = 0; x < size; x++)
+        var sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
+        var cc = new ChunkCoordinate(0, 0, 0);
+        var chunkData = chunkDataStore.GetChunkData(cc);
+        chunkMeshCreator.CreateMeshData(chunkData.Blocks);
+
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
+    }
+
+    [Test]
+    public void チャンクメッシュ生成速度計測_64チャンク()
+    {
+        MasterBlockDataStore.InitialLoad();
+
+        var mapGenerator = new MapGenerator(1024, 80);
+        var chunkDataStore = new ChunkDataStore(mapGenerator);
+        var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
+        var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
+
+        var sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
+        for (int x = 0; x < 4; x++)
         {
-            for (int y = 0; y < size; y++)
+            for (int y = 0; y < 4; y++)
             {
-                for (int z = 0; z < size; z++)
+                for (int z = 0; z < 4; z++)
                 {
                     var cc = new ChunkCoordinate(x, y, z);
                     var chunkData = chunkDataStore.GetChunkData(cc);
@@ -34,5 +57,65 @@ public class BlockSystemTest
                 }
             }
         }
+
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
+    }
+
+    [Test]
+    public void チャンクメッシュ生成速度計測_64チャンク_meshData使いまわし()
+    {
+        MasterBlockDataStore.InitialLoad();
+
+        var mapGenerator = new MapGenerator(1024, 80);
+        var chunkDataStore = new ChunkDataStore(mapGenerator);
+        var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
+        var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
+
+        var sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
+        ChunkMeshData meshData = null;
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                for (int z = 0; z < 4; z++)
+                {
+                    var cc = new ChunkCoordinate(x, y, z);
+                    var chunkData = chunkDataStore.GetChunkData(cc);
+                    meshData = chunkMeshCreator.CreateMeshData(chunkData.Blocks, meshData);
+                    meshData.Clear();
+                }
+            }
+        }
+
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
+    }
+
+    [Test]
+    public void 生成済みのチャンクの再生成速度計測_1チャンク()
+    {
+        MasterBlockDataStore.InitialLoad();
+
+        var mapGenerator = new MapGenerator(1024, 80);
+        var chunkDataStore = new ChunkDataStore(mapGenerator);
+        var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
+        var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
+
+        var cc1 = new ChunkCoordinate(0, 0, 0);
+        var chunkData1 = chunkDataStore.GetChunkData(cc1);
+        chunkMeshCreator.CreateMeshData(chunkData1.Blocks);
+
+        var sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
+        var cc2 = new ChunkCoordinate(0, 0, 0);
+        var chunkData2 = chunkDataStore.GetChunkData(cc2);
+        chunkMeshCreator.CreateMeshData(chunkData2.Blocks);
+
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
     }
 }

@@ -12,8 +12,10 @@ namespace BlockSystem
         public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
         private SurfaceNormal contactOtherBlockSurfaces;
-        internal bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
+        private bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
         internal bool NeedToCalcContactSurfaces => contactOtherBlockSurfaces == SurfaceNormal.Undefined;
+
+        internal bool IsRenderSkip => !IsContactAir || ID == BlockID.Air;
 
         internal BlockData(BlockID id, BlockCoordinate bc)
         {

@@ -22,7 +22,7 @@ namespace BlockSystem
 
         internal void AddBlock(BlockData blockData)
         {
-            if (blockData.ID == BlockID.Air) return;
+            if (blockData.IsRenderSkip) return;
 
             var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
 
