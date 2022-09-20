@@ -14,8 +14,6 @@ namespace BlockSystem
         internal IReadOnlyCollection<BlockData> Blocks => _blocks;
         private BlockData[] _blocks;
 
-        internal ChunkMeshData ChunkMeshData { get; private set; }
-
         internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
@@ -53,11 +51,6 @@ namespace BlockSystem
         internal BlockData GetBlockData(LocalCoordinate lc)
         {
             return _blocks[ToIndex(lc)];
-        }
-
-        internal void SetChunkMeshData(ChunkMeshData chunkMeshData)
-        {
-            ChunkMeshData = chunkMeshData;
         }
 
         /// <summary>
