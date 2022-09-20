@@ -151,7 +151,7 @@ namespace BlockSystem
                 }
 
                 var chunkData = _chunkDataStore.GetChunkData(cc);
-                meshData = _chunkMeshCreator.CreateMeshData(chunkData.Blocks, meshData);
+                meshData = _chunkMeshCreator.CreateMeshData(ref chunkData.Blocks, meshData);
 
                 // UnityApiを使う処理をするのでメインスレッドに戻す
                 await UniTask.SwitchToMainThread(ct);

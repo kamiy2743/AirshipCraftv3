@@ -26,7 +26,7 @@ public class BlockSystemTest
 
         var cc = new ChunkCoordinate(0, 0, 0);
         var chunkData = chunkDataStore.GetChunkData(cc);
-        chunkMeshCreator.CreateMeshData(chunkData.Blocks);
+        chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
 
         sw.Stop();
         Debug.Log(sw.Elapsed);
@@ -53,7 +53,7 @@ public class BlockSystemTest
                 {
                     var cc = new ChunkCoordinate(x, y, z);
                     var chunkData = chunkDataStore.GetChunkData(cc);
-                    chunkMeshCreator.CreateMeshData(chunkData.Blocks);
+                    chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
                 }
             }
         }
@@ -84,7 +84,7 @@ public class BlockSystemTest
                 {
                     var cc = new ChunkCoordinate(x, y, z);
                     var chunkData = chunkDataStore.GetChunkData(cc);
-                    meshData = chunkMeshCreator.CreateMeshData(chunkData.Blocks, meshData);
+                    meshData = chunkMeshCreator.CreateMeshData(ref chunkData.Blocks, meshData);
                     meshData.Clear();
                 }
             }
@@ -106,14 +106,14 @@ public class BlockSystemTest
 
         var cc1 = new ChunkCoordinate(0, 0, 0);
         var chunkData1 = chunkDataStore.GetChunkData(cc1);
-        chunkMeshCreator.CreateMeshData(chunkData1.Blocks);
+        chunkMeshCreator.CreateMeshData(ref chunkData1.Blocks);
 
         var sw = new System.Diagnostics.Stopwatch();
         sw.Start();
 
         var cc2 = new ChunkCoordinate(0, 0, 0);
         var chunkData2 = chunkDataStore.GetChunkData(cc2);
-        chunkMeshCreator.CreateMeshData(chunkData2.Blocks);
+        chunkMeshCreator.CreateMeshData(ref chunkData2.Blocks);
 
         sw.Stop();
         Debug.Log(sw.Elapsed);

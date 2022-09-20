@@ -13,21 +13,20 @@ namespace BlockSystem
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
-        internal ChunkMeshData CreateMeshData(BlockData[] blocksInChunk, ChunkMeshData meshData = null)
+        internal ChunkMeshData CreateMeshData(ref BlockData[] blocksInChunk, ChunkMeshData meshData = null)
         {
-            foreach (var blockData in blocksInChunk)
+            for (int i = 0; i < blocksInChunk.Length; i++)
             {
-                if (blockData.NeedToCalcContactSurfaces)
+                if (blocksInChunk[i].NeedToCalcContactSurfaces)
                 {
                     // 他のブロックに接している面を計算
-                    var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blockData.BlockCoordinate);
-                    // TODO 参照渡しじゃないからChunkDataの方には反映されない
-                    blockData.SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
+                    var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blocksInChunk[i].BlockCoordinate);
+                    blocksInChunk[i].SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
                 }
 
                 if (meshData != null)
                 {
-                    meshData.AddBlock(blockData);
+                    meshData.AddBlock(blocksInChunk[i]);
                 }
             }
 
