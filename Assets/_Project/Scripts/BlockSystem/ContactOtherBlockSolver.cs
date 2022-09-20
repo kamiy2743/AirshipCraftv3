@@ -30,15 +30,6 @@ namespace BlockSystem
             return surfaces;
         }
 
-        private bool IsAir(BlockCoordinate bc)
-        {
-            var cc = ChunkCoordinate.FromBlockCoordinate(bc);
-            var lc = LocalCoordinate.FromBlockCoordinate(bc);
-            var chunkData = _chunkDataStore.GetChunkData(cc);
-            var blockData = chunkData.GetBlockData(lc);
-            return blockData.ID == BlockID.Air;
-        }
-
         private bool IsContactOtherBlock(SurfaceNormal surface, BlockCoordinate bc)
         {
             var checkCoordinate = bc.ToVector3() + surface.ToVector3();
@@ -51,6 +42,15 @@ namespace BlockSystem
             }
 
             return true;
+        }
+
+        private bool IsAir(BlockCoordinate bc)
+        {
+            var cc = ChunkCoordinate.FromBlockCoordinate(bc);
+            var lc = LocalCoordinate.FromBlockCoordinate(bc);
+            var chunkData = _chunkDataStore.GetChunkData(cc);
+            var blockData = chunkData.GetBlockData(lc);
+            return blockData.ID == BlockID.Air;
         }
     }
 }
