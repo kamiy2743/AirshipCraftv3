@@ -17,7 +17,7 @@ namespace BlockSystem
 
         internal SurfaceNormal GetContactOtherBlockSurfaces(BlockCoordinate bc)
         {
-            var surfaces = SurfaceNormal.None;
+            var surfaces = SurfaceNormal.Zero;
 
             foreach (var surface in SurfaceNormalExt.List)
             {

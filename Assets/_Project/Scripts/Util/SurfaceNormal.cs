@@ -6,8 +6,8 @@ namespace Util
     [System.Flags]
     public enum SurfaceNormal
     {
-        Undefined = -1,
-        None = 0,
+        Empty = -1,
+        Zero = 0,
         Right = 1 << 0,
         Left = 1 << 1,
         Top = 1 << 2,
@@ -28,8 +28,8 @@ namespace Util
                 _list = new List<SurfaceNormal>(6);
                 foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
                 {
-                    if (surface == SurfaceNormal.Undefined) continue;
-                    if (surface == SurfaceNormal.None) continue;
+                    if (surface == SurfaceNormal.Empty) continue;
+                    if (surface == SurfaceNormal.Zero) continue;
                     _list.Add(surface);
                 }
                 return _list;
