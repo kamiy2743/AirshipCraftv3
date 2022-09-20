@@ -11,13 +11,12 @@ namespace BlockSystem
     {
         internal ChunkCoordinate ChunkCoordinate { get; private set; }
 
-        internal IReadOnlyCollection<BlockData> Blocks => _blocks;
-        private BlockData[] _blocks;
+        internal BlockData[] Blocks;
 
         internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            _blocks = new BlockData[World.BlockCountInChunk];
+            Blocks = new BlockData[World.BlockCountInChunk];
 
             var job = new CreateBlockDataJob
             {
@@ -45,12 +44,12 @@ namespace BlockSystem
 
         private void SetBlockData(LocalCoordinate lc, BlockData blockData)
         {
-            _blocks[ToIndex(lc)] = blockData;
+            Blocks[ToIndex(lc)] = blockData;
         }
 
         internal BlockData GetBlockData(LocalCoordinate lc)
         {
-            return _blocks[ToIndex(lc)];
+            return Blocks[ToIndex(lc)];
         }
 
         /// <summary>

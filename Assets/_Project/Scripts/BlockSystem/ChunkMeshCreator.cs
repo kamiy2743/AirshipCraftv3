@@ -13,7 +13,7 @@ namespace BlockSystem
             _contactOtherBlockSolver = contactOtherBlockSolver;
         }
 
-        internal ChunkMeshData CreateMeshData(IReadOnlyCollection<BlockData> blocksInChunk, ChunkMeshData meshData = null)
+        internal ChunkMeshData CreateMeshData(BlockData[] blocksInChunk, ChunkMeshData meshData = null)
         {
             if (meshData == null)
             {
