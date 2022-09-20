@@ -15,6 +15,8 @@ namespace Player
         [SerializeField] private float gravity;
         [Space(20)]
         [SerializeField] private float debugMoveSpeed;
+        [Space(20)]
+        [SerializeField] private bool isDebugMode;
 
         new private Rigidbody rigidbody;
 
@@ -25,7 +27,14 @@ namespace Player
 
         private void Update()
         {
-            Move();
+            if (isDebugMode)
+            {
+                DebugMove();
+            }
+            else
+            {
+                Move();
+            }
         }
 
         private void Move()
