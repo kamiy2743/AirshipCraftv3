@@ -42,7 +42,7 @@ namespace BlockSystem
             return (lc.y * World.ChunkBlockSide * World.ChunkBlockSide) + (lc.z * World.ChunkBlockSide) + lc.x;
         }
 
-        private void SetBlockData(LocalCoordinate lc, BlockData blockData)
+        internal void SetBlockData(LocalCoordinate lc, BlockData blockData)
         {
             Blocks[ToIndex(lc)] = blockData;
         }
