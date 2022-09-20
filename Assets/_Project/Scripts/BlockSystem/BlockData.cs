@@ -13,12 +13,13 @@ namespace BlockSystem
 
         private SurfaceNormal contactOtherBlockSurfaces;
         internal bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
+        internal bool NeedToCalcContactSurfaces => contactOtherBlockSurfaces == SurfaceNormal.Undefined;
 
         internal BlockData(BlockID id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;
-            contactOtherBlockSurfaces = SurfaceNormal.None;
+            contactOtherBlockSurfaces = SurfaceNormal.Undefined;
         }
 
         internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)

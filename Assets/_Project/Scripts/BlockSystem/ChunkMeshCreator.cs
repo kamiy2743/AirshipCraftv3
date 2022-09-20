@@ -34,12 +34,12 @@ namespace BlockSystem
 
             foreach (var blockData in blocksInChunk)
             {
-                // 他のブロックに接している面を計算
-                var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blockData.BlockCoordinate);
-                blockData.SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
-
-                // 空気に接していない = 見えないので描画しない
-                if (!blockData.IsContactAir) continue;
+                if (blockData.NeedToCalcContactSurfaces)
+                {
+                    // 他のブロックに接している面を計算
+                    var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blockData.BlockCoordinate);
+                    blockData.SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
+                }
 
                 meshData.AddBlock(blockData);
             }
