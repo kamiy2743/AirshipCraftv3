@@ -9,10 +9,10 @@ using Util;
 using MasterData.Block;
 using System;
 
-internal class Test
+public class Test
 {
     [Test]
-    internal void 割り算速度計測()
+    public void 割り算速度計測()
     {
         int a = 164;
         int b = 16;
@@ -38,7 +38,7 @@ internal class Test
     }
 
     [Test]
-    internal void mod速度計測()
+    public void mod速度計測()
     {
         int a = 164;
         int b = 16;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MasterData.Block;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 namespace BlockSystem
 {
     /// <summary>

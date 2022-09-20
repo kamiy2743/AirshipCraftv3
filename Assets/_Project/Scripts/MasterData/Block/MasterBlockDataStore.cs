@@ -16,6 +16,8 @@ namespace MasterData.Block
 
         public static void InitialLoad()
         {
+            masterBlockDataDictionary.Clear();
+
             var entity = Resources.Load<MasterBlockDataStore>(nameof(MasterBlockDataStore));
             var blockCount = entity.masterBlockDataList.Count;
 
