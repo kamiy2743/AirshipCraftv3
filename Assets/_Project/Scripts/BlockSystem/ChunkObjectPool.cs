@@ -30,7 +30,7 @@ namespace BlockSystem
         /// オブジェクトプールから取得
         /// メインスレッドのみ
         /// </summary>
-        internal ChunkObject GetChunkObject(ChunkCoordinate cc)
+        internal ChunkObject TakeChunkObject(ChunkCoordinate cc)
         {
             if (availableChunkObjects.Count == 0)
             {

@@ -40,7 +40,7 @@ namespace BlockSystem
             // UnityApiを使う処理をするのでメインスレッドに戻す
             await UniTask.SwitchToMainThread(ct);
 
-            var chunkObject = _chunkObjectPool.GetChunkObject(cc);
+            var chunkObject = _chunkObjectPool.TakeChunkObject(cc);
             chunkObject.SetMesh(newMeshData);
             newMeshData.Clear();
 

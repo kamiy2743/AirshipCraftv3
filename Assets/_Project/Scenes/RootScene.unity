@@ -582,7 +582,7 @@ MonoBehaviour:
   jumpForce: 9
   gravity: 25
   debugMoveSpeed: 10
-  isDebugMode: 1
+  isDebugMode: 0
 --- !u!114 &920373325
 MonoBehaviour:
   m_ObjectHideFlags: 0

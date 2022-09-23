@@ -6,6 +6,8 @@ using MasterData.Block;
 using Input;
 using UniRx;
 using UniRx.Triggers;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace Player
 {
@@ -16,8 +18,12 @@ namespace Player
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private float distance;
 
+        private CancellationToken _cancellationToken;
+
         private void Start()
         {
+            _cancellationToken = this.GetCancellationTokenOnDestroy();
+
             var selectedBlock = new ReactiveProperty<BlockData>();
             selectedBlock
                 .Subscribe(_ => SetBlockOutline(selectedBlock.Value))
@@ -38,7 +44,7 @@ namespace Player
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1))
                 .TakeUntil(stopPlaceBlockStream)
                 .RepeatUntilDestroy(gameObject)
-                .Subscribe(_ => PlaceBlock(raycastHit.normal))
+                .Subscribe(_ => PlaceBlock(selectedBlock.Value, raycastHit.normal))
                 .AddTo(this);
         }
 
@@ -70,9 +76,10 @@ namespace Player
             blockOutline.SetVisible(true);
         }
 
-        private void PlaceBlock(Vector3 hitNormal)
+        private void PlaceBlock(BlockData selectedBlock, Vector3 hitNormal)
         {
-            Debug.Log("place");
+            var position = selectedBlock.BlockCoordinate.ToVector3() + (Vector3.one * 0.5f) + hitNormal;
+            PlaceBlockSystem.Instance.PlaceBlock(BlockID.Dirt, position, _cancellationToken).Forget();
         }
     }
 }

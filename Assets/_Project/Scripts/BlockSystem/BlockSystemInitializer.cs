@@ -25,6 +25,7 @@ namespace BlockSystem
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkObjectCreator = new ChunkObjectCreator(chunkObjectPool, chunkDataStore, chunkMeshCreator);
 
+            new PlaceBlockSystem(chunkDataStore, chunkObjectPool, chunkMeshCreator);
             new UpdateChunkSystem(player, chunkObjectPool, chunkObjectCreator);
         }
     }

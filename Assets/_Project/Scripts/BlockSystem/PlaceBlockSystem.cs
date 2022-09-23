@@ -9,19 +9,26 @@ namespace BlockSystem
 {
     public class PlaceBlockSystem
     {
+        public static PlaceBlockSystem Instance => _instance;
+        private static PlaceBlockSystem _instance;
+
         private ChunkDataStore _chunkDataStore;
         private ChunkObjectPool _chunkObjectPool;
-        private ChunkObjectCreator _chunkObjectCreator;
+        private ChunkMeshCreator _chunkMeshCreator;
 
-        internal PlaceBlockSystem(ChunkDataStore chunkDataStore, ChunkObjectPool chunkObjectPool, ChunkObjectCreator chunkObjectCreator)
+        internal PlaceBlockSystem(ChunkDataStore chunkDataStore, ChunkObjectPool chunkObjectPool, ChunkMeshCreator chunkMeshCreator)
         {
+            _instance = this;
             _chunkDataStore = chunkDataStore;
             _chunkObjectPool = chunkObjectPool;
-            _chunkObjectCreator = chunkObjectCreator;
+            _chunkMeshCreator = chunkMeshCreator;
         }
 
         public async UniTask PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
         {
+            // 別スレッドに退避
+            await UniTask.SwitchToThreadPool();
+
             if (!BlockCoordinate.IsValid(position)) return;
 
             var bc = new BlockCoordinate(position);
@@ -32,9 +39,14 @@ namespace BlockSystem
             chunkData.SetBlockData(lc, new BlockData(blockID, bc));
 
             if (!_chunkObjectPool.ChunkObjects.ContainsKey(cc)) return;
+            
+            var meshData = _chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
+            var chunkObject = _chunkObjectPool.ChunkObjects[cc];
 
-            await _chunkObjectCreator.CreateChunkObject(cc, ct);
-            _chunkObjectPool.ReleaseChunkObject(cc);
+            // UnityApiを使う処理をするのでメインスレッドに戻す
+            await UniTask.SwitchToMainThread(ct);
+            
+            chunkObject.SetMesh(meshData);
         }
     }
 }
