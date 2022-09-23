@@ -17,6 +17,7 @@ namespace Player
         [SerializeField] private Transform startPosition;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private float distance;
+        [SerializeField] private float placeBlockInterval;
 
         private CancellationToken _cancellationToken;
 
@@ -41,7 +42,7 @@ namespace Player
             var stopPlaceBlockStream = this.UpdateAsObservable().Where(_ => !InputProvider.PlaceBlock());
             placeBlockStream
                 .Where(_ => selectedBlock.Value != BlockData.Empty)
-                .ThrottleFirst(System.TimeSpan.FromSeconds(1))
+                .ThrottleFirst(System.TimeSpan.FromSeconds(placeBlockInterval))
                 .TakeUntil(stopPlaceBlockStream)
                 .RepeatUntilDestroy(gameObject)
                 .Subscribe(_ => PlaceBlock(selectedBlock.Value, raycastHit.normal))
@@ -80,6 +81,11 @@ namespace Player
         {
             var position = selectedBlock.BlockCoordinate.ToVector3() + (Vector3.one * 0.5f) + hitNormal;
             PlaceBlockSystem.Instance.PlaceBlock(BlockID.Dirt, position, _cancellationToken).Forget();
+        }
+
+        private void BreakBlock(BlockData targetBlockData)
+        {
+
         }
     }
 }

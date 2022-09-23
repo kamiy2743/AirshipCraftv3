@@ -599,6 +599,7 @@ MonoBehaviour:
   startPosition: {fileID: 1036762686}
   playerCamera: {fileID: 920373326}
   distance: 5
+  placeBlockInterval: 0.2
 --- !u!114 &920373326
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ namespace BlockSystem
             job.blockDataArray.Dispose();
         }
 
-        private int ToIndex(LocalCoordinate lc)
+        internal static int ToIndex(LocalCoordinate lc)
         {
             return (lc.y * World.ChunkBlockSide * World.ChunkBlockSide) + (lc.z * World.ChunkBlockSide) + lc.x;
         }
