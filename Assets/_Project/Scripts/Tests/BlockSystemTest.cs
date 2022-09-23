@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 using NUnit.Framework;
-using UnityEngine.TestTools;
+// using UnityEngine.TestTools;
 using BlockSystem;
 using Cysharp.Threading.Tasks;
 using Util;
@@ -29,7 +29,7 @@ public class BlockSystemTest
         chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
 
         sw.Stop();
-        Debug.Log(sw.Elapsed);
+        UnityEngine.Debug.Log(sw.Elapsed);
     }
 
     [Test]
@@ -59,7 +59,7 @@ public class BlockSystemTest
         }
 
         sw.Stop();
-        Debug.Log(sw.Elapsed);
+        UnityEngine.Debug.Log(sw.Elapsed);
     }
 
     [Test]
@@ -91,7 +91,7 @@ public class BlockSystemTest
         }
 
         sw.Stop();
-        Debug.Log(sw.Elapsed);
+        UnityEngine.Debug.Log(sw.Elapsed);
     }
 
     [Test]
@@ -116,6 +116,6 @@ public class BlockSystemTest
         chunkMeshCreator.CreateMeshData(ref chunkData2.Blocks);
 
         sw.Stop();
-        Debug.Log(sw.Elapsed);
+        UnityEngine.Debug.Log(sw.Elapsed);
     }
 }

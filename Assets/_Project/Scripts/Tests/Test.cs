@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 using NUnit.Framework;
-using UnityEngine.TestTools;
+// using UnityEngine.TestTools;
 using BlockSystem;
 using Cysharp.Threading.Tasks;
 using Util;
@@ -24,7 +24,7 @@ public class Test
             var result = a / b;
         }
         sw1.Stop();
-        Debug.Log($"{a / b}: " + sw1.Elapsed);
+        UnityEngine.Debug.Log($"{a / b}: " + sw1.Elapsed);
 
         var sw2 = new System.Diagnostics.Stopwatch();
         sw2.Start();
@@ -34,7 +34,7 @@ public class Test
             var result = a * c;
         }
         sw2.Stop();
-        Debug.Log($"{(int)(a * c)}: " + sw2.Elapsed);
+        UnityEngine.Debug.Log($"{(int)(a * c)}: " + sw2.Elapsed);
     }
 
     [Test]
@@ -50,8 +50,8 @@ public class Test
             var result = a % b;
         }
         sw1.Stop();
-        Debug.Log($"a % b: " + sw1.Elapsed);
-        Debug.Log(a % b);
+        UnityEngine.Debug.Log($"a % b: " + sw1.Elapsed);
+        UnityEngine.Debug.Log(a % b);
 
         var sw3 = new System.Diagnostics.Stopwatch();
         sw3.Start();
@@ -61,7 +61,7 @@ public class Test
             var result = a - ((int)(a * c) * b);
         }
         sw3.Stop();
-        Debug.Log($"a - (int)(a * c): " + sw3.Elapsed);
-        Debug.Log(a - ((int)(a * c) * b));
+        UnityEngine.Debug.Log($"a - (int)(a * c): " + sw3.Elapsed);
+        UnityEngine.Debug.Log(a - ((int)(a * c) * b));
     }
 }
