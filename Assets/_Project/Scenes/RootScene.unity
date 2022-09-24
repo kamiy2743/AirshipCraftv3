@@ -396,6 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 694688719}
   - component: {fileID: 694688721}
+  - component: {fileID: 694688722}
   m_Layer: 0
   m_Name: BlockSystem
   m_TagString: Untagged
@@ -433,6 +434,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 920373323}
   chunkObjectPool: {fileID: 125769955}
+  breakBlockSystem: {fileID: 694688722}
+--- !u!114 &694688722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694688718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87c728a8d161c84fa8ef653f82cfaad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropItemPrefab: {fileID: 3569887538438418583, guid: 8eff85a4300058741888859503050db7, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

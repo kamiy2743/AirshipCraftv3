@@ -7,19 +7,36 @@ using Util;
 
 namespace BlockSystem
 {
-    public static class BreakBlockSystem
+    public class BreakBlockSystem : MonoBehaviour
     {
-        private static BlockDataUpdater _blockDataUpdater;
+        [SerializeField] private DropItem dropItemPrefab;
 
-        internal static void StartInitial(BlockDataUpdater blockDataUpdater)
+        public static BreakBlockSystem Instance { get; private set; }
+
+        private BlockDataUpdater _blockDataUpdater;
+        private ChunkDataStore _chunkDataStore;
+
+        internal void StartInitial(BlockDataUpdater blockDataUpdater, ChunkDataStore chunkDataStore)
         {
+            Instance = this;
             _blockDataUpdater = blockDataUpdater;
+            _chunkDataStore = chunkDataStore;
         }
 
-        public static async UniTask BreakBlock(BlockCoordinate targetCoordinate, CancellationToken ct)
+        public async UniTask BreakBlock(BlockCoordinate targetCoordinate, CancellationToken ct)
         {
+            var cc = ChunkCoordinate.FromBlockCoordinate(targetCoordinate);
+            var lc = LocalCoordinate.FromBlockCoordinate(targetCoordinate);
+            var chunkData = _chunkDataStore.GetChunkData(cc);
+            var targetBlockData = chunkData.GetBlockData(lc);
+
             var updateBlockData = new BlockData(BlockID.Air, targetCoordinate);
             await _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
+
+            var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
+            var dropItem = Instantiate(dropItemPrefab);
+            dropItem.SetMesh(meshData);
+            dropItem.SetPosition(targetCoordinate.ToVector3());
         }
     }
 }

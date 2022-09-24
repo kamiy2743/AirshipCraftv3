@@ -11,6 +11,7 @@ namespace BlockSystem
     {
         [SerializeField] private Transform player;
         [SerializeField] private ChunkObjectPool chunkObjectPool;
+        [SerializeField] private BreakBlockSystem breakBlockSystem;
 
         private void Start()
         {
@@ -25,7 +26,7 @@ namespace BlockSystem
             var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
-            BreakBlockSystem.StartInitial(blockDataUpdater);
+            breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
             new UpdateChunkSystem(player, chunkObjectPool, chunkObjectCreator);
         }
     }

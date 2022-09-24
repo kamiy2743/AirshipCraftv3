@@ -92,7 +92,7 @@ namespace Player
 
         private void BreakBlock(BlockData targetBlockData)
         {
-            BreakBlockSystem.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken).Forget();
+            BreakBlockSystem.Instance.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken).Forget();
         }
     }
 }
