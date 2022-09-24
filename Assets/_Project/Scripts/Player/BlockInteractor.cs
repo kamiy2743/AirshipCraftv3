@@ -92,7 +92,7 @@ namespace Player
 
         private void StartBreakBlock(BlockData targetBlockData)
         {
-            UnityEngine.Debug.Log("BreakStart: " + targetBlockData.ID);
+            BreakBlockSystem.Instance.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken).Forget();
         }
     }
 }

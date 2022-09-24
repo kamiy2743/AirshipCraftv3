@@ -12,12 +12,12 @@ namespace BlockSystem
         public static PlaceBlockSystem Instance => _instance;
         private static PlaceBlockSystem _instance;
 
-        private UpdateBlockSystem _updateBlockSystem;
+        private BlockDataUpdater _blockDataUpdater;
 
-        internal PlaceBlockSystem(UpdateBlockSystem updateBlockSystem)
+        internal PlaceBlockSystem(BlockDataUpdater blockDataUpdater)
         {
             _instance = this;
-            _updateBlockSystem = updateBlockSystem;
+            _blockDataUpdater = blockDataUpdater;
         }
 
         public async UniTask PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
@@ -25,7 +25,7 @@ namespace BlockSystem
             if (!BlockCoordinate.IsValid(position)) return;
 
             var updateBlockData = new BlockData(blockID, new BlockCoordinate(position));
-            await _updateBlockSystem.UpdateBlockData(updateBlockData, ct);
+            await _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
         }
     }
 }

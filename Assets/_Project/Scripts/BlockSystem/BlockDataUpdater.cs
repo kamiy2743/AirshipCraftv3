@@ -7,13 +7,13 @@ using Util;
 
 namespace BlockSystem
 {
-    internal class UpdateBlockSystem
+    internal class BlockDataUpdater
     {
         private ChunkDataStore _chunkDataStore;
         private ChunkObjectPool _chunkObjectPool;
         private ChunkMeshCreator _chunkMeshCreator;
 
-        internal UpdateBlockSystem(ChunkDataStore chunkDataStore, ChunkObjectPool chunkObjectPool, ChunkMeshCreator chunkMeshCreator)
+        internal BlockDataUpdater(ChunkDataStore chunkDataStore, ChunkObjectPool chunkObjectPool, ChunkMeshCreator chunkMeshCreator)
         {
             _chunkDataStore = chunkDataStore;
             _chunkObjectPool = chunkObjectPool;

@@ -22,9 +22,10 @@ namespace BlockSystem
             var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkObjectCreator = new ChunkObjectCreator(chunkObjectPool, chunkDataStore, chunkMeshCreator);
-            var updateBlockSystem = new UpdateBlockSystem(chunkDataStore, chunkObjectPool, chunkMeshCreator);
+            var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
 
-            new PlaceBlockSystem(updateBlockSystem);
+            new PlaceBlockSystem(blockDataUpdater);
+            new BreakBlockSystem(blockDataUpdater);
             new UpdateChunkSystem(player, chunkObjectPool, chunkObjectCreator);
         }
     }
