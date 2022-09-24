@@ -36,7 +36,7 @@ namespace BlockSystem
             var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
             var dropItem = Instantiate(dropItemPrefab);
             dropItem.SetMesh(meshData);
-            dropItem.SetPosition(targetCoordinate.ToVector3());
+            dropItem.SetPosition(targetCoordinate.Center);
         }
     }
 }

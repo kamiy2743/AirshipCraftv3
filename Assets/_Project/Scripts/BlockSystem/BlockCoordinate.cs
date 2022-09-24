@@ -12,6 +12,8 @@ namespace BlockSystem
         internal readonly int y;
         internal readonly int z;
 
+        internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
+
         internal BlockCoordinate(Vector3 position) : this((int)position.x, (int)position.y, (int)position.z) { }
         internal BlockCoordinate(int x, int y, int z)
         {
