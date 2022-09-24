@@ -7,20 +7,16 @@ using Util;
 
 namespace BlockSystem
 {
-    public class PlaceBlockSystem
+    public static class PlaceBlockSystem
     {
-        public static PlaceBlockSystem Instance => _instance;
-        private static PlaceBlockSystem _instance;
+        private static BlockDataUpdater _blockDataUpdater;
 
-        private BlockDataUpdater _blockDataUpdater;
-
-        internal PlaceBlockSystem(BlockDataUpdater blockDataUpdater)
+        internal static void StartInitial(BlockDataUpdater blockDataUpdater)
         {
-            _instance = this;
             _blockDataUpdater = blockDataUpdater;
         }
 
-        public async UniTask PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
+        public static async UniTask PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
         {
             if (!BlockCoordinate.IsValid(position)) return;
 

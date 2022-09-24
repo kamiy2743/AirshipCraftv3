@@ -52,7 +52,7 @@ namespace Player
             var stopBreakBlockStream = this.UpdateAsObservable().Where(_ => !InputProvider.BreakBlock());
             breakBlockStream
                 .Where(_ => selectedBlock.Value != BlockData.Empty)
-                .Subscribe(_ => StartBreakBlock(selectedBlock.Value))
+                .Subscribe(_ => BreakBlock(selectedBlock.Value))
                 .AddTo(this);
         }
 
@@ -86,13 +86,13 @@ namespace Player
 
         private void PlaceBlock(BlockData selectedBlock, Vector3 hitNormal)
         {
-            var position = selectedBlock.BlockCoordinate.ToVector3() + (Vector3.one * 0.5f) + hitNormal;
-            PlaceBlockSystem.Instance.PlaceBlock(BlockID.Dirt, position, _cancellationToken).Forget();
+            var position = selectedBlock.BlockCoordinate.ToVector3() + hitNormal;
+            PlaceBlockSystem.PlaceBlock(BlockID.Dirt, position, _cancellationToken).Forget();
         }
 
-        private void StartBreakBlock(BlockData targetBlockData)
+        private void BreakBlock(BlockData targetBlockData)
         {
-            BreakBlockSystem.Instance.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken).Forget();
+            BreakBlockSystem.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken).Forget();
         }
     }
 }
