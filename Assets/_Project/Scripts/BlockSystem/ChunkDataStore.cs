@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Collections.Concurrent;
+using System.Collections;
 
 namespace BlockSystem
 {
@@ -8,9 +7,7 @@ namespace BlockSystem
     /// </summary>
     internal class ChunkDataStore
     {
-        internal IReadOnlyDictionary<ChunkCoordinate, ChunkData> Chunks => _chunks;
-        private readonly ConcurrentDictionary<ChunkCoordinate, ChunkData> _chunks = new ConcurrentDictionary<ChunkCoordinate, ChunkData>();
-
+        private readonly Hashtable chunks = new Hashtable();
         private MapGenerator _mapGenerator;
 
         internal ChunkDataStore(MapGenerator mapGenerator)
@@ -23,7 +20,17 @@ namespace BlockSystem
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc)
         {
-            return _chunks.GetOrAdd(cc, _ => new ChunkData(cc, _mapGenerator));
+            if (chunks.ContainsKey(cc))
+            {
+                return (ChunkData)chunks[cc];
+            }
+
+            lock (chunks)
+            {
+                var newChunkData = new ChunkData(cc, _mapGenerator);
+                chunks.Add(cc, newChunkData);
+                return newChunkData;
+            }
         }
     }
 }

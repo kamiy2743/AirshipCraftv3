@@ -33,6 +33,7 @@ namespace BlockSystem
             var updateBlockData = new BlockData(BlockID.Air, targetCoordinate);
             await _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
 
+            return;
             var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
             var dropItem = Instantiate(dropItemPrefab);
             dropItem.SetMesh(meshData);

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,17 +11,21 @@ namespace BlockSystem
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
-        private ConcurrentDictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new ConcurrentDictionary<ChunkCoordinate, ChunkObject>();
-        private ConcurrentBag<ChunkObject> availableChunkObjects = new ConcurrentBag<ChunkObject>();
+        private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects;
+        private Queue<ChunkObject> availableChunkObjects;
 
         internal void StartInitial(ChunkDataStore chunkDataStore)
         {
+            var capacity = World.LoadChunkCount;
+            _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(capacity);
+            availableChunkObjects = new Queue<ChunkObject>(capacity);
+
             for (int i = 0; i < World.LoadChunkCount; i++)
             {
                 var chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
                 chunkObject.Init(chunkDataStore);
                 chunkObject.gameObject.SetActive(false);
-                availableChunkObjects.Add(chunkObject);
+                availableChunkObjects.Enqueue(chunkObject);
             }
         }
 
@@ -37,16 +40,8 @@ namespace BlockSystem
                 throw new System.Exception("ChunkObjectプールが空です");
             }
 
-            if (!availableChunkObjects.TryTake(out ChunkObject chunkObject))
-            {
-                throw new System.Exception("failed");
-            }
-
-            if (!_chunkObjects.TryAdd(cc, chunkObject))
-            {
-                throw new System.Exception("failed");
-            }
-
+            var chunkObject = availableChunkObjects.Dequeue();
+            _chunkObjects.Add(cc, chunkObject);
             chunkObject.gameObject.SetActive(true);
 
             return chunkObject;
@@ -58,13 +53,14 @@ namespace BlockSystem
         /// </summary>
         internal void ReleaseChunkObject(ChunkCoordinate cc)
         {
-            if (!_chunkObjects.TryRemove(cc, out ChunkObject chunkObject))
+            if (!_chunkObjects.TryGetValue(cc, out var chunkObject))
             {
-                throw new System.Exception("failed");
+                throw new System.Exception("割り当てられたChunkObjectが存在しません: " + cc);
             }
 
+            _chunkObjects.Remove(cc);
             chunkObject.gameObject.SetActive(false);
-            availableChunkObjects.Add(chunkObject);
+            availableChunkObjects.Enqueue(chunkObject);
         }
     }
 }
