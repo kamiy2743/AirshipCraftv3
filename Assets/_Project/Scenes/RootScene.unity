@@ -600,6 +600,7 @@ MonoBehaviour:
   playerCamera: {fileID: 920373326}
   distance: 5
   placeBlockInterval: 0.2
+  breakBlockInterval: 1
 --- !u!114 &920373326
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using UniRx;
 using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using System;
 
 namespace Player
 {
@@ -16,6 +17,7 @@ namespace Player
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private float distance;
         [SerializeField] private float placeBlockInterval;
+        [SerializeField] private float breakBlockInterval;
 
         private CancellationToken _cancellationToken;
 
@@ -40,10 +42,17 @@ namespace Player
             var stopPlaceBlockStream = this.UpdateAsObservable().Where(_ => !InputProvider.PlaceBlock());
             placeBlockStream
                 .Where(_ => selectedBlock.Value != BlockData.Empty)
-                .ThrottleFirst(System.TimeSpan.FromSeconds(placeBlockInterval))
+                .ThrottleFirst(TimeSpan.FromSeconds(placeBlockInterval))
                 .TakeUntil(stopPlaceBlockStream)
-                .RepeatUntilDestroy(gameObject)
+                .RepeatUntilDestroy(this)
                 .Subscribe(_ => PlaceBlock(selectedBlock.Value, raycastHit.normal))
+                .AddTo(this);
+
+            var breakBlockStream = this.UpdateAsObservable().Where(_ => InputProvider.BreakBlock());
+            var stopBreakBlockStream = this.UpdateAsObservable().Where(_ => !InputProvider.BreakBlock());
+            breakBlockStream
+                .Where(_ => selectedBlock.Value != BlockData.Empty)
+                .Subscribe(_ => StartBreakBlock(selectedBlock.Value))
                 .AddTo(this);
         }
 
@@ -81,9 +90,9 @@ namespace Player
             PlaceBlockSystem.Instance.PlaceBlock(BlockID.Dirt, position, _cancellationToken).Forget();
         }
 
-        private void BreakBlock(BlockData targetBlockData)
+        private void StartBreakBlock(BlockData targetBlockData)
         {
-
+            UnityEngine.Debug.Log("BreakStart: " + targetBlockData.ID);
         }
     }
 }
