@@ -42,6 +42,7 @@ namespace MasterData.Block
             return masterBlockDataDictionary[blockID];
         }
 
+#if UNITY_EDITOR
         private const string BlockIDScriptPath = "Assets/_Project/Scripts/MasterData/Block/BlockID.cs";
         internal void GenerateBlockIDScript()
         {
@@ -56,8 +57,10 @@ namespace MasterData.Block
             File.WriteAllText(BlockIDScriptPath, code);
             AssetDatabase.Refresh();
         }
+#endif
     }
 
+#if UNITY_EDITOR
     [CustomEditor(typeof(MasterBlockDataStore))]
     internal class MasterBlockDataStoreEditorExt : Editor
     {
@@ -72,4 +75,5 @@ namespace MasterData.Block
             }
         }
     }
+#endif
 }
