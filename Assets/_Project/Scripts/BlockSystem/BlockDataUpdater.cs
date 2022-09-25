@@ -70,7 +70,7 @@ namespace BlockSystem
 
                 var chunkObject = _chunkObjectPool.ChunkObjects[updateChunk];
                 var chunkData = _chunkDataStore.GetChunkData(updateChunk);
-                var meshData = _chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
+                var meshData = _chunkMeshCreator.CreateMeshData(chunkData);
                 chunkMeshDic.Add(chunkObject, meshData);
             }
 

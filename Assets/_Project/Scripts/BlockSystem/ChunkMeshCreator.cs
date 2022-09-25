@@ -1,14 +1,19 @@
 using MasterData.Block;
+using System.Collections.Generic;
+using Util;
+using UnityEngine;
 
 namespace BlockSystem
 {
     internal class ChunkMeshCreator
     {
         private ContactOtherBlockSolver _contactOtherBlockSolver;
+        private ChunkDataStore _chunkDataStore;
 
-        internal ChunkMeshCreator(ContactOtherBlockSolver contactOtherBlockSolver)
+        internal ChunkMeshCreator(ContactOtherBlockSolver contactOtherBlockSolver, ChunkDataStore chunkDataStore)
         {
             _contactOtherBlockSolver = contactOtherBlockSolver;
+            _chunkDataStore = chunkDataStore;
         }
 
         /// <summary>
@@ -16,20 +21,34 @@ namespace BlockSystem
         /// </summary>
         /// <param name="meshData">使いまわし用のChunkMeshData</param>
         /// <returns></returns>
-        internal ChunkMeshData CreateMeshData(ref BlockData[] blocksInChunk, ChunkMeshData meshData = null)
+        internal ChunkMeshData CreateMeshData(ChunkData chunkData, ChunkMeshData meshData = null)
         {
-            for (int i = 0; i < blocksInChunk.Length; i++)
+            var chunkDataCache = new Dictionary<ChunkCoordinate, ChunkData>(7);
+            chunkDataCache.Add(chunkData.ChunkCoordinate, chunkData);
+            foreach (var surface in SurfaceNormalExt.List)
             {
-                if (blocksInChunk[i].NeedToCalcContactSurfaces)
+                var surfaceVector = surface.ToVector3Int();
+                var ccx = chunkData.ChunkCoordinate.x + surfaceVector.x;
+                var ccy = chunkData.ChunkCoordinate.y + surfaceVector.y;
+                var ccz = chunkData.ChunkCoordinate.z + surfaceVector.z;
+                if (!ChunkCoordinate.IsValid(ccx, ccy, ccz)) continue;
+
+                var cc = new ChunkCoordinate(ccx, ccy, ccz);
+                chunkDataCache.Add(cc, _chunkDataStore.GetChunkData(cc));
+            }
+
+            for (int i = 0; i < chunkData.Blocks.Length; i++)
+            {
+                if (chunkData.Blocks[i].NeedToCalcContactSurfaces)
                 {
                     // 他のブロックに接している面を計算
-                    var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(blocksInChunk[i].BlockCoordinate);
-                    blocksInChunk[i].SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
+                    var contactOtherBlockSurfaces = _contactOtherBlockSolver.GetContactOtherBlockSurfaces(chunkData.Blocks[i].BlockCoordinate, chunkDataCache);
+                    chunkData.Blocks[i].SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
                 }
 
                 if (meshData != null)
                 {
-                    meshData.AddBlock(blocksInChunk[i]);
+                    meshData.AddBlock(chunkData.Blocks[i]);
                 }
             }
 
@@ -38,7 +57,7 @@ namespace BlockSystem
             int maxVerticesCount = 0;
             int maxTrianglesCount = 0;
             int maxUVsCount = 0;
-            foreach (var block in blocksInChunk)
+            foreach (var block in chunkData.Blocks)
             {
                 if (block.IsRenderSkip) continue;
 
@@ -50,7 +69,7 @@ namespace BlockSystem
 
             meshData = new ChunkMeshData(maxVerticesCount, maxTrianglesCount, maxUVsCount);
 
-            foreach (var blockData in blocksInChunk)
+            foreach (var blockData in chunkData.Blocks)
             {
                 meshData.AddBlock(blockData);
             }

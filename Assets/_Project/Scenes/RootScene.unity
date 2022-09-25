@@ -596,7 +596,7 @@ MonoBehaviour:
   moveSpeed: 3.5
   jumpForce: 9
   gravity: 25
-  debugMoveSpeed: 10
+  debugMoveSpeed: 40
   isDebugMode: 1
 --- !u!114 &920373325
 MonoBehaviour:

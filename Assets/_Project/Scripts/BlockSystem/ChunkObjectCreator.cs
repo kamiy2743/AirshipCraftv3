@@ -32,13 +32,13 @@ namespace BlockSystem
         internal async UniTask<(ChunkObject, ChunkMeshData)> CreateChunkObject(ChunkCoordinate cc, CancellationToken ct, ChunkMeshData meshData)
         {
             // 別スレッドに退避
-            await UniTask.SwitchToThreadPool();
+            // await UniTask.SwitchToThreadPool();
 
             var chunkData = _chunkDataStore.GetChunkData(cc);
-            var newMeshData = _chunkMeshCreator.CreateMeshData(ref chunkData.Blocks, meshData);
+            var newMeshData = _chunkMeshCreator.CreateMeshData(chunkData, meshData);
 
             // UnityApiを使う処理をするのでメインスレッドに戻す
-            await UniTask.SwitchToMainThread(ct);
+            // await UniTask.SwitchToMainThread(ct);
 
             var chunkObject = _chunkObjectPool.TakeChunkObject(cc);
             chunkObject.SetMesh(newMeshData);
