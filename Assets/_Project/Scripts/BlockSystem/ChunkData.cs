@@ -14,23 +14,17 @@ namespace BlockSystem
         internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            Blocks = new BlockData[World.BlockCountInChunk];
 
             var job = new CreateBlockDataJob
             {
                 chunkRoot = new int3(cc.x, cc.y, cc.z) * World.ChunkBlockSide,
                 mapGenerator = mapGenerator,
-                blockDataArray = new NativeArray<BlockData>(World.BlockCountInChunk, Allocator.TempJob)
+                blockDataArray = new NativeArray<BlockData>(World.BlockCountInChunk, Allocator.TempJob),
             };
 
             job.Schedule(World.BlockCountInChunk, 0).Complete();
 
-            for (int i = 0; i < World.BlockCountInChunk; i++)
-            {
-                var blockData = job.blockDataArray[i];
-                var lc = LocalCoordinate.FromBlockCoordinate(blockData.BlockCoordinate);
-                SetBlockData(lc, blockData);
-            }
+            Blocks = job.blockDataArray.ToArray();
 
             job.blockDataArray.Dispose();
         }
@@ -72,8 +66,7 @@ namespace BlockSystem
                 var blockCoordinate = localCoordinate + chunkRoot;
                 var blockID = mapGenerator.GetBlockID(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z);
 
-                var blockData = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
-                blockDataArray[index] = blockData;
+                blockDataArray[index] = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
             }
         }
 
