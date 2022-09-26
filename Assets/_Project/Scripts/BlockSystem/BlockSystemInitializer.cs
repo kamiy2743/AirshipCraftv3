@@ -19,8 +19,7 @@ namespace BlockSystem
 
             var mapGenerator = new MapGenerator(1024, 80);
             var chunkDataStore = new ChunkDataStore(mapGenerator);
-            var contactOtherBlockSolver = new ContactOtherBlockSolver();
-            var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver, chunkDataStore);
+            var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkObjectCreator = new ChunkObjectCreator(chunkObjectPool, chunkDataStore, chunkMeshCreator);
             var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);

@@ -18,21 +18,23 @@ namespace Util
 
     public static class SurfaceNormalExt
     {
-        private static List<SurfaceNormal> _list;
-        public static List<SurfaceNormal> List
+        private static SurfaceNormal[] _array;
+        public static SurfaceNormal[] Array
         {
             get
             {
-                if (_list != null) return _list;
+                if (_array != null) return _array;
 
-                _list = new List<SurfaceNormal>(6);
+                var list = new List<SurfaceNormal>(6);
                 foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
                 {
                     if (surface == SurfaceNormal.Empty) continue;
                     if (surface == SurfaceNormal.Zero) continue;
-                    _list.Add(surface);
+                    list.Add(surface);
                 }
-                return _list;
+
+                _array = list.ToArray();
+                return _array;
             }
         }
 

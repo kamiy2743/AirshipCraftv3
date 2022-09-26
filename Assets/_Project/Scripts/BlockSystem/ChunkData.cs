@@ -11,6 +11,18 @@ namespace BlockSystem
 
         internal BlockData[] Blocks;
 
+        internal static readonly ChunkData Empty = new ChunkData();
+
+        private ChunkData()
+        {
+            ChunkCoordinate = new ChunkCoordinate(0, 0, 0);
+            Blocks = new BlockData[World.BlockCountInChunk];
+            for (int i = 0; i < World.BlockCountInChunk; i++)
+            {
+                Blocks[i] = BlockData.Empty;
+            }
+        }
+
         internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
@@ -19,14 +31,14 @@ namespace BlockSystem
             {
                 chunkRoot = new int3(cc.x, cc.y, cc.z) * World.ChunkBlockSide,
                 mapGenerator = mapGenerator,
-                blockDataArray = new NativeArray<BlockData>(World.BlockCountInChunk, Allocator.TempJob),
+                blocks = new NativeArray<BlockData>(World.BlockCountInChunk, Allocator.TempJob),
             };
 
             job.Schedule(World.BlockCountInChunk, 0).Complete();
 
-            Blocks = job.blockDataArray.ToArray();
+            Blocks = job.blocks.ToArray();
 
-            job.blockDataArray.Dispose();
+            job.blocks.Dispose();
         }
 
         internal static int ToIndex(LocalCoordinate lc)
@@ -53,7 +65,7 @@ namespace BlockSystem
         {
             public int3 chunkRoot;
             public MapGenerator mapGenerator;
-            public NativeArray<BlockData> blockDataArray;
+            public NativeArray<BlockData> blocks;
 
             public void Execute(int index)
             {
@@ -66,7 +78,7 @@ namespace BlockSystem
                 var blockCoordinate = localCoordinate + chunkRoot;
                 var blockID = mapGenerator.GetBlockID(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z);
 
-                blockDataArray[index] = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
+                blocks[index] = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
             }
         }
 
