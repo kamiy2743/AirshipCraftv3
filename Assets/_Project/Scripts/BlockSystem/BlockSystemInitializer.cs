@@ -21,12 +21,11 @@ namespace BlockSystem
             var chunkDataStore = new ChunkDataStore(mapGenerator);
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkObjectPool.StartInitial(chunkDataStore);
-            var chunkObjectCreator = new ChunkObjectCreator(chunkObjectPool, chunkDataStore, chunkMeshCreator);
             var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
             breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
-            new UpdateChunkSystem(player, chunkObjectPool, chunkObjectCreator);
+            new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator);
         }
     }
 }
