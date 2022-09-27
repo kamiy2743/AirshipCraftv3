@@ -61,11 +61,9 @@ namespace BlockSystem
             createChunkTaskCancellationTokenSource?.Cancel();
             createChunkTaskCancellationTokenSource?.Dispose();
 
-            // 作成済みチャンク
-            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet.ToHashSet();
 
             // 読みこみ範囲外のチャンクオブジェクトを解放する
-            foreach (var cc in createdChunkHashSet)
+            foreach (var cc in _chunkObjectPool.ChunkObjects.Keys.ToList())
             {
                 if (math.abs(cc.x - pc.x) > World.LoadChunkRadius ||
                     math.abs(cc.y - pc.y) > World.LoadChunkRadius ||
@@ -75,6 +73,8 @@ namespace BlockSystem
                 }
             }
 
+            // 作成済みチャンク
+            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet;
             // 作成するチャンクのキュー
             var createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
 
@@ -111,8 +111,8 @@ namespace BlockSystem
                 // z-方向
                 if (pc.x + r < World.WorldChunkSideXZ)
                 {
-                    var ze = math.max(pc.z - r, 0);
-                    for (int z = math.min(pc.z + r, World.WorldChunkSideXZ); z >= ze; z--)
+                    var ze = math.max(pc.z - r, -1);
+                    for (int z = math.min(pc.z + r, World.WorldChunkSideXZ); z > ze; z--)
                     {
                         EnqueueChunk(pc.x + r, z);
                     }
@@ -120,8 +120,8 @@ namespace BlockSystem
                 // x-方向
                 if (pc.z - r >= 0)
                 {
-                    var xe = math.max(pc.x - r, 0);
-                    for (int x = math.min(pc.x + r, World.WorldChunkSideXZ); x >= xe; x--)
+                    var xe = math.max(pc.x - r, -1);
+                    for (int x = math.min(pc.x + r, World.WorldChunkSideXZ); x > xe; x--)
                     {
                         EnqueueChunk(x, pc.z - r);
                     }
