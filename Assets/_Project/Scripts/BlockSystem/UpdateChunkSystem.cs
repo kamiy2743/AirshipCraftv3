@@ -24,52 +24,45 @@ namespace BlockSystem
             _chunkObjectCreator = chunkObjectCreator;
 
             // 初回の更新
-            if (!TryGetPlayerChunk(player.position, out ChunkCoordinate firstPlayerChunk))
-            {
-                throw new System.Exception("最初は必ずワールドの範囲内にいてください");
-            }
-            UpdateAroundPlayer(firstPlayerChunk);
-
-            // 前回の更新時のプレイヤーチャンクを保持
-            ChunkCoordinate lastPlayerChunk = firstPlayerChunk;
+            Vector3Int lastPlayerChunk = GetPlayerChunk(player.position);
+            UpdateAroundPlayer(lastPlayerChunk);
 
             // 毎フレーム監視
             Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
                     // プレイヤーチャンクが変化したら更新
-                    if (!TryGetPlayerChunk(player.position, out ChunkCoordinate playerChunk)) return;
+                    var playerChunk = GetPlayerChunk(player.position);
                     if (playerChunk == lastPlayerChunk) return;
 
                     UpdateAroundPlayer(playerChunk);
                     lastPlayerChunk = playerChunk;
                 });
-        }
 
-        private bool TryGetPlayerChunk(Vector3 playerPosition, out ChunkCoordinate playerChunk)
-        {
-            if (!BlockCoordinate.IsValid(playerPosition))
+            // プレイヤーがいるチャンクに変換
+            const float InverseBlockSide = 1f / World.ChunkBlockSide;
+            Vector3Int GetPlayerChunk(Vector3 playerPosition)
             {
-                playerChunk = default;
-                UnityEngine.Debug.Log("チャンク生成範囲外です");
-                return false;
+                return new Vector3Int(
+                    // BlockSideで割り算
+                    (int)(playerPosition.x * InverseBlockSide),
+                    (int)(playerPosition.y * InverseBlockSide),
+                    (int)(playerPosition.z * InverseBlockSide)
+                );
             }
-
-            playerChunk = ChunkCoordinate.FromBlockCoordinate(new BlockCoordinate(playerPosition));
-            return true;
         }
 
         /// <summary>
         /// プレイヤーのいるチャンクを中心とする立方体を作成する
         /// </summary>
-        private void UpdateAroundPlayer(ChunkCoordinate pc)
+        private void UpdateAroundPlayer(Vector3Int pc)
         {
             // タスク実行中であればキャンセル
             createChunkTaskCancellationTokenSource?.Cancel();
             createChunkTaskCancellationTokenSource?.Dispose();
 
             // 作成済みチャンク
-            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet;
+            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet.ToHashSet();
 
             // 読みこみ範囲外のチャンクオブジェクトを解放する
             foreach (var cc in createdChunkHashSet)
