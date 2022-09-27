@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
+using Unity.Mathematics;
 
 namespace BlockSystem
 {
@@ -67,18 +68,20 @@ namespace BlockSystem
             createChunkTaskCancellationTokenSource?.Cancel();
             createChunkTaskCancellationTokenSource?.Dispose();
 
+            // 作成済みチャンク
+            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet;
+
             // 読みこみ範囲外のチャンクオブジェクトを解放する
-            foreach (var cc in _chunkObjectPool.ChunkObjects.Keys.ToList())
+            foreach (var cc in createdChunkHashSet)
             {
-                var distance = new Vector3Int(Mathf.Abs(cc.x - pc.x), Mathf.Abs(cc.y - pc.y), Mathf.Abs(cc.z - pc.z));
-                if (distance.x > World.LoadChunkRadius || distance.y > World.LoadChunkRadius || distance.z > World.LoadChunkRadius)
+                if (math.abs(cc.x - pc.x) > World.LoadChunkRadius ||
+                    math.abs(cc.y - pc.y) > World.LoadChunkRadius ||
+                    math.abs(cc.z - pc.z) > World.LoadChunkRadius)
                 {
                     _chunkObjectPool.ReleaseChunkObject(cc);
                 }
             }
 
-            // 作成済みチャンクのリスト
-            var createdChunkList = _chunkObjectPool.ChunkObjects.Keys.ToList();
             // 作成するチャンクのキュー
             var createChunkQueue = new ConcurrentQueue<ChunkCoordinate>();
 
@@ -86,12 +89,12 @@ namespace BlockSystem
             void EnqueueChunk(int x, int z)
             {
                 // 下から順に追加
-                for (int y = pc.y - World.LoadChunkRadius; y <= pc.y + World.LoadChunkRadius; y++)
+                var ye = math.min(pc.y + World.LoadChunkRadius, World.WorldChunkSideY - 1);
+                for (int y = math.max(pc.y - World.LoadChunkRadius, 0); y <= ye; y++)
                 {
-                    if (!ChunkCoordinate.IsValid(x, y, z)) continue;
-
-                    var cc = new ChunkCoordinate(x, y, z);
-                    if (createdChunkList.Contains(cc)) continue;
+                    var cc = new ChunkCoordinate(x, y, z, true);
+                    // 作成済みならスキップ
+                    if (createdChunkHashSet.Contains(cc)) continue;
 
                     createChunkQueue.Enqueue(cc);
                 }
@@ -104,24 +107,40 @@ namespace BlockSystem
             for (int r = 1; r <= World.LoadChunkRadius; r++)
             {
                 // 上から見てx+方向
-                for (int x = pc.x - r; x < pc.x + r; x++)
+                if (pc.z + r < World.WorldChunkSideXZ)
                 {
-                    EnqueueChunk(x, pc.z + r);
+                    var xe = math.min(pc.x + r, World.WorldChunkSideXZ);
+                    for (int x = math.max(pc.x - r, 0); x < xe; x++)
+                    {
+                        EnqueueChunk(x, pc.z + r);
+                    }
                 }
                 // z-方向
-                for (int z = pc.z + r; z > pc.z - r; z--)
+                if (pc.x + r < World.WorldChunkSideXZ)
                 {
-                    EnqueueChunk(pc.x + r, z);
+                    var ze = math.max(pc.z - r, 0);
+                    for (int z = math.min(pc.z + r, World.WorldChunkSideXZ); z > ze; z--)
+                    {
+                        EnqueueChunk(pc.x + r, z);
+                    }
                 }
                 // x-方向
-                for (int x = pc.x + r; x > pc.x - r; x--)
+                if (pc.z - r >= 0)
                 {
-                    EnqueueChunk(x, pc.z - r);
+                    var xe = math.max(pc.x - r, 0);
+                    for (int x = math.min(pc.x + r, World.WorldChunkSideXZ); x > xe; x--)
+                    {
+                        EnqueueChunk(x, pc.z - r);
+                    }
                 }
                 // z+方向
-                for (int z = pc.z - r; z < pc.z + r; z++)
+                if (pc.x - r >= 0)
                 {
-                    EnqueueChunk(pc.x - r, z);
+                    var ze = math.min(pc.z + r, World.WorldChunkSideXZ);
+                    for (int z = math.max(pc.z - r, 0); z < ze; z++)
+                    {
+                        EnqueueChunk(pc.x - r, z);
+                    }
                 }
             }
 

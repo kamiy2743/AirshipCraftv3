@@ -12,9 +12,13 @@ namespace BlockSystem
         internal readonly int y;
         internal readonly int z;
 
-        internal ChunkCoordinate(int x, int y, int z)
+        /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
+        internal ChunkCoordinate(int x, int y, int z, bool ignoreValidation = false)
         {
-            if (!IsValid(x, y, y)) throw new System.Exception($"chunk({x}, {y}, {z}) is invalid");
+            if (!ignoreValidation)
+            {
+                if (!IsValid(x, y, y)) throw new System.Exception($"chunk({x}, {y}, {z}) is invalid");
+            }
 
             this.x = x;
             this.y = y;

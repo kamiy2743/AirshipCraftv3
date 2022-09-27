@@ -12,12 +12,17 @@ namespace BlockSystem
 
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects;
+
+        internal IReadOnlyCollection<ChunkCoordinate> CreatedChunkHashSet => _createdChunkHashSet;
+        private HashSet<ChunkCoordinate> _createdChunkHashSet;
+
         private Queue<ChunkObject> availableChunkObjects;
 
         internal void StartInitial(ChunkDataStore chunkDataStore)
         {
             var capacity = World.LoadChunkCount;
             _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(capacity);
+            _createdChunkHashSet = new HashSet<ChunkCoordinate>(capacity);
             availableChunkObjects = new Queue<ChunkObject>(capacity);
 
             for (int i = 0; i < World.LoadChunkCount; i++)
@@ -42,6 +47,7 @@ namespace BlockSystem
 
             var chunkObject = availableChunkObjects.Dequeue();
             _chunkObjects.Add(cc, chunkObject);
+            _createdChunkHashSet.Add(cc);
             chunkObject.gameObject.SetActive(true);
 
             return chunkObject;
@@ -59,6 +65,7 @@ namespace BlockSystem
             }
 
             _chunkObjects.Remove(cc);
+            _createdChunkHashSet.Remove(cc);
             chunkObject.gameObject.SetActive(false);
             availableChunkObjects.Enqueue(chunkObject);
         }

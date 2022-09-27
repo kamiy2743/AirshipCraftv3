@@ -25,6 +25,7 @@ namespace BlockSystem
             // 別スレッドに退避
             await UniTask.SwitchToThreadPool();
 
+            // TODO HashSetにする
             var updateChunkList = new List<ChunkCoordinate>(4);
 
             // 更新対象のブロックデータをセットする
