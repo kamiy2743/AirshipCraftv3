@@ -25,8 +25,7 @@ namespace BlockSystem
             // 別スレッドに退避
             await UniTask.SwitchToThreadPool();
 
-            // TODO HashSetにする
-            var updateChunkList = new List<ChunkCoordinate>(4);
+            var updateChunkHashSet = new HashSet<ChunkCoordinate>(4);
 
             // 更新対象のブロックデータをセットする
             {
@@ -36,7 +35,7 @@ namespace BlockSystem
                 var chunkData = _chunkDataStore.GetChunkData(cc);
                 chunkData.SetBlockData(lc, updateBlockData);
 
-                updateChunkList.Add(cc);
+                updateChunkHashSet.Add(cc);
             }
 
             // 更新したブロックの周囲のブロックの接地ブロック情報を削除する
@@ -56,15 +55,12 @@ namespace BlockSystem
 
                 chunkData.Blocks[index].SetContactOtherBlockSurfaces(SurfaceNormal.Empty);
 
-                if (!updateChunkList.Contains(cc))
-                {
-                    updateChunkList.Add(cc);
-                }
+                updateChunkHashSet.Add(cc);
             }
 
             // 更新チャンクのメッシュを再計算する
-            var chunkMeshDic = new Dictionary<ChunkObject, ChunkMeshData>(updateChunkList.Count);
-            foreach (var updateChunk in updateChunkList)
+            var chunkMeshDic = new Dictionary<ChunkObject, ChunkMeshData>(updateChunkHashSet.Count);
+            foreach (var updateChunk in updateChunkHashSet)
             {
                 // 生成されていないチャンクであればスキップ
                 if (!_chunkObjectPool.ChunkObjects.ContainsKey(updateChunk)) continue;
