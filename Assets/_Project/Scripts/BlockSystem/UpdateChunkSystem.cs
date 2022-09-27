@@ -119,7 +119,7 @@ namespace BlockSystem
                 if (pc.x + r < World.WorldChunkSideXZ)
                 {
                     var ze = math.max(pc.z - r, 0);
-                    for (int z = math.min(pc.z + r, World.WorldChunkSideXZ); z > ze; z--)
+                    for (int z = math.min(pc.z + r, World.WorldChunkSideXZ); z >= ze; z--)
                     {
                         EnqueueChunk(pc.x + r, z);
                     }
@@ -128,7 +128,7 @@ namespace BlockSystem
                 if (pc.z - r >= 0)
                 {
                     var xe = math.max(pc.x - r, 0);
-                    for (int x = math.min(pc.x + r, World.WorldChunkSideXZ); x > xe; x--)
+                    for (int x = math.min(pc.x + r, World.WorldChunkSideXZ); x >= xe; x--)
                     {
                         EnqueueChunk(x, pc.z - r);
                     }
