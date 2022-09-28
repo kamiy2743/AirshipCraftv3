@@ -13,6 +13,8 @@ namespace BlockSystem
         internal void Init(ChunkDataStore chunkDataStore)
         {
             _chunkDataStore = chunkDataStore;
+            meshCollider.sharedMesh = null;
+            meshCollider.enabled = false;
         }
 
         internal void SetMesh(ChunkMeshData meshData)
@@ -33,8 +35,8 @@ namespace BlockSystem
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
 
-            meshCollider.sharedMesh = mesh;
-            meshCollider.enabled = true;
+            // meshCollider.sharedMesh = mesh;
+            // meshCollider.enabled = true;
         }
 
         internal void ClearMesh()
