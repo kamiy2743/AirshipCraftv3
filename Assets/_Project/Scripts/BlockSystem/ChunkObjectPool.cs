@@ -29,7 +29,6 @@ namespace BlockSystem
             {
                 var chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
                 chunkObject.Init(chunkDataStore);
-                chunkObject.gameObject.SetActive(false);
                 availableChunkObjects.Enqueue(chunkObject);
             }
         }
@@ -48,7 +47,6 @@ namespace BlockSystem
             var chunkObject = availableChunkObjects.Dequeue();
             _chunkObjects.Add(cc, chunkObject);
             _createdChunkHashSet.Add(cc);
-            chunkObject.gameObject.SetActive(true);
 
             return chunkObject;
         }
@@ -64,9 +62,9 @@ namespace BlockSystem
                 throw new System.Exception("割り当てられたChunkObjectが存在しません: " + cc);
             }
 
+            chunkObject.ClearMesh();
             _chunkObjects.Remove(cc);
             _createdChunkHashSet.Remove(cc);
-            chunkObject.gameObject.SetActive(false);
             availableChunkObjects.Enqueue(chunkObject);
         }
     }

@@ -37,6 +37,13 @@ namespace BlockSystem
             meshCollider.enabled = true;
         }
 
+        internal void ClearMesh()
+        {
+            meshFilter.mesh.Clear();
+            meshCollider.sharedMesh = null;
+            meshCollider.enabled = false;
+        }
+
         public BlockData GetBlockData(Vector3 position)
         {
             var bc = new BlockCoordinate(position);
