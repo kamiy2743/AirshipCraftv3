@@ -1,4 +1,5 @@
 using System;
+using MessagePack;
 
 namespace BlockSystem
 {
@@ -6,11 +7,15 @@ namespace BlockSystem
     /// ワールド内のチャンクの座標
     /// 座標というよりはインデックスに近い
     /// </summary>
-    internal struct ChunkCoordinate : IEquatable<ChunkCoordinate>
+    [MessagePackObject]
+    public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
-        internal readonly int x;
-        internal readonly int y;
-        internal readonly int z;
+        [Key(0)]
+        public readonly int x;
+        [Key(1)]
+        public readonly int y;
+        [Key(2)]
+        public readonly int z;
 
         /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
         internal ChunkCoordinate(int x, int y, int z, bool ignoreValidation = false)

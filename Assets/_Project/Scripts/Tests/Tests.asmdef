@@ -7,7 +7,9 @@
         "BlockSystem",
         "UniTask",
         "Util",
-        "MasterData"
+        "MasterData",
+        "MessagePack",
+        "MessagePack.Annotations"
     ],
     "includePlatforms": [
         "Editor"

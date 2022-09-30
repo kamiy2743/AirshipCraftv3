@@ -2,18 +2,22 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
+using MessagePack;
 
 namespace BlockSystem
 {
-    internal class ChunkData
+    [MessagePackObject]
+    public class ChunkData
     {
-        internal ChunkCoordinate ChunkCoordinate { get; private set; }
+        [Key(0)]
+        public ChunkCoordinate ChunkCoordinate { get; private set; }
 
-        internal BlockData[] Blocks;
+        [Key(1)]
+        public BlockData[] Blocks;
 
         internal static readonly ChunkData Empty = new ChunkData();
 
-        private ChunkData()
+        public ChunkData()
         {
             ChunkCoordinate = new ChunkCoordinate(0, 0, 0);
             Blocks = new BlockData[World.BlockCountInChunk];

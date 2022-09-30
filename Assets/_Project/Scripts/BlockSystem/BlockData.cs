@@ -1,18 +1,26 @@
 using Util;
 using MasterData.Block;
 using System;
+using MessagePack;
 
 namespace BlockSystem
 {
+    [MessagePackObject]
     public struct BlockData : IEquatable<BlockData>
     {
+        [Key(0)]
         public readonly BlockID ID;
+        [Key(1)]
         public readonly BlockCoordinate BlockCoordinate;
 
+        [IgnoreMember]
         public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
-        private SurfaceNormal contactOtherBlockSurfaces;
+        [Key(2)]
+        public SurfaceNormal contactOtherBlockSurfaces;
+
         private bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
+        // TODO 不要な計算してる可能性
         internal bool NeedToCalcContactSurfaces => contactOtherBlockSurfaces == SurfaceNormal.Empty;
 
         internal bool IsRenderSkip => !IsContactAir || ID == BlockID.Air;

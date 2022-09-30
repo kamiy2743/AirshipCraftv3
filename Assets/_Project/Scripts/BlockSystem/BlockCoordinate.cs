@@ -1,16 +1,21 @@
 using UnityEngine;
 using System;
+using MessagePack;
 
 namespace BlockSystem
 {
     /// <summary>
     /// ワールド内のブロックの座標
     /// </summary>
+    [MessagePackObject]
     public struct BlockCoordinate : IEquatable<BlockCoordinate>
     {
-        internal readonly int x;
-        internal readonly int y;
-        internal readonly int z;
+        [Key(0)]
+        public readonly int x;
+        [Key(1)]
+        public readonly int y;
+        [Key(2)]
+        public readonly int z;
 
         internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
 
