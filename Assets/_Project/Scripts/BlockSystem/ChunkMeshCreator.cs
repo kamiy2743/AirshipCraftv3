@@ -117,6 +117,7 @@ namespace BlockSystem
             {
                 BlockData* targetBlockData = centerChunkBlocksFirst + index;
                 if (targetBlockData->IsRenderSkip) return;
+                if (!targetBlockData->NeedToCalcContactSurfaces) return;
 
                 var surfaces = SurfaceNormal.Zero;
                 var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();

@@ -20,7 +20,6 @@ namespace BlockSystem
         public SurfaceNormal contactOtherBlockSurfaces;
 
         private bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
-        // TODO 不要な計算してる可能性
         internal bool NeedToCalcContactSurfaces => contactOtherBlockSurfaces == SurfaceNormal.Empty;
 
         internal bool IsRenderSkip => !IsContactAir || ID == BlockID.Air;
