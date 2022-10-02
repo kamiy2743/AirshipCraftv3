@@ -10,6 +10,9 @@ using MasterData.Block;
 using System;
 using MessagePack;
 using MessagePack.Resolvers;
+using UnityEngine;
+using System.IO;
+using System.Text;
 
 public class MessagePackTest
 {
@@ -17,15 +20,60 @@ public class MessagePackTest
     public void ChunkDataのシリアライズ()
     {
         var mapGenerator = new MapGenerator(100, 100);
-        var chunkData = new ChunkData(new ChunkCoordinate(0, 0, 0), mapGenerator);
+        var chunkData = new ChunkData(new ChunkCoordinate(12, 2, 35), mapGenerator);
 
         var sw1 = new System.Diagnostics.Stopwatch();
         sw1.Start();
 
         var bytes = MessagePackSerializer.Serialize(chunkData);
-        UnityEngine.Debug.Log(bytes.Length);
+        var chunkData2 = MessagePackSerializer.Deserialize<ChunkData>(bytes);
+        UnityEngine.Debug.Log(chunkData2.ChunkCoordinate);
 
         sw1.Stop();
         UnityEngine.Debug.Log(sw1.Elapsed);
+    }
+
+    [Test]
+    public void ChunkCoordinateのシリアライズ()
+    {
+        var bytes = MessagePackSerializer.Serialize(new ChunkCoordinate(124, 1, 11));
+        var cc = MessagePackSerializer.Deserialize<ChunkCoordinate>(bytes);
+        UnityEngine.Debug.Log(cc);
+    }
+
+    [Test]
+    public void Structのシリアライズ()
+    {
+        var bytes = MessagePackSerializer.Serialize(new Vector3(213, 1231, 321));
+        var vector = MessagePackSerializer.Deserialize<Vector3>(bytes);
+        UnityEngine.Debug.Log(vector);
+    }
+
+    [Test]
+    public void ChunkDataを複数回追記()
+    {
+        var mapGenerator = new MapGenerator(100, 100);
+        var ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
+        var sb = new StringBuilder();
+
+        for (int y = 0; y < World.WorldChunkSideY; y += 10)
+        {
+            for (int z = 0; z < World.WorldChunkSideXZ; z += 10)
+            {
+                for (int x = 0; x < World.WorldChunkSideXZ; x += 10)
+                {
+                    var chunkData = new ChunkData(new ChunkCoordinate(x, y, z), mapGenerator);
+
+                    using (var fs = new FileStream(Application.persistentDataPath + "/ChunkDataStore/ChunkDataTest.bin", FileMode.Append, FileAccess.Write))
+                    {
+                        MessagePackSerializer.Serialize<ChunkData>(fs, chunkData);
+                        var bytes = MessagePackSerializer.Serialize<ChunkData>(chunkData);
+                        sb.AppendLine(chunkData.ChunkCoordinate + ": " + bytes.Length);
+                    }
+                }
+            }
+        }
+
+        File.WriteAllText(Application.persistentDataPath + "/ChunkDataStore/ChunkDataTest.result", sb.ToString());
     }
 }

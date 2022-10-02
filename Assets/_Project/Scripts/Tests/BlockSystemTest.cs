@@ -1,65 +1,65 @@
 // using System.Collections;
 // using System.Collections.Generic;
-
 // using NUnit.Framework;
-// // using UnityEngine.TestTools;
+// using UnityEngine.TestTools;
 // using BlockSystem;
 // using Cysharp.Threading.Tasks;
 // using Util;
 // using MasterData.Block;
 // using System;
+// using Unity.PerformanceTesting;
 
 // public class BlockSystemTest
 // {
-//     [Test]
+//     [Test, Performance]
 //     public void チャンクメッシュ生成速度計測_1チャンク()
 //     {
 //         MasterBlockDataStore.InitialLoad();
 
-//         var mapGenerator = new MapGenerator(1024, 80);
-//         var chunkDataStore = new ChunkDataStore(mapGenerator);
-//         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
-//         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
+//         Measure.Method(() =>
+//         {
+//             var mapGenerator = new MapGenerator(1024, 80);
+//             var chunkDataStore = new ChunkDataStore(mapGenerator);
+//             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
 
-//         var sw = new System.Diagnostics.Stopwatch();
-//         sw.Start();
-
-//         var cc = new ChunkCoordinate(0, 0, 0);
-//         var chunkData = chunkDataStore.GetChunkData(cc);
-//         chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
-
-//         sw.Stop();
-//         UnityEngine.Debug.Log(sw.Elapsed);
+//             var cc = new ChunkCoordinate(0, 0, 0);
+//             var chunkData = chunkDataStore.GetChunkData(cc);
+//             chunkMeshCreator.CreateMeshData(chunkData);
+//         })
+//         .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
+//         .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
+//         .MeasurementCount(20) // 計測数
+//         .Run();
 //     }
 
-//     [Test]
+//     [Test, Performance]
 //     public void チャンクメッシュ生成速度計測_64チャンク()
 //     {
 //         MasterBlockDataStore.InitialLoad();
 
-//         var mapGenerator = new MapGenerator(1024, 80);
-//         var chunkDataStore = new ChunkDataStore(mapGenerator);
-//         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
-//         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
-
-//         var sw = new System.Diagnostics.Stopwatch();
-//         sw.Start();
-
-//         for (int x = 0; x < 4; x++)
+//         Measure.Method(() =>
 //         {
-//             for (int y = 0; y < 4; y++)
+//             var mapGenerator = new MapGenerator(1024, 80);
+//             var chunkDataStore = new ChunkDataStore(mapGenerator);
+//             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
+
+//             for (int x = 0; x < 4; x++)
 //             {
-//                 for (int z = 0; z < 4; z++)
+//                 for (int y = 0; y < 4; y++)
 //                 {
-//                     var cc = new ChunkCoordinate(x, y, z);
-//                     var chunkData = chunkDataStore.GetChunkData(cc);
-//                     chunkMeshCreator.CreateMeshData(ref chunkData.Blocks);
+//                     for (int z = 0; z < 4; z++)
+//                     {
+//                         var cc = new ChunkCoordinate(x, y, z);
+//                         var chunkData = chunkDataStore.GetChunkData(cc);
+//                         chunkMeshCreator.CreateMeshData(chunkData);
+//                     }
 //                 }
 //             }
-//         }
-
-//         sw.Stop();
-//         UnityEngine.Debug.Log(sw.Elapsed);
+//         })
+//         .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
+//         .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
+//         .MeasurementCount(20) // 計測数
+//         .Run();
 //     }
 
 //     [Test]
@@ -69,8 +69,7 @@
 
 //         var mapGenerator = new MapGenerator(1024, 80);
 //         var chunkDataStore = new ChunkDataStore(mapGenerator);
-//         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
-//         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
+//         var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
 
 //         var sw = new System.Diagnostics.Stopwatch();
 //         sw.Start();
@@ -84,7 +83,7 @@
 //                 {
 //                     var cc = new ChunkCoordinate(x, y, z);
 //                     var chunkData = chunkDataStore.GetChunkData(cc);
-//                     meshData = chunkMeshCreator.CreateMeshData(ref chunkData.Blocks, meshData);
+//                     meshData = chunkMeshCreator.CreateMeshData(chunkData, meshData);
 //                     meshData.Clear();
 //                 }
 //             }
@@ -101,19 +100,18 @@
 
 //         var mapGenerator = new MapGenerator(1024, 80);
 //         var chunkDataStore = new ChunkDataStore(mapGenerator);
-//         var contactOtherBlockSolver = new ContactOtherBlockSolver(chunkDataStore);
-//         var chunkMeshCreator = new ChunkMeshCreator(contactOtherBlockSolver);
+//         var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
 
 //         var cc1 = new ChunkCoordinate(0, 0, 0);
 //         var chunkData1 = chunkDataStore.GetChunkData(cc1);
-//         chunkMeshCreator.CreateMeshData(ref chunkData1.Blocks);
+//         chunkMeshCreator.CreateMeshData(chunkData1);
 
 //         var sw = new System.Diagnostics.Stopwatch();
 //         sw.Start();
 
 //         var cc2 = new ChunkCoordinate(0, 0, 0);
 //         var chunkData2 = chunkDataStore.GetChunkData(cc2);
-//         chunkMeshCreator.CreateMeshData(ref chunkData2.Blocks);
+//         chunkMeshCreator.CreateMeshData(chunkData2);
 
 //         sw.Stop();
 //         UnityEngine.Debug.Log(sw.Elapsed);

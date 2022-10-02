@@ -207,20 +207,22 @@ namespace MessagePack.Formatters.BlockSystem
 
             options.Security.DepthStep(ref reader);
             var length = reader.ReadArrayHeader();
-            var ____result = new global::BlockSystem.BlockCoordinate();
+            var __x__ = default(uint);
+            var __y__ = default(uint);
+            var __z__ = default(uint);
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        reader.ReadInt32();
+                        __x__ = reader.ReadUInt32();
                         break;
                     case 1:
-                        reader.ReadInt32();
+                        __y__ = reader.ReadUInt32();
                         break;
                     case 2:
-                        reader.ReadInt32();
+                        __z__ = reader.ReadUInt32();
                         break;
                     default:
                         reader.Skip();
@@ -228,6 +230,7 @@ namespace MessagePack.Formatters.BlockSystem
                 }
             }
 
+            var ____result = new global::BlockSystem.BlockCoordinate(__x__, __y__, __z__);
             reader.Depth--;
             return ____result;
         }
@@ -242,7 +245,7 @@ namespace MessagePack.Formatters.BlockSystem
             writer.WriteArrayHeader(3);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::MasterData.Block.BlockID>(formatterResolver).Serialize(ref writer, value.ID, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.BlockCoordinate>(formatterResolver).Serialize(ref writer, value.BlockCoordinate, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Util.SurfaceNormal>(formatterResolver).Serialize(ref writer, value.contactOtherBlockSurfaces, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Util.SurfaceNormal>(formatterResolver).Serialize(ref writer, value.ContactOtherBlockSurfaces, options);
         }
 
         public global::BlockSystem.BlockData Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -255,20 +258,22 @@ namespace MessagePack.Formatters.BlockSystem
             options.Security.DepthStep(ref reader);
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
-            var ____result = new global::BlockSystem.BlockData();
+            var __ContactOtherBlockSurfaces__ = default(global::Util.SurfaceNormal);
+            var __ID__ = default(global::MasterData.Block.BlockID);
+            var __BlockCoordinate__ = default(global::BlockSystem.BlockCoordinate);
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::MasterData.Block.BlockID>(formatterResolver).Deserialize(ref reader, options);
+                        __ID__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::MasterData.Block.BlockID>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 1:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.BlockCoordinate>(formatterResolver).Deserialize(ref reader, options);
+                        __BlockCoordinate__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.BlockCoordinate>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 2:
-                        ____result.contactOtherBlockSurfaces = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Util.SurfaceNormal>(formatterResolver).Deserialize(ref reader, options);
+                        __ContactOtherBlockSurfaces__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Util.SurfaceNormal>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -276,6 +281,7 @@ namespace MessagePack.Formatters.BlockSystem
                 }
             }
 
+            var ____result = new global::BlockSystem.BlockData(__ID__, __BlockCoordinate__, __ContactOtherBlockSurfaces__);
             reader.Depth--;
             return ____result;
         }
@@ -301,20 +307,22 @@ namespace MessagePack.Formatters.BlockSystem
 
             options.Security.DepthStep(ref reader);
             var length = reader.ReadArrayHeader();
-            var ____result = new global::BlockSystem.ChunkCoordinate();
+            var __x__ = default(ushort);
+            var __y__ = default(ushort);
+            var __z__ = default(ushort);
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        reader.ReadInt32();
+                        __x__ = reader.ReadUInt16();
                         break;
                     case 1:
-                        reader.ReadInt32();
+                        __y__ = reader.ReadUInt16();
                         break;
                     case 2:
-                        reader.ReadInt32();
+                        __z__ = reader.ReadUInt16();
                         break;
                     default:
                         reader.Skip();
@@ -322,6 +330,7 @@ namespace MessagePack.Formatters.BlockSystem
                 }
             }
 
+            var ____result = new global::BlockSystem.ChunkCoordinate(__x__, __y__, __z__);
             reader.Depth--;
             return ____result;
         }
@@ -354,17 +363,18 @@ namespace MessagePack.Formatters.BlockSystem
             options.Security.DepthStep(ref reader);
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
-            var ____result = new global::BlockSystem.ChunkData();
+            var __ChunkCoordinate__ = default(global::BlockSystem.ChunkCoordinate);
+            var __Blocks__ = default(global::BlockSystem.BlockData[]);
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Deserialize(ref reader, options);
+                        __ChunkCoordinate__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 1:
-                        ____result.Blocks = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.BlockData[]>(formatterResolver).Deserialize(ref reader, options);
+                        __Blocks__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.BlockData[]>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -372,6 +382,7 @@ namespace MessagePack.Formatters.BlockSystem
                 }
             }
 
+            var ____result = new global::BlockSystem.ChunkData(__ChunkCoordinate__, __Blocks__);
             reader.Depth--;
             return ____result;
         }

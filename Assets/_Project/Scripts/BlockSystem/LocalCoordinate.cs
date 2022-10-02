@@ -25,9 +25,9 @@ namespace BlockSystem
         {
             return new LocalCoordinate(
                 // BlockSideで割った余り
-                bc.x - ((int)(bc.x * InverseBlockSide) * World.ChunkBlockSide),
-                bc.y - ((int)(bc.y * InverseBlockSide) * World.ChunkBlockSide),
-                bc.z - ((int)(bc.z * InverseBlockSide) * World.ChunkBlockSide)
+                (int)bc.x - ((int)(bc.x * InverseBlockSide) * World.ChunkBlockSide),
+                (int)bc.y - ((int)(bc.y * InverseBlockSide) * World.ChunkBlockSide),
+                (int)bc.z - ((int)(bc.z * InverseBlockSide) * World.ChunkBlockSide)
             );
         }
     }

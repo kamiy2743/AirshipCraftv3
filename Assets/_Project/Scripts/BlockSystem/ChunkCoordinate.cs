@@ -11,23 +11,34 @@ namespace BlockSystem
     public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
         [Key(0)]
-        public readonly int x;
+        public readonly ushort x;
         [Key(1)]
-        public readonly int y;
+        public readonly ushort y;
         [Key(2)]
-        public readonly int z;
+        public readonly ushort z;
+
+        /// <summary>
+        /// シリアライズ用なのでそれ以外では使用しないでください
+        /// </summary>
+        [SerializationConstructor]
+        public ChunkCoordinate(ushort x, ushort y, ushort z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
 
         /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
         internal ChunkCoordinate(int x, int y, int z, bool ignoreValidation = false)
         {
             if (!ignoreValidation)
             {
-                if (!IsValid(x, y, y)) throw new System.Exception($"chunk({x}, {y}, {z}) is invalid");
+                if (!IsValid(x, y, z)) throw new System.Exception($"chunk({x}, {y}, {z}) is invalid");
             }
 
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.x = (ushort)x;
+            this.y = (ushort)y;
+            this.z = (ushort)z;
         }
 
         internal static bool IsValid(int x, int y, int z)

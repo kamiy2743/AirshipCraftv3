@@ -10,13 +10,16 @@ namespace BlockSystem
     public class ChunkData
     {
         [Key(0)]
-        public ChunkCoordinate ChunkCoordinate { get; private set; }
+        public readonly ChunkCoordinate ChunkCoordinate;
 
         [Key(1)]
-        public BlockData[] Blocks;
+        public readonly BlockData[] Blocks;
 
         internal static readonly ChunkData Empty = new ChunkData();
 
+        /// <summary>
+        /// Empty用
+        /// </summary>
         public ChunkData()
         {
             ChunkCoordinate = new ChunkCoordinate(0, 0, 0);
@@ -25,6 +28,13 @@ namespace BlockSystem
             {
                 Blocks[i] = BlockData.Empty;
             }
+        }
+
+        [SerializationConstructor]
+        public ChunkData(ChunkCoordinate cc, BlockData[] blocks)
+        {
+            ChunkCoordinate = cc;
+            Blocks = blocks;
         }
 
         internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)

@@ -8,6 +8,7 @@ public class MyMessagePackInitializer
     public static void Initialize()
     {
         StaticCompositeResolver.Instance.Register(
+            MessagePack.Resolvers.CustomResolver.Instance,
             MessagePack.Resolvers.GeneratedResolver.Instance,
             MessagePack.Resolvers.StandardResolver.Instance,
             MessagePack.Unity.UnityResolver.Instance,

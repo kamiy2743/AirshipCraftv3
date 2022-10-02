@@ -17,28 +17,36 @@ namespace BlockSystem
         public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
         [Key(2)]
-        public SurfaceNormal contactOtherBlockSurfaces;
+        public SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
-        private bool IsContactAir => !contactOtherBlockSurfaces.IsFull();
-        internal bool NeedToCalcContactSurfaces => contactOtherBlockSurfaces == SurfaceNormal.Empty;
+        private bool IsContactAir => !ContactOtherBlockSurfaces.IsFull();
+        internal bool NeedToCalcContactSurfaces => ContactOtherBlockSurfaces == SurfaceNormal.Empty;
 
         internal bool IsRenderSkip => !IsContactAir || ID == BlockID.Air;
+
+        [SerializationConstructor]
+        public BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
+        {
+            ID = id;
+            BlockCoordinate = bc;
+            ContactOtherBlockSurfaces = contactOtherBlockSurfaces;
+        }
 
         internal BlockData(BlockID id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;
-            contactOtherBlockSurfaces = SurfaceNormal.Empty;
+            ContactOtherBlockSurfaces = SurfaceNormal.Empty;
         }
 
         internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
-            contactOtherBlockSurfaces = surfaces;
+            ContactOtherBlockSurfaces = surfaces;
         }
 
         internal bool IsContactOtherBlock(SurfaceNormal surface)
         {
-            return contactOtherBlockSurfaces.Contains(surface);
+            return ContactOtherBlockSurfaces.Contains(surface);
         }
 
         public override bool Equals(object obj)
