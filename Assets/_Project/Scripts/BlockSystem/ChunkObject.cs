@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Threading;
 
 namespace BlockSystem
 {
@@ -46,12 +47,12 @@ namespace BlockSystem
             meshCollider.enabled = false;
         }
 
-        public BlockData GetBlockData(Vector3 position)
+        public BlockData GetBlockData(Vector3 position, CancellationToken ct)
         {
             var bc = new BlockCoordinate(position);
             var cc = ChunkCoordinate.FromBlockCoordinate(bc);
             var lc = LocalCoordinate.FromBlockCoordinate(bc);
-            var chunkData = _chunkDataStore.GetChunkData(cc);
+            var chunkData = _chunkDataStore.GetChunkData(cc, ct);
 
             return chunkData.GetBlockData(lc);
         }

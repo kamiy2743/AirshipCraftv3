@@ -73,6 +73,7 @@ namespace BlockSystem
         /// </summary>
         private void UpdateAroundPlayer(Vector3Int pc)
         {
+            UnityEngine.Debug.Log("update");
             // タスク実行中であればキャンセル
             createMeshDataTaskCancellationTokenSource?.Cancel();
             createMeshDataTaskCancellationTokenSource?.Dispose();
@@ -167,17 +168,21 @@ namespace BlockSystem
         private async UniTask CreateMeshDataFromQueue(CancellationToken ct)
         {
             // 別スレッドに退避
-            // await UniTask.SwitchToThreadPool();
+            await UniTask.SwitchToThreadPool();
 
             while (createChunkMeshDataQueue.Count > 0)
             {
                 if (ct.IsCancellationRequested) return;
 
                 var cc = createChunkMeshDataQueue.Dequeue();
-                var chunkData = _chunkDataStore.GetChunkData(cc);
-                var meshData = _chunkMeshCreator.CreateMeshData(chunkData);
 
+                var chunkData = _chunkDataStore.GetChunkData(cc, ct);
                 if (ct.IsCancellationRequested) return;
+                if (chunkData == null) return;
+
+                var meshData = _chunkMeshCreator.CreateMeshData(chunkData, ct);
+                if (ct.IsCancellationRequested) return;
+                if (meshData == null) return;
 
                 createChunkObjectQueue.Enqueue(new KeyValuePair<ChunkCoordinate, ChunkMeshData>(cc, meshData));
             }

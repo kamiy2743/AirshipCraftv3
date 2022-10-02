@@ -27,7 +27,7 @@ namespace BlockSystem
         {
             var cc = ChunkCoordinate.FromBlockCoordinate(targetCoordinate);
             var lc = LocalCoordinate.FromBlockCoordinate(targetCoordinate);
-            var chunkData = _chunkDataStore.GetChunkData(cc);
+            var chunkData = _chunkDataStore.GetChunkData(cc, ct);
             var targetBlockData = chunkData.GetBlockData(lc);
 
             var updateBlockData = new BlockData(BlockID.Air, targetCoordinate);

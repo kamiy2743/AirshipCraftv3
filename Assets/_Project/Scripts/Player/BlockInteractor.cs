@@ -67,7 +67,7 @@ namespace Player
                 return BlockData.Empty;
             }
 
-            return blockDataAccessor.GetBlockData(raycastHit.point - (raycastHit.normal * 0.5f));
+            return blockDataAccessor.GetBlockData(raycastHit.point - (raycastHit.normal * 0.5f), _cancellationToken);
         }
 
         private void SetBlockOutline(BlockData selectedBlock)

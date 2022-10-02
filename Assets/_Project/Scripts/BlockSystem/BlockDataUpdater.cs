@@ -25,17 +25,22 @@ namespace BlockSystem
             // 別スレッドに退避
             await UniTask.SwitchToThreadPool();
 
-            var updateChunkHashSet = new HashSet<ChunkCoordinate>(4);
+            var updateChunkHashSet = new HashSet<ChunkData>(4);
 
             // 更新対象のブロックデータをセットする
             {
                 var bc = updateBlockData.BlockCoordinate;
                 var cc = ChunkCoordinate.FromBlockCoordinate(bc);
                 var lc = LocalCoordinate.FromBlockCoordinate(bc);
-                var chunkData = _chunkDataStore.GetChunkData(cc);
+                var chunkData = _chunkDataStore.GetChunkData(cc, ct);
+                if (chunkData == null)
+                {
+                    await UniTask.SwitchToMainThread(ct);
+                    return;
+                }
                 chunkData.SetBlockData(lc, updateBlockData);
 
-                updateChunkHashSet.Add(cc);
+                updateChunkHashSet.Add(chunkData);
             }
 
             // 更新したブロックの周囲のブロックの接地ブロック情報を削除する
@@ -47,7 +52,12 @@ namespace BlockSystem
                 var bc = new BlockCoordinate(aroundPosition);
                 var cc = ChunkCoordinate.FromBlockCoordinate(bc);
                 var lc = LocalCoordinate.FromBlockCoordinate(bc);
-                var chunkData = _chunkDataStore.GetChunkData(cc);
+                var chunkData = _chunkDataStore.GetChunkData(cc, ct);
+                if (chunkData == null)
+                {
+                    await UniTask.SwitchToMainThread(ct);
+                    return;
+                }
                 var index = ChunkData.ToIndex(lc);
 
                 // 空気は削除する意味がない
@@ -55,7 +65,7 @@ namespace BlockSystem
 
                 chunkData.Blocks[index].SetContactOtherBlockSurfaces(SurfaceNormal.Empty);
 
-                updateChunkHashSet.Add(cc);
+                updateChunkHashSet.Add(chunkData);
             }
 
             // 更新チャンクのメッシュを再計算する
@@ -63,11 +73,15 @@ namespace BlockSystem
             foreach (var updateChunk in updateChunkHashSet)
             {
                 // 生成されていないチャンクであればスキップ
-                if (!_chunkObjectPool.ChunkObjects.ContainsKey(updateChunk)) continue;
+                if (!_chunkObjectPool.ChunkObjects.ContainsKey(updateChunk.ChunkCoordinate)) continue;
 
-                var chunkObject = _chunkObjectPool.ChunkObjects[updateChunk];
-                var chunkData = _chunkDataStore.GetChunkData(updateChunk);
-                var meshData = _chunkMeshCreator.CreateMeshData(chunkData);
+                var chunkObject = _chunkObjectPool.ChunkObjects[updateChunk.ChunkCoordinate];
+                var meshData = _chunkMeshCreator.CreateMeshData(updateChunk, ct);
+                if (meshData == null)
+                {
+                    await UniTask.SwitchToMainThread(ct);
+                    return;
+                }
                 chunkMeshDic.Add(chunkObject, meshData);
             }
 
@@ -80,7 +94,6 @@ namespace BlockSystem
                 var chunkObject = chunkMesh.Key;
                 var meshData = chunkMesh.Value;
                 chunkObject.SetMesh(meshData);
-                meshData.Clear();
             }
         }
     }

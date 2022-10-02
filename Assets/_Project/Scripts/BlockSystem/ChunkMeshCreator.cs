@@ -1,5 +1,5 @@
 using MasterData.Block;
-using System.Collections.Generic;
+using System.Threading;
 using Util;
 using Unity.Burst;
 using Unity.Jobs;
@@ -21,9 +21,16 @@ namespace BlockSystem
         /// チャンク内のブロックメッシュを合成したメッシュを作成します
         /// </summary>
         /// <param name="meshData">GC回避用の使いまわしChunkMeshData</param>
-        internal ChunkMeshData CreateMeshData(ChunkData chunkData, ChunkMeshData meshData = null)
+        internal ChunkMeshData CreateMeshData(ChunkData chunkData, CancellationToken ct, ChunkMeshData meshData = null)
         {
-            CalcContactOtherBlockSurfaces(chunkData);
+            try
+            {
+                CalcContactOtherBlockSurfaces(chunkData, ct);
+            }
+            catch (System.OperationCanceledException)
+            {
+                return null;
+            }
 
             if (meshData == null)
             {
@@ -51,9 +58,9 @@ namespace BlockSystem
             return meshData;
         }
 
-        unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData)
+        unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
-            var aroundChunkData = new ChunkData[6];
+            var aroundChunkDataArray = new ChunkData[6];
             for (int i = 0; i < 6; i++)
             {
                 var surfaceVector = SurfaceNormalExt.Array[i].ToVector3Int();
@@ -63,23 +70,25 @@ namespace BlockSystem
 
                 if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
                 {
-                    aroundChunkData[i] = ChunkData.Empty;
+                    aroundChunkDataArray[i] = ChunkData.Empty;
                     continue;
                 }
 
                 var cc = new ChunkCoordinate(ccx, ccy, ccz);
-                aroundChunkData[i] = _chunkDataStore.GetChunkData(cc);
+                var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
+                if (aroundChunkData == null) return;
+                aroundChunkDataArray[i] = aroundChunkData;
             }
 
             fixed (
                 BlockData*
                 centerChunkBlocksFirst = &chunkData.Blocks[0],
-                rightChunkBlocksFirst = &aroundChunkData[0].Blocks[0],
-                leftChunkBlocksFirst = &aroundChunkData[1].Blocks[0],
-                topChunkBlocksFirst = &aroundChunkData[2].Blocks[0],
-                bottomChunkBlocksFirst = &aroundChunkData[3].Blocks[0],
-                forwardChunkBlocksFirst = &aroundChunkData[4].Blocks[0],
-                backChunkBlocksFirst = &aroundChunkData[5].Blocks[0]
+                rightChunkBlocksFirst = &aroundChunkDataArray[0].Blocks[0],
+                leftChunkBlocksFirst = &aroundChunkDataArray[1].Blocks[0],
+                topChunkBlocksFirst = &aroundChunkDataArray[2].Blocks[0],
+                bottomChunkBlocksFirst = &aroundChunkDataArray[3].Blocks[0],
+                forwardChunkBlocksFirst = &aroundChunkDataArray[4].Blocks[0],
+                backChunkBlocksFirst = &aroundChunkDataArray[5].Blocks[0]
             )
             {
                 var job = new CalcContactOtherBlockSurfacesJob

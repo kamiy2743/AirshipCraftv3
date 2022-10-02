@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
@@ -36,13 +37,16 @@ namespace BlockSystem
 
         /// <summary>
         /// チャンクデータ取得、無ければ作成
+        /// キャンセルされた場合はnullを返す
         /// </summary>
-        internal ChunkData GetChunkData(ChunkCoordinate cc)
+        internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
             if (chunks.ContainsKey(cc))
             {
                 return (ChunkData)chunks[cc];
             }
+
+            if (ct.IsCancellationRequested) return null;
 
             lock (chunks)
             {
@@ -50,11 +54,11 @@ namespace BlockSystem
 
                 if (chunkDataIndexDictionary.ContainsKey(cc))
                 {
-                    chunkData = ReadChunk((int)chunkDataIndexDictionary[cc]);
+                    chunkData = ReadChunk((int)chunkDataIndexDictionary[cc], ct);
                 }
                 else
                 {
-                    chunkData = CreateNewChunk(cc);
+                    chunkData = CreateNewChunk(cc, ct);
                 }
 
                 if (chunkData == null) return null;
@@ -64,30 +68,60 @@ namespace BlockSystem
             }
         }
 
-        private ChunkData CreateNewChunk(ChunkCoordinate cc)
+        private ChunkData CreateNewChunk(ChunkCoordinate cc, CancellationToken ct)
         {
             var newChunkData = new ChunkData(cc, _mapGenerator);
 
             chunkDataIndexDictionary.Add(cc, chunkDataIndexDictionary.Count);
-            using (var fs = new FileStream(IndexDictionaryPath, FileMode.Create, FileAccess.Write))
-            {
-                MessagePackSerializer.Serialize(fs, chunkDataIndexDictionary);
-            }
 
-            using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
+            try
             {
-                MessagePackSerializer.Serialize<ChunkData>(fs, newChunkData);
+                using (var fs = new FileStream(IndexDictionaryPath, FileMode.Create, FileAccess.Write))
+                {
+                    MessagePackSerializer.Serialize(fs, chunkDataIndexDictionary, cancellationToken: ct);
+                }
+
+                using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
+                {
+                    MessagePackSerializer.Serialize<ChunkData>(fs, newChunkData, cancellationToken: ct);
+                }
+            }
+            catch (MessagePackSerializationException)
+            {
+                chunkDataIndexDictionary.Remove(cc);
+                return null;
+            }
+            catch (System.OperationCanceledException)
+            {
+                chunkDataIndexDictionary.Remove(cc);
+                return null;
             }
 
             return newChunkData;
         }
 
-        private ChunkData ReadChunk(int index)
+        private ChunkData ReadChunk(int index, CancellationToken ct)
         {
-            using (var fs = new FileStream(DataFilePath, FileMode.Open, FileAccess.Read))
+            try
             {
-                fs.Position = ChunkDataByteSize * index;
-                return MessagePackSerializer.Deserialize<ChunkData>(fs);
+                using (var fs = new FileStream(DataFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    fs.Position = ChunkDataByteSize * index;
+                    return MessagePackSerializer.Deserialize<ChunkData>(fs, cancellationToken: ct);
+                }
+            }
+            catch (MessagePackSerializationException e)
+            {
+                if (!e.ToString().Contains("cancel"))
+                {
+                    UnityEngine.Debug.Log(e);
+                }
+
+                return null;
+            }
+            catch (System.OperationCanceledException)
+            {
+                return null;
             }
         }
     }
