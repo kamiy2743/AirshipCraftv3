@@ -173,7 +173,7 @@ namespace BlockSystem
         private async UniTask CreateMeshDataFromQueue(CancellationToken ct)
         {
             // 別スレッドに退避
-            // await UniTask.SwitchToThreadPool();
+            await UniTask.SwitchToThreadPool();
 
             while (createChunkMeshDataQueue.Count > 0)
             {

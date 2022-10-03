@@ -13,24 +13,31 @@ namespace BlockSystem
     internal class ChunkDataStore
     {
         private Hashtable chunks = new Hashtable();
-        private Dictionary<ChunkCoordinate, int> chunkDataIndexDictionary = new Dictionary<ChunkCoordinate, int>();
+        private Hashtable chunkDataIndexHashtable = new Hashtable();
         private MapGenerator _mapGenerator;
 
         private static int ChunkDataByteSize;
         private static readonly string DataFilePath = Application.persistentDataPath + "/ChunkDataStore/ChunkData.bin";
-        private static readonly string IndexDictionaryPath = Application.persistentDataPath + "/ChunkDataStore/IndexDictionary.bin";
+        private static readonly string IndexHashtablePath = Application.persistentDataPath + "/ChunkDataStore/IndexHashtable.bin";
 
         internal ChunkDataStore(MapGenerator mapGenerator)
         {
             _mapGenerator = mapGenerator;
 
             ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
+            var chunkDataIndexByteSize = MessagePackSerializer.Serialize(new ChunkDataIndex()).Length;
 
-            if (File.Exists(IndexDictionaryPath))
+            if (File.Exists(IndexHashtablePath))
             {
-                using (var fs = new FileStream(IndexDictionaryPath, FileMode.Open, FileAccess.Read))
+                using (var fs = new FileStream(IndexHashtablePath, FileMode.Open, FileAccess.Read))
+                using (var br = new BinaryReader(fs))
                 {
-                    chunkDataIndexDictionary = MessagePackSerializer.Deserialize<Dictionary<ChunkCoordinate, int>>(fs);
+                    while (fs.Position < fs.Length)
+                    {
+                        var bytes = br.ReadBytes(chunkDataIndexByteSize);
+                        var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(bytes);
+                        chunkDataIndexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
+                    }
                 }
             }
         }
@@ -39,6 +46,7 @@ namespace BlockSystem
         /// チャンクデータ取得、無ければ作成
         /// キャンセルされた場合はnullを返す
         /// </summary>
+        // TODO ctいらないかも
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
             if (chunks.ContainsKey(cc))
@@ -52,9 +60,9 @@ namespace BlockSystem
             {
                 ChunkData chunkData = null;
 
-                if (chunkDataIndexDictionary.ContainsKey(cc))
+                if (chunkDataIndexHashtable.ContainsKey(cc))
                 {
-                    chunkData = ReadChunk((int)chunkDataIndexDictionary[cc], ct);
+                    chunkData = ReadChunk((long)chunkDataIndexHashtable[cc], ct);
                 }
                 else
                 {
@@ -71,15 +79,15 @@ namespace BlockSystem
         private ChunkData CreateNewChunk(ChunkCoordinate cc, CancellationToken ct)
         {
             var newChunkData = new ChunkData(cc, _mapGenerator);
-
-            chunkDataIndexDictionary.Add(cc, chunkDataIndexDictionary.Count);
+            // TODO 事実上intの最大値までしか正常に動かない
+            var chunkDataIndex = (long)chunkDataIndexHashtable.Count;
+            chunkDataIndexHashtable.Add(cc, chunkDataIndex);
 
             try
             {
-                // TODO 追記式にする
-                using (var fs = new FileStream(IndexDictionaryPath, FileMode.Create, FileAccess.Write))
+                using (var fs = new FileStream(IndexHashtablePath, FileMode.Append, FileAccess.Write))
                 {
-                    MessagePackSerializer.Serialize(fs, chunkDataIndexDictionary, cancellationToken: ct);
+                    MessagePackSerializer.Serialize(fs, new ChunkDataIndex(cc, chunkDataIndex), cancellationToken: ct);
                 }
 
                 using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
@@ -90,19 +98,17 @@ namespace BlockSystem
             catch (MessagePackSerializationException e)
             {
                 if (!e.ToString().Contains("The operation was canceled")) UnityEngine.Debug.Log(e);
-                chunkDataIndexDictionary.Remove(cc);
                 return null;
             }
             catch (System.OperationCanceledException)
             {
-                chunkDataIndexDictionary.Remove(cc);
                 return null;
             }
 
             return newChunkData;
         }
 
-        private ChunkData ReadChunk(int index, CancellationToken ct)
+        private ChunkData ReadChunk(long index, CancellationToken ct)
         {
             try
             {
@@ -125,6 +131,22 @@ namespace BlockSystem
             {
                 return null;
             }
+        }
+
+    }
+
+    [MessagePackObject]
+    public struct ChunkDataIndex
+    {
+        [Key(0)]
+        public ChunkCoordinate ChunkCoordinate;
+        [Key(1)]
+        public long Index;
+
+        public ChunkDataIndex(ChunkCoordinate cc, long index)
+        {
+            ChunkCoordinate = cc;
+            Index = index;
         }
     }
 }

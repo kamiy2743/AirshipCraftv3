@@ -58,6 +58,7 @@ namespace MyMessagePackExt.Resolvers
                 { typeof(global::BlockSystem.ChunkData), 2 },
                 { typeof(global::MasterData.Block.BlockID), 3 },
                 { typeof(global::Util.SurfaceNormal), 4 },
+                { typeof(global::BlockSystem.ChunkDataIndex), 5 },
             };
         }
 
@@ -76,6 +77,7 @@ namespace MyMessagePackExt.Resolvers
                 case 2: return new MyMessagePackExt.Formatters.BlockSystem.CustomChunkDataFormatter();
                 case 3: return new MyMessagePackExt.Formatters.MasterData.Block.CustomBlockIDFormatter();
                 case 4: return new MyMessagePackExt.Formatters.Util.CustomSurfaceNormalFormatter();
+                case 5: return new MyMessagePackExt.Formatters.BlockSystem.CustomChunkDataIndexFormatter();
                 default: return null;
             }
         }
@@ -417,6 +419,23 @@ namespace MyMessagePackExt.Formatters.BlockSystem
 
                 *(blocksFirst + index) = new global::BlockSystem.BlockData(blockID, bc, contactOtherBlockSurfaces);
             }
+        }
+    }
+
+    public sealed class CustomChunkDataIndexFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BlockSystem.ChunkDataIndex>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.ChunkDataIndex value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(2);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Serialize(ref writer, value.ChunkCoordinate, options);
+            writer.WriteInt64(value.Index);
+        }
+
+        public global::BlockSystem.ChunkDataIndex Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.ChunkDataIndex>().Deserialize(ref reader, options);
         }
     }
 }

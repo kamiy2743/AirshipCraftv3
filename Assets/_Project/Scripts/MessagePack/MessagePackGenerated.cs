@@ -47,7 +47,7 @@ namespace MyMessagePackExt.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(7)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(8)
             {
                 { typeof(global::BlockSystem.BlockData[]), 0 },
                 { typeof(global::MasterData.Block.BlockID), 1 },
@@ -56,6 +56,7 @@ namespace MyMessagePackExt.Resolvers
                 { typeof(global::BlockSystem.BlockData), 4 },
                 { typeof(global::BlockSystem.ChunkCoordinate), 5 },
                 { typeof(global::BlockSystem.ChunkData), 6 },
+                { typeof(global::BlockSystem.ChunkDataIndex), 7 },
             };
         }
 
@@ -76,6 +77,7 @@ namespace MyMessagePackExt.Resolvers
                 case 4: return new MyMessagePackExt.Formatters.BlockSystem.BlockDataFormatter();
                 case 5: return new MyMessagePackExt.Formatters.BlockSystem.ChunkCoordinateFormatter();
                 case 6: return new MyMessagePackExt.Formatters.BlockSystem.ChunkDataFormatter();
+                case 7: return new MyMessagePackExt.Formatters.BlockSystem.ChunkDataIndexFormatter();
                 default: return null;
             }
         }
@@ -383,6 +385,52 @@ namespace MyMessagePackExt.Formatters.BlockSystem
             }
 
             var ____result = new global::BlockSystem.ChunkData(__ChunkCoordinate__, __Blocks__);
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class ChunkDataIndexFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BlockSystem.ChunkDataIndex>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.ChunkDataIndex value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(2);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Serialize(ref writer, value.ChunkCoordinate, options);
+            writer.Write(value.Index);
+        }
+
+        public global::BlockSystem.ChunkDataIndex Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                throw new global::System.InvalidOperationException("typecode is null, struct not supported");
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var __ChunkCoordinate__ = default(global::BlockSystem.ChunkCoordinate);
+            var __Index__ = default(long);
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        __ChunkCoordinate__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        __Index__ = reader.ReadInt64();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var ____result = new global::BlockSystem.ChunkDataIndex(__ChunkCoordinate__, __Index__);
             reader.Depth--;
             return ____result;
         }

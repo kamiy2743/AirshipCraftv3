@@ -10,7 +10,7 @@ namespace BlockSystem
         internal const ushort WorldChunkSideY = 4;
 
         /// <summary>プレイヤーの周りの読み込み距離(チャンク換算)</summary>
-        internal static readonly int LoadChunkRadius = 4;
+        internal static readonly int LoadChunkRadius = 16;
         internal static readonly int LoadChunkCount = (int)Mathf.Pow(LoadChunkRadius * 2 + 1, 3);
 
         /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>

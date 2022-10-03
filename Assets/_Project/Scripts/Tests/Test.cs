@@ -64,4 +64,10 @@ public class Test
         UnityEngine.Debug.Log($"a - (int)(a * c): " + sw3.Elapsed);
         UnityEngine.Debug.Log(a - ((int)(a * c) * b));
     }
+
+    [Test]
+    public void ChunkDataの最大容量()
+    {
+        UnityEngine.Debug.Log(long.MaxValue / Math.Pow(ushort.MaxValue + 1, 3));
+    }
 }
