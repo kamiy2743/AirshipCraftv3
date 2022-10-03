@@ -2,29 +2,32 @@ using UnityEngine;
 using MessagePack;
 using MessagePack.Resolvers;
 
-public class MyMessagePackInitializer
+namespace MyMessagePackExt
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void Initialize()
+    public class MyMessagePackInitializer
     {
-        StaticCompositeResolver.Instance.Register(
-            MessagePack.Resolvers.CustomResolver.Instance,
-            MessagePack.Resolvers.GeneratedResolver.Instance,
-            MessagePack.Resolvers.StandardResolver.Instance,
-            MessagePack.Unity.UnityResolver.Instance,
-            MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance
-        );
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        public static void Initialize()
+        {
+            StaticCompositeResolver.Instance.Register(
+                CustomResolver.Instance,
+                Resolvers.GeneratedResolver.Instance,
+                StandardResolver.Instance,
+                MessagePack.Unity.UnityResolver.Instance,
+                MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance
+            );
 
-        var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
+            var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
 
-        MessagePackSerializer.DefaultOptions = option;
-    }
+            MessagePackSerializer.DefaultOptions = option;
+        }
 
 #if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoadMethod]
-    static void EditorInitialize()
-    {
-        Initialize();
-    }
+        [UnityEditor.InitializeOnLoadMethod]
+        static void EditorInitialize()
+        {
+            Initialize();
+        }
 #endif
+    }
 }

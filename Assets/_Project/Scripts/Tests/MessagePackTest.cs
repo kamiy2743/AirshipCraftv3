@@ -30,6 +30,7 @@ public class MessagePackTest
         var bytes = MessagePackSerializer.Serialize(chunkData);
         var chunkData2 = MessagePackSerializer.Deserialize<ChunkData>(bytes);
         UnityEngine.Debug.Log(chunkData2.ChunkCoordinate);
+        UnityEngine.Debug.Log(MessagePackSerializer.ConvertToJson(bytes));
 
         sw1.Stop();
         UnityEngine.Debug.Log(sw1.Elapsed);

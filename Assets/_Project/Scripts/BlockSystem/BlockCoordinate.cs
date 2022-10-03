@@ -49,6 +49,15 @@ namespace BlockSystem
             return true;
         }
 
+        public static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
+        {
+            return new BlockCoordinate(
+                cc.x * World.ChunkBlockSide + lc.x,
+                cc.y * World.ChunkBlockSide + lc.y,
+                cc.z * World.ChunkBlockSide + lc.z
+            );
+        }
+
         public Vector3 ToVector3()
         {
             return new Vector3(x, y, z);

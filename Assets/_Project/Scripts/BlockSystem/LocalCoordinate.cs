@@ -1,13 +1,27 @@
+using MessagePack;
+
 namespace BlockSystem
 {
     /// <summary>
     /// チャンク内のブロックの座標
     /// </summary>
-    internal struct LocalCoordinate
+    [MessagePackObject]
+    public struct LocalCoordinate
     {
-        internal readonly int x;
-        internal readonly int y;
-        internal readonly int z;
+        [Key(0)]
+        public readonly byte x;
+        [Key(1)]
+        public readonly byte y;
+        [Key(2)]
+        public readonly byte z;
+
+        [SerializationConstructor]
+        public LocalCoordinate(byte x, byte y, byte z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
 
         internal LocalCoordinate(int x, int y, int z)
         {
@@ -15,13 +29,13 @@ namespace BlockSystem
             if (y < 0 || y >= World.ChunkBlockSide) throw new System.Exception("ローカルy座標が不正です: " + y);
             if (z < 0 || z >= World.ChunkBlockSide) throw new System.Exception("ローカルz座標が不正です: " + z);
 
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.x = (byte)x;
+            this.y = (byte)y;
+            this.z = (byte)z;
         }
 
         private const float InverseBlockSide = 1f / World.ChunkBlockSide;
-        internal static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        public static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new LocalCoordinate(
                 // BlockSideで割った余り

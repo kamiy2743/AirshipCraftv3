@@ -1,0 +1,19 @@
+{
+    "name": "MyMessagePackExt",
+    "rootNamespace": "MyMessagePackExt",
+    "references": [
+        "GUID:bbde805d927e795439d7a746d1749cab",
+        "GUID:44ed9e862f6f24d42a7c3f21da93c08a",
+        "GUID:da37531d2dab97b4e932cb397036697d",
+        "GUID:71a0fa64a93d7d9409ff635cbe6f0d54"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -11,7 +11,7 @@
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
 #pragma warning disable SA1649 // File name should match first type name
 
-namespace MessagePack.Resolvers
+namespace MyMessagePackExt.Resolvers
 {
     public class GeneratedResolver : global::MessagePack.IFormatterResolver
     {
@@ -47,7 +47,7 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(7)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(8)
             {
                 { typeof(global::BlockSystem.BlockData[]), 0 },
                 { typeof(global::MasterData.Block.BlockID), 1 },
@@ -56,6 +56,7 @@ namespace MessagePack.Resolvers
                 { typeof(global::BlockSystem.BlockData), 4 },
                 { typeof(global::BlockSystem.ChunkCoordinate), 5 },
                 { typeof(global::BlockSystem.ChunkData), 6 },
+                { typeof(global::BlockSystem.LocalCoordinate), 7 },
             };
         }
 
@@ -70,12 +71,13 @@ namespace MessagePack.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::BlockSystem.BlockData>();
-                case 1: return new MessagePack.Formatters.MasterData.Block.BlockIDFormatter();
-                case 2: return new MessagePack.Formatters.Util.SurfaceNormalFormatter();
-                case 3: return new MessagePack.Formatters.BlockSystem.BlockCoordinateFormatter();
-                case 4: return new MessagePack.Formatters.BlockSystem.BlockDataFormatter();
-                case 5: return new MessagePack.Formatters.BlockSystem.ChunkCoordinateFormatter();
-                case 6: return new MessagePack.Formatters.BlockSystem.ChunkDataFormatter();
+                case 1: return new MyMessagePackExt.Formatters.MasterData.Block.BlockIDFormatter();
+                case 2: return new MyMessagePackExt.Formatters.Util.SurfaceNormalFormatter();
+                case 3: return new MyMessagePackExt.Formatters.BlockSystem.BlockCoordinateFormatter();
+                case 4: return new MyMessagePackExt.Formatters.BlockSystem.BlockDataFormatter();
+                case 5: return new MyMessagePackExt.Formatters.BlockSystem.ChunkCoordinateFormatter();
+                case 6: return new MyMessagePackExt.Formatters.BlockSystem.ChunkDataFormatter();
+                case 7: return new MyMessagePackExt.Formatters.BlockSystem.LocalCoordinateFormatter();
                 default: return null;
             }
         }
@@ -104,7 +106,7 @@ namespace MessagePack.Resolvers
 #pragma warning disable SA1403 // File may only contain a single namespace
 #pragma warning disable SA1649 // File name should match first type name
 
-namespace MessagePack.Formatters.MasterData.Block
+namespace MyMessagePackExt.Formatters.MasterData.Block
 {
 
     public sealed class BlockIDFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::MasterData.Block.BlockID>
@@ -142,7 +144,7 @@ namespace MessagePack.Formatters.MasterData.Block
 #pragma warning disable SA1403 // File may only contain a single namespace
 #pragma warning disable SA1649 // File name should match first type name
 
-namespace MessagePack.Formatters.Util
+namespace MyMessagePackExt.Formatters.Util
 {
 
     public sealed class SurfaceNormalFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Util.SurfaceNormal>
@@ -185,7 +187,7 @@ namespace MessagePack.Formatters.Util
 #pragma warning disable SA1403 // File may only contain a single namespace
 #pragma warning disable SA1649 // File name should match first type name
 
-namespace MessagePack.Formatters.BlockSystem
+namespace MyMessagePackExt.Formatters.BlockSystem
 {
     public sealed class BlockCoordinateFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BlockSystem.BlockCoordinate>
     {
@@ -383,6 +385,55 @@ namespace MessagePack.Formatters.BlockSystem
             }
 
             var ____result = new global::BlockSystem.ChunkData(__ChunkCoordinate__, __Blocks__);
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class LocalCoordinateFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BlockSystem.LocalCoordinate>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.LocalCoordinate value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.WriteArrayHeader(3);
+            writer.Write(value.x);
+            writer.Write(value.y);
+            writer.Write(value.z);
+        }
+
+        public global::BlockSystem.LocalCoordinate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                throw new global::System.InvalidOperationException("typecode is null, struct not supported");
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var __x__ = default(byte);
+            var __y__ = default(byte);
+            var __z__ = default(byte);
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        __x__ = reader.ReadByte();
+                        break;
+                    case 1:
+                        __y__ = reader.ReadByte();
+                        break;
+                    case 2:
+                        __z__ = reader.ReadByte();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var ____result = new global::BlockSystem.LocalCoordinate(__x__, __y__, __z__);
             reader.Depth--;
             return ____result;
         }

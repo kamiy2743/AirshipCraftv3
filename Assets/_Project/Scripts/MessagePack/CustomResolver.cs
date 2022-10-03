@@ -7,7 +7,7 @@
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
 #pragma warning disable SA1649 // File name should match first type name
 
-namespace MessagePack.Resolvers
+namespace MyMessagePackExt
 {
     public class CustomResolver : global::MessagePack.IFormatterResolver
     {
@@ -47,6 +47,7 @@ namespace MessagePack.Resolvers
             {
                 { typeof(global::BlockSystem.BlockCoordinate), 0 },
                 { typeof(global::BlockSystem.ChunkCoordinate), 1 },
+                { typeof(global::BlockSystem.ChunkData), 2 },
             };
         }
 
@@ -62,6 +63,7 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new MessagePack.Formatters.BlockSystem.CustomBlockCoordinateFormatter();
                 case 1: return new MessagePack.Formatters.BlockSystem.CustomChunkCoordinateFormatter();
+                case 2: return new MessagePack.Formatters.BlockSystem.CustomChunkDataFormatter();
                 default: return null;
             }
         }
@@ -108,7 +110,7 @@ namespace MessagePack.Formatters.BlockSystem
 
         public global::BlockSystem.BlockCoordinate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return MessagePack.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.BlockCoordinate>().Deserialize(ref reader, options);
+            return MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.BlockCoordinate>().Deserialize(ref reader, options);
         }
     }
 
@@ -125,10 +127,144 @@ namespace MessagePack.Formatters.BlockSystem
 
         public global::BlockSystem.ChunkCoordinate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return MessagePack.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.ChunkCoordinate>().Deserialize(ref reader, options);
+            return MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.ChunkCoordinate>().Deserialize(ref reader, options);
         }
     }
 
+    public sealed class CustomChunkDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BlockSystem.ChunkData>
+    {
+
+        private CustomBlockDataArrayFormatter customBlockDataArrayFormatter = new CustomBlockDataArrayFormatter();
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.ChunkData value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(2);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Serialize(ref writer, value.ChunkCoordinate, options);
+            customBlockDataArrayFormatter.Serialize(ref writer, value.Blocks, options);
+        }
+
+        public global::BlockSystem.ChunkData Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var __ChunkCoordinate__ = default(global::BlockSystem.ChunkCoordinate);
+            var __Blocks__ = default(global::BlockSystem.BlockData[]);
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        __ChunkCoordinate__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::BlockSystem.ChunkCoordinate>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        __Blocks__ = customBlockDataArrayFormatter.Deserialize(ref reader, __ChunkCoordinate__, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var ____result = new global::BlockSystem.ChunkData(__ChunkCoordinate__, __Blocks__);
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class CustomBlockDataArrayFormatter : IMessagePackFormatter<global::BlockSystem.BlockData[]>
+    {
+        public void Serialize(ref MessagePackWriter writer, global::BlockSystem.BlockData[] value, MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+            }
+            else
+            {
+                var blockIDFormatter = MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::MasterData.Block.BlockID>();
+                var localCoordinateFormatter = MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.LocalCoordinate>();
+                var surfaceNormalFormatter = MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::Util.SurfaceNormal>();
+                writer.WriteArrayHeader(value.Length);
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    writer.CancellationToken.ThrowIfCancellationRequested();
+
+                    var blockData = value[i];
+
+                    blockIDFormatter.Serialize(ref writer, blockData.ID, options);
+
+                    // LocalCoordinateに変換
+                    var lc = global::BlockSystem.LocalCoordinate.FromBlockCoordinate(blockData.BlockCoordinate);
+                    localCoordinateFormatter.Serialize(ref writer, lc, options);
+
+                    surfaceNormalFormatter.Serialize(ref writer, blockData.ContactOtherBlockSurfaces, options);
+                }
+            }
+        }
+
+        private global::BlockSystem.ChunkCoordinate chunkCoordinate;
+        public global::BlockSystem.BlockData[] Deserialize(ref MessagePackReader reader, global::BlockSystem.ChunkCoordinate chunkCoordinate, MessagePackSerializerOptions options)
+        {
+            this.chunkCoordinate = chunkCoordinate;
+            return Deserialize(ref reader, options);
+        }
+
+        public global::BlockSystem.BlockData[] Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return default;
+            }
+
+            var len = reader.ReadArrayHeader();
+            if (len == 0)
+            {
+                return System.Array.Empty<global::BlockSystem.BlockData>();
+            }
+
+            var blockIDFormatter = MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::MasterData.Block.BlockID>();
+            var localCoordinateFormatter = MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.LocalCoordinate>();
+            var surfaceNormalFormatter = MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::Util.SurfaceNormal>();
+
+            var array = new global::BlockSystem.BlockData[len];
+            options.Security.DepthStep(ref reader);
+            try
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    reader.CancellationToken.ThrowIfCancellationRequested();
+
+                    var blockID = blockIDFormatter.Deserialize(ref reader, options);
+                    var lc = localCoordinateFormatter.Deserialize(ref reader, options);
+                    var bc = global::BlockSystem.BlockCoordinate.FromChunkAndLocal(chunkCoordinate, lc);
+                    var contactOtherBlockSurfaces = surfaceNormalFormatter.Deserialize(ref reader, options);
+
+                    array[i] = new global::BlockSystem.BlockData(blockID, bc, contactOtherBlockSurfaces);
+                }
+            }
+            finally
+            {
+                reader.Depth--;
+            }
+
+            return array;
+        }
+    }
 }
 
 #pragma warning restore 168
