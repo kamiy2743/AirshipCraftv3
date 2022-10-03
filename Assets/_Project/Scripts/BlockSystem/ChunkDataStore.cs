@@ -46,7 +46,6 @@ namespace BlockSystem
         /// チャンクデータ取得、無ければ作成
         /// キャンセルされた場合はnullを返す
         /// </summary>
-        // TODO ctいらないかも
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
             if (chunks.ContainsKey(cc))
@@ -62,77 +61,54 @@ namespace BlockSystem
 
                 if (chunkDataIndexHashtable.ContainsKey(cc))
                 {
-                    chunkData = ReadChunk((long)chunkDataIndexHashtable[cc], ct);
+                    chunkData = ReadChunk((long)chunkDataIndexHashtable[cc]);
+                    if (chunkData == null) return null;
                 }
                 else
                 {
-                    chunkData = CreateNewChunk(cc, ct);
+                    chunkData = CreateNewChunk(cc);
                 }
 
-                if (chunkData == null) return null;
-
                 chunks.Add(cc, chunkData);
+                if (ct.IsCancellationRequested) return null;
+
                 return chunkData;
             }
         }
 
-        private ChunkData CreateNewChunk(ChunkCoordinate cc, CancellationToken ct)
+        private ChunkData CreateNewChunk(ChunkCoordinate cc)
         {
             var newChunkData = new ChunkData(cc, _mapGenerator);
+
             // TODO 事実上intの最大値までしか正常に動かない
             var chunkDataIndex = (long)chunkDataIndexHashtable.Count;
             chunkDataIndexHashtable.Add(cc, chunkDataIndex);
 
-            try
+            using (var fs = new FileStream(IndexHashtablePath, FileMode.Append, FileAccess.Write))
             {
-                using (var fs = new FileStream(IndexHashtablePath, FileMode.Append, FileAccess.Write))
-                {
-                    MessagePackSerializer.Serialize(fs, new ChunkDataIndex(cc, chunkDataIndex), cancellationToken: ct);
-                }
+                MessagePackSerializer.Serialize(fs, new ChunkDataIndex(cc, chunkDataIndex));
+            }
 
-                using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
-                {
-                    MessagePackSerializer.Serialize(fs, newChunkData, cancellationToken: ct);
-                }
-            }
-            catch (MessagePackSerializationException e)
+            using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
             {
-                if (!e.ToString().Contains("The operation was canceled")) UnityEngine.Debug.Log(e);
-                return null;
-            }
-            catch (System.OperationCanceledException)
-            {
-                return null;
+                MessagePackSerializer.Serialize(fs, newChunkData);
             }
 
             return newChunkData;
         }
 
-        private ChunkData ReadChunk(long index, CancellationToken ct)
+        private ChunkData ReadChunk(long index)
         {
-            try
+            using (var fs = new FileStream(DataFilePath, FileMode.Open, FileAccess.Read))
             {
-                using (var fs = new FileStream(DataFilePath, FileMode.Open, FileAccess.Read))
+                fs.Position = ChunkDataByteSize * index;
+                using (var br = new BinaryReader(fs))
                 {
-                    fs.Position = ChunkDataByteSize * index;
-                    using (var br = new BinaryReader(fs))
-                    {
-                        var bytes = br.ReadBytes(ChunkDataByteSize);
-                        return MessagePackSerializer.Deserialize<ChunkData>(bytes, cancellationToken: ct);
-                    }
+                    var bytes = br.ReadBytes(ChunkDataByteSize);
+                    return MessagePackSerializer.Deserialize<ChunkData>(bytes);
                 }
             }
-            catch (MessagePackSerializationException e)
-            {
-                if (!e.ToString().Contains("The operation was canceled")) UnityEngine.Debug.Log(e);
-                return null;
-            }
-            catch (System.OperationCanceledException)
-            {
-                return null;
-            }
         }
-
     }
 
     [MessagePackObject]

@@ -76,7 +76,8 @@ namespace BlockSystem
 
                 var cc = new ChunkCoordinate(ccx, ccy, ccz);
                 var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
-                if (aroundChunkData == null) return;
+                ct.ThrowIfCancellationRequested();
+
                 aroundChunkDataArray[i] = aroundChunkData;
             }
 
