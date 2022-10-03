@@ -83,7 +83,7 @@ namespace BlockSystem
 
                 using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
                 {
-                    MessagePackSerializer.Serialize<ChunkData>(fs, newChunkData, cancellationToken: ct);
+                    MessagePackSerializer.Serialize(fs, newChunkData, cancellationToken: ct);
                 }
             }
             catch (MessagePackSerializationException)
@@ -107,16 +107,15 @@ namespace BlockSystem
                 using (var fs = new FileStream(DataFilePath, FileMode.Open, FileAccess.Read))
                 {
                     fs.Position = ChunkDataByteSize * index;
-                    return MessagePackSerializer.Deserialize<ChunkData>(fs, cancellationToken: ct);
+                    using (var br = new BinaryReader(fs))
+                    {
+                        var bytes = br.ReadBytes(ChunkDataByteSize);
+                        return MessagePackSerializer.Deserialize<ChunkData>(bytes, cancellationToken: ct);
+                    }
                 }
             }
-            catch (MessagePackSerializationException e)
+            catch (MessagePackSerializationException)
             {
-                if (!e.ToString().Contains("cancel"))
-                {
-                    UnityEngine.Debug.Log(e);
-                }
-
                 return null;
             }
             catch (System.OperationCanceledException)

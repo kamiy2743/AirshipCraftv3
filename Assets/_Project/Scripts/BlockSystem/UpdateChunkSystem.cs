@@ -22,11 +22,17 @@ namespace BlockSystem
         private Queue<ChunkCoordinate> createChunkMeshDataQueue = new Queue<ChunkCoordinate>();
         private Queue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> createChunkObjectQueue = new Queue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
 
-        internal UpdateChunkSystem(Transform player, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
+        internal UpdateChunkSystem(Transform player, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator, CancellationToken ct)
         {
             _chunkObjectPool = chunkObjectPool;
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
+
+            ct.Register(() =>
+            {
+                createMeshDataTaskCancellationTokenSource?.Cancel();
+                createMeshDataTaskCancellationTokenSource?.Dispose();
+            });
 
             // 初回の更新
             Vector3Int lastPlayerChunk = GetPlayerChunk(player.position);

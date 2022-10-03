@@ -1,5 +1,6 @@
 using UnityEngine;
 using MasterData.Block;
+using Cysharp.Threading.Tasks;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 namespace BlockSystem
@@ -25,7 +26,7 @@ namespace BlockSystem
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
             breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
-            new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator);
+            new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator, this.GetCancellationTokenOnDestroy());
         }
     }
 }
