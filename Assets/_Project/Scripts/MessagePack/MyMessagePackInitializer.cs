@@ -10,7 +10,7 @@ namespace MyMessagePackExt
         public static void Initialize()
         {
             StaticCompositeResolver.Instance.Register(
-                CustomResolver.Instance,
+                Resolvers.CustomResolver.Instance,
                 Resolvers.GeneratedResolver.Instance,
                 StandardResolver.Instance,
                 MessagePack.Unity.UnityResolver.Instance,

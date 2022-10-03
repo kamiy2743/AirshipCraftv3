@@ -79,7 +79,6 @@ namespace BlockSystem
         /// </summary>
         private void UpdateAroundPlayer(Vector3Int pc)
         {
-            UnityEngine.Debug.Log("update");
             // タスク実行中であればキャンセル
             createMeshDataTaskCancellationTokenSource?.Cancel();
             createMeshDataTaskCancellationTokenSource?.Dispose();
@@ -174,7 +173,7 @@ namespace BlockSystem
         private async UniTask CreateMeshDataFromQueue(CancellationToken ct)
         {
             // 別スレッドに退避
-            await UniTask.SwitchToThreadPool();
+            // await UniTask.SwitchToThreadPool();
 
             while (createChunkMeshDataQueue.Count > 0)
             {

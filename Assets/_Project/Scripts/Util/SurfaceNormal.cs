@@ -6,7 +6,7 @@ namespace Util
     [System.Flags]
     public enum SurfaceNormal
     {
-        Empty = -1,
+        Empty = byte.MaxValue,
         Zero = 0,
         Right = 1 << 0,
         Left = 1 << 1,

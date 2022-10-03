@@ -47,7 +47,7 @@ namespace MyMessagePackExt.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(8)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(7)
             {
                 { typeof(global::BlockSystem.BlockData[]), 0 },
                 { typeof(global::MasterData.Block.BlockID), 1 },
@@ -56,7 +56,6 @@ namespace MyMessagePackExt.Resolvers
                 { typeof(global::BlockSystem.BlockData), 4 },
                 { typeof(global::BlockSystem.ChunkCoordinate), 5 },
                 { typeof(global::BlockSystem.ChunkData), 6 },
-                { typeof(global::BlockSystem.LocalCoordinate), 7 },
             };
         }
 
@@ -77,7 +76,6 @@ namespace MyMessagePackExt.Resolvers
                 case 4: return new MyMessagePackExt.Formatters.BlockSystem.BlockDataFormatter();
                 case 5: return new MyMessagePackExt.Formatters.BlockSystem.ChunkCoordinateFormatter();
                 case 6: return new MyMessagePackExt.Formatters.BlockSystem.ChunkDataFormatter();
-                case 7: return new MyMessagePackExt.Formatters.BlockSystem.LocalCoordinateFormatter();
                 default: return null;
             }
         }
@@ -385,55 +383,6 @@ namespace MyMessagePackExt.Formatters.BlockSystem
             }
 
             var ____result = new global::BlockSystem.ChunkData(__ChunkCoordinate__, __Blocks__);
-            reader.Depth--;
-            return ____result;
-        }
-    }
-
-    public sealed class LocalCoordinateFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BlockSystem.LocalCoordinate>
-    {
-
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.LocalCoordinate value, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            writer.WriteArrayHeader(3);
-            writer.Write(value.x);
-            writer.Write(value.y);
-            writer.Write(value.z);
-        }
-
-        public global::BlockSystem.LocalCoordinate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            if (reader.TryReadNil())
-            {
-                throw new global::System.InvalidOperationException("typecode is null, struct not supported");
-            }
-
-            options.Security.DepthStep(ref reader);
-            var length = reader.ReadArrayHeader();
-            var __x__ = default(byte);
-            var __y__ = default(byte);
-            var __z__ = default(byte);
-
-            for (int i = 0; i < length; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        __x__ = reader.ReadByte();
-                        break;
-                    case 1:
-                        __y__ = reader.ReadByte();
-                        break;
-                    case 2:
-                        __z__ = reader.ReadByte();
-                        break;
-                    default:
-                        reader.Skip();
-                        break;
-                }
-            }
-
-            var ____result = new global::BlockSystem.LocalCoordinate(__x__, __y__, __z__);
             reader.Depth--;
             return ____result;
         }

@@ -4,18 +4,15 @@ namespace BlockSystem
 {
     /// <summary>
     /// チャンク内のブロックの座標
-    /// </summary>
-    [MessagePackObject]
     public struct LocalCoordinate
     {
-        [Key(0)]
         public readonly byte x;
-        [Key(1)]
         public readonly byte y;
-        [Key(2)]
         public readonly byte z;
 
-        [SerializationConstructor]
+        /// <summary>
+        /// シリアライズ用
+        /// </summary>
         public LocalCoordinate(byte x, byte y, byte z)
         {
             this.x = x;

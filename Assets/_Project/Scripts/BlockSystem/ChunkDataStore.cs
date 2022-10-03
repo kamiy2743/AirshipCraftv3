@@ -76,6 +76,7 @@ namespace BlockSystem
 
             try
             {
+                // TODO 追記式にする
                 using (var fs = new FileStream(IndexDictionaryPath, FileMode.Create, FileAccess.Write))
                 {
                     MessagePackSerializer.Serialize(fs, chunkDataIndexDictionary, cancellationToken: ct);
@@ -86,8 +87,9 @@ namespace BlockSystem
                     MessagePackSerializer.Serialize(fs, newChunkData, cancellationToken: ct);
                 }
             }
-            catch (MessagePackSerializationException)
+            catch (MessagePackSerializationException e)
             {
+                if (!e.ToString().Contains("The operation was canceled")) UnityEngine.Debug.Log(e);
                 chunkDataIndexDictionary.Remove(cc);
                 return null;
             }
@@ -114,8 +116,9 @@ namespace BlockSystem
                     }
                 }
             }
-            catch (MessagePackSerializationException)
+            catch (MessagePackSerializationException e)
             {
+                if (!e.ToString().Contains("The operation was canceled")) UnityEngine.Debug.Log(e);
                 return null;
             }
             catch (System.OperationCanceledException)
