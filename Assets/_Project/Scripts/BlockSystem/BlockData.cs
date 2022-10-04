@@ -19,11 +19,10 @@ namespace BlockSystem
         [Key(2)]
         public SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
-        private bool IsContactAir => !ContactOtherBlockSurfaces.IsFull();
         internal bool NeedToCalcContactSurfaces => ContactOtherBlockSurfaces == SurfaceNormal.Empty;
 
-        // TODO こいつ単体は軽いけど、大量に呼び出すためもっと高速化したい
-        internal bool IsRenderSkip => !IsContactAir || ID == BlockID.Air;
+        // アクセスの度に計算するのだと遅いから値変更時に確定させておく
+        internal bool IsRenderSkip;
 
         [SerializationConstructor]
         public BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
@@ -31,6 +30,8 @@ namespace BlockSystem
             ID = id;
             BlockCoordinate = bc;
             ContactOtherBlockSurfaces = contactOtherBlockSurfaces;
+            IsRenderSkip = false;
+            SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
         }
 
         internal BlockData(BlockID id, BlockCoordinate bc)
@@ -38,11 +39,14 @@ namespace BlockSystem
             ID = id;
             BlockCoordinate = bc;
             ContactOtherBlockSurfaces = SurfaceNormal.Empty;
+            IsRenderSkip = false;
+            SetContactOtherBlockSurfaces(ContactOtherBlockSurfaces);
         }
 
         internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
             ContactOtherBlockSurfaces = surfaces;
+            IsRenderSkip = ID == BlockID.Air || ContactOtherBlockSurfaces.IsFull();
         }
 
         internal bool IsContactOtherBlock(SurfaceNormal surface)
