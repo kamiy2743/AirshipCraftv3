@@ -13,6 +13,8 @@ namespace BlockSystem
 
         internal bool IsEmpty => Vertices.Count == 0;
 
+        private MasterBlockData masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
+
         internal ChunkMeshData(int maxVerticesCount, int maxTrianglesCount, int maxUVsCount)
         {
             Vertices = new List<Vector3>(maxVerticesCount);
@@ -24,8 +26,12 @@ namespace BlockSystem
         {
             if (blockData.IsRenderSkip) return;
 
-            // TODO キャッシュする
-            var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
+            if (blockData.ID != masterBlockDataCache.ID)
+            {
+                masterBlockDataCache = MasterBlockDataStore.GetData(blockData.ID);
+            }
+
+            var meshData = masterBlockDataCache.MeshData;
 
             // triangleはインデックスのため、現在の頂点数を加算しないといけない
             var vc = Vertices.Count;

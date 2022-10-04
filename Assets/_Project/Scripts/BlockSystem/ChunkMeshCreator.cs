@@ -37,11 +37,17 @@ namespace BlockSystem
                 int maxVerticesCount = 0;
                 int maxTrianglesCount = 0;
                 int maxUVsCount = 0;
+                var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
                 foreach (var block in chunkData.Blocks)
                 {
                     if (block.IsRenderSkip) continue;
 
-                    var blockMeshData = MasterBlockDataStore.GetData(block.ID).MeshData;
+                    if (block.ID != masterBlockDataCache.ID)
+                    {
+                        masterBlockDataCache = MasterBlockDataStore.GetData(block.ID);
+                    }
+
+                    var blockMeshData = masterBlockDataCache.MeshData;
                     maxVerticesCount += blockMeshData.Vertices.Length;
                     maxTrianglesCount += blockMeshData.Triangles.Length;
                     maxUVsCount += blockMeshData.UVs.Length;
