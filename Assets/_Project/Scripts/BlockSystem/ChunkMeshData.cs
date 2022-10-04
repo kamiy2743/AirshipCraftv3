@@ -24,6 +24,7 @@ namespace BlockSystem
         {
             if (blockData.IsRenderSkip) return;
 
+            // TODO キャッシュする
             var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
 
             // triangleはインデックスのため、現在の頂点数を加算しないといけない

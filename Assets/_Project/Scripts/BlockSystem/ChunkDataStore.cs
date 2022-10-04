@@ -84,6 +84,7 @@ namespace BlockSystem
             var chunkDataIndex = (long)chunkDataIndexHashtable.Count;
             chunkDataIndexHashtable.Add(cc, chunkDataIndex);
 
+            // TODO FileStreamのコンストラクタがかなり遅い
             using (var fs = new FileStream(IndexHashtablePath, FileMode.Append, FileAccess.Write))
             {
                 MessagePackSerializer.Serialize(fs, new ChunkDataIndex(cc, chunkDataIndex));

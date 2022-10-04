@@ -22,6 +22,7 @@ namespace BlockSystem
         private bool IsContactAir => !ContactOtherBlockSurfaces.IsFull();
         internal bool NeedToCalcContactSurfaces => ContactOtherBlockSurfaces == SurfaceNormal.Empty;
 
+        // TODO こいつ単体は軽いけど、大量に呼び出すためもっと高速化したい
         internal bool IsRenderSkip => !IsContactAir || ID == BlockID.Air;
 
         [SerializationConstructor]
