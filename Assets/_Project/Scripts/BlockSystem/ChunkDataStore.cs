@@ -12,7 +12,10 @@ namespace BlockSystem
     /// </summary>
     internal class ChunkDataStore
     {
-        private Hashtable chunks = new Hashtable();
+        private const int chunkDataCacheCapacity = 512;
+        private Hashtable chunkDataCache = new Hashtable(chunkDataCacheCapacity);
+        private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(chunkDataCacheCapacity);
+
         private Hashtable chunkDataIndexHashtable = new Hashtable();
         private MapGenerator _mapGenerator;
 
@@ -48,14 +51,14 @@ namespace BlockSystem
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
-            if (chunks.ContainsKey(cc))
+            if (chunkDataCache.ContainsKey(cc))
             {
-                return (ChunkData)chunks[cc];
+                return (ChunkData)chunkDataCache[cc];
             }
 
             if (ct.IsCancellationRequested) return null;
 
-            lock (chunks)
+            lock (chunkDataCache)
             {
                 ChunkData chunkData = null;
 
@@ -69,7 +72,15 @@ namespace BlockSystem
                     chunkData = CreateNewChunk(cc);
                 }
 
-                chunks.Add(cc, chunkData);
+                if (chunkDataCache.Count >= chunkDataCacheCapacity)
+                {
+                    var releaseChunk = chunkDataCacheQueue.Dequeue();
+                    chunkDataCache.Remove(releaseChunk);
+                }
+
+                chunkDataCache.Add(cc, chunkData);
+                chunkDataCacheQueue.Enqueue(cc);
+
                 if (ct.IsCancellationRequested) return null;
 
                 return chunkData;
