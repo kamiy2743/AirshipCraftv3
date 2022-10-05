@@ -1,4 +1,5 @@
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
@@ -37,22 +38,23 @@ namespace BlockSystem
             Blocks = blocks;
         }
 
-        internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
+        unsafe internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
+            Blocks = new BlockData[World.BlockCountInChunk];
 
-            var job = new CreateBlockDataJob
+            fixed (BlockData* blocksFirst = &Blocks[0])
             {
-                chunkRoot = new int3(cc.x, cc.y, cc.z) * World.ChunkBlockSide,
-                mapGenerator = mapGenerator,
-                blocks = new NativeArray<BlockData>(World.BlockCountInChunk, Allocator.TempJob),
-            };
+                var job = new CreateBlockDataJob
+                {
+                    blocksFirst = blocksFirst,
+                    chunkRoot = new int3(cc.x, cc.y, cc.z) * World.ChunkBlockSide,
+                    mapGenerator = mapGenerator
+                };
 
-            job.Schedule(World.BlockCountInChunk, 0).Complete();
+                job.Schedule(World.BlockCountInChunk, 0).Complete();
+            }
 
-            Blocks = job.blocks.ToArray();
-
-            job.blocks.Dispose();
         }
 
         internal static int ToIndex(LocalCoordinate lc)
@@ -75,11 +77,14 @@ namespace BlockSystem
         /// BLockDataを生成する
         /// </summary>
         [BurstCompile]
-        private struct CreateBlockDataJob : IJobParallelFor
+        unsafe private struct CreateBlockDataJob : IJobParallelFor
         {
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
+
+            [ReadOnly]
             public int3 chunkRoot;
+            [ReadOnly]
             public MapGenerator mapGenerator;
-            public NativeArray<BlockData> blocks;
 
             public void Execute(int index)
             {
@@ -92,7 +97,7 @@ namespace BlockSystem
                 var blockCoordinate = localCoordinate + chunkRoot;
                 var blockID = mapGenerator.GetBlockID(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z);
 
-                blocks[index] = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
+                *(blocksFirst + index) = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
             }
         }
 
