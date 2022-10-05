@@ -10,26 +10,30 @@ namespace BlockSystem
         [SerializeField] private MeshCollider meshCollider;
 
         private ChunkDataStore _chunkDataStore;
+        private Mesh mesh;
 
         internal void Init(ChunkDataStore chunkDataStore)
         {
             _chunkDataStore = chunkDataStore;
-            meshCollider.sharedMesh = null;
-            meshCollider.enabled = false;
         }
 
         internal void SetMesh(ChunkMeshData meshData)
         {
-            var mesh = meshFilter.mesh;
-            mesh.Clear();
-
             if (meshData.IsEmpty)
             {
-                meshCollider.sharedMesh = null;
-                meshCollider.enabled = false;
+                ClearMesh();
                 return;
             }
 
+            if (mesh == null)
+            {
+                mesh = new Mesh();
+                meshFilter.sharedMesh = mesh;
+                meshRenderer.enabled = true;
+                // meshCollider.enabled = true;
+            }
+
+            mesh.Clear();
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.SetVertices(meshData.Vertices);
             mesh.SetTriangles(meshData.Triangles, 0);
@@ -37,14 +41,17 @@ namespace BlockSystem
             mesh.RecalculateNormals();
 
             // meshCollider.sharedMesh = mesh;
-            // meshCollider.enabled = true;
         }
 
         internal void ClearMesh()
         {
-            meshFilter.mesh.Clear();
-            meshCollider.sharedMesh = null;
-            meshCollider.enabled = false;
+            if (mesh != null)
+            {
+                Destroy(mesh);
+                meshRenderer.enabled = false;
+                meshCollider.enabled = false;
+                meshCollider.sharedMesh = null;
+            }
         }
 
         public BlockData GetBlockData(Vector3 position, CancellationToken ct)
@@ -55,6 +62,14 @@ namespace BlockSystem
             var chunkData = _chunkDataStore.GetChunkData(cc, ct);
 
             return chunkData.GetBlockData(lc);
+        }
+
+        private void OnDestroy()
+        {
+            if (mesh != null)
+            {
+                Destroy(mesh);
+            }
         }
     }
 }
