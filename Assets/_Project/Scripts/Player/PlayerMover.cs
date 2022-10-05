@@ -22,7 +22,7 @@ namespace Player
             rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (isDebugMode)
             {
@@ -50,7 +50,7 @@ namespace Player
 
         private void DebugMove()
         {
-            transform.position += playerCamera.HorizontalRotation * (InputProvider.DebugMove() * debugMoveSpeed * Time.deltaTime);
+            transform.position += playerCamera.HorizontalRotation * (InputProvider.DebugMove() * debugMoveSpeed * Time.fixedDeltaTime);
         }
     }
 }
