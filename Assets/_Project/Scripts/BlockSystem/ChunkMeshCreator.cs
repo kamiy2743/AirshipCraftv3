@@ -20,8 +20,7 @@ namespace BlockSystem
         /// <summary>
         /// チャンク内のブロックメッシュを合成したメッシュを作成します
         /// </summary>
-        /// <param name="meshData">GC回避用の使いまわしChunkMeshData</param>
-        internal ChunkMeshData CreateMeshData(ChunkData chunkData, CancellationToken ct, ChunkMeshData meshData = null)
+        internal ChunkMeshData CreateMeshData(ChunkData chunkData, CancellationToken ct)
         {
             try
             {
@@ -32,35 +31,34 @@ namespace BlockSystem
                 return null;
             }
 
-            if (meshData == null)
+            int maxVerticesCount = 0;
+            int maxTrianglesCount = 0;
+            int maxUVsCount = 0;
+            var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
+            foreach (var block in chunkData.Blocks)
             {
-                int maxVerticesCount = 0;
-                int maxTrianglesCount = 0;
-                int maxUVsCount = 0;
-                var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
-                foreach (var block in chunkData.Blocks)
+                if (block.IsRenderSkip) continue;
+
+                if (block.ID != masterBlockDataCache.ID)
                 {
-                    if (block.IsRenderSkip) continue;
-
-                    if (block.ID != masterBlockDataCache.ID)
-                    {
-                        masterBlockDataCache = MasterBlockDataStore.GetData(block.ID);
-                    }
-
-                    var blockMeshData = masterBlockDataCache.MeshData;
-                    maxVerticesCount += blockMeshData.Vertices.Length;
-                    maxTrianglesCount += blockMeshData.Triangles.Length;
-                    maxUVsCount += blockMeshData.UVs.Length;
+                    masterBlockDataCache = MasterBlockDataStore.GetData(block.ID);
                 }
 
-                meshData = new ChunkMeshData(maxVerticesCount, maxTrianglesCount, maxUVsCount);
+                var blockMeshData = masterBlockDataCache.MeshData;
+                maxVerticesCount += blockMeshData.Vertices.Length;
+                maxTrianglesCount += blockMeshData.Triangles.Length;
+                maxUVsCount += blockMeshData.UVs.Length;
             }
+
+            var meshData = new ChunkMeshData(maxVerticesCount, maxTrianglesCount, maxUVsCount);
+            if (ct.IsCancellationRequested) return null;
 
             foreach (var blockData in chunkData.Blocks)
             {
                 meshData.AddBlock(blockData);
             }
 
+            if (ct.IsCancellationRequested) return null;
             return meshData;
         }
 
