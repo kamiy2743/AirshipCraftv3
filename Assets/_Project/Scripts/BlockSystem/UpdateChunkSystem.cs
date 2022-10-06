@@ -236,6 +236,7 @@ namespace BlockSystem
 
                     var meshData = _chunkMeshCreator.CreateMeshData(chunkData, ct);
                     if (meshData == null) return;
+                    if (meshData.IsEmpty) continue;
 
                     if (ct.IsCancellationRequested) return;
 

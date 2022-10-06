@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace BlockSystem
 {
@@ -10,27 +11,22 @@ namespace BlockSystem
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
+        private ChunkDataStore _chunkDataStore;
+
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects;
 
-        internal IReadOnlyCollection<ChunkCoordinate> CreatedChunkHashSet => _createdChunkHashSet;
-        private HashSet<ChunkCoordinate> _createdChunkHashSet;
+        internal HashSet<ChunkCoordinate> CreatedChunkHashSet => _chunkObjects.Keys.ToHashSet();
 
-        private Queue<ChunkObject> availableChunkObjects;
+        private Queue<ChunkObject> availableChunkObjectQueue;
+
+        private static readonly int Capacity = World.LoadChunkCount;
 
         internal void StartInitial(ChunkDataStore chunkDataStore)
         {
-            var capacity = World.LoadChunkCount;
-            _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(capacity);
-            _createdChunkHashSet = new HashSet<ChunkCoordinate>(capacity);
-            availableChunkObjects = new Queue<ChunkObject>(capacity);
-
-            for (int i = 0; i < World.LoadChunkCount; i++)
-            {
-                var chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
-                chunkObject.Init(chunkDataStore);
-                availableChunkObjects.Enqueue(chunkObject);
-            }
+            _chunkDataStore = chunkDataStore;
+            _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
+            availableChunkObjectQueue = new Queue<ChunkObject>(Capacity);
         }
 
         /// <summary>
@@ -39,15 +35,23 @@ namespace BlockSystem
         /// </summary>
         internal ChunkObject TakeChunkObject(ChunkCoordinate cc)
         {
-            if (availableChunkObjects.Count == 0)
+            if (_chunkObjects.Count + 1 >= Capacity)
             {
-                throw new System.Exception("ChunkObjectプールが空です");
+                throw new System.Exception("Capacity: " + Capacity + " を超えたのでこれ以上取り出せません");
             }
 
-            var chunkObject = availableChunkObjects.Dequeue();
-            _chunkObjects.Add(cc, chunkObject);
-            _createdChunkHashSet.Add(cc);
+            ChunkObject chunkObject;
+            if (availableChunkObjectQueue.Count > 0)
+            {
+                chunkObject = availableChunkObjectQueue.Dequeue();
+            }
+            else
+            {
+                chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
+                chunkObject.Init(_chunkDataStore);
+            }
 
+            _chunkObjects.Add(cc, chunkObject);
             return chunkObject;
         }
 
@@ -64,8 +68,7 @@ namespace BlockSystem
 
             chunkObject.ClearMesh();
             _chunkObjects.Remove(cc);
-            _createdChunkHashSet.Remove(cc);
-            availableChunkObjects.Enqueue(chunkObject);
+            availableChunkObjectQueue.Enqueue(chunkObject);
         }
     }
 }

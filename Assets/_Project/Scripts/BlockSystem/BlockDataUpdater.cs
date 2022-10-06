@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 using MasterData.Block;
 using Cysharp.Threading.Tasks;
 using Util;
@@ -70,10 +69,11 @@ namespace BlockSystem
 
             // 更新チャンクのメッシュを再計算する
             var chunkMeshDic = new Dictionary<ChunkObject, ChunkMeshData>(updateChunkHashSet.Count);
+            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet;
             foreach (var updateChunk in updateChunkHashSet)
             {
                 // 生成されていないチャンクであればスキップ
-                if (!_chunkObjectPool.ChunkObjects.ContainsKey(updateChunk.ChunkCoordinate)) continue;
+                if (!createdChunkHashSet.Contains(updateChunk.ChunkCoordinate)) continue;
 
                 var chunkObject = _chunkObjectPool.ChunkObjects[updateChunk.ChunkCoordinate];
                 var meshData = _chunkMeshCreator.CreateMeshData(updateChunk, ct);
