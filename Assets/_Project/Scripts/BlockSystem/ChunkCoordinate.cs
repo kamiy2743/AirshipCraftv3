@@ -54,15 +54,12 @@ namespace BlockSystem
             return true;
         }
 
-        // TODO ビット演算で何とかなるかも
-        private const float InverseBlockSide = 1f / ChunkData.ChunkBlockSide;
         internal static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new ChunkCoordinate(
-                // BlockSideで割り算
-                (int)math.floor(bc.x * InverseBlockSide),
-                (int)math.floor(bc.y * InverseBlockSide),
-                (int)math.floor(bc.z * InverseBlockSide)
+                bc.x >> ChunkData.ChunkBlockSideShift,
+                bc.y >> ChunkData.ChunkBlockSideShift,
+                bc.z >> ChunkData.ChunkBlockSideShift
             );
         }
 

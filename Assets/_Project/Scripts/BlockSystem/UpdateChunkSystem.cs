@@ -57,14 +57,12 @@ namespace BlockSystem
         /// <summary>
         /// プレイヤーがいるチャンクに変換
         /// </summary>
-        private const float InverseBlockSide = 1f / ChunkData.ChunkBlockSide;
         private Vector3Int GetPlayerChunk(Vector3 playerPosition)
         {
             return new Vector3Int(
-                // BlockSideで割り算
-                (int)(playerPosition.x * InverseBlockSide),
-                (int)(playerPosition.y * InverseBlockSide),
-                (int)(playerPosition.z * InverseBlockSide)
+                (int)math.floor(playerPosition.x) >> ChunkData.ChunkBlockSideShift,
+                (int)math.floor(playerPosition.y) >> ChunkData.ChunkBlockSideShift,
+                (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift
             );
         }
 
