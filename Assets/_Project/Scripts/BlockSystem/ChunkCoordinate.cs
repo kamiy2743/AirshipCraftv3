@@ -1,5 +1,7 @@
 using System;
 using MessagePack;
+using UnityEngine;
+using Unity.Mathematics;
 
 namespace BlockSystem
 {
@@ -11,17 +13,20 @@ namespace BlockSystem
     public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
         [Key(0)]
-        public readonly ushort x;
+        public readonly short x;
         [Key(1)]
-        public readonly ushort y;
+        public readonly short y;
         [Key(2)]
-        public readonly ushort z;
+        public readonly short z;
+
+        public static readonly Vector3Int Max = Vector3Int.one * short.MaxValue;
+        public static readonly Vector3Int Min = Vector3Int.one * short.MinValue;
 
         /// <summary>
         /// シリアライズ用なのでそれ以外では使用しないでください
         /// </summary>
         [SerializationConstructor]
-        public ChunkCoordinate(ushort x, ushort y, ushort z)
+        public ChunkCoordinate(short x, short y, short z)
         {
             this.x = x;
             this.y = y;
@@ -36,27 +41,28 @@ namespace BlockSystem
                 if (!IsValid(x, y, z)) throw new System.Exception($"chunk({x}, {y}, {z}) is invalid");
             }
 
-            this.x = (ushort)x;
-            this.y = (ushort)y;
-            this.z = (ushort)z;
+            this.x = (short)x;
+            this.y = (short)y;
+            this.z = (short)z;
         }
 
         internal static bool IsValid(int x, int y, int z)
         {
-            if (x < 0 || x >= World.WorldChunkSideXZ) return false;
-            if (y < 0 || y >= World.WorldChunkSideY) return false;
-            if (z < 0 || z >= World.WorldChunkSideXZ) return false;
+            if (x < Min.x || x > Max.x) return false;
+            if (y < Min.y || y > Max.y) return false;
+            if (z < Min.z || z > Max.z) return false;
             return true;
         }
 
-        private const float InverseBlockSide = 1f / World.ChunkBlockSide;
+        // TODO ビット演算で何とかなるかも
+        private const float InverseBlockSide = 1f / ChunkData.ChunkBlockSide;
         internal static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new ChunkCoordinate(
                 // BlockSideで割り算
-                (int)(bc.x * InverseBlockSide),
-                (int)(bc.y * InverseBlockSide),
-                (int)(bc.z * InverseBlockSide)
+                (int)math.floor(bc.x * InverseBlockSide),
+                (int)math.floor(bc.y * InverseBlockSide),
+                (int)math.floor(bc.z * InverseBlockSide)
             );
         }
 

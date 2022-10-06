@@ -57,7 +57,7 @@ namespace BlockSystem
         /// <summary>
         /// プレイヤーがいるチャンクに変換
         /// </summary>
-        private const float InverseBlockSide = 1f / World.ChunkBlockSide;
+        private const float InverseBlockSide = 1f / ChunkData.ChunkBlockSide;
         private Vector3Int GetPlayerChunk(Vector3 playerPosition)
         {
             return new Vector3Int(
@@ -162,7 +162,7 @@ namespace BlockSystem
                 void EnqueueChunk(int x, int z)
                 {
                     // 下から順に追加
-                    var ye = math.min(pc.y + World.LoadChunkRadius, World.WorldChunkSideY - 1);
+                    var ye = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y);
                     for (int y = math.max(pc.y - World.LoadChunkRadius, 0); y <= ye; y++)
                     {
                         var cc = new ChunkCoordinate(x, y, z, true);
@@ -174,8 +174,8 @@ namespace BlockSystem
                 }
 
                 // 中心
-                if ((pc.x >= 0 && pc.x < World.WorldBlockSideXZ) &&
-                    (pc.z >= 0 && pc.z < World.WorldBlockSideXZ))
+                if ((pc.x >= ChunkCoordinate.Min.x && pc.x <= ChunkCoordinate.Max.x) &&
+                    (pc.z >= ChunkCoordinate.Min.z && pc.z <= ChunkCoordinate.Max.z))
                 {
                     EnqueueChunk(pc.x, pc.z);
                 }
@@ -184,37 +184,37 @@ namespace BlockSystem
                 for (int r = 1; r <= World.LoadChunkRadius; r++)
                 {
                     // 上から見てx+方向
-                    if (pc.z + r < World.WorldChunkSideXZ)
+                    if (pc.z + r <= ChunkCoordinate.Max.z)
                     {
-                        var xe = math.min(pc.x + r, World.WorldChunkSideXZ);
-                        for (int x = math.max(pc.x - r, 0); x < xe; x++)
+                        var xe = math.min(pc.x + r - 1, ChunkCoordinate.Max.x);
+                        for (int x = math.max(pc.x - r, ChunkCoordinate.Min.x); x <= xe; x++)
                         {
                             EnqueueChunk(x, pc.z + r);
                         }
                     }
                     // z-方向
-                    if (pc.x + r < World.WorldChunkSideXZ)
+                    if (pc.x + r <= ChunkCoordinate.Max.x)
                     {
-                        var ze = math.max(pc.z - r, -1);
-                        for (int z = math.min(pc.z + r, World.WorldChunkSideXZ); z > ze; z--)
+                        var ze = math.max(pc.z - r + 1, ChunkCoordinate.Min.z);
+                        for (int z = math.min(pc.z + r, ChunkCoordinate.Max.z); z >= ze; z--)
                         {
                             EnqueueChunk(pc.x + r, z);
                         }
                     }
                     // x-方向
-                    if (pc.z - r >= 0)
+                    if (pc.z - r >= ChunkCoordinate.Min.z)
                     {
-                        var xe = math.max(pc.x - r, -1);
-                        for (int x = math.min(pc.x + r, World.WorldChunkSideXZ); x > xe; x--)
+                        var xe = math.max(pc.x - r + 1, ChunkCoordinate.Min.x);
+                        for (int x = math.min(pc.x + r, ChunkCoordinate.Max.x); x >= xe; x--)
                         {
                             EnqueueChunk(x, pc.z - r);
                         }
                     }
                     // z+方向
-                    if (pc.x - r >= 0)
+                    if (pc.x - r >= ChunkCoordinate.Min.x)
                     {
-                        var ze = math.min(pc.z + r, World.WorldChunkSideXZ);
-                        for (int z = math.max(pc.z - r, 0); z < ze; z++)
+                        var ze = math.min(pc.z + r - 1, ChunkCoordinate.Max.z);
+                        for (int z = math.max(pc.z - r, ChunkCoordinate.Min.z); z <= ze; z++)
                         {
                             EnqueueChunk(pc.x - r, z);
                         }

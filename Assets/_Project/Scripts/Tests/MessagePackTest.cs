@@ -52,34 +52,6 @@ public class MessagePackTest
         UnityEngine.Debug.Log(vector);
     }
 
-    [Test]
-    public void ChunkDataを複数回追記()
-    {
-        var mapGenerator = new MapGenerator(100, 100);
-        var ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
-        var sb = new StringBuilder();
-
-        for (int y = 0; y < World.WorldChunkSideY; y += 10)
-        {
-            for (int z = 0; z < World.WorldChunkSideXZ; z += 10)
-            {
-                for (int x = 0; x < World.WorldChunkSideXZ; x += 10)
-                {
-                    var chunkData = new ChunkData(new ChunkCoordinate(x, y, z), mapGenerator);
-
-                    using (var fs = new FileStream(Application.persistentDataPath + "/ChunkDataStore/ChunkDataTest.bin", FileMode.Append, FileAccess.Write))
-                    {
-                        MessagePackSerializer.Serialize<ChunkData>(fs, chunkData);
-                        var bytes = MessagePackSerializer.Serialize<ChunkData>(chunkData);
-                        sb.AppendLine(chunkData.ChunkCoordinate + ": " + bytes.Length);
-                    }
-                }
-            }
-        }
-
-        File.WriteAllText(Application.persistentDataPath + "/ChunkDataStore/ChunkDataTest.result", sb.ToString());
-    }
-
     [Test, Performance]
     public void SerializeとDeserializeの速度計測()
     {

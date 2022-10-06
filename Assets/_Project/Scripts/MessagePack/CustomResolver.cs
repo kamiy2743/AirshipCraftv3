@@ -193,15 +193,44 @@ namespace MyMessagePackExt.Formatters.BlockSystem
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.BlockCoordinate value, global::MessagePack.MessagePackSerializerOptions options)
         {
-            writer.WriteArrayHeader(3);
-            writer.WriteUInt32(value.x);
-            writer.WriteUInt32(value.y);
-            writer.WriteUInt32(value.z);
+            MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.BlockCoordinate>().Serialize(ref writer, value, options);
         }
 
         public global::BlockSystem.BlockCoordinate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return MyMessagePackExt.Resolvers.GeneratedResolver.Instance.GetFormatter<global::BlockSystem.BlockCoordinate>().Deserialize(ref reader, options);
+            if (reader.TryReadNil())
+            {
+                throw new global::System.InvalidOperationException("typecode is null, struct not supported");
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var __x__ = default(int);
+            var __y__ = default(int);
+            var __z__ = default(int);
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        __x__ = reader.ReadInt32();
+                        break;
+                    case 1:
+                        __y__ = reader.ReadInt32();
+                        break;
+                    case 2:
+                        __z__ = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var ____result = new global::BlockSystem.BlockCoordinate(__x__, __y__, __z__, true);
+            reader.Depth--;
+            return ____result;
         }
     }
 
@@ -211,9 +240,9 @@ namespace MyMessagePackExt.Formatters.BlockSystem
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BlockSystem.ChunkCoordinate value, global::MessagePack.MessagePackSerializerOptions options)
         {
             writer.WriteArrayHeader(3);
-            writer.WriteUInt16(value.x);
-            writer.WriteUInt16(value.y);
-            writer.WriteUInt16(value.z);
+            writer.WriteInt16(value.x);
+            writer.WriteInt16(value.y);
+            writer.WriteInt16(value.z);
         }
 
         public global::BlockSystem.ChunkCoordinate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)

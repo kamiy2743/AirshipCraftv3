@@ -26,7 +26,7 @@ namespace BlockSystem
             var noiseValue = noise.snoise(new float2(xSample, zSample));
             noiseValue = (noiseValue + 1) * 0.5f;
 
-            var resultY = (int)math.floor(World.WorldBlockSideY * noiseValue);
+            var resultY = (int)math.floor(64 * noiseValue);
 
             if (resultY == y) return BlockID.Grass;
             if (resultY > y) return BlockID.Dirt;

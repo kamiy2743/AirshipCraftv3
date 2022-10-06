@@ -209,22 +209,20 @@ namespace MyMessagePackExt.Formatters.BlockSystem
 
             options.Security.DepthStep(ref reader);
             var length = reader.ReadArrayHeader();
-            var __x__ = default(uint);
-            var __y__ = default(uint);
-            var __z__ = default(uint);
+            var ____result = new global::BlockSystem.BlockCoordinate();
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        __x__ = reader.ReadUInt32();
+                        reader.ReadInt32();
                         break;
                     case 1:
-                        __y__ = reader.ReadUInt32();
+                        reader.ReadInt32();
                         break;
                     case 2:
-                        __z__ = reader.ReadUInt32();
+                        reader.ReadInt32();
                         break;
                     default:
                         reader.Skip();
@@ -232,7 +230,6 @@ namespace MyMessagePackExt.Formatters.BlockSystem
                 }
             }
 
-            var ____result = new global::BlockSystem.BlockCoordinate(__x__, __y__, __z__);
             reader.Depth--;
             return ____result;
         }
@@ -309,22 +306,22 @@ namespace MyMessagePackExt.Formatters.BlockSystem
 
             options.Security.DepthStep(ref reader);
             var length = reader.ReadArrayHeader();
-            var __x__ = default(ushort);
-            var __y__ = default(ushort);
-            var __z__ = default(ushort);
+            var __x__ = default(short);
+            var __y__ = default(short);
+            var __z__ = default(short);
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        __x__ = reader.ReadUInt16();
+                        __x__ = reader.ReadInt16();
                         break;
                     case 1:
-                        __y__ = reader.ReadUInt16();
+                        __y__ = reader.ReadInt16();
                         break;
                     case 2:
-                        __z__ = reader.ReadUInt16();
+                        __z__ = reader.ReadInt16();
                         break;
                     default:
                         reader.Skip();

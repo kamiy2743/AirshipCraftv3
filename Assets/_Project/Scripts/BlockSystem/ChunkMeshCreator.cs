@@ -108,7 +108,7 @@ namespace BlockSystem
                     surfaceNormals = new NativeArray<SurfaceNormal>(SurfaceNormalExt.Array, Allocator.TempJob)
                 };
 
-                job.Schedule(World.BlockCountInChunk, 0).Complete();
+                job.Schedule(ChunkData.BlockCountInChunk, 0).Complete();
                 job.surfaceNormals.Dispose();
             }
         }
@@ -164,7 +164,7 @@ namespace BlockSystem
                             aroundBlocksFirst = rightChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Left:
-                        if (lc.x == World.ChunkBlockSide - 1)
+                        if (lc.x == ChunkData.ChunkBlockSide - 1)
                             aroundBlocksFirst = leftChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Top:
@@ -172,7 +172,7 @@ namespace BlockSystem
                             aroundBlocksFirst = topChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Bottom:
-                        if (lc.y == World.ChunkBlockSide - 1)
+                        if (lc.y == ChunkData.ChunkBlockSide - 1)
                             aroundBlocksFirst = bottomChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Forward:
@@ -180,7 +180,7 @@ namespace BlockSystem
                             aroundBlocksFirst = forwardChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Back:
-                        if (lc.z == World.ChunkBlockSide - 1)
+                        if (lc.z == ChunkData.ChunkBlockSide - 1)
                             aroundBlocksFirst = backChunkBlocksFirst;
                         break;
                 }

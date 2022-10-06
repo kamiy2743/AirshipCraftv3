@@ -18,14 +18,19 @@ namespace BlockSystem
 
         internal static readonly ChunkData Empty = new ChunkData();
 
+        /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
+        internal const byte ChunkBlockSide = 16;
+        /// <summary>チャンク内のブロックの総数</summary>
+        internal const int BlockCountInChunk = ChunkBlockSide * ChunkBlockSide * ChunkBlockSide;
+
         /// <summary>
         /// Empty用
         /// </summary>
-        public ChunkData()
+        private ChunkData()
         {
             ChunkCoordinate = new ChunkCoordinate(0, 0, 0);
-            Blocks = new BlockData[World.BlockCountInChunk];
-            for (int i = 0; i < World.BlockCountInChunk; i++)
+            Blocks = new BlockData[BlockCountInChunk];
+            for (int i = 0; i < BlockCountInChunk; i++)
             {
                 Blocks[i] = BlockData.Empty;
             }
@@ -41,25 +46,25 @@ namespace BlockSystem
         unsafe internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            Blocks = new BlockData[World.BlockCountInChunk];
+            Blocks = new BlockData[BlockCountInChunk];
 
             fixed (BlockData* blocksFirst = &Blocks[0])
             {
                 var job = new CreateBlockDataJob
                 {
                     blocksFirst = blocksFirst,
-                    chunkRoot = new int3(cc.x, cc.y, cc.z) * World.ChunkBlockSide,
+                    chunkRoot = new int3(cc.x, cc.y, cc.z) * ChunkBlockSide,
                     mapGenerator = mapGenerator
                 };
 
-                job.Schedule(World.BlockCountInChunk, 0).Complete();
+                job.Schedule(BlockCountInChunk, 0).Complete();
             }
 
         }
 
         internal static int ToIndex(LocalCoordinate lc)
         {
-            return (lc.y * World.ChunkBlockSide * World.ChunkBlockSide) + (lc.z * World.ChunkBlockSide) + lc.x;
+            return (lc.y * ChunkBlockSide * ChunkBlockSide) + (lc.z * ChunkBlockSide) + lc.x;
         }
 
         internal void SetBlockData(LocalCoordinate lc, BlockData blockData)
@@ -88,13 +93,12 @@ namespace BlockSystem
 
             public void Execute(int index)
             {
-                var localY = index / (World.ChunkBlockSide * World.ChunkBlockSide);
-                var xz = index - (localY * (World.ChunkBlockSide * World.ChunkBlockSide));
-                var localX = xz % World.ChunkBlockSide;
-                var localZ = xz / World.ChunkBlockSide;
+                var localY = (int)math.floor((float)index / (ChunkBlockSide * ChunkBlockSide));
+                var xz = index - (localY * (ChunkBlockSide * ChunkBlockSide));
+                var localX = (int)math.floor((float)xz % ChunkBlockSide);
+                var localZ = (int)math.floor((float)xz / ChunkBlockSide);
 
-                var localCoordinate = new int3(localX, localY, localZ);
-                var blockCoordinate = localCoordinate + chunkRoot;
+                var blockCoordinate = chunkRoot + new int3(localX, localY, localZ);
                 var blockID = mapGenerator.GetBlockID(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z);
 
                 *(blocksFirst + index) = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));

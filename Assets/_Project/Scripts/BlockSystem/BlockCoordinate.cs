@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using MessagePack;
+using Unity.Mathematics;
 
 namespace BlockSystem
 {
@@ -11,30 +12,30 @@ namespace BlockSystem
     public struct BlockCoordinate : IEquatable<BlockCoordinate>
     {
         [Key(0)]
-        public readonly uint x;
+        public readonly int x;
         [Key(1)]
-        public readonly uint y;
+        public readonly int y;
         [Key(2)]
-        public readonly uint z;
+        public readonly int z;
+
+        public static readonly Vector3Int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
+        public static readonly Vector3Int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
 
         internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
 
-        [SerializationConstructor]
-        public BlockCoordinate(uint x, uint y, uint z)
+        internal BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
+
+        /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
+        public BlockCoordinate(int x, int y, int z, bool ignoreValidation = false)
         {
+            if (!ignoreValidation)
+            {
+                if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
+            }
+
             this.x = x;
             this.y = y;
             this.z = z;
-        }
-
-        internal BlockCoordinate(Vector3 position) : this((int)position.x, (int)position.y, (int)position.z) { }
-        internal BlockCoordinate(int x, int y, int z)
-        {
-            if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
-
-            this.x = (uint)x;
-            this.y = (uint)y;
-            this.z = (uint)z;
         }
 
         internal static bool IsValid(Vector3 position)
@@ -43,18 +44,18 @@ namespace BlockSystem
         }
         internal static bool IsValid(int x, int y, int z)
         {
-            if (x < 0 || x >= World.WorldBlockSideXZ) return false;
-            if (y < 0 || y >= World.WorldBlockSideY) return false;
-            if (z < 0 || z >= World.WorldBlockSideXZ) return false;
+            if (x < Min.x || x > Max.x) return false;
+            if (y < Min.y || y > Max.y) return false;
+            if (z < Min.z || z > Max.z) return false;
             return true;
         }
 
         public static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
         {
             return new BlockCoordinate(
-                cc.x * World.ChunkBlockSide + lc.x,
-                cc.y * World.ChunkBlockSide + lc.y,
-                cc.z * World.ChunkBlockSide + lc.z
+                cc.x * ChunkData.ChunkBlockSide + lc.x,
+                cc.y * ChunkData.ChunkBlockSide + lc.y,
+                cc.z * ChunkData.ChunkBlockSide + lc.z
             );
         }
 
