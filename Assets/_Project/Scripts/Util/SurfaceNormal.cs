@@ -64,12 +64,6 @@ namespace Util
             return Vector3.zero;
         }
 
-        public static Vector3Int ToVector3Int(this SurfaceNormal surface)
-        {
-            var fv = surface.ToVector3();
-            return new Vector3Int((int)fv.x, (int)fv.y, (int)fv.z);
-        }
-
         /// <summary>
         /// 呼ぶだけでは値が反映されないので戻り値を再代入してください
         /// </summary>

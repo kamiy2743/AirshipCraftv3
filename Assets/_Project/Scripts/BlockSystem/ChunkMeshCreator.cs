@@ -67,10 +67,10 @@ namespace BlockSystem
             var aroundChunkDataArray = new ChunkData[6];
             for (int i = 0; i < 6; i++)
             {
-                var surfaceVector = SurfaceNormalExt.Array[i].ToVector3Int();
-                var ccx = chunkData.ChunkCoordinate.x + surfaceVector.x;
-                var ccy = chunkData.ChunkCoordinate.y + surfaceVector.y;
-                var ccz = chunkData.ChunkCoordinate.z + surfaceVector.z;
+                var surfaceVector = SurfaceNormalExt.Array[i].ToVector3();
+                var ccx = chunkData.ChunkCoordinate.x + (int)surfaceVector.x;
+                var ccy = chunkData.ChunkCoordinate.y + (int)surfaceVector.y;
+                var ccz = chunkData.ChunkCoordinate.z + (int)surfaceVector.z;
 
                 if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
                 {
@@ -78,7 +78,7 @@ namespace BlockSystem
                     continue;
                 }
 
-                var cc = new ChunkCoordinate(ccx, ccy, ccz);
+                var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
                 var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
                 ct.ThrowIfCancellationRequested();
 
@@ -95,6 +95,7 @@ namespace BlockSystem
                 forwardChunkBlocksFirst = &aroundChunkDataArray[4].Blocks[0],
                 backChunkBlocksFirst = &aroundChunkDataArray[5].Blocks[0]
             )
+            fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
             {
                 var job = new CalcContactOtherBlockSurfacesJob
                 {
@@ -105,11 +106,10 @@ namespace BlockSystem
                     bottomChunkBlocksFirst = bottomChunkBlocksFirst,
                     forwardChunkBlocksFirst = forwardChunkBlocksFirst,
                     backChunkBlocksFirst = backChunkBlocksFirst,
-                    surfaceNormals = new NativeArray<SurfaceNormal>(SurfaceNormalExt.Array, Allocator.TempJob)
+                    surfaceNormalsFirst = surfaceNormalsFirst
                 };
 
                 job.Schedule(ChunkData.BlockCountInChunk, 0).Complete();
-                job.surfaceNormals.Dispose();
             }
         }
 
@@ -124,8 +124,7 @@ namespace BlockSystem
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* forwardChunkBlocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* backChunkBlocksFirst;
 
-            [ReadOnly]
-            public NativeArray<SurfaceNormal> surfaceNormals;
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public SurfaceNormal* surfaceNormalsFirst;
 
             public void Execute(int index)
             {
@@ -136,8 +135,10 @@ namespace BlockSystem
                 var surfaces = SurfaceNormal.Zero;
                 var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();
 
-                foreach (var surface in surfaceNormals)
+                for (int i = 0; i < 6; i++)
                 {
+                    var surface = *(surfaceNormalsFirst + i);
+
                     var checkCoordinate = targetCoordinateVector + surface.ToVector3();
                     if (!BlockCoordinate.IsValid(checkCoordinate)) continue;
 
