@@ -5,6 +5,8 @@ using Unity.Burst;
 using Unity.Jobs;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace BlockSystem
 {
@@ -31,35 +33,90 @@ namespace BlockSystem
                 return null;
             }
 
+            // TODO BlockIDの個数を取得できるように
+            /// <typeparam name="int">BlockID</typeparam>
+            /// <typeparam name="int2-0">v,tの開始位置</typeparam>
+            /// <typeparam name="int2-1">v,tのサイズ</typeparam>
+            var masterMeshDataInfoHashMap = new NativeParallelHashMap<int, int2x2>(10, Allocator.TempJob);
+
+            var masterVertices = new NativeList<Vector3>(Allocator.TempJob);
+            var masterTriangles = new NativeList<int>(Allocator.TempJob);
+            var masterUVs = new NativeList<Vector2>(Allocator.TempJob);
+
             int maxVerticesCount = 0;
             int maxTrianglesCount = 0;
-            int maxUVsCount = 0;
-            var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
-            foreach (var block in chunkData.Blocks)
-            {
-                if (block.IsRenderSkip) continue;
 
-                if (block.ID != masterBlockDataCache.ID)
+            var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
+            for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
+            {
+                if (chunkData.Blocks[i].IsRenderSkip) continue;
+
+                var blockID = chunkData.Blocks[i].ID;
+                if (blockID != masterBlockDataCache.ID)
                 {
-                    masterBlockDataCache = MasterBlockDataStore.GetData(block.ID);
+                    masterBlockDataCache = MasterBlockDataStore.GetData(blockID);
                 }
 
-                var blockMeshData = masterBlockDataCache.MeshData;
-                maxVerticesCount += blockMeshData.Vertices.Length;
-                maxTrianglesCount += blockMeshData.Triangles.Length;
-                maxUVsCount += blockMeshData.UVs.Length;
+                var masterMeshData = masterBlockDataCache.MeshData;
+                maxVerticesCount += masterMeshData.Vertices.Length;
+                maxTrianglesCount += masterMeshData.Triangles.Length;
+
+                if (masterMeshDataInfoHashMap.ContainsKey((int)blockID)) continue;
+
+                var masterMeshDataInfo = new int2x2(
+                    masterVertices.Length, masterMeshData.Vertices.Length,
+                    masterTriangles.Length, masterMeshData.Triangles.Length
+                );
+                masterMeshDataInfoHashMap.Add((int)blockID, masterMeshDataInfo);
+
+                unsafe
+                {
+                    fixed (void*
+                        vp = &masterMeshData.Vertices[0],
+                        tp = &masterMeshData.Triangles[0],
+                        up = &masterMeshData.UVs[0])
+                    {
+                        masterVertices.AddRange(vp, masterMeshData.Vertices.Length);
+                        masterTriangles.AddRange(tp, masterMeshData.Triangles.Length);
+                        masterUVs.AddRange(up, masterMeshData.Vertices.Length);
+                    }
+                }
             }
 
-            var meshData = new ChunkMeshData(maxVerticesCount, maxTrianglesCount, maxUVsCount);
-            if (ct.IsCancellationRequested) return null;
-
-            foreach (var blockData in chunkData.Blocks)
+            if (ct.IsCancellationRequested || masterVertices.Length == 0)
             {
-                meshData.AddBlock(blockData);
+                CleanUp();
+                return null;
             }
+
+            ChunkMeshData meshData;
+            unsafe
+            {
+                fixed (BlockData* blocksFirst = &chunkData.Blocks[0])
+                {
+                    meshData = new ChunkMeshData(
+                        blocksFirst,
+                        masterMeshDataInfoHashMap,
+                        masterVertices,
+                        masterTriangles,
+                        masterUVs,
+                        maxVerticesCount,
+                        maxTrianglesCount);
+                }
+            }
+
+            CleanUp();
 
             if (ct.IsCancellationRequested) return null;
             return meshData;
+
+            void CleanUp()
+            {
+                masterMeshDataInfoHashMap.Dispose();
+                masterVertices.Dispose();
+                masterTriangles.Dispose();
+                masterUVs.Dispose();
+            }
         }
 
         unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
@@ -85,16 +142,14 @@ namespace BlockSystem
                 aroundChunkDataArray[i] = aroundChunkData;
             }
 
-            fixed (
-                BlockData*
+            fixed (BlockData*
                 centerChunkBlocksFirst = &chunkData.Blocks[0],
                 rightChunkBlocksFirst = &aroundChunkDataArray[0].Blocks[0],
                 leftChunkBlocksFirst = &aroundChunkDataArray[1].Blocks[0],
                 topChunkBlocksFirst = &aroundChunkDataArray[2].Blocks[0],
                 bottomChunkBlocksFirst = &aroundChunkDataArray[3].Blocks[0],
                 forwardChunkBlocksFirst = &aroundChunkDataArray[4].Blocks[0],
-                backChunkBlocksFirst = &aroundChunkDataArray[5].Blocks[0]
-            )
+                backChunkBlocksFirst = &aroundChunkDataArray[5].Blocks[0])
             fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
             {
                 var job = new CalcContactOtherBlockSurfacesJob
@@ -106,7 +161,8 @@ namespace BlockSystem
                     bottomChunkBlocksFirst = bottomChunkBlocksFirst,
                     forwardChunkBlocksFirst = forwardChunkBlocksFirst,
                     backChunkBlocksFirst = backChunkBlocksFirst,
-                    surfaceNormalsFirst = surfaceNormalsFirst
+                    surfaceNormalsFirst = surfaceNormalsFirst,
+                    surfaceNormalsCount = SurfaceNormalExt.Array.Length
                 };
 
                 job.Schedule(ChunkData.BlockCountInChunk, 0).Complete();
@@ -125,6 +181,7 @@ namespace BlockSystem
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* backChunkBlocksFirst;
 
             [NativeDisableUnsafePtrRestriction][ReadOnly] public SurfaceNormal* surfaceNormalsFirst;
+            [ReadOnly] public int surfaceNormalsCount;
 
             public void Execute(int index)
             {
@@ -135,7 +192,7 @@ namespace BlockSystem
                 var surfaces = SurfaceNormal.Zero;
                 var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();
 
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < surfaceNormalsCount; i++)
                 {
                     var surface = *(surfaceNormalsFirst + i);
 

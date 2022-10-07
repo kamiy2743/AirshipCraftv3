@@ -1,71 +1,102 @@
-using System.Collections.Generic;
 using UnityEngine;
-using MasterData.Block;
+using Unity.Burst;
+using Unity.Jobs;
+using Unity.Mathematics;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Util;
 
 namespace BlockSystem
 {
     internal class ChunkMeshData
     {
-        internal List<Vector3> Vertices;
-        internal List<int> Triangles;
-        internal List<Vector2> UVs;
+        internal Vector3[] Vertices;
+        internal int[] Triangles;
+        internal Vector2[] UVs;
 
-        internal bool IsEmpty => Vertices.Count == 0;
-
-        private MasterBlockData masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
-
-        internal ChunkMeshData(int maxVerticesCount, int maxTrianglesCount, int maxUVsCount)
+        unsafe internal ChunkMeshData(
+            BlockData* blocksFirst,
+            NativeParallelHashMap<int, int2x2> masterMeshDataInfoHashMap,
+            NativeList<Vector3> masterVertices,
+            NativeList<int> masterTriangles,
+            NativeList<Vector2> masterUVs,
+            int maxVerticesCount,
+            int maxTrianglesCount)
         {
-            Vertices = new List<Vector3>(maxVerticesCount);
-            Triangles = new List<int>(maxTrianglesCount);
-            UVs = new List<Vector2>(maxUVsCount);
+            var job = new ChunkMeshDataJob
+            {
+                blocksFirst = blocksFirst,
+                masterMeshDataInfoHashMap = masterMeshDataInfoHashMap,
+                masterVertices = masterVertices,
+                masterTriangles = masterTriangles,
+                masterUVs = masterUVs,
+                resultVertices = new NativeList<Vector3>(maxVerticesCount, Allocator.TempJob),
+                resultTriangles = new NativeList<int>(maxTrianglesCount, Allocator.TempJob),
+                resultUVs = new NativeList<Vector2>(maxVerticesCount, Allocator.TempJob)
+            };
+
+            job.Schedule().Complete();
+
+            Vertices = job.resultVertices.ToArray();
+            Triangles = job.resultTriangles.ToArray();
+            UVs = job.resultUVs.ToArray();
+
+            job.resultVertices.Dispose();
+            job.resultTriangles.Dispose();
+            job.resultUVs.Dispose();
         }
 
-        internal void AddBlock(BlockData blockData)
+        [BurstCompile]
+        unsafe private struct ChunkMeshDataJob : IJob
         {
-            if (blockData.IsRenderSkip) return;
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
+            [ReadOnly] public NativeParallelHashMap<int, int2x2> masterMeshDataInfoHashMap;
 
-            if (blockData.ID != masterBlockDataCache.ID)
+            [ReadOnly] public NativeList<Vector3> masterVertices;
+            [ReadOnly] public NativeList<int> masterTriangles;
+            [ReadOnly] public NativeList<Vector2> masterUVs;
+
+            public NativeList<Vector3> resultVertices;
+            public NativeList<int> resultTriangles;
+            public NativeList<Vector2> resultUVs;
+
+            public void Execute()
             {
-                masterBlockDataCache = MasterBlockDataStore.GetData(blockData.ID);
-            }
-
-            var meshData = masterBlockDataCache.MeshData;
-
-            // triangleはインデックスのため、現在の頂点数を加算しないといけない
-            var vc = Vertices.Count;
-
-            // CubeMeshじゃないと動かない
-            for (int i = 0; i < 6; i++)
-            {
-                // 他のブロックに面していれば描画しない
-                if (blockData.IsContactOtherBlock(SurfaceNormalExt.FromIndex(i)))
+                for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
                 {
-                    continue;
-                }
+                    var blockData = blocksFirst + i;
+                    if (blockData->IsRenderSkip) continue;
 
-                for (int j = 0; j < 6; j++)
-                {
-                    var t = meshData.Triangles[i * 6 + j];
-                    Triangles.Add(t + vc);
+                    var blockID = (int)blockData->ID;
+                    var meshDataInfo = masterMeshDataInfoHashMap[blockID];
+                    var meshStartIndex = meshDataInfo.c0;
+                    var meshSize = meshDataInfo.c1;
+
+                    // triangleはインデックスのため、現在の頂点数を加算しないといけない
+                    var vc = resultVertices.Length;
+
+                    // CubeMeshじゃないと動かない
+                    for (int j = 0; j < 6; j++)
+                    {
+                        // 他のブロックに面していれば描画しない
+                        if (blockData->IsContactOtherBlock(SurfaceNormalExt.FromIndex(j))) continue;
+
+                        for (int k = 0; k < 6; k++)
+                        {
+                            var t = masterTriangles[meshStartIndex[1] + (j * 6 + k)];
+                            resultTriangles.AddNoResize(t + vc);
+                        }
+                    }
+
+                    var blockCoordinate = blockData->BlockCoordinate.ToVector3();
+                    for (int j = 0; j < meshSize[0]; j++)
+                    {
+                        var index = meshStartIndex[0] + j;
+                        resultVertices.AddNoResize(masterVertices[index] + blockCoordinate);
+                        resultUVs.AddNoResize(masterUVs[index]);
+                    }
                 }
             }
-
-            UVs.AddRange(meshData.UVs);
-
-            var blockCoordinate = blockData.BlockCoordinate.ToVector3();
-            for (int i = 0; i < meshData.Vertices.Length; i++)
-            {
-                Vertices.Add(meshData.Vertices[i] + blockCoordinate);
-            }
-        }
-
-        internal void Clear()
-        {
-            Vertices.Clear();
-            Triangles.Clear();
-            UVs.Clear();
         }
     }
 }

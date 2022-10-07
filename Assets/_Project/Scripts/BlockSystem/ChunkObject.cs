@@ -19,12 +19,6 @@ namespace BlockSystem
 
         internal void SetMesh(ChunkMeshData meshData)
         {
-            if (meshData.IsEmpty)
-            {
-                ClearMesh();
-                return;
-            }
-
             if (mesh == null)
             {
                 mesh = new Mesh();
