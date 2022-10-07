@@ -50,15 +50,6 @@ namespace BlockSystem
             return true;
         }
 
-        public static BlockCoordinate FromChunkAndLocal(ChunkCoordinate cc, LocalCoordinate lc)
-        {
-            return new BlockCoordinate(
-                cc.x * ChunkData.ChunkBlockSide + lc.x,
-                cc.y * ChunkData.ChunkBlockSide + lc.y,
-                cc.z * ChunkData.ChunkBlockSide + lc.z
-            );
-        }
-
         public Vector3 ToVector3()
         {
             return new Vector3(x, y, z);

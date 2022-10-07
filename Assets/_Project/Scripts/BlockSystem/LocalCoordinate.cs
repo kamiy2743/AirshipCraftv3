@@ -11,7 +11,7 @@ namespace BlockSystem
         public readonly byte y;
         public readonly byte z;
 
-        public LocalCoordinate(byte x, byte y, byte z)
+        private LocalCoordinate(byte x, byte y, byte z)
         {
             this.x = x;
             this.y = y;

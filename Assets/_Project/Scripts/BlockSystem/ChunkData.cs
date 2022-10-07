@@ -19,7 +19,7 @@ namespace BlockSystem
         internal static readonly ChunkData Empty = new ChunkData();
 
         /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
-        internal const byte ChunkBlockSide = 1 << ChunkBlockSideShift;
+        public const byte ChunkBlockSide = 1 << ChunkBlockSideShift;
         internal const byte ChunkBlockSideShift = 4;
         /// <summary>チャンク内のブロックの総数</summary>
         internal const int BlockCountInChunk = ChunkBlockSide * ChunkBlockSide * ChunkBlockSide;

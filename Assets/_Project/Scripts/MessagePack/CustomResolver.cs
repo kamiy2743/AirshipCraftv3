@@ -13,7 +13,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using System;
+using Unity.Mathematics;
 
 namespace MyMessagePackExt.Resolvers
 {
@@ -401,7 +401,7 @@ namespace MyMessagePackExt.Formatters.BlockSystem
 
             var job = new DeserializeJob();
             job.blockDataByteSize = BlockDataByteSize;
-            job.chunkCoordinate = chunkCoordinate;
+            job.chunkRoot = new int3(chunkCoordinate.x, chunkCoordinate.y, chunkCoordinate.z) * global::BlockSystem.ChunkData.ChunkBlockSide;
 
             unsafe
             {
@@ -427,7 +427,7 @@ namespace MyMessagePackExt.Formatters.BlockSystem
             public int blockDataByteSize;
 
             [ReadOnly]
-            public global::BlockSystem.ChunkCoordinate chunkCoordinate;
+            public int3 chunkRoot;
 
             public void Execute(int index)
             {
@@ -440,8 +440,11 @@ namespace MyMessagePackExt.Formatters.BlockSystem
                 var lcx = *(bytesFirst + (offset++));
                 var lcy = *(bytesFirst + (offset++));
                 var lcz = *(bytesFirst + (offset++));
-                var lc = new global::BlockSystem.LocalCoordinate(lcx, lcy, lcz);
-                var bc = global::BlockSystem.BlockCoordinate.FromChunkAndLocal(chunkCoordinate, lc);
+                var bc = new global::BlockSystem.BlockCoordinate(
+                    chunkRoot.x + lcx,
+                    chunkRoot.y + lcy,
+                    chunkRoot.z + lcz
+                );
 
                 // ContactOtherBlockSurfaces
                 var contactOtherBlockSurfaces = (global::Util.SurfaceNormal)(*(bytesFirst + offset));
