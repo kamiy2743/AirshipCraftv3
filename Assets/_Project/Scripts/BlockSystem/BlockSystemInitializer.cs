@@ -14,12 +14,15 @@ namespace BlockSystem
         [SerializeField] private ChunkObjectPool chunkObjectPool;
         [SerializeField] private BreakBlockSystem breakBlockSystem;
 
+        private ChunkDataStore chunkDataStoreDisposal;
+
         private void Start()
         {
             MasterBlockDataStore.InitialLoad();
 
             var mapGenerator = new MapGenerator(1024, 80);
             var chunkDataStore = new ChunkDataStore(mapGenerator);
+            chunkDataStoreDisposal = chunkDataStore;
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkObjectPool.StartInitial(chunkDataStore);
             var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
@@ -27,6 +30,11 @@ namespace BlockSystem
             PlaceBlockSystem.StartInitial(blockDataUpdater);
             breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
             new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator, this.GetCancellationTokenOnDestroy());
+        }
+
+        private void OnDestroy()
+        {
+            chunkDataStoreDisposal.Dispose();
         }
     }
 }

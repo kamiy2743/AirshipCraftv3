@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Collections;
@@ -10,18 +11,23 @@ namespace BlockSystem
     /// <summary>
     /// チャンクデータを管理
     /// </summary>
-    internal class ChunkDataStore
+    internal class ChunkDataStore : IDisposable
     {
         private const int chunkDataCacheCapacity = 512;
         private Hashtable chunkDataCache = new Hashtable(chunkDataCacheCapacity);
         private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(chunkDataCacheCapacity);
 
-        private Hashtable chunkDataIndexHashtable = new Hashtable();
+        private Hashtable indexHashtable = new Hashtable();
         private MapGenerator _mapGenerator;
 
         private static int ChunkDataByteSize;
-        private static readonly string DataFilePath = Application.persistentDataPath + "/ChunkDataStore/ChunkData.bin";
+        private static readonly string ChunkDataFilePath = Application.persistentDataPath + "/ChunkDataStore/ChunkData.bin";
         private static readonly string IndexHashtablePath = Application.persistentDataPath + "/ChunkDataStore/IndexHashtable.bin";
+
+        private static readonly FileStream ChunkDataStream = new FileStream(ChunkDataFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        private static readonly FileStream IndexHashtableStream = new FileStream(IndexHashtablePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        private static readonly BinaryReader ChunkDataBinaryReader = new BinaryReader(ChunkDataStream);
+        private static readonly BinaryReader IndexHashtableBinaryReader = new BinaryReader(IndexHashtableStream);
 
         internal ChunkDataStore(MapGenerator mapGenerator)
         {
@@ -30,18 +36,11 @@ namespace BlockSystem
             ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
             var chunkDataIndexByteSize = MessagePackSerializer.Serialize(new ChunkDataIndex()).Length;
 
-            if (File.Exists(IndexHashtablePath))
+            while (IndexHashtableStream.Position < IndexHashtableStream.Length)
             {
-                using (var fs = new FileStream(IndexHashtablePath, FileMode.Open, FileAccess.Read))
-                using (var br = new BinaryReader(fs))
-                {
-                    while (fs.Position < fs.Length)
-                    {
-                        var bytes = br.ReadBytes(chunkDataIndexByteSize);
-                        var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(bytes);
-                        chunkDataIndexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
-                    }
-                }
+                var bytes = IndexHashtableBinaryReader.ReadBytes(chunkDataIndexByteSize);
+                var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(bytes);
+                indexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
             }
         }
 
@@ -62,9 +61,9 @@ namespace BlockSystem
             {
                 ChunkData chunkData = null;
 
-                if (chunkDataIndexHashtable.ContainsKey(cc))
+                if (indexHashtable.ContainsKey(cc))
                 {
-                    chunkData = ReadChunk((long)chunkDataIndexHashtable[cc]);
+                    chunkData = ReadChunk((long)indexHashtable[cc]);
                     if (chunkData == null) return null;
                 }
                 else
@@ -92,34 +91,31 @@ namespace BlockSystem
             var newChunkData = new ChunkData(cc, _mapGenerator);
 
             // TODO 事実上intの最大値までしか正常に動かない
-            var chunkDataIndex = (long)chunkDataIndexHashtable.Count;
-            chunkDataIndexHashtable.Add(cc, chunkDataIndex);
+            var chunkDataIndex = (long)indexHashtable.Count;
+            indexHashtable.Add(cc, chunkDataIndex);
 
-            // TODO FileStreamのコンストラクタがかなり遅い
-            using (var fs = new FileStream(IndexHashtablePath, FileMode.Append, FileAccess.Write))
-            {
-                MessagePackSerializer.Serialize(fs, new ChunkDataIndex(cc, chunkDataIndex));
-            }
+            IndexHashtableStream.Position = IndexHashtableStream.Length;
+            MessagePackSerializer.Serialize(IndexHashtableStream, new ChunkDataIndex(cc, chunkDataIndex));
 
-            using (var fs = new FileStream(DataFilePath, FileMode.Append, FileAccess.Write))
-            {
-                MessagePackSerializer.Serialize(fs, newChunkData);
-            }
+            ChunkDataStream.Position = ChunkDataStream.Length;
+            MessagePackSerializer.Serialize(ChunkDataStream, newChunkData);
 
             return newChunkData;
         }
 
         private ChunkData ReadChunk(long index)
         {
-            using (var fs = new FileStream(DataFilePath, FileMode.Open, FileAccess.Read))
-            {
-                fs.Position = ChunkDataByteSize * index;
-                using (var br = new BinaryReader(fs))
-                {
-                    var bytes = br.ReadBytes(ChunkDataByteSize);
-                    return MessagePackSerializer.Deserialize<ChunkData>(bytes);
-                }
-            }
+            ChunkDataStream.Position = ChunkDataByteSize * index;
+            var bytes = ChunkDataBinaryReader.ReadBytes(ChunkDataByteSize);
+            return MessagePackSerializer.Deserialize<ChunkData>(bytes);
+        }
+
+        public void Dispose()
+        {
+            ChunkDataStream.Dispose();
+            IndexHashtableStream.Dispose();
+            ChunkDataBinaryReader.Dispose();
+            IndexHashtableBinaryReader.Dispose();
         }
     }
 
