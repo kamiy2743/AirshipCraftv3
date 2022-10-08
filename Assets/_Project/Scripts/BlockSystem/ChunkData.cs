@@ -65,7 +65,7 @@ namespace BlockSystem
 
         internal static int ToIndex(LocalCoordinate lc)
         {
-            return (lc.y * ChunkBlockSide * ChunkBlockSide) + (lc.z * ChunkBlockSide) + lc.x;
+            return lc.x + (lc.y << ChunkBlockSideShift) + (lc.z << (ChunkBlockSideShift * 2));
         }
 
         internal void SetBlockData(LocalCoordinate lc, BlockData blockData)
@@ -87,19 +87,18 @@ namespace BlockSystem
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
 
-            [ReadOnly]
-            public int3 chunkRoot;
-            [ReadOnly]
-            public MapGenerator mapGenerator;
+            [ReadOnly] public int3 chunkRoot;
+            [ReadOnly] public MapGenerator mapGenerator;
+
+            private const byte mask = (ChunkBlockSide - 1);
 
             public void Execute(int index)
             {
-                var localY = (int)math.floor((float)index / (ChunkBlockSide * ChunkBlockSide));
-                var xz = index - (localY * (ChunkBlockSide * ChunkBlockSide));
-                var localX = (int)math.floor((float)xz % ChunkBlockSide);
-                var localZ = (int)math.floor((float)xz / ChunkBlockSide);
+                var lcx = index & mask;
+                var lcy = (index >> ChunkBlockSideShift) & mask;
+                var lcz = (index >> (ChunkBlockSideShift * 2)) & mask;
 
-                var blockCoordinate = chunkRoot + new int3(localX, localY, localZ);
+                var blockCoordinate = chunkRoot + new int3(lcx, lcy, lcz);
                 var blockID = mapGenerator.GetBlockID(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z);
 
                 *(blocksFirst + index) = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
