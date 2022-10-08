@@ -1,31 +1,27 @@
 using Util;
 using MasterData.Block;
 using System;
-using MessagePack;
 
 namespace BlockSystem
 {
-    [MessagePackObject]
     public struct BlockData : IEquatable<BlockData>
     {
-        [Key(0)]
         public readonly BlockID ID;
-        [Key(1)]
         public readonly BlockCoordinate BlockCoordinate;
 
-        [IgnoreMember]
         public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
-        [Key(2)]
-        public SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
+        internal SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
         internal bool NeedToCalcContactSurfaces => ContactOtherBlockSurfaces == SurfaceNormal.Empty;
 
         // アクセスの度に計算するのだと遅いから値変更時に確定させておく
         internal bool IsRenderSkip;
 
-        [SerializationConstructor]
-        public BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
+        /// <summary>
+        /// シリアライズ用なのでそれ以外では使用しないでください
+        /// </summary>
+        internal BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
         {
             ID = id;
             BlockCoordinate = bc;

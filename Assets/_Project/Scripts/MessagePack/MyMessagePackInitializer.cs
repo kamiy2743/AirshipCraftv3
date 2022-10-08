@@ -1,6 +1,7 @@
 using UnityEngine;
 using MessagePack;
 using MessagePack.Resolvers;
+using BlockSystem.Serializer.Resolvers;
 
 namespace MyMessagePackExt
 {
@@ -10,8 +11,8 @@ namespace MyMessagePackExt
         public static void Initialize()
         {
             StaticCompositeResolver.Instance.Register(
-                Resolvers.CustomResolver.Instance,
-                Resolvers.GeneratedResolver.Instance,
+                BlockSystemResolver.Instance,
+                // Resolvers.GeneratedResolver.Instance,
                 StandardResolver.Instance,
                 MessagePack.Unity.UnityResolver.Instance,
                 MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance

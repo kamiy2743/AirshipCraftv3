@@ -1,7 +1,6 @@
 using System;
 using MessagePack;
 using UnityEngine;
-using Unity.Mathematics;
 
 namespace BlockSystem
 {
@@ -10,23 +9,19 @@ namespace BlockSystem
     /// 座標というよりはインデックスに近い
     /// </summary>
     [MessagePackObject]
-    public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
+    internal struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
-        [Key(0)]
-        public readonly short x;
-        [Key(1)]
-        public readonly short y;
-        [Key(2)]
-        public readonly short z;
+        internal readonly short x;
+        internal readonly short y;
+        internal readonly short z;
 
-        public static readonly Vector3Int Max = Vector3Int.one * short.MaxValue;
-        public static readonly Vector3Int Min = Vector3Int.one * short.MinValue;
+        internal static readonly Vector3Int Max = Vector3Int.one * short.MaxValue;
+        internal static readonly Vector3Int Min = Vector3Int.one * short.MinValue;
 
         /// <summary>
         /// シリアライズ用なのでそれ以外では使用しないでください
         /// </summary>
-        [SerializationConstructor]
-        public ChunkCoordinate(short x, short y, short z)
+        internal ChunkCoordinate(short x, short y, short z)
         {
             this.x = x;
             this.y = y;

@@ -3,24 +3,21 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
-using MessagePack;
 
 namespace BlockSystem
 {
-    [MessagePackObject]
-    public class ChunkData
+    internal class ChunkData
     {
-        [Key(0)]
-        public readonly ChunkCoordinate ChunkCoordinate;
+        internal readonly ChunkCoordinate ChunkCoordinate;
 
-        [Key(1)]
-        public readonly BlockData[] Blocks;
+        internal readonly BlockData[] Blocks;
 
         internal static readonly ChunkData Empty = new ChunkData();
 
         /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
-        public const byte ChunkBlockSide = 1 << ChunkBlockSideShift;
+        internal const byte ChunkBlockSide = 1 << ChunkBlockSideShift;
         internal const byte ChunkBlockSideShift = 4;
+
         /// <summary>チャンク内のブロックの総数</summary>
         internal const int BlockCountInChunk = ChunkBlockSide * ChunkBlockSide * ChunkBlockSide;
 
@@ -37,8 +34,10 @@ namespace BlockSystem
             }
         }
 
-        [SerializationConstructor]
-        public ChunkData(ChunkCoordinate cc, BlockData[] blocks)
+        /// <summary>
+        /// シリアライズ用なのでそれ以外では使用しないでください
+        /// </summary>
+        internal ChunkData(ChunkCoordinate cc, BlockData[] blocks)
         {
             ChunkCoordinate = cc;
             Blocks = blocks;

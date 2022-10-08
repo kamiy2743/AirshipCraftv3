@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using MessagePack;
 using Unity.Mathematics;
 
 namespace BlockSystem
@@ -8,25 +7,21 @@ namespace BlockSystem
     /// <summary>
     /// ワールド内のブロックの座標
     /// </summary>
-    [MessagePackObject]
     public struct BlockCoordinate : IEquatable<BlockCoordinate>
     {
-        [Key(0)]
-        public readonly int x;
-        [Key(1)]
-        public readonly int y;
-        [Key(2)]
-        public readonly int z;
+        internal readonly int x;
+        internal readonly int y;
+        internal readonly int z;
 
-        public static readonly Vector3Int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
-        public static readonly Vector3Int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
+        internal static readonly Vector3Int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
+        internal static readonly Vector3Int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
 
         internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
 
         internal BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
 
         /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
-        public BlockCoordinate(int x, int y, int z, bool ignoreValidation = false)
+        internal BlockCoordinate(int x, int y, int z, bool ignoreValidation = false)
         {
             if (!ignoreValidation)
             {

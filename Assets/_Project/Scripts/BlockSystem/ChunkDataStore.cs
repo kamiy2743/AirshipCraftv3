@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using UnityEngine;
+using BlockSystem.Serializer;
 
 namespace BlockSystem
 {
@@ -21,7 +22,6 @@ namespace BlockSystem
 
         private MapGenerator _mapGenerator;
 
-        private static readonly int ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
         private static readonly string ChunkDataFilePath = Application.persistentDataPath + "/ChunkDataStore/ChunkData.bin";
         private static readonly string IndexHashtablePath = Application.persistentDataPath + "/ChunkDataStore/IndexHashtable.bin";
 
@@ -96,17 +96,18 @@ namespace BlockSystem
             IndexHashtableStream.Position = IndexHashtableStream.Length;
             MessagePackSerializer.Serialize(IndexHashtableStream, new ChunkDataIndex(cc, chunkDataIndex));
 
+            var bytes = ChunkDataSerializer.Serialize(newChunkData);
             ChunkDataStream.Position = ChunkDataStream.Length;
-            MessagePackSerializer.Serialize(ChunkDataStream, newChunkData);
+            ChunkDataStream.Write(bytes);
 
             return newChunkData;
         }
 
         private ChunkData ReadChunk(long index)
         {
-            ChunkDataStream.Position = ChunkDataByteSize * index;
-            var bytes = ChunkDataBinaryReader.ReadBytes(ChunkDataByteSize);
-            return MessagePackSerializer.Deserialize<ChunkData>(bytes);
+            ChunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
+            var bytes = ChunkDataBinaryReader.ReadBytes(ChunkDataSerializer.ChunkDataByteSize);
+            return ChunkDataSerializer.Deserialize(bytes);
         }
 
         public void Dispose()
@@ -118,15 +119,12 @@ namespace BlockSystem
         }
     }
 
-    [MessagePackObject]
     public struct ChunkDataIndex
     {
-        [Key(0)]
-        public ChunkCoordinate ChunkCoordinate;
-        [Key(1)]
-        public long Index;
+        internal ChunkCoordinate ChunkCoordinate;
+        internal long Index;
 
-        public ChunkDataIndex(ChunkCoordinate cc, long index)
+        internal ChunkDataIndex(ChunkCoordinate cc, long index)
         {
             ChunkCoordinate = cc;
             Index = index;
