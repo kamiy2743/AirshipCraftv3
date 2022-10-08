@@ -48,6 +48,7 @@ namespace BlockSystem
             if (mesh != null)
             {
                 Destroy(mesh);
+                mesh = null;
                 meshRenderer.enabled = false;
                 meshCollider.enabled = false;
                 meshCollider.sharedMesh = null;

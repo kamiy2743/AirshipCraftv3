@@ -31,7 +31,7 @@ namespace BlockSystem
         /// </summary>
         internal ChunkObject TakeChunkObject(ChunkCoordinate cc)
         {
-            if (_chunkObjects.Count + 1 >= Capacity)
+            if (_chunkObjects.Count + 1 > Capacity)
             {
                 throw new System.Exception("Capacity: " + Capacity + " を超えたのでこれ以上取り出せません");
             }

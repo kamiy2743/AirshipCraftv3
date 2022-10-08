@@ -26,7 +26,7 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            ct.Register(() => currentTask.Cancel());
+            ct.Register(() => currentTask?.Cancel());
 
             // 初回の更新
             Vector3Int lastPlayerChunk = GetPlayerChunk(player.position);
@@ -161,7 +161,7 @@ namespace BlockSystem
                 {
                     // 下から順に追加
                     var ye = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y);
-                    for (int y = math.max(pc.y - World.LoadChunkRadius, 0); y <= ye; y++)
+                    for (int y = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min.y); y <= ye; y++)
                     {
                         var cc = new ChunkCoordinate(x, y, z, true);
                         // 作成済みならスキップ
