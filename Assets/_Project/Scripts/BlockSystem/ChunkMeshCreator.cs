@@ -21,6 +21,7 @@ namespace BlockSystem
 
         /// <summary>
         /// チャンク内のブロックメッシュを合成したメッシュを作成します
+        /// キャンセルされた場合、頂点が0だった場合はnullを返す
         /// </summary>
         internal ChunkMeshData CreateMeshData(ChunkData chunkData, CancellationToken ct)
         {
@@ -43,10 +44,19 @@ namespace BlockSystem
             var masterTriangles = new NativeList<int>(Allocator.TempJob);
             var masterUVs = new NativeList<Vector2>(Allocator.TempJob);
 
+            void CleanUp()
+            {
+                masterMeshDataInfoHashMap.Dispose();
+                masterVertices.Dispose();
+                masterTriangles.Dispose();
+                masterUVs.Dispose();
+            }
+
+
             int maxVerticesCount = 0;
             int maxTrianglesCount = 0;
-
             var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
+
             for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
             {
                 if (chunkData.Blocks[i].IsRenderSkip) continue;
@@ -107,16 +117,9 @@ namespace BlockSystem
 
             CleanUp();
 
+            if (meshData.Vertices == null) return null;
             if (ct.IsCancellationRequested) return null;
             return meshData;
-
-            void CleanUp()
-            {
-                masterMeshDataInfoHashMap.Dispose();
-                masterVertices.Dispose();
-                masterTriangles.Dispose();
-                masterUVs.Dispose();
-            }
         }
 
         unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)

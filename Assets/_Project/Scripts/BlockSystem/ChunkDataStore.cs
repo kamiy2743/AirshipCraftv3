@@ -18,9 +18,10 @@ namespace BlockSystem
         private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(chunkDataCacheCapacity);
 
         private Hashtable indexHashtable = new Hashtable();
+
         private MapGenerator _mapGenerator;
 
-        private static int ChunkDataByteSize;
+        private static readonly int ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
         private static readonly string ChunkDataFilePath = Application.persistentDataPath + "/ChunkDataStore/ChunkData.bin";
         private static readonly string IndexHashtablePath = Application.persistentDataPath + "/ChunkDataStore/IndexHashtable.bin";
 
@@ -33,9 +34,7 @@ namespace BlockSystem
         {
             _mapGenerator = mapGenerator;
 
-            ChunkDataByteSize = MessagePackSerializer.Serialize(ChunkData.Empty).Length;
             var chunkDataIndexByteSize = MessagePackSerializer.Serialize(new ChunkDataIndex()).Length;
-
             while (IndexHashtableStream.Position < IndexHashtableStream.Length)
             {
                 var bytes = IndexHashtableBinaryReader.ReadBytes(chunkDataIndexByteSize);

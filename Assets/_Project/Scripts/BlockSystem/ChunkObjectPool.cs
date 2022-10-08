@@ -12,21 +12,17 @@ namespace BlockSystem
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
         private ChunkDataStore _chunkDataStore;
+        private static readonly int Capacity = World.LoadChunkCount;
 
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
-        private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects;
-
+        private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
         internal HashSet<ChunkCoordinate> CreatedChunkHashSet => _chunkObjects.Keys.ToHashSet();
 
-        private Queue<ChunkObject> availableChunkObjectQueue;
-
-        private static readonly int Capacity = World.LoadChunkCount;
+        private Queue<ChunkObject> availableChunkObjectQueue = new Queue<ChunkObject>(Capacity);
 
         internal void StartInitial(ChunkDataStore chunkDataStore)
         {
             _chunkDataStore = chunkDataStore;
-            _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
-            availableChunkObjectQueue = new Queue<ChunkObject>(Capacity);
         }
 
         /// <summary>

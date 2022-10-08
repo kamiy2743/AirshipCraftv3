@@ -37,9 +37,12 @@ namespace BlockSystem
 
             job.Schedule().Complete();
 
-            Vertices = job.resultVertices.ToArray();
-            Triangles = job.resultTriangles.ToArray();
-            UVs = job.resultUVs.ToArray();
+            if (job.resultVertices.Length > 0)
+            {
+                Vertices = job.resultVertices.ToArray();
+                Triangles = job.resultTriangles.ToArray();
+                UVs = job.resultUVs.ToArray();
+            }
 
             job.resultVertices.Dispose();
             job.resultTriangles.Dispose();

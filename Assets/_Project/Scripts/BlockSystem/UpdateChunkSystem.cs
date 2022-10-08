@@ -126,7 +126,7 @@ namespace BlockSystem
             internal async UniTask Start()
             {
                 // 読みこみ範囲外のチャンクオブジェクトを解放する
-                foreach (var cc in _chunkObjectPool.ChunkObjects.Keys.ToList())
+                foreach (var cc in _chunkObjectPool.CreatedChunkHashSet)
                 {
                     if (math.abs(cc.x - pc.x) > World.LoadChunkRadius ||
                         math.abs(cc.y - pc.y) > World.LoadChunkRadius ||
@@ -235,10 +235,8 @@ namespace BlockSystem
                     if (chunkData == null) return;
 
                     var meshData = _chunkMeshCreator.CreateMeshData(chunkData, ct);
-                    if (meshData == null) continue;
 
                     if (ct.IsCancellationRequested) return;
-
                     CreateChunkObjectQueue.Enqueue(new KeyValuePair<ChunkCoordinate, ChunkMeshData>(cc, meshData));
                 }
             }
