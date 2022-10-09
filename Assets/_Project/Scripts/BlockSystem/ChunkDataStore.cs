@@ -19,6 +19,7 @@ namespace BlockSystem
         private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(chunkDataCacheCapacity);
 
         private Hashtable indexHashtable = new Hashtable();
+        private long indexHashTableCount = 0;
 
         private MapGenerator _mapGenerator;
 
@@ -40,6 +41,7 @@ namespace BlockSystem
                 var bytes = IndexHashtableBinaryReader.ReadBytes(chunkDataIndexByteSize);
                 var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(bytes);
                 indexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
+                indexHashTableCount++;
             }
         }
 
@@ -89,12 +91,10 @@ namespace BlockSystem
         {
             var newChunkData = new ChunkData(cc, _mapGenerator);
 
-            // TODO 事実上intの最大値までしか正常に動かない
-            var chunkDataIndex = (long)indexHashtable.Count;
-            indexHashtable.Add(cc, chunkDataIndex);
-
             IndexHashtableStream.Position = IndexHashtableStream.Length;
-            MessagePackSerializer.Serialize(IndexHashtableStream, new ChunkDataIndex(cc, chunkDataIndex));
+            MessagePackSerializer.Serialize(IndexHashtableStream, new ChunkDataIndex(cc, indexHashTableCount));
+            indexHashtable.Add(cc, indexHashTableCount);
+            indexHashTableCount++;
 
             var bytes = ChunkDataSerializer.Serialize(newChunkData);
             ChunkDataStream.Position = ChunkDataStream.Length;
