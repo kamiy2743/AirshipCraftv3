@@ -3,6 +3,7 @@ using System.Threading;
 using MasterData.Block;
 using Cysharp.Threading.Tasks;
 using Util;
+using System.Linq;
 
 namespace BlockSystem
 {
@@ -69,7 +70,7 @@ namespace BlockSystem
 
             // 更新チャンクのメッシュを再計算する
             var chunkMeshDic = new Dictionary<ChunkObject, ChunkMeshData>(updateChunkHashSet.Count);
-            var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet;
+            var createdChunkHashSet = _chunkObjectPool.ChunkObjects.Keys.ToHashSet();
             foreach (var updateChunk in updateChunkHashSet)
             {
                 // 生成されていないチャンクであればスキップ

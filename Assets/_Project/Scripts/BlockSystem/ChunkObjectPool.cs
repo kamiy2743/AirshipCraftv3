@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 namespace BlockSystem
 {
@@ -16,7 +15,6 @@ namespace BlockSystem
 
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
-        internal HashSet<ChunkCoordinate> CreatedChunkHashSet => _chunkObjects.Keys.ToHashSet();
 
         private Queue<ChunkObject> availableChunkObjectQueue = new Queue<ChunkObject>(Capacity);
 

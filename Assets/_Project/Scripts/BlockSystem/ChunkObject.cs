@@ -30,7 +30,7 @@ namespace BlockSystem
                 mesh = new Mesh();
                 meshFilter.sharedMesh = mesh;
                 meshRenderer.enabled = true;
-                // meshCollider.enabled = true;
+                meshCollider.enabled = true;
             }
 
             mesh.Clear();
@@ -40,7 +40,7 @@ namespace BlockSystem
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
 
-            // meshCollider.sharedMesh = mesh;
+            meshCollider.sharedMesh = mesh;
         }
 
         internal void ClearMesh()

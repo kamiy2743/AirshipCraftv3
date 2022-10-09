@@ -126,7 +126,8 @@ namespace BlockSystem
             internal async UniTask Start()
             {
                 // 読みこみ範囲外のチャンクオブジェクトを解放する
-                foreach (var cc in _chunkObjectPool.CreatedChunkHashSet)
+                var createdChunkList = _chunkObjectPool.ChunkObjects.Keys.ToList();
+                foreach (var cc in createdChunkList)
                 {
                     if (math.abs(cc.x - pc.x) > World.LoadChunkRadius ||
                         math.abs(cc.y - pc.y) > World.LoadChunkRadius ||
@@ -154,7 +155,7 @@ namespace BlockSystem
             private void SetupCreateMeshDataQueue()
             {
                 // 作成済みチャンク
-                var createdChunkHashSet = _chunkObjectPool.CreatedChunkHashSet;
+                var createdChunkHashSet = _chunkObjectPool.ChunkObjects.Keys.ToHashSet();
 
                 // 指定されたxzにあるチャンクを下から順に作成キューに追加する
                 void EnqueueChunk(int x, int z)
