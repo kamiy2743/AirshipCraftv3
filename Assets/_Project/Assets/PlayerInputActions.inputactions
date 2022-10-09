@@ -16,12 +16,12 @@
                 },
                 {
                     "name": "VerticalMove",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "3bf47bfa-6944-40b8-be27-17b3e095b7b9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Look",
@@ -34,30 +34,30 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "Button",
-                    "id": "e2b95def-14c2-4985-893f-05b843b39dbe",
+                    "type": "Value",
+                    "id": "6d894975-3072-4b9c-ab31-cccaad6597e2",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "PlaceBlock",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "1b30bbe9-32f7-45c0-a48f-0e2c6756189e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "BreakBlock",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "5280ed39-6963-43d9-8bf9-5ac8d53be249",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -249,17 +249,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "67571c51-0f8f-4ea3-8c0e-4e19515af0c6",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "1D Axis",
                     "id": "bcd80ada-f7b5-44fa-bc1c-cd2ac7b72edb",
                     "path": "1DAxis",
@@ -291,6 +280,17 @@
                     "action": "VerticalMove",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "115ded3b-5a04-4b15-8bae-6c825b227841",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
