@@ -31,7 +31,7 @@ namespace BlockSystem.Serializer
 
             unsafe
             {
-                fixed (global::BlockSystem.BlockData* blocksFirst = &chunkData.Blocks[0])
+                fixed (BlockData* blocksFirst = &chunkData.Blocks[0])
                 fixed (byte* blocksResultFirst = &result[ChunkCoordinateByteSize])
                 {
                     var job = new SerializeJob
@@ -40,7 +40,7 @@ namespace BlockSystem.Serializer
                         blocksResultFirst = blocksResultFirst
                     };
 
-                    job.Schedule(ChunkData.BlockCountInChunk, 0).Complete();
+                    job.Schedule().Complete();
                 }
             }
 
@@ -48,28 +48,33 @@ namespace BlockSystem.Serializer
         }
 
         [BurstCompile]
-        unsafe private struct SerializeJob : IJobParallelFor
+        unsafe private struct SerializeJob : IJob
         {
-            [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public byte* blocksResultFirst;
 
-            public void Execute(int index)
+            private const byte LocalCoordinateMask = (byte)(ChunkData.ChunkBlockSide - 1);
+
+            public void Execute()
             {
-                var blockData = blocksFirst + index;
-                var offset = index * BlockDataByteSize;
+                for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
+                {
+                    var blockData = blocksFirst + i;
+                    var offset = i * BlockDataByteSize;
 
-                // BlockID
-                *(blocksResultFirst + (offset++)) = (byte)((ushort)blockData->ID >> 8);
-                *(blocksResultFirst + (offset++)) = (byte)(ushort)blockData->ID;
+                    // BlockID
+                    *(blocksResultFirst + (offset++)) = (byte)((ushort)blockData->ID >> 8);
+                    *(blocksResultFirst + (offset++)) = (byte)(ushort)blockData->ID;
 
-                // BlockCoordinateをLocalCoordinateに変換して書き込み
-                var lc = global::BlockSystem.LocalCoordinate.FromBlockCoordinate(blockData->BlockCoordinate);
-                *(blocksResultFirst + (offset++)) = lc.x;
-                *(blocksResultFirst + (offset++)) = lc.y;
-                *(blocksResultFirst + (offset++)) = lc.z;
+                    // BlockCoordinateをLocalCoordinateに変換して書き込み
+                    var bc = blockData->BlockCoordinate;
+                    *(blocksResultFirst + (offset++)) = (byte)(bc.x & LocalCoordinateMask);
+                    *(blocksResultFirst + (offset++)) = (byte)(bc.y & LocalCoordinateMask);
+                    *(blocksResultFirst + (offset++)) = (byte)(bc.z & LocalCoordinateMask);
 
-                // ContactOtherBlockSurfaces
-                *(blocksResultFirst + (offset++)) = (byte)blockData->ContactOtherBlockSurfaces;
+                    // ContactOtherBlockSurfaces
+                    *(blocksResultFirst + (offset++)) = (byte)blockData->ContactOtherBlockSurfaces;
+                }
             }
         }
 
@@ -84,7 +89,7 @@ namespace BlockSystem.Serializer
 
             unsafe
             {
-                fixed (global::BlockSystem.BlockData* blocksFirst = &blocks[0])
+                fixed (BlockData* blocksFirst = &blocks[0])
                 fixed (byte* bytesFirst = &bytes[ChunkCoordinateByteSize])
                 {
                     var job = new DeserializeJob
@@ -94,7 +99,7 @@ namespace BlockSystem.Serializer
                         chunkRoot = new int3(cc.x, cc.y, cc.z) * ChunkData.ChunkBlockSide
                     };
 
-                    job.Schedule(global::BlockSystem.ChunkData.BlockCountInChunk, 0).Complete();
+                    job.Schedule().Complete();
                 }
             }
 
@@ -102,34 +107,37 @@ namespace BlockSystem.Serializer
         }
 
         [BurstCompile]
-        unsafe private struct DeserializeJob : IJobParallelFor
+        unsafe private struct DeserializeJob : IJob
         {
-            [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public byte* bytesFirst;
 
             [ReadOnly] public int3 chunkRoot;
 
-            public void Execute(int index)
+            public void Execute()
             {
-                var offset = index * BlockDataByteSize;
+                for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
+                {
+                    var offset = i * BlockDataByteSize;
 
-                // BlockID
-                var blockID = (BlockID)(*(bytesFirst + (offset++)) << 8) + *(bytesFirst + (offset++));
+                    // BlockID
+                    var blockID = (BlockID)(*(bytesFirst + (offset++)) << 8) + *(bytesFirst + (offset++));
 
-                // BlockCoordinate
-                var lcx = *(bytesFirst + (offset++));
-                var lcy = *(bytesFirst + (offset++));
-                var lcz = *(bytesFirst + (offset++));
-                var bc = new BlockCoordinate(
-                    chunkRoot.x + lcx,
-                    chunkRoot.y + lcy,
-                    chunkRoot.z + lcz
-                );
+                    // BlockCoordinate
+                    var lcx = *(bytesFirst + (offset++));
+                    var lcy = *(bytesFirst + (offset++));
+                    var lcz = *(bytesFirst + (offset++));
+                    var bc = new BlockCoordinate(
+                        chunkRoot.x + lcx,
+                        chunkRoot.y + lcy,
+                        chunkRoot.z + lcz
+                    );
 
-                // ContactOtherBlockSurfaces
-                var contactOtherBlockSurfaces = (SurfaceNormal)(*(bytesFirst + offset));
+                    // ContactOtherBlockSurfaces
+                    var contactOtherBlockSurfaces = (SurfaceNormal)(*(bytesFirst + offset));
 
-                *(blocksFirst + index) = new BlockData(blockID, bc, contactOtherBlockSurfaces);
+                    *(blocksFirst + i) = new BlockData(blockID, bc, contactOtherBlockSurfaces);
+                }
             }
         }
     }

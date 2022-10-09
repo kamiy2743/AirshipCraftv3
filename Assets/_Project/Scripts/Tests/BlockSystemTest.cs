@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 using BlockSystem;
+using BlockSystem.Serializer;
 using Cysharp.Threading.Tasks;
 using Util;
 using MasterData.Block;
@@ -97,6 +98,37 @@ public class BlockSystemTest
         Measure.Method(() =>
         {
             new ChunkData(cc, mapGenerator);
+        })
+        .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
+        .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
+        .MeasurementCount(20) // 計測数
+        .Run();
+    }
+
+    [Test, Performance]
+    public void ChunkDataのシリアライズ()
+    {
+        var chunkData = ChunkData.Empty;
+
+        Measure.Method(() =>
+        {
+            ChunkDataSerializer.Serialize(chunkData);
+        })
+        .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
+        .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
+        .MeasurementCount(20) // 計測数
+        .Run();
+    }
+
+    [Test, Performance]
+    public void ChunkDataのデシリアライズ()
+    {
+        var chunkData = ChunkData.Empty;
+        var bytes = ChunkDataSerializer.Serialize(chunkData);
+
+        Measure.Method(() =>
+        {
+            ChunkDataSerializer.Deserialize(bytes);
         })
         .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
         .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
