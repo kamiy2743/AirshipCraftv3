@@ -14,9 +14,9 @@ namespace BlockSystem
     /// </summary>
     internal class ChunkDataStore : IDisposable
     {
-        private const int chunkDataCacheCapacity = 512;
-        private Hashtable chunkDataCache = new Hashtable(chunkDataCacheCapacity);
-        private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(chunkDataCacheCapacity);
+        private static readonly int ChunkDataCacheCapacity = World.LoadChunkCount;
+        private Hashtable chunkDataCache = new Hashtable(ChunkDataCacheCapacity);
+        private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(ChunkDataCacheCapacity);
 
         private Hashtable indexHashtable = new Hashtable();
         private long indexHashTableCount = 0;
@@ -72,7 +72,7 @@ namespace BlockSystem
                     chunkData = CreateNewChunk(cc);
                 }
 
-                if (chunkDataCache.Count >= chunkDataCacheCapacity)
+                if (chunkDataCache.Count >= ChunkDataCacheCapacity)
                 {
                     var releaseChunk = chunkDataCacheQueue.Dequeue();
                     chunkDataCache.Remove(releaseChunk);

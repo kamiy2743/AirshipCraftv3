@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            ct.Register(() => currentTask?.Cancel());
+            ct.Register(() => currentTask?.CancelAsync());
 
             // 初回の更新
             Vector3Int lastPlayerChunk = GetPlayerChunk(player.position);
@@ -47,9 +48,15 @@ namespace BlockSystem
                     // 別スレッドで作成したメッシュデータからChunkObjectを作成
                     while (currentTask.CreateChunkObjectQueue.Count > 0)
                     {
-                        var item = currentTask.CreateChunkObjectQueue.Dequeue();
-                        var chunkObject = _chunkObjectPool.TakeChunkObject(item.Key);
-                        chunkObject.SetMesh(item.Value);
+                        if (currentTask.CreateChunkObjectQueue.TryDequeue(out var item))
+                        {
+                            var chunkObject = _chunkObjectPool.TakeChunkObject(item.Key);
+                            chunkObject.SetMesh(item.Value);
+                        }
+                        else
+                        {
+                            throw new Exception("取得に失敗しました");
+                        }
                     }
                 });
         }
@@ -76,10 +83,10 @@ namespace BlockSystem
             currentTask = selfTask;
 
             // タスク実行中であればキャンセルし、終了を待つ
-            if (lastTask != null && !lastTask.IsCompleted)
+            // lastTaskが!nullなことがタスク実行中であるという意味ではない
+            if (lastTask != null)
             {
-                lastTask.Cancel();
-                await UniTask.WaitUntil(() => lastTask.IsCompleted);
+                await lastTask.CancelAsync();
             }
 
             // 古いタスクであれば中断
@@ -94,19 +101,17 @@ namespace BlockSystem
 
         private class UpdateAroundPlayerTask
         {
+            internal Guid ID = Guid.NewGuid();
+            internal ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> CreateChunkObjectQueue = new ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
+
             private CancellationTokenSource cts = new CancellationTokenSource();
             private CancellationToken ct;
+            private bool isCompleted = false;
 
             private Vector3Int pc;
             private ChunkObjectPool _chunkObjectPool;
             private ChunkDataStore _chunkDataStore;
             private ChunkMeshCreator _chunkMeshCreator;
-
-            private Queue<ChunkCoordinate> createChunkMeshDataQueue = new Queue<ChunkCoordinate>();
-            internal Queue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> CreateChunkObjectQueue = new Queue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
-
-            internal Guid ID = Guid.NewGuid();
-            internal bool IsCompleted = false;
 
             internal UpdateAroundPlayerTask(Vector3Int pc, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
             {
@@ -117,10 +122,16 @@ namespace BlockSystem
                 ct = cts.Token;
             }
 
-            internal void Cancel()
+            internal async UniTask CancelAsync()
             {
+                if (cts.IsCancellationRequested) return;
+
                 cts.Cancel();
                 cts.Dispose();
+                if (!isCompleted)
+                {
+                    await UniTask.WaitUntil(() => isCompleted);
+                }
             }
 
             internal async UniTask Start()
@@ -141,34 +152,38 @@ namespace BlockSystem
                 await UniTask.SwitchToThreadPool();
 
                 // キューに作成チャンクを追加
-                SetupCreateMeshDataQueue();
+                var createMeshDataQueue = SetupCreateMeshDataQueue();
 
                 // メッシュ作成
-                CreateMeshDataFromQueue();
+                CreateMeshDataFromQueue(createMeshDataQueue);
 
                 // メインスレッドに戻す
                 await UniTask.SwitchToMainThread();
 
-                IsCompleted = true;
+                isCompleted = true;
             }
 
-            private void SetupCreateMeshDataQueue()
+            private Queue<ChunkCoordinate> SetupCreateMeshDataQueue()
             {
+                var createMeshDataQueue = new Queue<ChunkCoordinate>();
+
                 // 作成済みチャンク
                 var createdChunkHashSet = _chunkObjectPool.ChunkObjects.Keys.ToHashSet();
 
+                var yStart = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min.y);
+                var yEnd = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y);
                 // 指定されたxzにあるチャンクを下から順に作成キューに追加する
                 void EnqueueChunk(int x, int z)
                 {
                     // 下から順に追加
-                    var ye = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y);
-                    for (int y = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min.y); y <= ye; y++)
+                    for (int y = yStart; y <= yEnd; y++)
                     {
                         var cc = new ChunkCoordinate(x, y, z, true);
-                        // 作成済みならスキップ
-                        if (createdChunkHashSet.Contains(cc)) continue;
-
-                        createChunkMeshDataQueue.Enqueue(cc);
+                        // 作成していなければ追加
+                        if (!createdChunkHashSet.Contains(cc))
+                        {
+                            createMeshDataQueue.Enqueue(cc);
+                        }
                     }
                 }
 
@@ -180,7 +195,7 @@ namespace BlockSystem
                 }
 
                 // 内側から順に作成
-                for (int r = 1; r <= World.LoadChunkRadius; r++)
+                for (int r = 0; r <= World.LoadChunkRadius; r++)
                 {
                     // 上から見てx+方向
                     if (pc.z + r <= ChunkCoordinate.Max.z)
@@ -219,18 +234,20 @@ namespace BlockSystem
                         }
                     }
                 }
+
+                return createMeshDataQueue;
             }
 
             /// <summary>
             /// キューにあるチャンクのメッシュを順次作成
             /// </summary>
-            private void CreateMeshDataFromQueue()
+            private void CreateMeshDataFromQueue(Queue<ChunkCoordinate> createMeshDataQueue)
             {
-                while (createChunkMeshDataQueue.Count > 0)
+                while (createMeshDataQueue.Count > 0)
                 {
                     if (ct.IsCancellationRequested) return;
 
-                    var cc = createChunkMeshDataQueue.Dequeue();
+                    var cc = createMeshDataQueue.Dequeue();
 
                     var chunkData = _chunkDataStore.GetChunkData(cc, ct);
                     if (chunkData == null) return;
