@@ -18,40 +18,6 @@ using System.Threading;
 
 public class MessagePackTest
 {
-    [Test]
-    public void ChunkDataのシリアライズ()
-    {
-        var mapGenerator = new MapGenerator(100, 100);
-        var chunkData = new ChunkData(new ChunkCoordinate(12, 2, 35), mapGenerator);
-
-        var sw1 = new System.Diagnostics.Stopwatch();
-        sw1.Start();
-
-        var bytes = MessagePackSerializer.Serialize(chunkData);
-        var chunkData2 = MessagePackSerializer.Deserialize<ChunkData>(bytes);
-        UnityEngine.Debug.Log(chunkData2.ChunkCoordinate);
-        UnityEngine.Debug.Log(MessagePackSerializer.ConvertToJson(bytes));
-
-        sw1.Stop();
-        UnityEngine.Debug.Log(sw1.Elapsed);
-    }
-
-    [Test]
-    public void ChunkCoordinateのシリアライズ()
-    {
-        var bytes = MessagePackSerializer.Serialize(new ChunkCoordinate(124, 1, 11));
-        var cc = MessagePackSerializer.Deserialize<ChunkCoordinate>(bytes);
-        UnityEngine.Debug.Log(cc);
-    }
-
-    [Test]
-    public void Structのシリアライズ()
-    {
-        var bytes = MessagePackSerializer.Serialize(new Vector3(213, 1231, 321));
-        var vector = MessagePackSerializer.Deserialize<Vector3>(bytes);
-        UnityEngine.Debug.Log(vector);
-    }
-
     [Test, Performance]
     public void SerializeとDeserializeの速度計測()
     {

@@ -3,16 +3,18 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
+using Util;
 
 namespace BlockSystem
 {
     internal class ChunkData
     {
-        internal readonly ChunkCoordinate ChunkCoordinate;
+        internal ChunkCoordinate ChunkCoordinate { get; private set; }
+        internal BlockData[] Blocks { get; private set; }
 
-        internal readonly BlockData[] Blocks;
+        internal readonly ReferenceCounter ReferenceCounter = new ReferenceCounter();
 
-        internal static readonly ChunkData Empty = new ChunkData();
+        internal static readonly ChunkData Empty = ForEmpty();
 
         /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
         internal const byte ChunkBlockSide = 1 << ChunkBlockSideShift;
@@ -21,36 +23,67 @@ namespace BlockSystem
         /// <summary>チャンク内のブロックの総数</summary>
         internal const int BlockCountInChunk = ChunkBlockSide * ChunkBlockSide * ChunkBlockSide;
 
-        /// <summary>
-        /// Empty用
-        /// </summary>
-        private ChunkData()
+        private ChunkData() { }
+        private static ChunkData ForEmpty()
         {
-            ChunkCoordinate = new ChunkCoordinate(0, 0, 0);
-            Blocks = new BlockData[BlockCountInChunk];
+            var chunkData = new ChunkData();
+            chunkData.ChunkCoordinate = new ChunkCoordinate(0, 0, 0);
+            chunkData.Blocks = new BlockData[BlockCountInChunk];
             for (int i = 0; i < BlockCountInChunk; i++)
             {
-                Blocks[i] = BlockData.Empty;
+                chunkData.Blocks[i] = BlockData.Empty;
             }
+            return chunkData;
         }
 
         /// <summary>
-        /// シリアライズ用なのでそれ以外では使用しないでください
+        /// デシリアライズ用なのでそれ以外では使用しないでください
+        /// 既存のフィールドのメモリを流用します
         /// </summary>
-        internal ChunkData(ChunkCoordinate cc, BlockData[] blocks)
+        internal ChunkData ReuseDeserialization(ChunkCoordinate cc, BlockData[] blocks)
         {
             ChunkCoordinate = cc;
             Blocks = blocks;
+            return this;
         }
 
-        unsafe internal ChunkData(ChunkCoordinate cc, MapGenerator mapGenerator)
+        /// <summary>
+        /// デシリアライズ用なのでそれ以外では使用しないでください
+        /// 新規作成します
+        /// </summary>
+        internal static ChunkData NewDeserialization(ChunkCoordinate cc, BlockData[] blocks)
+        {
+            return new ChunkData().ReuseDeserialization(cc, blocks);
+        }
+
+        /// <summary>
+        /// 通常のコンストラクタです
+        /// </summary>
+        unsafe internal static ChunkData NewConstructor(ChunkCoordinate cc, MapGenerator mapGenerator)
+        {
+            var chunkData = new ChunkData();
+            chunkData.Blocks = new BlockData[BlockCountInChunk];
+            return chunkData.ReuseConstructor(cc, mapGenerator);
+        }
+
+        /// <summary>
+        /// フィールドのメモリを流用し、コンストラクタを実行します
+        /// </summary>
+        internal ChunkData ReuseConstructor(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            Blocks = new BlockData[BlockCountInChunk];
+            SetupBlockDataArray(cc, Blocks, mapGenerator);
+            return this;
+        }
 
-            fixed (BlockData* blocksFirst = &Blocks[0])
+        /// <summary>
+        /// BlocksをBlockDataで埋めます
+        /// </summary>
+        unsafe private static void SetupBlockDataArray(ChunkCoordinate cc, BlockData[] blocks, MapGenerator mapGenerator)
+        {
+            fixed (BlockData* blocksFirst = &blocks[0])
             {
-                var job = new CreateBlockDataJob
+                var job = new SetupBlockDataArrayJob
                 {
                     blocksFirst = blocksFirst,
                     chunkRoot = new int3(cc.x, cc.y, cc.z) * ChunkBlockSide,
@@ -59,7 +92,6 @@ namespace BlockSystem
 
                 job.Schedule(BlockCountInChunk, 0).Complete();
             }
-
         }
 
         internal static int ToIndex(LocalCoordinate lc)
@@ -82,7 +114,8 @@ namespace BlockSystem
         /// BLockDataを生成する
         /// </summary>
         [BurstCompile]
-        unsafe private struct CreateBlockDataJob : IJobParallelFor
+        // TODO IJobとの速度比較
+        unsafe private struct SetupBlockDataArrayJob : IJobParallelFor
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
 
@@ -103,6 +136,5 @@ namespace BlockSystem
                 *(blocksFirst + index) = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
             }
         }
-
     }
 }

@@ -78,14 +78,22 @@ namespace BlockSystem.Serializer
             }
         }
 
-        internal static ChunkData Deserialize(byte[] bytes)
+        internal static ChunkData Deserialize(byte[] bytes, ChunkData reusableChunkData = null)
         {
             var ccx = (bytes[0] << 8) + bytes[1];
             var ccy = (bytes[2] << 8) + bytes[3];
             var ccz = (bytes[4] << 8) + bytes[5];
             var cc = new ChunkCoordinate((short)ccx, (short)ccy, (short)ccz);
 
-            var blocks = new BlockData[ChunkData.BlockCountInChunk];
+            BlockData[] blocks;
+            if (reusableChunkData == null)
+            {
+                blocks = new BlockData[ChunkData.BlockCountInChunk];
+            }
+            else
+            {
+                blocks = reusableChunkData.Blocks;
+            }
 
             unsafe
             {
@@ -103,7 +111,14 @@ namespace BlockSystem.Serializer
                 }
             }
 
-            return new ChunkData(cc, blocks);
+            if (reusableChunkData == null)
+            {
+                return ChunkData.NewDeserialization(cc, blocks);
+            }
+            else
+            {
+                return reusableChunkData.ReuseDeserialization(cc, blocks);
+            }
         }
 
         [BurstCompile]

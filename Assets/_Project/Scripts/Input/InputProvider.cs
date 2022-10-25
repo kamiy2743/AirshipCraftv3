@@ -4,9 +4,9 @@ namespace Input
 {
     public static class InputProvider
     {
-        private static PlayerInputActions inputActions = SetUp();
+        private static PlayerInputActions inputActions = Setup();
 
-        private static PlayerInputActions SetUp()
+        private static PlayerInputActions Setup()
         {
             var inputActions = new PlayerInputActions();
             inputActions.Enable();

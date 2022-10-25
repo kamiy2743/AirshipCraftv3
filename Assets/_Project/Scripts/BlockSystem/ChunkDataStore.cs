@@ -14,10 +14,6 @@ namespace BlockSystem
     /// </summary>
     internal class ChunkDataStore : IDisposable
     {
-        private static readonly int ChunkDataCacheCapacity = World.LoadChunkCount;
-        private Hashtable chunkDataCache = new Hashtable(ChunkDataCacheCapacity);
-        private Queue<ChunkCoordinate> chunkDataCacheQueue = new Queue<ChunkCoordinate>(ChunkDataCacheCapacity);
-
         private Hashtable indexHashtable = new Hashtable();
         private long indexHashTableCount = 0;
 
@@ -51,45 +47,35 @@ namespace BlockSystem
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
-            if (chunkDataCache.ContainsKey(cc))
+            lock (indexHashtable)
             {
-                return (ChunkData)chunkDataCache[cc];
-            }
-
-            if (ct.IsCancellationRequested) return null;
-
-            lock (chunkDataCache)
-            {
-                ChunkData chunkData = null;
+                ChunkData chunkData;
 
                 if (indexHashtable.ContainsKey(cc))
                 {
                     chunkData = ReadChunk((long)indexHashtable[cc]);
-                    if (chunkData == null) return null;
                 }
                 else
                 {
                     chunkData = CreateNewChunk(cc);
                 }
 
-                if (chunkDataCache.Count >= ChunkDataCacheCapacity)
-                {
-                    var releaseChunk = chunkDataCacheQueue.Dequeue();
-                    chunkDataCache.Remove(releaseChunk);
-                }
-
-                chunkDataCache.Add(cc, chunkData);
-                chunkDataCacheQueue.Enqueue(cc);
-
                 if (ct.IsCancellationRequested) return null;
-
                 return chunkData;
             }
         }
 
         private ChunkData CreateNewChunk(ChunkCoordinate cc)
         {
-            var newChunkData = new ChunkData(cc, _mapGenerator);
+            ChunkData newChunkData;
+            if (TryGetReusableChunkData(out var reusableChunkData))
+            {
+                newChunkData = reusableChunkData.ReuseConstructor(cc, _mapGenerator);
+            }
+            else
+            {
+                newChunkData = ChunkData.NewConstructor(cc, _mapGenerator);
+            }
 
             IndexHashtableStream.Position = IndexHashtableStream.Length;
             MessagePackSerializer.Serialize(IndexHashtableStream, new ChunkDataIndex(cc, indexHashTableCount));
@@ -107,9 +93,27 @@ namespace BlockSystem
         {
             ChunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
             var bytes = ChunkDataBinaryReader.ReadBytes(ChunkDataSerializer.ChunkDataByteSize);
-            return ChunkDataSerializer.Deserialize(bytes);
+
+            if (TryGetReusableChunkData(out var reusableChunkData))
+            {
+                return ChunkDataSerializer.Deserialize(bytes, reusableChunkData);
+            }
+            else
+            {
+                return ChunkDataSerializer.Deserialize(bytes);
+            }
         }
 
+        /// <summary>
+        /// 再利用可能なChunkDataを取得する
+        /// </summary>
+        private bool TryGetReusableChunkData(out ChunkData reusableChunkData)
+        {
+            reusableChunkData = null;
+            return false;
+        }
+
+        // TODO https://ufcpp.net/study/csharp/rm_disposable.html?sec=idisposable#idisposable
         public void Dispose()
         {
             ChunkDataStream.Dispose();

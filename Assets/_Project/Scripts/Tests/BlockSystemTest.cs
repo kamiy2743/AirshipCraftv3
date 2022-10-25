@@ -97,7 +97,7 @@ public class BlockSystemTest
 
         Measure.Method(() =>
         {
-            new ChunkData(cc, mapGenerator);
+            ChunkData.NewConstructor(cc, mapGenerator);
         })
         .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
         .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
