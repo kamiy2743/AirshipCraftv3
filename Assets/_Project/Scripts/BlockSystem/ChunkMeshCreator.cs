@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace BlockSystem
 {
+    /// <summary>
+    /// チャンク用のメッシュを作成する
+    /// </summary>
     internal class ChunkMeshCreator
     {
         private ChunkDataStore _chunkDataStore;
@@ -27,6 +30,7 @@ namespace BlockSystem
         {
             try
             {
+                // 描画面計算
                 CalcContactOtherBlockSurfaces(chunkData, ct);
             }
             catch (System.OperationCanceledException)
@@ -122,37 +126,20 @@ namespace BlockSystem
             return meshData;
         }
 
+        /// <summary>
+        /// チャンク内のすべてのブロックの描画面を計算する
+        /// </summary>
         unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
-            var aroundChunkDataArray = new ChunkData[6];
-            for (int i = 0; i < 6; i++)
-            {
-                var surfaceVector = SurfaceNormalExt.Array[i].ToVector3();
-                var ccx = chunkData.ChunkCoordinate.x + (int)surfaceVector.x;
-                var ccy = chunkData.ChunkCoordinate.y + (int)surfaceVector.y;
-                var ccz = chunkData.ChunkCoordinate.z + (int)surfaceVector.z;
-
-                if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
-                {
-                    aroundChunkDataArray[i] = ChunkData.Empty;
-                    continue;
-                }
-
-                var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
-                var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
-                ct.ThrowIfCancellationRequested();
-
-                aroundChunkDataArray[i] = aroundChunkData;
-            }
-
+            var cc = chunkData.ChunkCoordinate;
             fixed (BlockData*
                 centerChunkBlocksFirst = &chunkData.Blocks[0],
-                rightChunkBlocksFirst = &aroundChunkDataArray[0].Blocks[0],
-                leftChunkBlocksFirst = &aroundChunkDataArray[1].Blocks[0],
-                topChunkBlocksFirst = &aroundChunkDataArray[2].Blocks[0],
-                bottomChunkBlocksFirst = &aroundChunkDataArray[3].Blocks[0],
-                forwardChunkBlocksFirst = &aroundChunkDataArray[4].Blocks[0],
-                backChunkBlocksFirst = &aroundChunkDataArray[5].Blocks[0])
+                rightChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Right, ct).Blocks[0],
+                leftChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Left, ct).Blocks[0],
+                topChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Top, ct).Blocks[0],
+                bottomChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Bottom, ct).Blocks[0],
+                forwardChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Forward, ct).Blocks[0],
+                backChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Back, ct).Blocks[0])
             fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
             {
                 var job = new CalcContactOtherBlockSurfacesJob
@@ -172,7 +159,31 @@ namespace BlockSystem
             }
         }
 
+        /// <summary>
+        /// 指定された面のChunkDataを取得する
+        /// </summary>
+        private ChunkData GetAroundChunkData(ChunkCoordinate targetChunkCoordinate, SurfaceNormal surface, CancellationToken ct)
+        {
+            var surfaceVector = surface.ToVector3();
+            var ccx = targetChunkCoordinate.x + (int)surfaceVector.x;
+            var ccy = targetChunkCoordinate.y + (int)surfaceVector.y;
+            var ccz = targetChunkCoordinate.z + (int)surfaceVector.z;
+
+            if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
+            {
+                return ChunkData.Empty;
+            }
+
+            var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
+            var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
+
+            ct.ThrowIfCancellationRequested();
+            return aroundChunkData;
+        }
+
         [BurstCompile]
+        // TODO IJobとの速度比較
+        // TODO コメント追加
         unsafe private struct CalcContactOtherBlockSurfacesJob : IJobParallelFor
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* centerChunkBlocksFirst;
