@@ -200,8 +200,8 @@ namespace BlockSystem
                 for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
                 {
                     BlockData* targetBlockData = centerChunkBlocksFirst + i;
-                    if (targetBlockData->IsRenderSkip) return;
-                    if (!targetBlockData->NeedToCalcContactSurfaces) return;
+                    if (targetBlockData->IsRenderSkip) continue;
+                    if (!targetBlockData->NeedToCalcContactSurfaces) continue;
 
                     var surfaces = SurfaceNormal.Zero;
                     var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();
