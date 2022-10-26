@@ -94,7 +94,7 @@ namespace BlockSystem
                     mapGenerator = mapGenerator
                 };
 
-                job.Schedule(BlockCountInChunk, 0).Complete();
+                job.Schedule(BlockCountInChunk, 128).Complete();
             }
         }
 
@@ -117,7 +117,6 @@ namespace BlockSystem
         /// Blocks生成用Job
         /// </summary>
         [BurstCompile]
-        // TODO IJobとの速度比較
         unsafe private struct SetupBlocksJob : IJobParallelFor
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
