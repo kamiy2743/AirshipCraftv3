@@ -17,20 +17,23 @@ public class BlockSystemTest
     {
         MasterBlockDataStore.InitialLoad();
 
+        var mapGenerator = new MapGenerator(1024, 80);
+        var chunkDataStore = new ChunkDataStore(mapGenerator);
+        var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
+
+        var cc = new ChunkCoordinate(0, 0, 0);
+        var chunkData = chunkDataStore.GetChunkData(cc, default);
+
         Measure.Method(() =>
         {
-            var mapGenerator = new MapGenerator(1024, 80);
-            var chunkDataStore = new ChunkDataStore(mapGenerator);
-            var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
-
-            var cc = new ChunkCoordinate(0, 0, 0);
-            var chunkData = chunkDataStore.GetChunkData(cc, default);
             chunkMeshCreator.CreateMeshData(chunkData, default);
         })
         .WarmupCount(5) // 記録する前に何回か処理を走らせる（安定性を向上させるため）
         .IterationsPerMeasurement(10) // 計測一回辺りに走らせる処理の回数
         .MeasurementCount(20) // 計測数
         .Run();
+
+        chunkDataStore.Dispose();
     }
 
     [Test, Performance]

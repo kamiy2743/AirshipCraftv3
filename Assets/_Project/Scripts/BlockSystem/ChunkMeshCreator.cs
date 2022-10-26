@@ -155,7 +155,7 @@ namespace BlockSystem
                     surfaceNormalsCount = SurfaceNormalExt.Array.Length
                 };
 
-                job.Schedule(ChunkData.BlockCountInChunk, 0).Complete();
+                job.Schedule().Complete();
             }
         }
 
@@ -182,9 +182,7 @@ namespace BlockSystem
         }
 
         [BurstCompile]
-        // TODO IJobとの速度比較
-        // TODO コメント追加
-        unsafe private struct CalcContactOtherBlockSurfacesJob : IJobParallelFor
+        unsafe private struct CalcContactOtherBlockSurfacesJob : IJob
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* centerChunkBlocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* rightChunkBlocksFirst;
@@ -197,31 +195,34 @@ namespace BlockSystem
             [NativeDisableUnsafePtrRestriction][ReadOnly] public SurfaceNormal* surfaceNormalsFirst;
             [ReadOnly] public int surfaceNormalsCount;
 
-            public void Execute(int index)
+            public void Execute()
             {
-                BlockData* targetBlockData = centerChunkBlocksFirst + index;
-                if (targetBlockData->IsRenderSkip) return;
-                if (!targetBlockData->NeedToCalcContactSurfaces) return;
-
-                var surfaces = SurfaceNormal.Zero;
-                var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();
-
-                for (int i = 0; i < surfaceNormalsCount; i++)
+                for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
                 {
-                    var surface = *(surfaceNormalsFirst + i);
+                    BlockData* targetBlockData = centerChunkBlocksFirst + i;
+                    if (targetBlockData->IsRenderSkip) return;
+                    if (!targetBlockData->NeedToCalcContactSurfaces) return;
 
-                    var checkCoordinate = targetCoordinateVector + surface.ToVector3();
-                    if (!BlockCoordinate.IsValid(checkCoordinate)) continue;
+                    var surfaces = SurfaceNormal.Zero;
+                    var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();
 
-                    var bc = new BlockCoordinate(checkCoordinate);
-                    var aroundBlockData = GetAroundBlockData(surface, bc);
+                    for (int j = 0; j < surfaceNormalsCount; j++)
+                    {
+                        var surface = *(surfaceNormalsFirst + j);
 
-                    if (aroundBlockData->ID == BlockID.Air) continue;
+                        var checkCoordinate = targetCoordinateVector + surface.ToVector3();
+                        if (!BlockCoordinate.IsValid(checkCoordinate)) continue;
 
-                    surfaces = surfaces.Add(surface);
+                        var bc = new BlockCoordinate(checkCoordinate);
+                        var aroundBlockData = GetAroundBlockData(surface, bc);
+
+                        if (aroundBlockData->ID == BlockID.Air) continue;
+
+                        surfaces = surfaces.Add(surface);
+                    }
+
+                    targetBlockData->SetContactOtherBlockSurfaces(surfaces);
                 }
-
-                targetBlockData->SetContactOtherBlockSurfaces(surfaces);
             }
 
             private BlockData* GetAroundBlockData(SurfaceNormal surface, BlockCoordinate bc)
