@@ -13,7 +13,6 @@ namespace BlockSystem
         private ChunkDataStore _chunkDataStore;
         private static readonly int Capacity = World.LoadChunkCount;
 
-        // TODO Hashtableでもいいかも
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
 

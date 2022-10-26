@@ -56,7 +56,7 @@ namespace BlockSystem
                 masterUVs.Dispose();
             }
 
-
+            // TODO リファクタ
             int maxVerticesCount = 0;
             int maxTrianglesCount = 0;
             var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);

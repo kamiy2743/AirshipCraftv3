@@ -3,6 +3,9 @@ using System.Threading;
 
 namespace BlockSystem
 {
+    /// <summary>
+    /// チャンクのGameObject
+    /// </summary>
     internal class ChunkObject : MonoBehaviour, IBlockDataAccessor
     {
         [SerializeField] private MeshFilter meshFilter;

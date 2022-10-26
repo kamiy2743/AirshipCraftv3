@@ -14,6 +14,7 @@ namespace BlockSystem
         internal int[] Triangles;
         internal Vector2[] UVs;
 
+        // TODO リファクタ
         unsafe internal ChunkMeshData(
             BlockData* blocksFirst,
             NativeParallelHashMap<int, int2x2> masterMeshDataInfoHashMap,
