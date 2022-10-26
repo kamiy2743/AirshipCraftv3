@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace BlockSystem
 {
+    // TODO コメントをつける
     internal class BlockDataUpdater
     {
         private ChunkDataStore _chunkDataStore;

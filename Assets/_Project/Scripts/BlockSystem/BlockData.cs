@@ -4,19 +4,32 @@ using System;
 
 namespace BlockSystem
 {
+    /// <summary>
+    /// ブロックの内部データ
+    /// </summary>
     public struct BlockData : IEquatable<BlockData>
     {
         public readonly BlockID ID;
         public readonly BlockCoordinate BlockCoordinate;
 
-        public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
-
+        /// <summary>
+        /// 他のブロックと接している面
+        /// 直接アクセスは非推奨、<see cref="BlockData.IsContactOtherBlock(SurfaceNormal)"/>でアクセスしてください
+        /// </summary>
         internal SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
+        /// <summary>
+        /// 接している面を再計算する必要があるかどうか
+        /// </summary>
         internal bool NeedToCalcContactSurfaces => ContactOtherBlockSurfaces == SurfaceNormal.Empty;
 
+        /// <summary>
+        /// 描画をスキップするかどうか
+        /// </summary>
         // アクセスの度に計算するのだと遅いから値変更時に確定させておく
         internal bool IsRenderSkip;
+
+        public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
         /// <summary>
         /// シリアライズ用なのでそれ以外では使用しないでください
@@ -42,9 +55,13 @@ namespace BlockSystem
         internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
             ContactOtherBlockSurfaces = surfaces;
-            IsRenderSkip = ID == BlockID.Air || ContactOtherBlockSurfaces.IsFull();
+            // 空気ブロックか、周りがすべてブロックで埋まっていれば描画しない
+            IsRenderSkip = (ID == BlockID.Air) || ContactOtherBlockSurfaces.IsFull();
         }
 
+        /// <summary>
+        /// 指定された面で他のブロックと接しているかを返します
+        /// </summary>
         internal bool IsContactOtherBlock(SurfaceNormal surface)
         {
             return ContactOtherBlockSurfaces.Contains(surface);

@@ -1,14 +1,11 @@
 using System;
-using MessagePack;
 using UnityEngine;
 
 namespace BlockSystem
 {
     /// <summary>
-    /// ワールド内のチャンクの座標
-    /// 座標というよりはインデックスに近い
+    /// ブロックを<see cref="ChunkData.ChunkBlockSide"/>で区切った単位
     /// </summary>
-    [MessagePackObject]
     internal struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
         internal readonly short x;

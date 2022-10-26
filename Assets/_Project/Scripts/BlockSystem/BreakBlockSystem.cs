@@ -7,6 +7,7 @@ using Util;
 
 namespace BlockSystem
 {
+    // TODO コメント追加
     public class BreakBlockSystem : MonoBehaviour
     {
         [SerializeField] private DropItem dropItemPrefab;
@@ -33,11 +34,10 @@ namespace BlockSystem
             var updateBlockData = new BlockData(BlockID.Air, targetCoordinate);
             await _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
 
-            return;
-            var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
-            var dropItem = Instantiate(dropItemPrefab);
-            dropItem.SetMesh(meshData);
-            dropItem.SetPosition(targetCoordinate.Center);
+            // var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
+            // var dropItem = Instantiate(dropItemPrefab);
+            // dropItem.SetMesh(meshData);
+            // dropItem.SetPosition(targetCoordinate.Center);
         }
     }
 }

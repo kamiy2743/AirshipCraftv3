@@ -5,7 +5,8 @@ using Unity.Mathematics;
 namespace BlockSystem
 {
     /// <summary>
-    /// ワールド内のブロックの座標
+    /// ブロックの座標
+    /// ワールド内のグローバル座標
     /// </summary>
     public struct BlockCoordinate : IEquatable<BlockCoordinate>
     {
@@ -19,14 +20,9 @@ namespace BlockSystem
         internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
 
         internal BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
-
-        /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
-        internal BlockCoordinate(int x, int y, int z, bool ignoreValidation = false)
+        internal BlockCoordinate(int x, int y, int z)
         {
-            if (!ignoreValidation)
-            {
-                if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
-            }
+            if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
 
             this.x = x;
             this.y = y;

@@ -8,17 +8,26 @@ using Util;
 
 namespace BlockSystem.Serializer
 {
+    /// <summary>
+    /// ChunkData用のシリアライザーです
+    /// </summary>
     internal static class ChunkDataSerializer
     {
+        // ChunkCoordinateのバイト数
         private const int ChunkCoordinateByteSize = 6; //int16*3
+
+        // BlockDataのバイト数
         private const int BlockIDByteSize = 2; //uint16
         private const int LocalCoordinateByteSize = 3; //byte*3
         private const int SurfaceNormalByteSize = 1; //byte
         private const int BlockDataByteSize = BlockIDByteSize + LocalCoordinateByteSize + SurfaceNormalByteSize;
+
+        // ChunkDataのバイト数
         internal const int ChunkDataByteSize = ChunkCoordinateByteSize + (BlockDataByteSize * ChunkData.BlockCountInChunk);
 
         internal static byte[] Serialize(ChunkData chunkData)
         {
+            // TODO 使いまわしたい
             var result = new byte[ChunkDataByteSize];
 
             var cc = chunkData.ChunkCoordinate;
@@ -62,6 +71,7 @@ namespace BlockSystem.Serializer
                     var blockData = blocksFirst + i;
                     var offset = i * BlockDataByteSize;
 
+                    // 1バイトずつ埋めていく
                     // BlockID
                     *(blocksResultFirst + (offset++)) = (byte)((ushort)blockData->ID >> 8);
                     *(blocksResultFirst + (offset++)) = (byte)(ushort)blockData->ID;
@@ -86,6 +96,7 @@ namespace BlockSystem.Serializer
             var cc = new ChunkCoordinate((short)ccx, (short)ccy, (short)ccz);
 
             BlockData[] blocks;
+            // 再使用可能なChunkDataがあれば新しく配列を作成しない
             if (reusableChunkData == null)
             {
                 blocks = new BlockData[ChunkData.BlockCountInChunk];

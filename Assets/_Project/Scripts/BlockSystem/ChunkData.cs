@@ -7,6 +7,9 @@ using Util;
 
 namespace BlockSystem
 {
+    /// <summary>
+    /// チャンクの内部データ
+    /// </summary>
     internal class ChunkData
     {
         internal ChunkCoordinate ChunkCoordinate { get; private set; }
@@ -49,7 +52,7 @@ namespace BlockSystem
 
         /// <summary>
         /// デシリアライズ用なのでそれ以外では使用しないでください
-        /// 新規作成します
+        /// 新規作成するのでアロケーションが発生します
         /// </summary>
         internal static ChunkData NewDeserialization(ChunkCoordinate cc, BlockData[] blocks)
         {
@@ -58,6 +61,7 @@ namespace BlockSystem
 
         /// <summary>
         /// 通常のコンストラクタです
+        /// 新規作成するのでアロケーションが発生します
         /// </summary>
         unsafe internal static ChunkData NewConstructor(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
@@ -72,18 +76,18 @@ namespace BlockSystem
         internal ChunkData ReuseConstructor(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             ChunkCoordinate = cc;
-            SetupBlockDataArray(cc, Blocks, mapGenerator);
+            SetupBlocks(cc, Blocks, mapGenerator);
             return this;
         }
 
         /// <summary>
         /// BlocksをBlockDataで埋めます
         /// </summary>
-        unsafe private static void SetupBlockDataArray(ChunkCoordinate cc, BlockData[] blocks, MapGenerator mapGenerator)
+        unsafe private static void SetupBlocks(ChunkCoordinate cc, BlockData[] blocks, MapGenerator mapGenerator)
         {
             fixed (BlockData* blocksFirst = &blocks[0])
             {
-                var job = new SetupBlockDataArrayJob
+                var job = new SetupBlocksJob
                 {
                     blocksFirst = blocksFirst,
                     chunkRoot = new int3(cc.x, cc.y, cc.z) * ChunkBlockSide,
@@ -110,12 +114,11 @@ namespace BlockSystem
         }
 
         /// <summary>
-        /// コンストラクタ用
-        /// BLockDataを生成する
+        /// Blocks生成用Job
         /// </summary>
         [BurstCompile]
         // TODO IJobとの速度比較
-        unsafe private struct SetupBlockDataArrayJob : IJobParallelFor
+        unsafe private struct SetupBlocksJob : IJobParallelFor
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
 
