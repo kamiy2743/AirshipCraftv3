@@ -38,18 +38,15 @@ namespace BlockSystem
             IndexHashtableStream = new FileStream(IndexHashtablePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
             // チャンクの保存位置を読み込む
-            var indexHashtableBinaryReader = new BinaryReader(IndexHashtableStream);
             var chunkDataIndexByteSize = MessagePackSerializer.Serialize(new ChunkDataIndex()).Length;
-
+            var readBuffer = new byte[chunkDataIndexByteSize];
             while (IndexHashtableStream.Position < IndexHashtableStream.Length)
             {
-                var bytes = indexHashtableBinaryReader.ReadBytes(chunkDataIndexByteSize);
-                var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(bytes);
+                IndexHashtableStream.Read(readBuffer, 0, readBuffer.Length);
+                var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(readBuffer);
                 indexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
                 createdChunkCount++;
             }
-
-            indexHashtableBinaryReader.Dispose();
         }
 
         /// <summary>
@@ -118,7 +115,7 @@ namespace BlockSystem
         private ChunkData ReadChunk(long index)
         {
             ChunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
-            ChunkDataStream.Read(readBuffer, 0, ChunkDataSerializer.ChunkDataByteSize);
+            ChunkDataStream.Read(readBuffer, 0, readBuffer.Length);
 
             if (TryGetReusableChunkData(out var reusableChunkData))
             {
