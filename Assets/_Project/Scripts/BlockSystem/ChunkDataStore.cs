@@ -28,8 +28,6 @@ namespace BlockSystem
 
         private readonly FileStream ChunkDataStream;
         private readonly FileStream IndexHashtableStream;
-        private readonly BinaryReader ChunkDataBinaryReader;
-        private readonly BinaryReader IndexHashtableBinaryReader;
 
         internal ChunkDataStore(MapGenerator mapGenerator)
         {
@@ -38,18 +36,20 @@ namespace BlockSystem
             Directory.CreateDirectory(RootDirectory);
             ChunkDataStream = new FileStream(ChunkDataFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             IndexHashtableStream = new FileStream(IndexHashtablePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            ChunkDataBinaryReader = new BinaryReader(ChunkDataStream);
-            IndexHashtableBinaryReader = new BinaryReader(IndexHashtableStream);
 
             // チャンクの保存位置を読み込む
+            var indexHashtableBinaryReader = new BinaryReader(IndexHashtableStream);
             var chunkDataIndexByteSize = MessagePackSerializer.Serialize(new ChunkDataIndex()).Length;
+
             while (IndexHashtableStream.Position < IndexHashtableStream.Length)
             {
-                var bytes = IndexHashtableBinaryReader.ReadBytes(chunkDataIndexByteSize);
+                var bytes = indexHashtableBinaryReader.ReadBytes(chunkDataIndexByteSize);
                 var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(bytes);
                 indexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
                 createdChunkCount++;
             }
+
+            indexHashtableBinaryReader.Dispose();
         }
 
         /// <summary>
@@ -114,14 +114,15 @@ namespace BlockSystem
         /// <summary>
         /// 保存されているチャンクを読み込む
         /// </summary>
+        private byte[] readBuffer = new byte[ChunkDataSerializer.ChunkDataByteSize];
         private ChunkData ReadChunk(long index)
         {
             ChunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
-            var bytes = ChunkDataBinaryReader.ReadBytes(ChunkDataSerializer.ChunkDataByteSize);
+            ChunkDataStream.Read(readBuffer, 0, ChunkDataSerializer.ChunkDataByteSize);
 
             if (TryGetReusableChunkData(out var reusableChunkData))
             {
-                return ChunkDataSerializer.Deserialize(bytes, reusableChunkData);
+                return ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
             }
             else
             {
@@ -153,8 +154,6 @@ namespace BlockSystem
         {
             ChunkDataStream.Dispose();
             IndexHashtableStream.Dispose();
-            ChunkDataBinaryReader.Dispose();
-            IndexHashtableBinaryReader.Dispose();
         }
     }
 
