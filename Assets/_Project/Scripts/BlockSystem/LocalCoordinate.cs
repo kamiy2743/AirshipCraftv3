@@ -1,15 +1,13 @@
-using Unity.Mathematics;
-
 namespace BlockSystem
 {
     /// <summary>
     /// チャンク内のブロックの座標
     // TODO LocalCoordinateいらないかも
-    public struct LocalCoordinate
+    internal struct LocalCoordinate
     {
-        public readonly byte x;
-        public readonly byte y;
-        public readonly byte z;
+        internal readonly byte x;
+        internal readonly byte y;
+        internal readonly byte z;
 
         private LocalCoordinate(byte x, byte y, byte z)
         {
@@ -19,7 +17,7 @@ namespace BlockSystem
         }
 
         private const byte mask = (byte)(ChunkData.ChunkBlockSide - 1);
-        public static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        internal static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new LocalCoordinate(
                 (byte)(bc.x & mask),
