@@ -132,14 +132,21 @@ namespace BlockSystem
         unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
             var cc = chunkData.ChunkCoordinate;
+            var rightChunk = GetAroundChunkData(cc, SurfaceNormal.Right, ct);
+            var leftChunk = GetAroundChunkData(cc, SurfaceNormal.Left, ct);
+            var topChunk = GetAroundChunkData(cc, SurfaceNormal.Top, ct);
+            var bottomChunk = GetAroundChunkData(cc, SurfaceNormal.Bottom, ct);
+            var forwardChunk = GetAroundChunkData(cc, SurfaceNormal.Forward, ct);
+            var backChunk = GetAroundChunkData(cc, SurfaceNormal.Back, ct);
+
             fixed (BlockData*
                 centerChunkBlocksFirst = &chunkData.Blocks[0],
-                rightChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Right, ct).Blocks[0],
-                leftChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Left, ct).Blocks[0],
-                topChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Top, ct).Blocks[0],
-                bottomChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Bottom, ct).Blocks[0],
-                forwardChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Forward, ct).Blocks[0],
-                backChunkBlocksFirst = &GetAroundChunkData(cc, SurfaceNormal.Back, ct).Blocks[0])
+                rightChunkBlocksFirst = &rightChunk.Blocks[0],
+                leftChunkBlocksFirst = &leftChunk.Blocks[0],
+                topChunkBlocksFirst = &topChunk.Blocks[0],
+                bottomChunkBlocksFirst = &bottomChunk.Blocks[0],
+                forwardChunkBlocksFirst = &forwardChunk.Blocks[0],
+                backChunkBlocksFirst = &backChunk.Blocks[0])
             fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
             {
                 var job = new CalcContactOtherBlockSurfacesJob
@@ -157,6 +164,13 @@ namespace BlockSystem
 
                 job.Schedule().Complete();
             }
+
+            rightChunk.ReferenceCounter.Release();
+            leftChunk.ReferenceCounter.Release();
+            topChunk.ReferenceCounter.Release();
+            bottomChunk.ReferenceCounter.Release();
+            forwardChunk.ReferenceCounter.Release();
+            backChunk.ReferenceCounter.Release();
         }
 
         /// <summary>

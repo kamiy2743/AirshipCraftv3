@@ -253,6 +253,7 @@ namespace BlockSystem
                     if (chunkData == null) return;
 
                     var meshData = _chunkMeshCreator.CreateMeshData(chunkData, ct);
+                    chunkData.ReferenceCounter.Release();
 
                     if (ct.IsCancellationRequested) return;
                     CreateChunkObjectQueue.Enqueue(new KeyValuePair<ChunkCoordinate, ChunkMeshData>(cc, meshData));

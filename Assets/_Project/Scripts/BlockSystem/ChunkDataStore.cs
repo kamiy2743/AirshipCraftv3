@@ -16,8 +16,9 @@ namespace BlockSystem
     {
         /// <summary> チャンクの保存位置を格納する </summary>
         private Hashtable indexHashtable = new Hashtable();
-        /// <summary> 作成済みチャンクの個数 </summary>
         private long createdChunkCount = 0;
+
+        private List<ChunkData> allocatedChunkData = new List<ChunkData>();
 
         private MapGenerator _mapGenerator;
 
@@ -54,6 +55,7 @@ namespace BlockSystem
         /// <summary>
         /// チャンクデータ取得、無ければ作成
         /// キャンセルされた場合はnullを返す
+        /// 終わったらChunkDataの参照を開放することを忘れないように
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
@@ -72,6 +74,7 @@ namespace BlockSystem
                 }
 
                 if (ct.IsCancellationRequested) return null;
+                chunkData.ReferenceCounter.AddRef();
                 return chunkData;
             }
         }
@@ -82,6 +85,7 @@ namespace BlockSystem
         private ChunkData CreateNewChunk(ChunkCoordinate cc)
         {
             ChunkData newChunkData;
+
             // 再利用可能なChunkDataがあれば再利用する
             if (TryGetReusableChunkData(out var reusableChunkData))
             {
@@ -90,6 +94,7 @@ namespace BlockSystem
             else
             {
                 newChunkData = ChunkData.NewConstructor(cc, _mapGenerator);
+                allocatedChunkData.Add(newChunkData);
             }
 
             // チャンクの保存位置を書き込む
@@ -120,7 +125,9 @@ namespace BlockSystem
             }
             else
             {
-                return ChunkDataSerializer.Deserialize(bytes);
+                var chunkData = ChunkDataSerializer.Deserialize(readBuffer);
+                allocatedChunkData.Add(chunkData);
+                return chunkData;
             }
         }
 
@@ -129,6 +136,15 @@ namespace BlockSystem
         /// </summary>
         private bool TryGetReusableChunkData(out ChunkData reusableChunkData)
         {
+            foreach (var chunkData in allocatedChunkData)
+            {
+                if (chunkData.ReferenceCounter.IsFree)
+                {
+                    reusableChunkData = chunkData;
+                    return true;
+                }
+            }
+
             reusableChunkData = null;
             return false;
         }
