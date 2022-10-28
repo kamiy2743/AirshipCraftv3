@@ -83,29 +83,27 @@ namespace BlockSystem
             currentTask = selfTask;
 
             // タスク実行中であればキャンセルし、終了を待つ
-            // lastTaskが!nullなことがタスク実行中であるという意味ではない
-            if (lastTask != null)
+            if (lastTask != null && lastTask.InProgress)
             {
                 await lastTask.CancelAsync();
             }
 
-            // 古いタスクであれば中断
-            if (selfTask.ID != currentTask.ID)
+            // 最新のタスクであれば開始
+            if (selfTask.ID == currentTask.ID)
             {
-                return;
+                currentTask.Start().Forget();
             }
-
-            // タスク開始
-            currentTask.Start().Forget();
         }
 
         private class UpdateAroundPlayerTask
         {
             internal Guid ID = Guid.NewGuid();
             internal ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> CreateChunkObjectQueue = new ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
+            internal bool InProgress => isStarted && !isCompleted;
 
             private CancellationTokenSource cts = new CancellationTokenSource();
             private CancellationToken ct;
+            private bool isStarted = false;
             private bool isCompleted = false;
 
             private Vector3Int pc;
@@ -136,6 +134,8 @@ namespace BlockSystem
 
             internal async UniTask Start()
             {
+                isStarted = true;
+
                 // 読みこみ範囲外のチャンクオブジェクトを解放する
                 var createdChunkList = _chunkObjectPool.ChunkObjects.Keys.ToList();
                 foreach (var cc in createdChunkList)
