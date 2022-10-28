@@ -1,13 +1,14 @@
-using MasterData.Block;
 using System;
 using System.Threading;
 using System.Collections.Generic;
-using Util;
-using Unity.Burst;
+using System.Collections.Concurrent;
+using UniRx;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using UniRx;
+using Util;
+using MasterData.Block;
 
 namespace BlockSystem
 {
@@ -18,7 +19,7 @@ namespace BlockSystem
     {
         private ChunkDataStore _chunkDataStore;
         private Dictionary<ChunkMeshData, IDisposable> allocatedMeshDataDictionary = new Dictionary<ChunkMeshData, IDisposable>();
-        private Queue<ChunkMeshData> reusableMeshDataQueue = new Queue<ChunkMeshData>();
+        private ConcurrentQueue<ChunkMeshData> reusableMeshDataQueue = new ConcurrentQueue<ChunkMeshData>();
 
         internal ChunkMeshCreator(ChunkDataStore chunkDataStore)
         {
@@ -63,7 +64,7 @@ namespace BlockSystem
         /// </summary>
         internal ChunkMeshData GetChunkMeshData()
         {
-            lock (reusableMeshDataQueue)
+            lock (allocatedMeshDataDictionary)
             {
                 ChunkMeshData meshData;
                 if (reusableMeshDataQueue.Count == 0)
@@ -73,7 +74,10 @@ namespace BlockSystem
                 else
                 {
                     // 再利用キューから取得
-                    meshData = reusableMeshDataQueue.Dequeue();
+                    if (!reusableMeshDataQueue.TryDequeue(out meshData))
+                    {
+                        throw new Exception("ChunkMeshDataの取得に失敗しました");
+                    }
                     // 購読を解除
                     allocatedMeshDataDictionary[meshData].Dispose();
                 }
