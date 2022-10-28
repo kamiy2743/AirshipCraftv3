@@ -39,9 +39,11 @@ namespace BlockSystem
             mesh.Clear();
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.SetVertices(meshData.Vertices);
-            mesh.SetTriangles(meshData.Triangles, 0);
+            mesh.SetTriangles(meshData.Triangles.ToArray(), 0);
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
+
+            meshData.Release();
 
             meshCollider.sharedMesh = mesh;
         }

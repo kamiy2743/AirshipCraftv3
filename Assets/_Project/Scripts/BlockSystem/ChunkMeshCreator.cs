@@ -1,25 +1,37 @@
 using MasterData.Block;
+using System;
 using System.Threading;
+using System.Collections.Generic;
 using Util;
 using Unity.Burst;
 using Unity.Jobs;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.Mathematics;
-using UnityEngine;
+using UniRx;
 
 namespace BlockSystem
 {
     /// <summary>
     /// チャンク用のメッシュを作成する
     /// </summary>
-    internal class ChunkMeshCreator
+    internal class ChunkMeshCreator : IDisposable
     {
         private ChunkDataStore _chunkDataStore;
+        private Dictionary<ChunkMeshData, IDisposable> allocatedMeshDataDictionary = new Dictionary<ChunkMeshData, IDisposable>();
+        private Queue<ChunkMeshData> reusableMeshDataQueue = new Queue<ChunkMeshData>();
 
         internal ChunkMeshCreator(ChunkDataStore chunkDataStore)
         {
             _chunkDataStore = chunkDataStore;
+        }
+
+        public void Dispose()
+        {
+            foreach (var item in allocatedMeshDataDictionary)
+            {
+                item.Key.Dispose();
+                item.Value.Dispose();
+            }
         }
 
         /// <summary>
@@ -28,171 +40,126 @@ namespace BlockSystem
         /// </summary>
         internal ChunkMeshData CreateMeshData(ChunkData chunkData, CancellationToken ct)
         {
+            ChunkMeshData meshData;
             try
             {
                 // 描画面計算
                 CalcContactOtherBlockSurfaces(chunkData, ct);
+
+                meshData = GetChunkMeshData();
+                meshData.Init(chunkData, ct);
             }
             catch (System.OperationCanceledException)
             {
                 return null;
             }
 
-            // TODO BlockIDの個数を取得できるように
-            /// <typeparam name="int">BlockID</typeparam>
-            /// <typeparam name="int2-0">v,tの開始位置</typeparam>
-            /// <typeparam name="int2-1">v,tのサイズ</typeparam>
-            var masterMeshDataInfoHashMap = new NativeParallelHashMap<int, int2x2>(10, Allocator.TempJob);
-
-            var masterVertices = new NativeList<Vector3>(Allocator.TempJob);
-            var masterTriangles = new NativeList<int>(Allocator.TempJob);
-            var masterUVs = new NativeList<Vector2>(Allocator.TempJob);
-
-            void CleanUp()
-            {
-                masterMeshDataInfoHashMap.Dispose();
-                masterVertices.Dispose();
-                masterTriangles.Dispose();
-                masterUVs.Dispose();
-            }
-
-            // TODO リファクタ
-            int maxVerticesCount = 0;
-            int maxTrianglesCount = 0;
-            var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
-
-            for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
-            {
-                if (chunkData.Blocks[i].IsRenderSkip) continue;
-
-                var blockID = chunkData.Blocks[i].ID;
-                if (blockID != masterBlockDataCache.ID)
-                {
-                    masterBlockDataCache = MasterBlockDataStore.GetData(blockID);
-                }
-
-                var masterMeshData = masterBlockDataCache.MeshData;
-                maxVerticesCount += masterMeshData.Vertices.Length;
-                maxTrianglesCount += masterMeshData.Triangles.Length;
-
-                if (masterMeshDataInfoHashMap.ContainsKey((int)blockID)) continue;
-
-                var masterMeshDataInfo = new int2x2(
-                    masterVertices.Length, masterMeshData.Vertices.Length,
-                    masterTriangles.Length, masterMeshData.Triangles.Length
-                );
-                masterMeshDataInfoHashMap.Add((int)blockID, masterMeshDataInfo);
-
-                unsafe
-                {
-                    fixed (void*
-                        vp = &masterMeshData.Vertices[0],
-                        tp = &masterMeshData.Triangles[0],
-                        up = &masterMeshData.UVs[0])
-                    {
-                        masterVertices.AddRange(vp, masterMeshData.Vertices.Length);
-                        masterTriangles.AddRange(tp, masterMeshData.Triangles.Length);
-                        masterUVs.AddRange(up, masterMeshData.Vertices.Length);
-                    }
-                }
-            }
-
-            if (ct.IsCancellationRequested || masterVertices.Length == 0)
-            {
-                CleanUp();
-                return null;
-            }
-
-            ChunkMeshData meshData;
-            unsafe
-            {
-                fixed (BlockData* blocksFirst = &chunkData.Blocks[0])
-                {
-                    meshData = new ChunkMeshData(
-                        blocksFirst,
-                        masterMeshDataInfoHashMap,
-                        masterVertices,
-                        masterTriangles,
-                        masterUVs,
-                        maxVerticesCount,
-                        maxTrianglesCount);
-                }
-            }
-
-            CleanUp();
-
-            if (meshData.Vertices == null) return null;
-            if (ct.IsCancellationRequested) return null;
+            if (meshData.Vertices.Length == 0) return null;
             return meshData;
+        }
+
+        /// <summary>
+        /// ChunkMeshDataをできるだけ再利用するようにして取得
+        /// </summary>
+        internal ChunkMeshData GetChunkMeshData()
+        {
+            lock (reusableMeshDataQueue)
+            {
+                ChunkMeshData meshData;
+                if (reusableMeshDataQueue.Count == 0)
+                {
+                    meshData = new ChunkMeshData();
+                }
+                else
+                {
+                    // 再利用キューから取得
+                    meshData = reusableMeshDataQueue.Dequeue();
+                    // 購読を解除
+                    allocatedMeshDataDictionary[meshData].Dispose();
+                }
+
+                // meshDataが解放されたら再利用キューに追加
+                var disposal = meshData.OnReleased.Subscribe(_ => reusableMeshDataQueue.Enqueue(meshData));
+                // 購読を登録
+                allocatedMeshDataDictionary[meshData] = disposal;
+
+                return meshData;
+            }
         }
 
         /// <summary>
         /// チャンク内のすべてのブロックの描画面を計算する
         /// </summary>
-        unsafe private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
+        private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
-            var cc = chunkData.ChunkCoordinate;
-            var rightChunk = GetAroundChunkData(cc, SurfaceNormal.Right, ct);
-            var leftChunk = GetAroundChunkData(cc, SurfaceNormal.Left, ct);
-            var topChunk = GetAroundChunkData(cc, SurfaceNormal.Top, ct);
-            var bottomChunk = GetAroundChunkData(cc, SurfaceNormal.Bottom, ct);
-            var forwardChunk = GetAroundChunkData(cc, SurfaceNormal.Forward, ct);
-            var backChunk = GetAroundChunkData(cc, SurfaceNormal.Back, ct);
-
-            fixed (BlockData*
-                centerChunkBlocksFirst = &chunkData.Blocks[0],
-                rightChunkBlocksFirst = &rightChunk.Blocks[0],
-                leftChunkBlocksFirst = &leftChunk.Blocks[0],
-                topChunkBlocksFirst = &topChunk.Blocks[0],
-                bottomChunkBlocksFirst = &bottomChunk.Blocks[0],
-                forwardChunkBlocksFirst = &forwardChunk.Blocks[0],
-                backChunkBlocksFirst = &backChunk.Blocks[0])
-            fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
+            /// <summary>
+            /// 指定された面のChunkDataを取得する
+            /// </summary>
+            var targetChunkCoordinate = chunkData.ChunkCoordinate;
+            ChunkData GetAroundChunkData(SurfaceNormal surface)
             {
-                var job = new CalcContactOtherBlockSurfacesJob
-                {
-                    centerChunkBlocksFirst = centerChunkBlocksFirst,
-                    rightChunkBlocksFirst = rightChunkBlocksFirst,
-                    leftChunkBlocksFirst = leftChunkBlocksFirst,
-                    topChunkBlocksFirst = topChunkBlocksFirst,
-                    bottomChunkBlocksFirst = bottomChunkBlocksFirst,
-                    forwardChunkBlocksFirst = forwardChunkBlocksFirst,
-                    backChunkBlocksFirst = backChunkBlocksFirst,
-                    surfaceNormalsFirst = surfaceNormalsFirst,
-                    surfaceNormalsCount = SurfaceNormalExt.Array.Length
-                };
+                var surfaceVector = surface.ToVector3();
+                var ccx = targetChunkCoordinate.x + (int)surfaceVector.x;
+                var ccy = targetChunkCoordinate.y + (int)surfaceVector.y;
+                var ccz = targetChunkCoordinate.z + (int)surfaceVector.z;
 
-                job.Schedule().Complete();
+                if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
+                {
+                    return ChunkData.Empty;
+                }
+
+                var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
+                var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
+
+                ct.ThrowIfCancellationRequested();
+                return aroundChunkData;
             }
 
+            // それぞれの面のChunkDataを取得
+            var rightChunk = GetAroundChunkData(SurfaceNormal.Right);
+            var leftChunk = GetAroundChunkData(SurfaceNormal.Left);
+            var topChunk = GetAroundChunkData(SurfaceNormal.Top);
+            var bottomChunk = GetAroundChunkData(SurfaceNormal.Bottom);
+            var forwardChunk = GetAroundChunkData(SurfaceNormal.Forward);
+            var backChunk = GetAroundChunkData(SurfaceNormal.Back);
+
+            unsafe
+            {
+                // それぞれの面のBlocksの先頭のポインタをJobに渡す
+                fixed (BlockData*
+                    centerChunkBlocksFirst = &chunkData.Blocks[0],
+                    rightChunkBlocksFirst = &rightChunk.Blocks[0],
+                    leftChunkBlocksFirst = &leftChunk.Blocks[0],
+                    topChunkBlocksFirst = &topChunk.Blocks[0],
+                    bottomChunkBlocksFirst = &bottomChunk.Blocks[0],
+                    forwardChunkBlocksFirst = &forwardChunk.Blocks[0],
+                    backChunkBlocksFirst = &backChunk.Blocks[0])
+                fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
+                {
+                    var job = new CalcContactOtherBlockSurfacesJob
+                    {
+                        centerChunkBlocksFirst = centerChunkBlocksFirst,
+                        rightChunkBlocksFirst = rightChunkBlocksFirst,
+                        leftChunkBlocksFirst = leftChunkBlocksFirst,
+                        topChunkBlocksFirst = topChunkBlocksFirst,
+                        bottomChunkBlocksFirst = bottomChunkBlocksFirst,
+                        forwardChunkBlocksFirst = forwardChunkBlocksFirst,
+                        backChunkBlocksFirst = backChunkBlocksFirst,
+                        surfaceNormalsFirst = surfaceNormalsFirst,
+                        surfaceNormalsCount = SurfaceNormalExt.Array.Length
+                    };
+
+                    job.Schedule().Complete();
+                }
+            }
+
+            // 参照を解放
             rightChunk.ReferenceCounter.Release();
             leftChunk.ReferenceCounter.Release();
             topChunk.ReferenceCounter.Release();
             bottomChunk.ReferenceCounter.Release();
             forwardChunk.ReferenceCounter.Release();
             backChunk.ReferenceCounter.Release();
-        }
-
-        /// <summary>
-        /// 指定された面のChunkDataを取得する
-        /// </summary>
-        private ChunkData GetAroundChunkData(ChunkCoordinate targetChunkCoordinate, SurfaceNormal surface, CancellationToken ct)
-        {
-            var surfaceVector = surface.ToVector3();
-            var ccx = targetChunkCoordinate.x + (int)surfaceVector.x;
-            var ccy = targetChunkCoordinate.y + (int)surfaceVector.y;
-            var ccz = targetChunkCoordinate.z + (int)surfaceVector.z;
-
-            if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
-            {
-                return ChunkData.Empty;
-            }
-
-            var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
-            var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
-
-            ct.ThrowIfCancellationRequested();
-            return aroundChunkData;
         }
 
         [BurstCompile]
@@ -229,7 +196,6 @@ namespace BlockSystem
 
                         var bc = new BlockCoordinate(checkCoordinate);
                         var aroundBlockData = GetAroundBlockData(surface, bc);
-
                         if (aroundBlockData->ID == BlockID.Air) continue;
 
                         surfaces = surfaces.Add(surface);
