@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using MessagePack;
 using UnityEngine;
 using BlockSystem.Serializer;
+using UniRx;
 
 namespace BlockSystem
 {
@@ -18,7 +19,7 @@ namespace BlockSystem
         private Hashtable indexHashtable = new Hashtable();
         private long createdChunkCount = 0;
 
-        private List<ChunkData> allocatedChunkData = new List<ChunkData>();
+        private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
 
         private MapGenerator _mapGenerator;
 
@@ -52,26 +53,35 @@ namespace BlockSystem
         /// <summary>
         /// チャンクデータ取得、無ければ作成
         /// キャンセルされた場合はnullを返す
-        /// 終わったらChunkDataの参照を開放することを忘れないように
+        /// 使い終わったら参照を開放することを忘れないように
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
             lock (indexHashtable)
             {
                 ChunkData chunkData;
+                reusableChunkQueue.TryDequeue(out ChunkData reusableChunkData);
 
                 // 保存位置が存在すれば読み込み、無ければ作成
                 if (indexHashtable.ContainsKey(cc))
                 {
-                    chunkData = ReadChunk((long)indexHashtable[cc]);
+                    chunkData = ReadChunk((long)indexHashtable[cc], reusableChunkData);
                 }
                 else
                 {
-                    chunkData = CreateNewChunk(cc);
+                    chunkData = CreateNewChunk(cc, reusableChunkData);
                 }
 
                 if (ct.IsCancellationRequested) return null;
+
+                // 参照追加
                 chunkData.ReferenceCounter.AddRef();
+                // 参照がなくなったら再利用キューに追加
+                if (reusableChunkData == null)
+                {
+                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => reusableChunkQueue.Enqueue(chunkData));
+                }
+
                 return chunkData;
             }
         }
@@ -79,19 +89,18 @@ namespace BlockSystem
         /// <summary>
         /// チャンクを新規作成し、チャンクとその保存位置を書き込む
         /// </summary>
-        private ChunkData CreateNewChunk(ChunkCoordinate cc)
+        private ChunkData CreateNewChunk(ChunkCoordinate cc, ChunkData reusableChunkData)
         {
             ChunkData newChunkData;
 
             // 再利用可能なChunkDataがあれば再利用する
-            if (TryGetReusableChunkData(out var reusableChunkData))
+            if (reusableChunkData != null)
             {
                 newChunkData = reusableChunkData.ReuseConstructor(cc, _mapGenerator);
             }
             else
             {
                 newChunkData = ChunkData.NewConstructor(cc, _mapGenerator);
-                allocatedChunkData.Add(newChunkData);
             }
 
             // チャンクの保存位置を書き込む
@@ -112,39 +121,11 @@ namespace BlockSystem
         /// 保存されているチャンクを読み込む
         /// </summary>
         private byte[] readBuffer = new byte[ChunkDataSerializer.ChunkDataByteSize];
-        private ChunkData ReadChunk(long index)
+        private ChunkData ReadChunk(long index, ChunkData reusableChunkData)
         {
             ChunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
             ChunkDataStream.Read(readBuffer, 0, readBuffer.Length);
-
-            if (TryGetReusableChunkData(out var reusableChunkData))
-            {
-                return ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
-            }
-            else
-            {
-                var chunkData = ChunkDataSerializer.Deserialize(readBuffer);
-                allocatedChunkData.Add(chunkData);
-                return chunkData;
-            }
-        }
-
-        /// <summary>
-        /// 再利用可能なChunkDataを取得する
-        /// </summary>
-        private bool TryGetReusableChunkData(out ChunkData reusableChunkData)
-        {
-            foreach (var chunkData in allocatedChunkData)
-            {
-                if (chunkData.ReferenceCounter.IsFree)
-                {
-                    reusableChunkData = chunkData;
-                    return true;
-                }
-            }
-
-            reusableChunkData = null;
-            return false;
+            return ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
         }
 
         public void Dispose()

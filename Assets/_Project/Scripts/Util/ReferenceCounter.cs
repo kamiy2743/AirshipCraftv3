@@ -1,3 +1,6 @@
+using System;
+using UniRx;
+
 namespace Util
 {
     /// <summary>
@@ -7,6 +10,9 @@ namespace Util
     {
         private int count = 0;
         public bool IsFree => count == 0;
+
+        private Subject<Unit> _onAllReferenceReleased;
+        public IObservable<Unit> OnAllReferenceReleased => _onAllReferenceReleased ??= new Subject<Unit>();
 
         public void AddRef()
         {
@@ -22,6 +28,7 @@ namespace Util
             {
                 if (count == 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
                 count--;
+                if (count == 0) _onAllReferenceReleased?.OnNext(default);
             }
         }
     }
