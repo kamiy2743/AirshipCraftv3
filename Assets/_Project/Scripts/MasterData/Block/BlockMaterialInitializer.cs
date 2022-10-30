@@ -23,7 +23,7 @@ namespace MasterData.Block
                     Texture2D blockTexture = null;
 
                     var masterBlockData = MasterBlockDataStore.GetData(side * y + x);
-                    if (masterBlockData != null)
+                    if (masterBlockData is not null)
                     {
                         blockTexture = masterBlockData.Texture;
                     }

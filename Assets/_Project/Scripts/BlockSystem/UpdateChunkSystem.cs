@@ -83,7 +83,7 @@ namespace BlockSystem
             currentTask = selfTask;
 
             // タスク実行中であればキャンセルし、終了を待つ
-            if (lastTask != null && lastTask.InProgress)
+            if (lastTask is not null && lastTask.InProgress)
             {
                 await lastTask.CancelAsync();
             }
@@ -250,7 +250,7 @@ namespace BlockSystem
                     var cc = createMeshDataQueue.Dequeue();
 
                     var chunkData = _chunkDataStore.GetChunkData(cc, ct);
-                    if (chunkData == null) return;
+                    if (chunkData is null) return;
 
                     var meshData = _chunkMeshCreator.CreateMeshData(chunkData, ct);
                     chunkData.ReferenceCounter.Release();

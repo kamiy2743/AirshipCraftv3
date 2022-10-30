@@ -34,7 +34,7 @@ namespace BlockSystem
                 var cc = ChunkCoordinate.FromBlockCoordinate(bc);
                 var lc = LocalCoordinate.FromBlockCoordinate(bc);
                 var chunkData = _chunkDataStore.GetChunkData(cc, ct);
-                if (chunkData == null)
+                if (chunkData is null)
                 {
                     await UniTask.SwitchToMainThread(ct);
                     return;
@@ -54,7 +54,7 @@ namespace BlockSystem
                 var cc = ChunkCoordinate.FromBlockCoordinate(bc);
                 var lc = LocalCoordinate.FromBlockCoordinate(bc);
                 var chunkData = _chunkDataStore.GetChunkData(cc, ct);
-                if (chunkData == null)
+                if (chunkData is null)
                 {
                     await UniTask.SwitchToMainThread(ct);
                     return;
@@ -79,7 +79,7 @@ namespace BlockSystem
 
                 var chunkObject = _chunkObjectPool.ChunkObjects[updateChunk.ChunkCoordinate];
                 var meshData = _chunkMeshCreator.CreateMeshData(updateChunk, ct);
-                if (meshData == null)
+                if (meshData is null)
                 {
                     await UniTask.SwitchToMainThread(ct);
                     return;

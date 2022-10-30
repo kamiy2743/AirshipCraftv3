@@ -23,7 +23,7 @@ namespace Util
         {
             get
             {
-                if (_array != null) return _array;
+                if (_array is not null) return _array;
 
                 var list = new List<SurfaceNormal>(6);
                 foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))

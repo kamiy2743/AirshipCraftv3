@@ -97,7 +97,7 @@ namespace BlockSystem.Serializer
 
             BlockData[] blocks;
             // 再使用可能なChunkDataがあれば新しく配列を作成しない
-            if (reusableChunkData == null)
+            if (reusableChunkData is null)
             {
                 blocks = new BlockData[ChunkData.BlockCountInChunk];
             }
@@ -122,7 +122,7 @@ namespace BlockSystem.Serializer
                 }
             }
 
-            if (reusableChunkData == null)
+            if (reusableChunkData is null)
             {
                 return ChunkData.NewDeserialization(cc, blocks);
             }

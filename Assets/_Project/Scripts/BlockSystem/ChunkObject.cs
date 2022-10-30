@@ -22,13 +22,13 @@ namespace BlockSystem
 
         internal void SetMesh(ChunkMeshData meshData)
         {
-            if (meshData == null)
+            if (meshData is null)
             {
                 ClearMesh();
                 return;
             }
 
-            if (mesh == null)
+            if (mesh is null)
             {
                 mesh = new Mesh();
                 meshFilter.sharedMesh = mesh;
@@ -50,7 +50,7 @@ namespace BlockSystem
 
         internal void ClearMesh()
         {
-            if (mesh != null)
+            if (mesh is not null)
             {
                 Destroy(mesh);
                 mesh = null;
@@ -72,7 +72,7 @@ namespace BlockSystem
 
         private void OnDestroy()
         {
-            if (mesh != null)
+            if (mesh is not null)
             {
                 Destroy(mesh);
             }
