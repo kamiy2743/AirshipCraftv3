@@ -18,7 +18,7 @@ namespace BlockSystem
     internal class ChunkMeshCreator : IDisposable
     {
         private ChunkDataStore _chunkDataStore;
-        private Dictionary<ChunkMeshData, IDisposable> allocatedMeshDataDictionary = new Dictionary<ChunkMeshData, IDisposable>();
+        private List<ChunkMeshData> allocatedMeshDataList = new List<ChunkMeshData>();
         private ConcurrentQueue<ChunkMeshData> reusableMeshDataQueue = new ConcurrentQueue<ChunkMeshData>();
 
         internal ChunkMeshCreator(ChunkDataStore chunkDataStore)
@@ -28,10 +28,9 @@ namespace BlockSystem
 
         public void Dispose()
         {
-            foreach (var item in allocatedMeshDataDictionary)
+            foreach (var meshData in allocatedMeshDataList)
             {
-                item.Key.Dispose();
-                item.Value.Dispose();
+                meshData.Dispose();
             }
         }
 
@@ -62,32 +61,29 @@ namespace BlockSystem
         /// <summary>
         /// ChunkMeshDataをできるだけ再利用するようにして取得
         /// </summary>
-        internal ChunkMeshData GetChunkMeshData()
+        private ChunkMeshData GetChunkMeshData()
         {
-            lock (allocatedMeshDataDictionary)
+            lock (this)
             {
-                ChunkMeshData meshData;
                 if (reusableMeshDataQueue.Count == 0)
                 {
-                    meshData = new ChunkMeshData();
+                    var meshData = new ChunkMeshData();
+                    allocatedMeshDataList.Add(meshData);
+
+                    // meshDataが解放されたら再利用キューに追加
+                    meshData.OnReleased.Subscribe(_ => reusableMeshDataQueue.Enqueue(meshData));
+
+                    return meshData;
                 }
                 else
                 {
                     // 再利用キューから取得
-                    if (!reusableMeshDataQueue.TryDequeue(out meshData))
+                    if (!reusableMeshDataQueue.TryDequeue(out ChunkMeshData meshData))
                     {
                         throw new Exception("ChunkMeshDataの取得に失敗しました");
                     }
-                    // 購読を解除
-                    allocatedMeshDataDictionary[meshData].Dispose();
+                    return meshData;
                 }
-
-                // meshDataが解放されたら再利用キューに追加
-                var disposal = meshData.OnReleased.Subscribe(_ => reusableMeshDataQueue.Enqueue(meshData));
-                // 購読を登録
-                allocatedMeshDataDictionary[meshData] = disposal;
-
-                return meshData;
             }
         }
 
