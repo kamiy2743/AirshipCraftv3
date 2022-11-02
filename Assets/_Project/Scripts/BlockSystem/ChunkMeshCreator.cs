@@ -110,9 +110,7 @@ namespace BlockSystem
 
                 var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
                 var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
-                ct.Register(aroundChunkData.ReferenceCounter.Release);
 
-                ct.ThrowIfCancellationRequested();
                 return aroundChunkData;
             }
 
@@ -124,43 +122,46 @@ namespace BlockSystem
             var forwardChunk = GetAroundChunkData(SurfaceNormal.Forward);
             var backChunk = GetAroundChunkData(SurfaceNormal.Back);
 
-            unsafe
+            if (!ct.IsCancellationRequested)
             {
-                // それぞれの面のBlocksの先頭のポインタをJobに渡す
-                fixed (BlockData*
-                    centerChunkBlocksFirst = &chunkData.Blocks[0],
-                    rightChunkBlocksFirst = &rightChunk.Blocks[0],
-                    leftChunkBlocksFirst = &leftChunk.Blocks[0],
-                    topChunkBlocksFirst = &topChunk.Blocks[0],
-                    bottomChunkBlocksFirst = &bottomChunk.Blocks[0],
-                    forwardChunkBlocksFirst = &forwardChunk.Blocks[0],
-                    backChunkBlocksFirst = &backChunk.Blocks[0])
-                fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
+                unsafe
                 {
-                    var job = new CalcContactOtherBlockSurfacesJob
+                    // それぞれの面のBlocksの先頭のポインタをJobに渡す
+                    fixed (BlockData*
+                        centerChunkBlocksFirst = &chunkData.Blocks[0],
+                        rightChunkBlocksFirst = &rightChunk.Blocks[0],
+                        leftChunkBlocksFirst = &leftChunk.Blocks[0],
+                        topChunkBlocksFirst = &topChunk.Blocks[0],
+                        bottomChunkBlocksFirst = &bottomChunk.Blocks[0],
+                        forwardChunkBlocksFirst = &forwardChunk.Blocks[0],
+                        backChunkBlocksFirst = &backChunk.Blocks[0])
+                    fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
                     {
-                        centerChunkBlocksFirst = centerChunkBlocksFirst,
-                        rightChunkBlocksFirst = rightChunkBlocksFirst,
-                        leftChunkBlocksFirst = leftChunkBlocksFirst,
-                        topChunkBlocksFirst = topChunkBlocksFirst,
-                        bottomChunkBlocksFirst = bottomChunkBlocksFirst,
-                        forwardChunkBlocksFirst = forwardChunkBlocksFirst,
-                        backChunkBlocksFirst = backChunkBlocksFirst,
-                        surfaceNormalsFirst = surfaceNormalsFirst,
-                        surfaceNormalsCount = SurfaceNormalExt.Array.Length
-                    };
+                        var job = new CalcContactOtherBlockSurfacesJob
+                        {
+                            centerChunkBlocksFirst = centerChunkBlocksFirst,
+                            rightChunkBlocksFirst = rightChunkBlocksFirst,
+                            leftChunkBlocksFirst = leftChunkBlocksFirst,
+                            topChunkBlocksFirst = topChunkBlocksFirst,
+                            bottomChunkBlocksFirst = bottomChunkBlocksFirst,
+                            forwardChunkBlocksFirst = forwardChunkBlocksFirst,
+                            backChunkBlocksFirst = backChunkBlocksFirst,
+                            surfaceNormalsFirst = surfaceNormalsFirst,
+                            surfaceNormalsCount = SurfaceNormalExt.Array.Length
+                        };
 
-                    job.Schedule().Complete();
+                        job.Schedule().Complete();
+                    }
                 }
             }
 
             // 参照を解放
-            rightChunk.ReferenceCounter.Release();
-            leftChunk.ReferenceCounter.Release();
-            topChunk.ReferenceCounter.Release();
-            bottomChunk.ReferenceCounter.Release();
-            forwardChunk.ReferenceCounter.Release();
-            backChunk.ReferenceCounter.Release();
+            rightChunk?.ReferenceCounter.Release();
+            leftChunk?.ReferenceCounter.Release();
+            topChunk?.ReferenceCounter.Release();
+            bottomChunk?.ReferenceCounter.Release();
+            forwardChunk?.ReferenceCounter.Release();
+            backChunk?.ReferenceCounter.Release();
         }
 
         [BurstCompile]

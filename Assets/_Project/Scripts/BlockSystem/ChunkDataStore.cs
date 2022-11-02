@@ -61,6 +61,8 @@ namespace BlockSystem
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
+            if (ct.IsCancellationRequested) return null;
+
             lock (chunkDataCache)
             {
                 // キャッシュにあればそれを返す
