@@ -297,7 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6878ad4d26760964eb6b9e5bc520ee80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkObjectPrefab: {fileID: 3715391981258457855, guid: a5f98469cd6fd774186d8f20027e90ca, type: 3}
 --- !u!1 &686078255
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,9 +432,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5a3cae8d23e354e843ce4e27503ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 920373323}
-  chunkObjectPool: {fileID: 125769955}
-  breakBlockSystem: {fileID: 694688722}
 --- !u!114 &694688722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87c728a8d161c84fa8ef653f82cfaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropItemPrefab: {fileID: 3569887538438418583, guid: 8eff85a4300058741888859503050db7, type: 3}
 --- !u!114 &694688723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,10 +456,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e336533fd964e12448d633e5a855e98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 920373323}
-  drawRadius: 1
-  onlyTargetRadius: 1
-  simpleDraw: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,7 +578,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920373322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 32, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -741,7 +732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 32.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

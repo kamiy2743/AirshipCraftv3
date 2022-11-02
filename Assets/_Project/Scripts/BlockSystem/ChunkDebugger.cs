@@ -10,7 +10,7 @@ namespace BlockSystem
         [SerializeField] private Transform player;
         [Space(20)]
         [SerializeField] private bool drawGizmo = true;
-        [SerializeField, Range(0, World.LoadChunkRadius)] private int drawRadius;
+        [SerializeField, Range(0, 16)] private int drawRadius;
         [SerializeField] private bool simpleDraw = false;
 
         private void OnDrawGizmos()

@@ -149,7 +149,7 @@ namespace BlockSystem
                 }
 
                 // 別スレッドに退避
-                await UniTask.SwitchToThreadPool();
+                // await UniTask.SwitchToThreadPool();
 
                 // キューに作成チャンクを追加
                 var createMeshDataQueue = SetupCreateMeshDataQueue();
@@ -158,7 +158,7 @@ namespace BlockSystem
                 CreateMeshDataFromQueue(createMeshDataQueue);
 
                 // メインスレッドに戻す
-                await UniTask.SwitchToMainThread();
+                // await UniTask.SwitchToMainThread();
 
                 isCompleted = true;
             }

@@ -19,7 +19,11 @@ namespace BlockSystem
         private Hashtable indexHashtable = new Hashtable();
         private long createdChunkCount = 0;
 
-        private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
+        private const int CacheCapacity = 4;
+        private Hashtable chunkDataCache = new Hashtable(CacheCapacity);
+
+        private HashSet<ChunkData> reusableChunkHashSet = new HashSet<ChunkData>();
+        private List<ChunkData> reusableChunkList = new List<ChunkData>();
 
         private MapGenerator _mapGenerator;
 
@@ -57,11 +61,29 @@ namespace BlockSystem
         /// </summary>
         internal ChunkData GetChunkData(ChunkCoordinate cc, CancellationToken ct)
         {
-            lock (indexHashtable)
+            lock (chunkDataCache)
             {
-                ChunkData chunkData;
-                reusableChunkQueue.TryDequeue(out ChunkData reusableChunkData);
+                // キャッシュにあればそれを返す
+                if (chunkDataCache.ContainsKey(cc))
+                {
+                    var cache = (ChunkData)chunkDataCache[cc];
+                    UnityEngine.Debug.Log("cache: " + cc);
 
+                    // 再利用リストにあれば削除
+                    TryRemoveReusableChunk(cache);
+                    cache.ReferenceCounter.AddRef();
+
+                    return cache;
+                }
+
+                // 再利用可能チャンクの取得
+                var useReusableChunkData = TryGetReusableChunkData(out ChunkData reusableChunkData);
+                if (reusableChunkData is not null)
+                {
+                    UnityEngine.Debug.Log("reuse: " + reusableChunkData.ChunkCoordinate);
+                }
+
+                ChunkData chunkData;
                 // 保存位置が存在すれば読み込み、無ければ作成
                 if (indexHashtable.ContainsKey(cc))
                 {
@@ -76,14 +98,70 @@ namespace BlockSystem
 
                 // 参照追加
                 chunkData.ReferenceCounter.AddRef();
-                // 参照がなくなったら再利用キューに追加
-                if (reusableChunkData == null)
+
+                if (!useReusableChunkData)
                 {
-                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => reusableChunkQueue.Enqueue(chunkData));
+                    // キャッシュに追加
+                    chunkDataCache.Add(cc, chunkData);
+
+                    // 参照がなくなったら再利用リストに追加
+                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => AddReusableChunk(chunkData));
                 }
 
                 return chunkData;
             }
+        }
+
+        /// <summary>
+        /// 再利用可能なチャンクの取得
+        /// </summary>
+        private bool TryGetReusableChunkData(out ChunkData reusableChunkData)
+        {
+            // キャッシュが埋まってなければ再利用はしない
+            if (chunkDataCache.Count < CacheCapacity)
+            {
+                reusableChunkData = null;
+                return false;
+            }
+
+            if (reusableChunkList.Count > 0)
+            {
+                // 先頭を返す
+                reusableChunkData = reusableChunkList[0];
+                reusableChunkList.RemoveAt(0);
+                reusableChunkHashSet.Remove(reusableChunkData);
+                return true;
+            }
+
+            reusableChunkData = null;
+            return false;
+        }
+
+        /// <summary>
+        /// 再利用可能チャンクに追加
+        /// </summary>
+        private void AddReusableChunk(ChunkData addChunk)
+        {
+            lock (this)
+            {
+                reusableChunkHashSet.Add(addChunk);
+                reusableChunkList.Add(addChunk);
+            }
+        }
+
+        /// <summary>
+        /// 再利用可能チャンクから削除
+        /// </summary>
+        private bool TryRemoveReusableChunk(ChunkData removeChunk)
+        {
+            if (reusableChunkHashSet.Contains(removeChunk))
+            {
+                reusableChunkHashSet.Remove(removeChunk);
+                reusableChunkList.Remove(removeChunk);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -94,7 +172,7 @@ namespace BlockSystem
             ChunkData newChunkData;
 
             // 再利用可能なChunkDataがあれば再利用する
-            if (reusableChunkData != null)
+            if (reusableChunkData is not null)
             {
                 newChunkData = reusableChunkData.ReuseConstructor(cc, _mapGenerator);
             }

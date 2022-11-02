@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -10,12 +11,14 @@ namespace BlockSystem
     /// <summary>
     /// チャンクの内部データ
     /// </summary>
-    internal class ChunkData
+    internal class ChunkData : IEquatable<ChunkData>
     {
         internal ChunkCoordinate ChunkCoordinate { get; private set; }
         internal BlockData[] Blocks { get; private set; }
 
         internal readonly ReferenceCounter ReferenceCounter = new ReferenceCounter();
+
+        private int hashCode = Guid.NewGuid().GetHashCode();
 
         internal static readonly ChunkData Empty = ForEmpty();
 
@@ -111,6 +114,31 @@ namespace BlockSystem
         internal BlockData GetBlockData(LocalCoordinate lc)
         {
             return Blocks[ToIndex(lc)];
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ChunkData data && Equals(data);
+        }
+
+        public bool Equals(ChunkData other)
+        {
+            return this.hashCode == other.hashCode;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.hashCode;
+        }
+
+        public static bool operator ==(ChunkData left, ChunkData right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ChunkData left, ChunkData right)
+        {
+            return !(left == right);
         }
 
         /// <summary>

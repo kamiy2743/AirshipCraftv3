@@ -110,6 +110,7 @@ namespace BlockSystem
 
                 var cc = new ChunkCoordinate(ccx, ccy, ccz, true);
                 var aroundChunkData = _chunkDataStore.GetChunkData(cc, ct);
+                ct.Register(aroundChunkData.ReferenceCounter.Release);
 
                 ct.ThrowIfCancellationRequested();
                 return aroundChunkData;
