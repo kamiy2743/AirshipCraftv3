@@ -16,6 +16,7 @@ namespace BlockSystem
         [SerializeField] private BreakBlockSystem breakBlockSystem;
 
         private IDisposable chunkDataStoreDisposal;
+        private IDisposable chunkMeshCreatorDisposal;
 
         private void Start()
         {
@@ -26,6 +27,7 @@ namespace BlockSystem
             chunkDataStoreDisposal = chunkDataStore;
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
+            chunkMeshCreatorDisposal = chunkMeshCreator;
             var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
@@ -36,6 +38,7 @@ namespace BlockSystem
         private void OnApplicationQuit()
         {
             chunkDataStoreDisposal.Dispose();
+            chunkMeshCreatorDisposal.Dispose();
             ChunkMeshData.DisposeNativeBuffer();
         }
     }

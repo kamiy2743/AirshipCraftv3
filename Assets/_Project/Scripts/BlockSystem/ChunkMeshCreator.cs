@@ -54,7 +54,7 @@ namespace BlockSystem
                 return null;
             }
 
-            if (meshData.Vertices.Length == 0) return null;
+            if (meshData.NoVertices) return null;
             return meshData;
         }
 
