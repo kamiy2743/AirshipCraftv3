@@ -19,7 +19,7 @@ namespace BlockSystem
         private Hashtable indexHashtable = new Hashtable();
         private long createdChunkCount = 0;
 
-        private const int CacheCapacity = 4;
+        private const int CacheCapacity = 128;
         private Hashtable chunkDataCache = new Hashtable(CacheCapacity);
 
         private HashSet<ChunkData> reusableChunkHashSet = new HashSet<ChunkData>();
@@ -67,7 +67,6 @@ namespace BlockSystem
                 if (chunkDataCache.ContainsKey(cc))
                 {
                     var cache = (ChunkData)chunkDataCache[cc];
-                    UnityEngine.Debug.Log("cache: " + cc);
 
                     // 再利用リストにあれば削除
                     TryRemoveReusableChunk(cache);
@@ -78,10 +77,6 @@ namespace BlockSystem
 
                 // 再利用可能チャンクの取得
                 var useReusableChunkData = TryGetReusableChunkData(out ChunkData reusableChunkData);
-                if (reusableChunkData is not null)
-                {
-                    UnityEngine.Debug.Log("reuse: " + reusableChunkData.ChunkCoordinate);
-                }
 
                 ChunkData chunkData;
                 // 保存位置が存在すれば読み込み、無ければ作成
@@ -98,12 +93,12 @@ namespace BlockSystem
 
                 // 参照追加
                 chunkData.ReferenceCounter.AddRef();
+                // キャッシュに追加
+                chunkDataCache.Add(cc, chunkData);
 
+                // 新規作成時のみ購読
                 if (!useReusableChunkData)
                 {
-                    // キャッシュに追加
-                    chunkDataCache.Add(cc, chunkData);
-
                     // 参照がなくなったら再利用リストに追加
                     chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => AddReusableChunk(chunkData));
                 }
@@ -130,6 +125,7 @@ namespace BlockSystem
                 reusableChunkData = reusableChunkList[0];
                 reusableChunkList.RemoveAt(0);
                 reusableChunkHashSet.Remove(reusableChunkData);
+                chunkDataCache.Remove(reusableChunkData.ChunkCoordinate);
                 return true;
             }
 
