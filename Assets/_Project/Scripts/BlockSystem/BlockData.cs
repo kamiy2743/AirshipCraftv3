@@ -18,14 +18,11 @@ namespace BlockSystem
         /// </summary>
         internal SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
-        /// <summary>
-        /// 接している面を再計算する必要があるかどうか
-        /// </summary>
-        internal bool NeedToCalcContactSurfaces => ContactOtherBlockSurfaces == SurfaceNormal.Empty;
+        /// <summary> 接している面を再計算する必要があるかどうか </summary>
+        /// // アクセスの度に計算するのだと遅いから値変更時に確定させておく
+        internal bool NeedToCalcContactSurfaces;
 
-        /// <summary>
-        /// 描画をスキップするかどうか
-        /// </summary>
+        /// <summary> 描画をスキップするかどうか </summary>
         // アクセスの度に計算するのだと遅いから値変更時に確定させておく
         internal bool IsRenderSkip;
 
@@ -39,6 +36,7 @@ namespace BlockSystem
             ID = id;
             BlockCoordinate = bc;
             ContactOtherBlockSurfaces = contactOtherBlockSurfaces;
+            NeedToCalcContactSurfaces = true;
             IsRenderSkip = false;
             SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
         }
@@ -48,6 +46,7 @@ namespace BlockSystem
             ID = id;
             BlockCoordinate = bc;
             ContactOtherBlockSurfaces = SurfaceNormal.Empty;
+            NeedToCalcContactSurfaces = true;
             IsRenderSkip = false;
             SetContactOtherBlockSurfaces(ContactOtherBlockSurfaces);
         }
@@ -55,6 +54,8 @@ namespace BlockSystem
         internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
             ContactOtherBlockSurfaces = surfaces;
+            // 接地面情報が空なら計算が必要
+            NeedToCalcContactSurfaces = ContactOtherBlockSurfaces == SurfaceNormal.Empty;
             // 空気ブロックか、周りがすべてブロックで埋まっていれば描画しない
             IsRenderSkip = (ID == BlockID.Air) || ContactOtherBlockSurfaces.IsFull();
         }
