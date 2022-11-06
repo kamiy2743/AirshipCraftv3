@@ -8,6 +8,7 @@ using Util;
 using UniRx;
 using System;
 using System.Threading;
+using System.Collections.Generic;
 using MasterData.Block;
 
 namespace BlockSystem
@@ -27,6 +28,7 @@ namespace BlockSystem
         /// <typeparam name="int2-0">v,tの開始位置</typeparam>
         /// <typeparam name="int2-1">v,tのサイズ</typeparam>
         // TODO BlockIDの個数を取得できるように
+        private static readonly HashSet<int> BlockIDHashSet = new HashSet<int>(10);
         private static readonly NativeParallelHashMap<int, int2x2> MasterMeshDataInfoHashMap = new NativeParallelHashMap<int, int2x2>(10, Allocator.Persistent);
         private static readonly NativeList<Vector3> MasterVertices = new NativeList<Vector3>(Allocator.Persistent);
         private static readonly NativeList<int> MasterTriangles = new NativeList<int>(Allocator.Persistent);
@@ -44,27 +46,23 @@ namespace BlockSystem
                 trianglesList.Clear();
                 uvsList.Clear();
 
+                BlockIDHashSet.Clear();
                 MasterMeshDataInfoHashMap.Clear();
                 MasterVertices.Clear();
                 MasterTriangles.Clear();
                 MasterUVs.Clear();
 
-                var masterBlockDataCache = MasterBlockDataStore.GetData(BlockID.Empty);
                 var blocks = chunkData.Blocks;
-
                 for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
                 {
-                    if (blocks[i].IsRenderSkip) continue;
-                    ct.ThrowIfCancellationRequested();
+                    var block = blocks[i];
+                    if (block.IsRenderSkip) continue;
+                    BlockIDHashSet.Add((int)block.ID);
+                }
 
-                    var blockID = blocks[i].ID;
-                    if (blockID != masterBlockDataCache.ID)
-                    {
-                        masterBlockDataCache = MasterBlockDataStore.GetData(blockID);
-                    }
-
-                    var masterMeshData = masterBlockDataCache.MeshData;
-                    if (MasterMeshDataInfoHashMap.ContainsKey((int)blockID)) continue;
+                foreach (var blockID in BlockIDHashSet)
+                {
+                    var masterMeshData = MasterBlockDataStore.GetData(blockID).MeshData;
 
                     var masterMeshDataInfo = new int2x2(
                         MasterVertices.Length, masterMeshData.Vertices.Length,
