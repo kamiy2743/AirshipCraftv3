@@ -12,6 +12,8 @@ namespace BlockSystem
         internal readonly short y;
         internal readonly short z;
 
+        private int hashCode;
+
         internal static readonly Vector3Int Max = Vector3Int.one * short.MaxValue;
         internal static readonly Vector3Int Min = Vector3Int.one * short.MinValue;
 
@@ -23,6 +25,8 @@ namespace BlockSystem
             this.x = x;
             this.y = y;
             this.z = z;
+
+            hashCode = HashCode.Combine(this.x, this.y, this.z);
         }
 
         /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
@@ -36,6 +40,8 @@ namespace BlockSystem
             this.x = (short)x;
             this.y = (short)y;
             this.z = (short)z;
+
+            hashCode = HashCode.Combine(this.x, this.y, this.z);
         }
 
         internal static bool IsValid(int x, int y, int z)
@@ -67,15 +73,12 @@ namespace BlockSystem
 
         public bool Equals(ChunkCoordinate other)
         {
-            if (this.x != other.x) return false;
-            if (this.y != other.y) return false;
-            if (this.z != other.z) return false;
-            return true;
+            return this.hashCode == other.hashCode;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(this.x, this.y, this.z);
+            return hashCode;
         }
 
         public static bool operator ==(ChunkCoordinate left, ChunkCoordinate right)
