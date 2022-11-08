@@ -91,12 +91,13 @@ namespace BlockSystem
                     chunkData = CreateNewChunk(cc, reusableChunkData);
                 }
 
+                // キャッシュに追加
+                chunkDataCache.Add(cc, chunkData);
+
                 if (ct.IsCancellationRequested) return null;
 
                 // 参照追加
                 chunkData.ReferenceCounter.AddRef();
-                // キャッシュに追加
-                chunkDataCache.Add(cc, chunkData);
 
                 // 新規作成時のみ購読
                 if (!useReusableChunkData)
