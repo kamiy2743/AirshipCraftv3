@@ -33,7 +33,7 @@ namespace BlockSystem
                 mesh = new Mesh();
                 meshFilter.sharedMesh = mesh;
                 meshRenderer.enabled = true;
-                meshCollider.enabled = true;
+                // meshCollider.enabled = true;
             }
 
             mesh.Clear();
@@ -45,7 +45,7 @@ namespace BlockSystem
 
             meshData.Release();
 
-            meshCollider.sharedMesh = mesh;
+            // meshCollider.sharedMesh = mesh;
         }
 
         internal void ClearMesh()
@@ -55,8 +55,8 @@ namespace BlockSystem
                 Destroy(mesh);
                 mesh = null;
                 meshRenderer.enabled = false;
-                meshCollider.enabled = false;
-                meshCollider.sharedMesh = null;
+                // meshCollider.enabled = false;
+                // meshCollider.sharedMesh = null;
             }
         }
 
