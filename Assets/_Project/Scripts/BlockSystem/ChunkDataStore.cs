@@ -146,6 +146,7 @@ namespace BlockSystem
         /// </summary>
         private void AddReusableChunk(ChunkData addChunk)
         {
+            // イベントで呼び出されることを想定して自前でlockする
             lock (this)
             {
                 reusableChunkHashSet.Add(addChunk);
