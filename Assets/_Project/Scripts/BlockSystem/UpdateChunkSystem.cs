@@ -7,6 +7,10 @@ using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using Unity.Mathematics;
+using Unity.Burst;
+using Unity.Jobs;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace BlockSystem
 {
@@ -136,17 +140,8 @@ namespace BlockSystem
             {
                 isStarted = true;
 
-                // 読みこみ範囲外のチャンクオブジェクトを解放する
-                var createdChunkList = _chunkObjectPool.ChunkObjects.Keys.ToList();
-                foreach (var cc in createdChunkList)
-                {
-                    if (math.abs(cc.x - pc.x) > World.LoadChunkRadius ||
-                        math.abs(cc.y - pc.y) > World.LoadChunkRadius ||
-                        math.abs(cc.z - pc.z) > World.LoadChunkRadius)
-                    {
-                        _chunkObjectPool.ReleaseChunkObject(cc);
-                    }
-                }
+                // 範囲外チャンクの開放
+                ReleaseOutRangeChunk();
 
                 // 別スレッドに退避
                 await UniTask.SwitchToThreadPool();
@@ -161,6 +156,34 @@ namespace BlockSystem
                 await UniTask.SwitchToMainThread();
 
                 isCompleted = true;
+            }
+
+            /// <summary> 読みこみ範囲外のチャンクオブジェクトを解放する </summary>
+            private void ReleaseOutRangeChunk()
+            {
+                var createdChunks = _chunkObjectPool.ChunkObjects.Keys.ToArray();
+                if (createdChunks.Length == 0) return;
+
+                var job = new ReleaseOutRangeChunkJob();
+                job.createdChunksCount = createdChunks.Length;
+                job.playerChunk = pc;
+                job.releaseChunks = new NativeList<ChunkCoordinate>(Allocator.TempJob);
+
+                unsafe
+                {
+                    fixed (ChunkCoordinate* createdChunksFirst = &createdChunks[0])
+                    {
+                        job.createdChunksFirst = createdChunksFirst;
+                        job.Schedule().Complete();
+                    }
+                }
+
+                foreach (var cc in job.releaseChunks)
+                {
+                    _chunkObjectPool.ReleaseChunkObject(cc);
+                }
+
+                job.releaseChunks.Dispose();
             }
 
             private Queue<ChunkCoordinate> SetupCreateMeshDataQueue()
@@ -238,9 +261,7 @@ namespace BlockSystem
                 return createMeshDataQueue;
             }
 
-            /// <summary>
-            /// キューにあるチャンクのメッシュを順次作成
-            /// </summary>
+            /// <summary> キューにあるチャンクのメッシュを順次作成 </summary>
             private void CreateMeshDataFromQueue(Queue<ChunkCoordinate> createMeshDataQueue)
             {
                 while (createMeshDataQueue.Count > 0)
@@ -257,6 +278,50 @@ namespace BlockSystem
 
                     if (ct.IsCancellationRequested) return;
                     CreateChunkObjectQueue.Enqueue(new KeyValuePair<ChunkCoordinate, ChunkMeshData>(cc, meshData));
+                }
+            }
+
+            [BurstCompile]
+            private unsafe struct ReleaseOutRangeChunkJob : IJob
+            {
+                [NativeDisableUnsafePtrRestriction][ReadOnly] public ChunkCoordinate* createdChunksFirst;
+                [ReadOnly] public int createdChunksCount;
+                [ReadOnly] public Vector3Int playerChunk;
+                public NativeList<ChunkCoordinate> releaseChunks;
+
+                public void Execute()
+                {
+                    var pcx = playerChunk.x;
+                    var pcy = playerChunk.y;
+                    var pcz = playerChunk.z;
+                    for (int i = 0; i < createdChunksCount; i++)
+                    {
+                        var cc = createdChunksFirst + i;
+
+                        var x = cc->x - pcx;
+                        if (x < 0) x = -x;
+                        if (x > World.LoadChunkRadius)
+                        {
+                            releaseChunks.Add(*cc);
+                            continue;
+                        }
+
+                        var y = cc->y - pcy;
+                        if (y < 0) y = -y;
+                        if (y > World.LoadChunkRadius)
+                        {
+                            releaseChunks.Add(*cc);
+                            continue;
+                        }
+
+                        var z = cc->z - pcz;
+                        if (z < 0) z = -z;
+                        if (z > World.LoadChunkRadius)
+                        {
+                            releaseChunks.Add(*cc);
+                            continue;
+                        }
+                    }
                 }
             }
         }
