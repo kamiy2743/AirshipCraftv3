@@ -23,7 +23,7 @@ namespace BlockSystem
         private Hashtable chunkDataCache = new Hashtable(CacheCapacity);
 
         private HashSet<ChunkData> reusableChunkHashSet = new HashSet<ChunkData>();
-        private List<ChunkData> reusableChunkList = new List<ChunkData>();
+        private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
 
         private MapGenerator _mapGenerator;
 
@@ -93,6 +93,10 @@ namespace BlockSystem
 
                 // キャッシュに追加
                 chunkDataCache.Add(cc, chunkData);
+                if (chunkDataCache.Count > CacheCapacity)
+                {
+                    UnityEngine.Debug.Log("キャッシュ容量を超えています: " + chunkDataCache.Count);
+                }
 
                 if (ct.IsCancellationRequested) return null;
 
@@ -115,24 +119,25 @@ namespace BlockSystem
         /// </summary>
         private bool TryGetReusableChunkData(out ChunkData reusableChunkData)
         {
+            reusableChunkData = null;
+
             // キャッシュが埋まってなければ再利用はしない
             if (chunkDataCache.Count < CacheCapacity)
             {
-                reusableChunkData = null;
                 return false;
             }
 
-            if (reusableChunkList.Count > 0)
+            while (reusableChunkQueue.TryDequeue(out var takeChunk))
             {
-                // 先頭を返す
-                reusableChunkData = reusableChunkList[0];
-                reusableChunkList.RemoveAt(0);
-                reusableChunkHashSet.Remove(reusableChunkData);
-                chunkDataCache.Remove(reusableChunkData.ChunkCoordinate);
+                // キューには再利用可能チャンクから除外されているものも含まれているので、利用可能かチェックする
+                if (!reusableChunkHashSet.Contains(takeChunk)) continue;
+
+                reusableChunkData = takeChunk;
+                reusableChunkHashSet.Remove(takeChunk);
+                chunkDataCache.Remove(takeChunk.ChunkCoordinate);
                 return true;
             }
 
-            reusableChunkData = null;
             return false;
         }
 
@@ -144,7 +149,7 @@ namespace BlockSystem
             lock (this)
             {
                 reusableChunkHashSet.Add(addChunk);
-                reusableChunkList.Add(addChunk);
+                reusableChunkQueue.Enqueue(addChunk);
             }
         }
 
@@ -153,14 +158,8 @@ namespace BlockSystem
         /// </summary>
         private bool TryRemoveReusableChunk(ChunkData removeChunk)
         {
-            if (reusableChunkHashSet.Contains(removeChunk))
-            {
-                reusableChunkHashSet.Remove(removeChunk);
-                reusableChunkList.Remove(removeChunk);
-                return true;
-            }
-
-            return false;
+            // キューはランダムアクセスができないのでここでは削除しない
+            return reusableChunkHashSet.Remove(removeChunk);
         }
 
         /// <summary>
