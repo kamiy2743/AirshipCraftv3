@@ -205,12 +205,8 @@ namespace BlockSystem
             /// <summary> キューにあるチャンクのメッシュを順次作成 </summary>
             private void CreateMeshDataFromQueue(NativeQueue<ChunkCoordinate> createMeshDataQueue)
             {
-                while (createMeshDataQueue.Count > 0)
+                while (createMeshDataQueue.TryDequeue(out var cc))
                 {
-                    if (ct.IsCancellationRequested) return;
-
-                    var cc = createMeshDataQueue.Dequeue();
-
                     var chunkData = _chunkDataStore.GetChunkData(cc, ct);
                     if (chunkData is null) return;
 
