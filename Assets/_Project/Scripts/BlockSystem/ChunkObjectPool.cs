@@ -1,18 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Unity.Collections;
 
 namespace BlockSystem
 {
     /// <summary>
     /// チャンクオブジェクトを管理
     /// </summary>
-    internal class ChunkObjectPool : MonoBehaviour
+    internal class ChunkObjectPool : MonoBehaviour, IDisposable
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;
 
         private ChunkDataStore _chunkDataStore;
         private static readonly int Capacity = World.LoadChunkCount;
 
+        internal NativeParallelHashSet<ChunkCoordinate> CreatedChunks;
         internal IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
 
@@ -21,6 +24,7 @@ namespace BlockSystem
         internal void StartInitial(ChunkDataStore chunkDataStore)
         {
             _chunkDataStore = chunkDataStore;
+            CreatedChunks = new NativeParallelHashSet<ChunkCoordinate>(Capacity, Allocator.Persistent);
         }
 
         /// <summary>
@@ -45,7 +49,9 @@ namespace BlockSystem
                 chunkObject.Init(_chunkDataStore);
             }
 
+            CreatedChunks.Add(cc);
             _chunkObjects.Add(cc, chunkObject);
+
             return chunkObject;
         }
 
@@ -61,8 +67,14 @@ namespace BlockSystem
             }
 
             chunkObject.ClearMesh();
+            CreatedChunks.Remove(cc);
             _chunkObjects.Remove(cc);
             availableChunkObjectQueue.Enqueue(chunkObject);
+        }
+
+        public void Dispose()
+        {
+            CreatedChunks.Dispose();
         }
     }
 }

@@ -37,6 +37,7 @@ namespace BlockSystem
 
         private void OnApplicationQuit()
         {
+            chunkObjectPool.Dispose();
             chunkDataStoreDisposal.Dispose();
             chunkMeshCreatorDisposal.Dispose();
             ChunkMeshData.DisposeNativeBuffer();
