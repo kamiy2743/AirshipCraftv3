@@ -17,7 +17,7 @@ namespace BlockSystem
     /// <summary>
     /// プレイヤーの周りのチャンクオブジェクトを作成、破棄する
     /// </summary>
-    internal class UpdateChunkSystem
+    internal class UpdateChunkSystem : IDisposable
     {
         private UpdateAroundPlayerTask currentTask;
 
@@ -99,6 +99,11 @@ namespace BlockSystem
             }
         }
 
+        public void Dispose()
+        {
+            UpdateAroundPlayerTask.DisposeNativeBuffer();
+        }
+
         private class UpdateAroundPlayerTask
         {
             internal Guid ID = Guid.NewGuid();
@@ -115,6 +120,9 @@ namespace BlockSystem
             private ChunkDataStore _chunkDataStore;
             private ChunkMeshCreator _chunkMeshCreator;
 
+            private static NativeList<ChunkCoordinate> releaseChunkList = new NativeList<ChunkCoordinate>(Allocator.Persistent);
+            private static NativeQueue<ChunkCoordinate> createMeshDataQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent);
+
             internal UpdateAroundPlayerTask(Vector3Int pc, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
             {
                 this.pc = pc;
@@ -122,6 +130,12 @@ namespace BlockSystem
                 _chunkDataStore = chunkDataStore;
                 _chunkMeshCreator = chunkMeshCreator;
                 ct = cts.Token;
+            }
+
+            internal static void DisposeNativeBuffer()
+            {
+                releaseChunkList.Dispose();
+                createMeshDataQueue.Dispose();
             }
 
             internal async UniTask CancelAsync()
@@ -151,7 +165,6 @@ namespace BlockSystem
 
                 // メッシュ作成
                 CreateMeshDataFromQueue(createMeshDataQueue);
-                createMeshDataQueue.Dispose();
 
                 // メインスレッドに戻す
                 await UniTask.SwitchToMainThread();
@@ -165,10 +178,12 @@ namespace BlockSystem
                 var createdChunks = _chunkObjectPool.ChunkObjects.Keys.ToArray();
                 if (createdChunks.Length == 0) return;
 
+                releaseChunkList.Clear();
+
                 var job = new ReleaseOutRangeChunkJob();
                 job.createdChunksCount = createdChunks.Length;
                 job.playerChunk = pc;
-                job.releaseChunks = new NativeList<ChunkCoordinate>(Allocator.TempJob);
+                job.releaseChunkList = releaseChunkList;
 
                 unsafe
                 {
@@ -179,20 +194,20 @@ namespace BlockSystem
                     }
                 }
 
-                foreach (var cc in job.releaseChunks)
+                foreach (var cc in job.releaseChunkList)
                 {
                     _chunkObjectPool.ReleaseChunkObject(cc);
                 }
-
-                job.releaseChunks.Dispose();
             }
 
             private NativeQueue<ChunkCoordinate> SetupCreateMeshDataQueue()
             {
+                createMeshDataQueue.Clear();
+
                 var job = new SetupCreateMeshDataQueueJob
                 {
                     createdChunks = _chunkObjectPool.CreatedChunks,
-                    createMeshDataQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent),
+                    createMeshDataQueue = createMeshDataQueue,
                     playerChunk = pc,
                     yStart = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min.y),
                     yEnd = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y)
@@ -224,7 +239,7 @@ namespace BlockSystem
                 [NativeDisableUnsafePtrRestriction][ReadOnly] public ChunkCoordinate* createdChunksFirst;
                 [ReadOnly] public int createdChunksCount;
                 [ReadOnly] public Vector3Int playerChunk;
-                public NativeList<ChunkCoordinate> releaseChunks;
+                public NativeList<ChunkCoordinate> releaseChunkList;
 
                 public void Execute()
                 {
@@ -239,7 +254,7 @@ namespace BlockSystem
                         if (x < 0) x = -x;
                         if (x > World.LoadChunkRadius)
                         {
-                            releaseChunks.Add(*cc);
+                            releaseChunkList.Add(*cc);
                             continue;
                         }
 
@@ -247,7 +262,7 @@ namespace BlockSystem
                         if (y < 0) y = -y;
                         if (y > World.LoadChunkRadius)
                         {
-                            releaseChunks.Add(*cc);
+                            releaseChunkList.Add(*cc);
                             continue;
                         }
 
@@ -255,7 +270,7 @@ namespace BlockSystem
                         if (z < 0) z = -z;
                         if (z > World.LoadChunkRadius)
                         {
-                            releaseChunks.Add(*cc);
+                            releaseChunkList.Add(*cc);
                             continue;
                         }
                     }
