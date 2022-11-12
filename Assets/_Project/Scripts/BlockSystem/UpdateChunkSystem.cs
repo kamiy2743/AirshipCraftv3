@@ -157,11 +157,15 @@ namespace BlockSystem
                 // 範囲外チャンクの開放
                 ReleaseOutRangeChunk();
 
+                // メインスレッドでしか取得できないからここで
+                var camera = Camera.main;
+                var viewportMatrix = camera.projectionMatrix * camera.worldToCameraMatrix;
+
                 // 別スレッドに退避
                 await UniTask.SwitchToThreadPool();
 
                 // キューに作成チャンクを追加
-                var createMeshDataQueue = SetupCreateMeshDataQueue();
+                var createMeshDataQueue = SetupCreateMeshDataQueue(viewportMatrix);
 
                 // メッシュ作成
                 CreateMeshDataFromQueue(createMeshDataQueue);
@@ -200,7 +204,7 @@ namespace BlockSystem
                 }
             }
 
-            private NativeQueue<ChunkCoordinate> SetupCreateMeshDataQueue()
+            private NativeQueue<ChunkCoordinate> SetupCreateMeshDataQueue(float4x4 viewportMatrix)
             {
                 createMeshDataQueue.Clear();
 
@@ -210,7 +214,8 @@ namespace BlockSystem
                     createMeshDataQueue = createMeshDataQueue,
                     playerChunk = pc,
                     yStart = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min.y),
-                    yEnd = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y)
+                    yEnd = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y),
+                    viewportMatrix = viewportMatrix
                 };
 
                 job.Schedule().Complete();
@@ -286,6 +291,7 @@ namespace BlockSystem
                 [ReadOnly] public Vector3Int playerChunk;
                 [ReadOnly] public int yStart;
                 [ReadOnly] public int yEnd;
+                [ReadOnly] public float4x4 viewportMatrix;
 
                 public void Execute()
                 {
@@ -348,6 +354,9 @@ namespace BlockSystem
                     // 下から順に追加
                     for (int y = yStart; y <= yEnd; y++)
                     {
+                        // カメラの描画範囲に入っているか
+                        if (!InCameraRange(x, y, z)) continue;
+
                         var cc = new ChunkCoordinate(x, y, z, true);
                         // 作成していなければ追加
                         if (!createdChunks.Contains(cc))
@@ -355,6 +364,34 @@ namespace BlockSystem
                             createMeshDataQueue.Enqueue(cc);
                         }
                     }
+                }
+
+                private bool InCameraRange(int x, int y, int z)
+                {
+                    if (InCameraRangeHelper(x, y, z)) return true;
+                    if (InCameraRangeHelper(x, y + 1, z)) return true;
+                    if (InCameraRangeHelper(x, y, z + 1)) return true;
+                    if (InCameraRangeHelper(x, y + 1, z + 1)) return true;
+                    if (InCameraRangeHelper(x + 1, y, z)) return true;
+                    if (InCameraRangeHelper(x + 1, y + 1, z)) return true;
+                    if (InCameraRangeHelper(x + 1, y, z + 1)) return true;
+                    if (InCameraRangeHelper(x + 1, y + 1, z + 1)) return true;
+                    return false;
+                }
+
+                private bool InCameraRangeHelper(int x, int y, int z)
+                {
+                    var viewportPoint = WorldToViewportPoint(new float3(x, y, z) * ChunkData.ChunkBlockSide);
+                    if (viewportPoint.z > 1) return false;
+                    if (viewportPoint.x > 1 || viewportPoint.x < -1) return false;
+                    if (viewportPoint.y > 1 || viewportPoint.y < -1) return false;
+                    return true;
+                }
+
+                private float3 WorldToViewportPoint(float3 worldPoint)
+                {
+                    var viewportPoint = math.mul(viewportMatrix, new float4(worldPoint, 1));
+                    return (viewportPoint / viewportPoint.w).xyz;
                 }
             }
         }
