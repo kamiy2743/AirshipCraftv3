@@ -47,7 +47,7 @@ namespace BlockSystem
             // 更新したブロックの周囲のブロックの接地ブロック情報を削除する
             foreach (var surface in SurfaceNormalExt.Array)
             {
-                var aroundPosition = updateBlockData.BlockCoordinate.ToVector3() + surface.ToVector3();
+                var aroundPosition = updateBlockData.BlockCoordinate.ToInt3() + surface.ToInt3();
                 if (!BlockCoordinate.IsValid(aroundPosition)) continue;
 
                 var bc = new BlockCoordinate(aroundPosition);

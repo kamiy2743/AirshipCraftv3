@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 namespace Util
 {
@@ -18,50 +19,46 @@ namespace Util
 
     public static class SurfaceNormalExt
     {
-        private static SurfaceNormal[] _array;
-        public static SurfaceNormal[] Array
-        {
-            get
-            {
-                if (_array is not null) return _array;
-
-                var list = new List<SurfaceNormal>(6);
-                foreach (SurfaceNormal surface in System.Enum.GetValues(typeof(SurfaceNormal)))
-                {
-                    if (surface == SurfaceNormal.Empty) continue;
-                    if (surface == SurfaceNormal.Zero) continue;
-                    list.Add(surface);
-                }
-
-                _array = list.ToArray();
-                return _array;
-            }
-        }
+        public static readonly SurfaceNormal[] Array = new SurfaceNormal[] {
+            SurfaceNormal.Right,
+            SurfaceNormal.Left,
+            SurfaceNormal.Top,
+            SurfaceNormal.Bottom,
+            SurfaceNormal.Forward,
+            SurfaceNormal.Back,
+        };
 
         public static SurfaceNormal FromIndex(int index)
         {
             return (SurfaceNormal)(1 << index);
         }
 
-        public static Vector3 ToVector3(this SurfaceNormal surface)
+        private static readonly int3 i3right = new int3(1, 0, 0);
+        private static readonly int3 i3left = new int3(-1, 0, 0);
+        private static readonly int3 i3top = new int3(0, 1, 0);
+        private static readonly int3 i3bottom = new int3(0, -1, 0);
+        private static readonly int3 i3forward = new int3(0, 0, 1);
+        private static readonly int3 i3back = new int3(0, 0, -1);
+
+        public static int3 ToInt3(this SurfaceNormal surface)
         {
             switch (surface)
             {
                 case SurfaceNormal.Right:
-                    return Vector3.right;
+                    return i3right;
                 case SurfaceNormal.Left:
-                    return Vector3.left;
+                    return i3left;
                 case SurfaceNormal.Top:
-                    return Vector3.up;
+                    return i3top;
                 case SurfaceNormal.Bottom:
-                    return Vector3.down;
+                    return i3bottom;
                 case SurfaceNormal.Forward:
-                    return Vector3.forward;
+                    return i3forward;
                 case SurfaceNormal.Back:
-                    return Vector3.back;
+                    return i3back;
             }
 
-            return Vector3.zero;
+            return int3.zero;
         }
 
         /// <summary>

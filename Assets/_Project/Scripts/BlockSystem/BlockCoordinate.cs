@@ -14,12 +14,13 @@ namespace BlockSystem
         internal readonly int y;
         internal readonly int z;
 
-        internal static readonly Vector3Int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
-        internal static readonly Vector3Int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
+        internal const int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
+        internal const int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
 
         internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
 
         internal BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
+        internal BlockCoordinate(int3 position) : this(position.x, position.y, position.z) { }
         internal BlockCoordinate(int x, int y, int z)
         {
             if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
@@ -29,21 +30,24 @@ namespace BlockSystem
             this.z = z;
         }
 
-        internal static bool IsValid(Vector3 position)
-        {
-            return IsValid((int)position.x, (int)position.y, (int)position.z);
-        }
+        internal static bool IsValid(Vector3 position) => IsValid((int)position.x, (int)position.y, (int)position.z);
+        internal static bool IsValid(int3 position) => IsValid(position.x, position.y, position.z);
         internal static bool IsValid(int x, int y, int z)
         {
-            if (x < Min.x || x > Max.x) return false;
-            if (y < Min.y || y > Max.y) return false;
-            if (z < Min.z || z > Max.z) return false;
+            if (x < Min || x > Max) return false;
+            if (y < Min || y > Max) return false;
+            if (z < Min || z > Max) return false;
             return true;
         }
 
         public Vector3 ToVector3()
         {
             return new Vector3(x, y, z);
+        }
+
+        public int3 ToInt3()
+        {
+            return new int3(x, y, z);
         }
 
         public override string ToString()

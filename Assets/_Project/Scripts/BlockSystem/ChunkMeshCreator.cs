@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using UniRx;
 using Unity.Jobs;
 using Unity.Burst;
+using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Util;
@@ -92,16 +93,14 @@ namespace BlockSystem
         /// </summary>
         private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
-            /// <summary>
-            /// 指定された面のChunkDataを取得する
-            /// </summary>
+            // 指定された面のChunkDataを取得する
             var targetChunkCoordinate = chunkData.ChunkCoordinate;
             ChunkData GetAroundChunkData(SurfaceNormal surface)
             {
-                var surfaceVector = surface.ToVector3();
-                var ccx = targetChunkCoordinate.x + (int)surfaceVector.x;
-                var ccy = targetChunkCoordinate.y + (int)surfaceVector.y;
-                var ccz = targetChunkCoordinate.z + (int)surfaceVector.z;
+                var surfaceVector = surface.ToInt3();
+                var ccx = targetChunkCoordinate.x + surfaceVector.x;
+                var ccy = targetChunkCoordinate.y + surfaceVector.y;
+                var ccz = targetChunkCoordinate.z + surfaceVector.z;
 
                 if (!ChunkCoordinate.IsValid(ccx, ccy, ccz))
                 {
@@ -187,17 +186,19 @@ namespace BlockSystem
                     if (!targetBlockData->NeedToCalcContactSurfaces) continue;
 
                     var surfaces = SurfaceNormal.Zero;
-                    var targetCoordinateVector = targetBlockData->BlockCoordinate.ToVector3();
+                    var targetCoordinate = targetBlockData->BlockCoordinate.ToInt3();
 
                     for (int j = 0; j < surfaceNormalsCount; j++)
                     {
                         var surface = *(surfaceNormalsFirst + j);
+                        var surfaceVector = surface.ToInt3();
 
-                        var checkCoordinate = targetCoordinateVector + surface.ToVector3();
-                        if (!BlockCoordinate.IsValid(checkCoordinate)) continue;
+                        var bcx = targetCoordinate.x + surfaceVector.x;
+                        var bcy = targetCoordinate.y + surfaceVector.y;
+                        var bcz = targetCoordinate.z + surfaceVector.z;
+                        if (!BlockCoordinate.IsValid(bcx, bcy, bcz)) continue;
 
-                        var bc = new BlockCoordinate(checkCoordinate);
-                        var aroundBlockData = GetAroundBlockData(surface, bc);
+                        var aroundBlockData = GetAroundBlockData(surface, bcx, bcy, bcz);
                         if (aroundBlockData->ID == BlockID.Air) continue;
 
                         surfaces = surfaces.Add(surface);
@@ -207,40 +208,42 @@ namespace BlockSystem
                 }
             }
 
-            private BlockData* GetAroundBlockData(SurfaceNormal surface, BlockCoordinate bc)
+            private BlockData* GetAroundBlockData(SurfaceNormal surface, int bcx, int bcy, int bcz)
             {
-                var lc = LocalCoordinate.FromBlockCoordinate(bc);
+                var lcx = bcx & LocalCoordinate.ToLocalCoordinateMask;
+                var lcy = bcy & LocalCoordinate.ToLocalCoordinateMask;
+                var lcz = bcz & LocalCoordinate.ToLocalCoordinateMask;
 
                 BlockData* aroundBlocksFirst = centerChunkBlocksFirst;
                 switch (surface)
                 {
                     case SurfaceNormal.Right:
-                        if (lc.x == 0)
+                        if (lcx == 0)
                             aroundBlocksFirst = rightChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Left:
-                        if (lc.x == ChunkData.ChunkBlockSide - 1)
+                        if (lcx == ChunkData.ChunkBlockSide - 1)
                             aroundBlocksFirst = leftChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Top:
-                        if (lc.y == 0)
+                        if (lcy == 0)
                             aroundBlocksFirst = topChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Bottom:
-                        if (lc.y == ChunkData.ChunkBlockSide - 1)
+                        if (lcy == ChunkData.ChunkBlockSide - 1)
                             aroundBlocksFirst = bottomChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Forward:
-                        if (lc.z == 0)
+                        if (lcz == 0)
                             aroundBlocksFirst = forwardChunkBlocksFirst;
                         break;
                     case SurfaceNormal.Back:
-                        if (lc.z == ChunkData.ChunkBlockSide - 1)
+                        if (lcz == ChunkData.ChunkBlockSide - 1)
                             aroundBlocksFirst = backChunkBlocksFirst;
                         break;
                 }
 
-                return aroundBlocksFirst + ChunkData.ToIndex(lc);
+                return aroundBlocksFirst + ChunkData.ToIndex(lcx, lcy, lcz);
             }
         }
     }

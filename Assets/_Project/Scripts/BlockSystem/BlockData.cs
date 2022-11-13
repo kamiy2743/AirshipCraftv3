@@ -55,9 +55,9 @@ namespace BlockSystem
         {
             ContactOtherBlockSurfaces = surfaces;
             // 接地面情報が空なら計算が必要
-            NeedToCalcContactSurfaces = ContactOtherBlockSurfaces == SurfaceNormal.Empty;
+            NeedToCalcContactSurfaces = (surfaces == SurfaceNormal.Empty);
             // 空気ブロックか、周りがすべてブロックで埋まっていれば描画しない
-            IsRenderSkip = (ID == BlockID.Air) || ContactOtherBlockSurfaces.IsFull();
+            IsRenderSkip = (ID == BlockID.Air) || surfaces.IsFull();
         }
 
         /// <summary>

@@ -14,8 +14,8 @@ namespace BlockSystem
 
         private long uniqueCode;
 
-        internal static readonly Vector3Int Max = Vector3Int.one * short.MaxValue;
-        internal static readonly Vector3Int Min = Vector3Int.one * short.MinValue;
+        internal const int Max = short.MaxValue;
+        internal const int Min = short.MinValue;
 
         /// <summary>
         /// シリアライズ用なのでそれ以外では使用しないでください
@@ -51,9 +51,9 @@ namespace BlockSystem
 
         internal static bool IsValid(int x, int y, int z)
         {
-            if (x < Min.x || x > Max.x) return false;
-            if (y < Min.y || y > Max.y) return false;
-            if (z < Min.z || z > Max.z) return false;
+            if (x < Min || x > Max) return false;
+            if (y < Min || y > Max) return false;
+            if (z < Min || z > Max) return false;
             return true;
         }
 

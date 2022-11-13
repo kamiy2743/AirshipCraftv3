@@ -213,8 +213,8 @@ namespace BlockSystem
                     createdChunks = _chunkObjectPool.CreatedChunks,
                     createMeshDataQueue = createMeshDataQueue,
                     playerChunk = pc,
-                    yStart = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min.y),
-                    yEnd = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max.y),
+                    yStart = math.max(pc.y - World.LoadChunkRadius, ChunkCoordinate.Min),
+                    yEnd = math.min(pc.y + World.LoadChunkRadius, ChunkCoordinate.Max),
                     viewportMatrix = viewportMatrix
                 };
 
@@ -300,8 +300,8 @@ namespace BlockSystem
                     var pcz = playerChunk.z;
 
                     // 中心
-                    if ((pcx >= ChunkCoordinate.Min.x && pcx <= ChunkCoordinate.Max.x) &&
-                        (pcz >= ChunkCoordinate.Min.z && pcz <= ChunkCoordinate.Max.z))
+                    if ((pcx >= ChunkCoordinate.Min && pcx <= ChunkCoordinate.Max) &&
+                        (pcz >= ChunkCoordinate.Min && pcz <= ChunkCoordinate.Max))
                     {
                         EnqueueChunk(pcx, pcz);
                     }
@@ -310,37 +310,37 @@ namespace BlockSystem
                     for (int r = 0; r <= World.LoadChunkRadius; r++)
                     {
                         // 上から見てx+方向
-                        if (pcz + r <= ChunkCoordinate.Max.z)
+                        if (pcz + r <= ChunkCoordinate.Max)
                         {
-                            var xe = math.min(pcx + r - 1, ChunkCoordinate.Max.x);
-                            for (int x = math.max(pcx - r, ChunkCoordinate.Min.x); x <= xe; x++)
+                            var xe = math.min(pcx + r - 1, ChunkCoordinate.Max);
+                            for (int x = math.max(pcx - r, ChunkCoordinate.Min); x <= xe; x++)
                             {
                                 EnqueueChunk(x, pcz + r);
                             }
                         }
                         // z-方向
-                        if (pcx + r <= ChunkCoordinate.Max.x)
+                        if (pcx + r <= ChunkCoordinate.Max)
                         {
-                            var ze = math.max(pcz - r + 1, ChunkCoordinate.Min.z);
-                            for (int z = math.min(pcz + r, ChunkCoordinate.Max.z); z >= ze; z--)
+                            var ze = math.max(pcz - r + 1, ChunkCoordinate.Min);
+                            for (int z = math.min(pcz + r, ChunkCoordinate.Max); z >= ze; z--)
                             {
                                 EnqueueChunk(pcx + r, z);
                             }
                         }
                         // x-方向
-                        if (pcz - r >= ChunkCoordinate.Min.z)
+                        if (pcz - r >= ChunkCoordinate.Min)
                         {
-                            var xe = math.max(pcx - r + 1, ChunkCoordinate.Min.x);
-                            for (int x = math.min(pcx + r, ChunkCoordinate.Max.x); x >= xe; x--)
+                            var xe = math.max(pcx - r + 1, ChunkCoordinate.Min);
+                            for (int x = math.min(pcx + r, ChunkCoordinate.Max); x >= xe; x--)
                             {
                                 EnqueueChunk(x, pcz - r);
                             }
                         }
                         // z+方向
-                        if (pcx - r >= ChunkCoordinate.Min.x)
+                        if (pcx - r >= ChunkCoordinate.Min)
                         {
-                            var ze = math.min(pcz + r - 1, ChunkCoordinate.Max.z);
-                            for (int z = math.max(pcz - r, ChunkCoordinate.Min.z); z <= ze; z++)
+                            var ze = math.min(pcz + r - 1, ChunkCoordinate.Max);
+                            for (int z = math.max(pcz - r, ChunkCoordinate.Min); z <= ze; z++)
                             {
                                 EnqueueChunk(pcx - r, z);
                             }

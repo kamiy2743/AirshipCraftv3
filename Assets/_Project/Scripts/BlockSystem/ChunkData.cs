@@ -103,7 +103,12 @@ namespace BlockSystem
 
         internal static int ToIndex(LocalCoordinate lc)
         {
-            return lc.x + (lc.y << ChunkBlockSideShift) + (lc.z << (ChunkBlockSideShift * 2));
+            return ToIndex(lc.x, lc.y, lc.z);
+        }
+
+        internal static int ToIndex(int lcx, int lcy, int lcz)
+        {
+            return lcx + (lcy << ChunkBlockSideShift) + (lcz << (ChunkBlockSideShift * 2));
         }
 
         internal void SetBlockData(LocalCoordinate lc, BlockData blockData)
