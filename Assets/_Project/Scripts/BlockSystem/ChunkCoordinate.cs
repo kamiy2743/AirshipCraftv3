@@ -83,7 +83,7 @@ namespace BlockSystem
 
         public override int GetHashCode()
         {
-            // 簡易的な比較なら事足りるはず
+            // TODO yとzしか使えない
             return (int)uniqueCode;
         }
 

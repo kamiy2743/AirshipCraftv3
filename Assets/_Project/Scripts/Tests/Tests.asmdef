@@ -10,7 +10,8 @@
         "MasterData",
         "MessagePack",
         "MessagePack.Annotations",
-        "Unity.PerformanceTesting"
+        "Unity.PerformanceTesting",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [
         "Editor"

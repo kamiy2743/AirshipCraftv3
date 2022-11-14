@@ -17,8 +17,6 @@ namespace BlockSystem
         internal const int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
         internal const int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
 
-        internal Vector3 Center => ToVector3() + (Vector3.one * 0.5f);
-
         internal BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
         internal BlockCoordinate(int3 position) : this(position.x, position.y, position.z) { }
         internal BlockCoordinate(int x, int y, int z)
@@ -30,7 +28,7 @@ namespace BlockSystem
             this.z = z;
         }
 
-        internal static bool IsValid(Vector3 position) => IsValid((int)position.x, (int)position.y, (int)position.z);
+        internal static bool IsValid(Vector3 position) => IsValid((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z));
         internal static bool IsValid(int3 position) => IsValid(position.x, position.y, position.z);
         internal static bool IsValid(int x, int y, int z)
         {
