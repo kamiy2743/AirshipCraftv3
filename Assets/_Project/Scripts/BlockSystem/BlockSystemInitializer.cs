@@ -17,7 +17,7 @@ namespace BlockSystem
 
         private IDisposable chunkDataStoreDisposal;
         private IDisposable chunkMeshCreatorDisposal;
-        private IDisposable updateChunkSystemDisposal;
+        private IDisposable createChunkAroundPlayerSystemDisposal;
 
         private void Start()
         {
@@ -33,7 +33,8 @@ namespace BlockSystem
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
             breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
-            updateChunkSystemDisposal = new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator, this.GetCancellationTokenOnDestroy());
+            createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator);
+            // new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator, this.GetCancellationTokenOnDestroy());
         }
 
         private void OnApplicationQuit()
@@ -42,7 +43,7 @@ namespace BlockSystem
             chunkDataStoreDisposal.Dispose();
             chunkMeshCreatorDisposal.Dispose();
             ChunkMeshData.DisposeNativeBuffer();
-            updateChunkSystemDisposal.Dispose();
+            createChunkAroundPlayerSystemDisposal.Dispose();
         }
     }
 }
