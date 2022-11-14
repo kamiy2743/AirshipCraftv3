@@ -66,25 +66,20 @@ namespace BlockSystem
         {
             lock (this)
             {
-                if (reusableMeshDataQueue.Count == 0)
+                // 再利用キューから取得
+                if (reusableMeshDataQueue.TryDequeue(out ChunkMeshData meshData))
                 {
-                    var meshData = new ChunkMeshData();
-                    allocatedMeshDataList.Add(meshData);
-
-                    // meshDataが解放されたら再利用キューに追加
-                    meshData.OnReleased.Subscribe(_ => reusableMeshDataQueue.Enqueue(meshData));
-
                     return meshData;
                 }
-                else
-                {
-                    // 再利用キューから取得
-                    if (!reusableMeshDataQueue.TryDequeue(out ChunkMeshData meshData))
-                    {
-                        throw new Exception("ChunkMeshDataの取得に失敗しました");
-                    }
-                    return meshData;
-                }
+
+                // 再利用できなければ新規作成
+                meshData = new ChunkMeshData();
+                allocatedMeshDataList.Add(meshData);
+
+                // meshDataが解放されたら再利用キューに追加
+                meshData.OnReleased.Subscribe(_ => reusableMeshDataQueue.Enqueue(meshData));
+
+                return meshData;
             }
         }
 
