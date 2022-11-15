@@ -8,9 +8,6 @@ using Util;
 
 namespace BlockSystem.Serializer
 {
-    /// <summary>
-    /// ChunkData用のシリアライザーです
-    /// </summary>
     internal static class ChunkDataSerializer
     {
         // ChunkCoordinateのバイト数

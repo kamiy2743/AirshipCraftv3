@@ -46,12 +46,11 @@ namespace BlockSystem
             IndexHashtableStream.SetLength(0);
 
             // チャンクの保存位置を読み込む
-            var chunkDataIndexByteSize = MessagePackSerializer.Serialize(new ChunkDataIndex()).Length;
-            var readBuffer = new byte[chunkDataIndexByteSize];
+            var readBuffer = new byte[ChunkDataIndexSerializer.ChunkDataIndexByteSize];
             while (IndexHashtableStream.Position < IndexHashtableStream.Length)
             {
                 IndexHashtableStream.Read(readBuffer, 0, readBuffer.Length);
-                var chunkDataIndex = MessagePackSerializer.Deserialize<ChunkDataIndex>(readBuffer);
+                var chunkDataIndex = ChunkDataIndexSerializer.Deserialize(readBuffer);
                 indexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
                 createdChunkCount++;
             }
@@ -176,13 +175,14 @@ namespace BlockSystem
             }
 
             // チャンクの保存位置を書き込む
-            MessagePackSerializer.Serialize(IndexHashtableStream, new ChunkDataIndex(cc, createdChunkCount));
+            var chunkDataIndexBytes = ChunkDataIndexSerializer.Serialize(new ChunkDataIndex(cc, createdChunkCount));
+            IndexHashtableStream.Write(chunkDataIndexBytes);
             indexHashtable.Add(cc, createdChunkCount);
 
             // チャンク本体を書き込む
-            var bytes = ChunkDataSerializer.Serialize(newChunkData);
+            var chunkDataBytes = ChunkDataSerializer.Serialize(newChunkData);
             ChunkDataStream.Position = createdChunkCount * ChunkDataSerializer.ChunkDataByteSize;
-            ChunkDataStream.Write(bytes);
+            ChunkDataStream.Write(chunkDataBytes);
             createdChunkCount++;
 
             return newChunkData;
@@ -205,7 +205,7 @@ namespace BlockSystem
     }
 
     /// <summary> 保存位置を表す </summary>
-    public struct ChunkDataIndex
+    internal struct ChunkDataIndex
     {
         internal ChunkCoordinate ChunkCoordinate;
         internal long Index;
