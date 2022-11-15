@@ -52,7 +52,7 @@ namespace BlockSystem.Serializer
         }
 
         [BurstCompile]
-        unsafe private struct SerializeJob : IJob
+        private unsafe struct SerializeJob : IJob
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public byte* blocksResultFirst;
@@ -126,7 +126,7 @@ namespace BlockSystem.Serializer
         }
 
         [BurstCompile]
-        unsafe private struct DeserializeJob : IJob
+        private unsafe struct DeserializeJob : IJob
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public byte* bytesFirst;

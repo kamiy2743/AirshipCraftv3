@@ -38,7 +38,7 @@ namespace BlockSystem
         private Subject<Unit> _onReleasedSubject = new Subject<Unit>();
 
         internal ChunkMeshData() { }
-        unsafe internal void Init(ChunkData chunkData, CancellationToken ct)
+        internal unsafe void Init(ChunkData chunkData, CancellationToken ct)
         {
             lock (this)
             {
@@ -137,7 +137,7 @@ namespace BlockSystem
         }
 
         [BurstCompile]
-        unsafe private struct ChunkMeshDataJob : IJob
+        private unsafe struct ChunkMeshDataJob : IJob
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [ReadOnly] public NativeParallelHashMap<int, int2x2> masterMeshDataInfoHashMap;

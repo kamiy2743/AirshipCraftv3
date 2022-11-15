@@ -159,7 +159,7 @@ namespace BlockSystem
         }
 
         [BurstCompile]
-        unsafe private struct CalcContactOtherBlockSurfacesJob : IJob
+        private unsafe struct CalcContactOtherBlockSurfacesJob : IJob
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* centerChunkBlocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* rightChunkBlocksFirst;

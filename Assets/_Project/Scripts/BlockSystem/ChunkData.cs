@@ -66,7 +66,7 @@ namespace BlockSystem
         /// 通常のコンストラクタです
         /// 新規作成するのでアロケーションが発生します
         /// </summary>
-        unsafe internal static ChunkData NewConstructor(ChunkCoordinate cc, MapGenerator mapGenerator)
+        internal static unsafe ChunkData NewConstructor(ChunkCoordinate cc, MapGenerator mapGenerator)
         {
             var chunkData = new ChunkData();
             chunkData.Blocks = new BlockData[BlockCountInChunk];
@@ -86,7 +86,7 @@ namespace BlockSystem
         /// <summary>
         /// BlocksをBlockDataで埋めます
         /// </summary>
-        unsafe private static void SetupBlocks(ChunkCoordinate cc, BlockData[] blocks, MapGenerator mapGenerator)
+        private static unsafe void SetupBlocks(ChunkCoordinate cc, BlockData[] blocks, MapGenerator mapGenerator)
         {
             fixed (BlockData* blocksFirst = &blocks[0])
             {
@@ -150,7 +150,7 @@ namespace BlockSystem
         /// Blocks生成用Job
         /// </summary>
         [BurstCompile]
-        unsafe private struct SetupBlocksJob : IJobParallelFor
+        private unsafe struct SetupBlocksJob : IJobParallelFor
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public global::BlockSystem.BlockData* blocksFirst;
 
