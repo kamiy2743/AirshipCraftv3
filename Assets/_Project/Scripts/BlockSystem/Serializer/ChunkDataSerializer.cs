@@ -11,12 +11,12 @@ namespace BlockSystem.Serializer
     internal static class ChunkDataSerializer
     {
         // ChunkCoordinateのバイト数
-        private const int ChunkCoordinateByteSize = 6; //int16*3
+        private const int ChunkCoordinateByteSize = sizeof(short) * 3;
 
         // BlockDataのバイト数
-        private const int BlockIDByteSize = 2; //uint16
-        private const int LocalCoordinateByteSize = 3; //byte*3
-        private const int SurfaceNormalByteSize = 1; //byte
+        private const int BlockIDByteSize = sizeof(ushort);
+        private const int LocalCoordinateByteSize = sizeof(byte) * 3;
+        private const int SurfaceNormalByteSize = sizeof(byte);
         private const int BlockDataByteSize = BlockIDByteSize + LocalCoordinateByteSize + SurfaceNormalByteSize;
 
         // ChunkDataのバイト数
