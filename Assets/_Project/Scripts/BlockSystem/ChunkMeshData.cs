@@ -28,7 +28,7 @@ namespace BlockSystem
         /// <typeparam name="int2-0">v,tの開始位置</typeparam>
         /// <typeparam name="int2-1">v,tのサイズ</typeparam>
         // TODO BlockIDの個数を取得できるように
-        private static readonly int[] ContainsBlockIDArray = new int[10];
+        private static readonly bool[] ContainsBlockIDArray = new bool[10];
         private static readonly NativeParallelHashMap<int, int2x2> MasterMeshDataInfoHashMap = new NativeParallelHashMap<int, int2x2>(10, Allocator.Persistent);
         private static readonly NativeList<Vector3> MasterVertices = new NativeList<Vector3>(Allocator.Persistent);
         private static readonly NativeList<int> MasterTriangles = new NativeList<int>(Allocator.Persistent);
@@ -54,8 +54,7 @@ namespace BlockSystem
                 // 初期化
                 for (int i = 0; i < ContainsBlockIDArray.Length; i++)
                 {
-                    // int.MinValueは対応するBlockIDはないという意味
-                    ContainsBlockIDArray[i] = int.MinValue;
+                    ContainsBlockIDArray[i] = false;
                 }
 
                 var blocks = chunkData.Blocks;
@@ -63,15 +62,14 @@ namespace BlockSystem
                 {
                     var block = blocks[i];
                     if (block.IsRenderSkip) continue;
-                    // int.MaxValueは対応するBlockIDがあるという意味
-                    ContainsBlockIDArray[(int)block.ID] = int.MaxValue;
+                    ContainsBlockIDArray[(int)block.ID] = true;
                 }
 
                 // TODO ↑ここまではJob化できるかもしれない
 
                 for (int i = 0; i < ContainsBlockIDArray.Length; i++)
                 {
-                    if (ContainsBlockIDArray[i] == int.MinValue) continue;
+                    if (!ContainsBlockIDArray[i]) continue;
 
                     var blockID = i;
                     var masterMeshData = MasterBlockDataStore.GetData(blockID).MeshData;
