@@ -25,23 +25,21 @@ namespace BlockSystem.Serializer
         // ChunkDataのバイト数
         internal const int ChunkDataByteSize = ChunkCoordinateByteSize + (BlockDataByteSize * ChunkData.BlockCountInChunk);
 
+        private static byte[] writeBuffer = new byte[ChunkDataByteSize];
         internal static byte[] Serialize(ChunkData chunkData)
         {
-            // TODO 使いまわしたい
-            var result = new byte[ChunkDataByteSize];
-
             var cc = chunkData.ChunkCoordinate;
-            result[0] = (byte)(cc.x >> 8);
-            result[1] = (byte)cc.x;
-            result[2] = (byte)(cc.y >> 8);
-            result[3] = (byte)cc.y;
-            result[4] = (byte)(cc.z >> 8);
-            result[5] = (byte)cc.z;
+            writeBuffer[0] = (byte)(cc.x >> 8);
+            writeBuffer[1] = (byte)cc.x;
+            writeBuffer[2] = (byte)(cc.y >> 8);
+            writeBuffer[3] = (byte)cc.y;
+            writeBuffer[4] = (byte)(cc.z >> 8);
+            writeBuffer[5] = (byte)cc.z;
 
             unsafe
             {
                 fixed (BlockData* blocksFirst = &chunkData.Blocks[0])
-                fixed (byte* blocksResultFirst = &result[ChunkCoordinateByteSize])
+                fixed (byte* blocksResultFirst = &writeBuffer[ChunkCoordinateByteSize])
                 {
                     var job = new SerializeJob
                     {
@@ -53,7 +51,7 @@ namespace BlockSystem.Serializer
                 }
             }
 
-            return result;
+            return writeBuffer;
         }
 
         [BurstCompile]
@@ -61,8 +59,6 @@ namespace BlockSystem.Serializer
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public byte* blocksResultFirst;
-
-            private const byte LocalCoordinateMask = (byte)(ChunkData.ChunkBlockSide - 1);
 
             public void Execute()
             {
@@ -78,9 +74,9 @@ namespace BlockSystem.Serializer
 
                     // BlockCoordinateをLocalCoordinateに変換して書き込み
                     var bc = blockData->BlockCoordinate;
-                    *(blocksResultFirst + (offset++)) = (byte)(bc.x & LocalCoordinateMask);
-                    *(blocksResultFirst + (offset++)) = (byte)(bc.y & LocalCoordinateMask);
-                    *(blocksResultFirst + (offset++)) = (byte)(bc.z & LocalCoordinateMask);
+                    *(blocksResultFirst + (offset++)) = (byte)(bc.x & LocalCoordinate.ToLocalCoordinateMask);
+                    *(blocksResultFirst + (offset++)) = (byte)(bc.y & LocalCoordinate.ToLocalCoordinateMask);
+                    *(blocksResultFirst + (offset++)) = (byte)(bc.z & LocalCoordinate.ToLocalCoordinateMask);
 
                     // ContactOtherBlockSurfaces
                     *(blocksResultFirst + (offset++)) = (byte)blockData->ContactOtherBlockSurfaces;

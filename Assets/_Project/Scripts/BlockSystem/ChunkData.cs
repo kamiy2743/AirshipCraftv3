@@ -157,18 +157,18 @@ namespace BlockSystem
             [ReadOnly] public int3 chunkRoot;
             [ReadOnly] public MapGenerator mapGenerator;
 
-            private const byte mask = (ChunkBlockSide - 1);
-
             public void Execute(int index)
             {
-                var lcx = index & mask;
-                var lcy = (index >> ChunkBlockSideShift) & mask;
-                var lcz = (index >> (ChunkBlockSideShift * 2)) & mask;
+                var lcx = index & LocalCoordinate.ToLocalCoordinateMask;
+                var lcy = (index >> ChunkBlockSideShift) & LocalCoordinate.ToLocalCoordinateMask;
+                var lcz = (index >> (ChunkBlockSideShift * 2)) & LocalCoordinate.ToLocalCoordinateMask;
 
-                var blockCoordinate = chunkRoot + new int3(lcx, lcy, lcz);
-                var blockID = mapGenerator.GetBlockID(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z);
+                var bcx = chunkRoot.x + lcx;
+                var bcy = chunkRoot.y + lcy;
+                var bcz = chunkRoot.z + lcz;
+                var blockID = mapGenerator.GetBlockID(bcx, bcy, bcz);
 
-                *(blocksFirst + index) = new BlockData(blockID, new BlockCoordinate(blockCoordinate.x, blockCoordinate.y, blockCoordinate.z));
+                *(blocksFirst + index) = new BlockData(blockID, new BlockCoordinate(bcx, bcy, bcz));
             }
         }
     }
