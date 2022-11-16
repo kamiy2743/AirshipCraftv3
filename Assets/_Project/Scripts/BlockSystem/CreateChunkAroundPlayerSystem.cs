@@ -46,21 +46,26 @@ namespace BlockSystem
 
             // 初回の作成
             var lastPlayerChunk = GetPlayerChunk(player.position);
-            CreateChunk(lastPlayerChunk).Forget();
+            CreateNearChunk(lastPlayerChunk);
 
             // 毎フレーム監視
             updateDisposal = Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    // プレイヤーチャンクが変化したら範囲外のチャンクを解放
+                    // プレイヤーチャンクが変化したら
                     var playerChunk = GetPlayerChunk(player.position);
                     if (!playerChunk.Equals(lastPlayerChunk))
                     {
-                        ReleaseOutRangeChunk(playerChunk);
                         lastPlayerChunk = playerChunk;
+
+                        // 範囲外のチャンクを解放
+                        ReleaseOutRangeChunk(playerChunk);
+
+                        // プレイヤーの周辺1チャンクは同期的に作成
+                        CreateNearChunk(playerChunk);
                     }
 
-                    CreateChunk(playerChunk).Forget();
+                    CreateFarChunk(playerChunk).Forget();
 
                     // 別スレッドで作成したメッシュデータからChunkObjectを作成
                     while (createChunkObjectQueue.TryDequeue(out var item))
@@ -142,7 +147,30 @@ namespace BlockSystem
             }
         }
 
-        private async UniTask CreateChunk(int3 playerChunk)
+        private void CreateNearChunk(int3 playerChunk)
+        {
+            for (int x = playerChunk.x - 1; x <= playerChunk.x + 1; x++)
+            {
+                for (int y = playerChunk.y - 1; y <= playerChunk.y + 1; y++)
+                {
+                    for (int z = playerChunk.z - 1; z <= playerChunk.z + 1; z++)
+                    {
+                        if (!ChunkCoordinate.IsValid(x, y, z)) continue;
+                        var cc = new ChunkCoordinate(x, y, z);
+                        if (_chunkObjectPool.CreatedChunks.Contains(cc)) continue;
+
+                        var chunkData = _chunkDataStore.GetChunkData(cc, default);
+                        var meshData = _chunkMeshCreator.CreateMeshData(chunkData, default);
+                        chunkData.ReferenceCounter.Release();
+
+                        var chunkObject = _chunkObjectPool.TakeChunkObject(cc);
+                        chunkObject.SetMesh(meshData);
+                    }
+                }
+            }
+        }
+
+        private async UniTask CreateFarChunk(int3 playerChunk)
         {
             if (cts is not null)
             {
@@ -158,6 +186,7 @@ namespace BlockSystem
             createChunkQueue.Clear();
             createChunkObjectQueue.Clear();
             cts = new CancellationTokenSource();
+            var ct = cts.Token;
 
             // メインスレッドでしか取得できないからここで
             var camera = Camera.main;
@@ -168,7 +197,7 @@ namespace BlockSystem
 
             SetupCreateChunkQueue(playerChunk, viewportMatrix);
 
-            CreateMeshDataFromQueue(cts.Token);
+            CreateMeshDataFromQueue(ct);
 
             // メインスレッドに戻す
             await UniTask.SwitchToMainThread();
@@ -209,15 +238,8 @@ namespace BlockSystem
                 var pcy = playerChunk.y;
                 var pcz = playerChunk.z;
 
-                // 中心
-                if ((pcx >= ChunkCoordinate.Min && pcx <= ChunkCoordinate.Max) &&
-                    (pcz >= ChunkCoordinate.Min && pcz <= ChunkCoordinate.Max))
-                {
-                    EnqueueChunk(pcx, pcz);
-                }
-
                 // 内側から順に作成
-                for (int r = 0; r <= World.LoadChunkRadius; r++)
+                for (int r = 2; r <= World.LoadChunkRadius; r++)
                 {
                     // 上から見てx+方向
                     if (pcz + r <= ChunkCoordinate.Max)
