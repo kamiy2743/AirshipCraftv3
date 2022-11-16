@@ -51,21 +51,18 @@ namespace BlockSystem
                 MasterTriangles.Clear();
                 MasterUVs.Clear();
 
-                // 初期化
-                for (int i = 0; i < ContainsBlockIDArray.Length; i++)
+                fixed (bool* containsBlockIDArrayFirst = &ContainsBlockIDArray[0])
+                fixed (BlockData* blocksFirst = &chunkData.Blocks[0])
                 {
-                    ContainsBlockIDArray[i] = false;
-                }
+                    var job = new SetUpContainsBlockIDArrayJob
+                    {
+                        containsBlockIDArrayFirst = containsBlockIDArrayFirst,
+                        blocksFirst = blocksFirst,
+                        containsBlockIDArrayLength = ContainsBlockIDArray.Length
+                    };
 
-                var blocks = chunkData.Blocks;
-                for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
-                {
-                    var block = blocks[i];
-                    if (block.IsRenderSkip) continue;
-                    ContainsBlockIDArray[(int)block.ID] = true;
+                    job.Schedule().Complete();
                 }
-
-                // TODO ↑ここまではJob化できるかもしれない
 
                 for (int i = 0; i < ContainsBlockIDArray.Length; i++)
                 {
@@ -99,7 +96,7 @@ namespace BlockSystem
 
                 fixed (BlockData* blocksFirst = &chunkData.Blocks[0])
                 {
-                    var job = new ChunkMeshDataJob
+                    var job = new CombineMeshJob
                     {
                         blocksFirst = blocksFirst,
                         masterMeshDataInfoHashMap = MasterMeshDataInfoHashMap,
@@ -137,7 +134,31 @@ namespace BlockSystem
         }
 
         [BurstCompile]
-        private unsafe struct ChunkMeshDataJob : IJob
+        private unsafe struct SetUpContainsBlockIDArrayJob : IJob
+        {
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public bool* containsBlockIDArrayFirst;
+            [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
+            [ReadOnly] public int containsBlockIDArrayLength;
+
+            public void Execute()
+            {
+                // 初期化
+                for (int i = 0; i < containsBlockIDArrayLength; i++)
+                {
+                    *(containsBlockIDArrayFirst + i) = false;
+                }
+
+                for (int i = 0; i < ChunkData.BlockCountInChunk; i++)
+                {
+                    var block = blocksFirst + i;
+                    if (block->IsRenderSkip) continue;
+                    *(containsBlockIDArrayFirst + (int)block->ID) = true;
+                }
+            }
+        }
+
+        [BurstCompile]
+        private unsafe struct CombineMeshJob : IJob
         {
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* blocksFirst;
             [ReadOnly] public NativeParallelHashMap<int, int2x2> masterMeshDataInfoHashMap;

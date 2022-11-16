@@ -129,7 +129,6 @@ namespace BlockSystem
                         bottomChunkBlocksFirst = &bottomChunk.Blocks[0],
                         forwardChunkBlocksFirst = &forwardChunk.Blocks[0],
                         backChunkBlocksFirst = &backChunk.Blocks[0])
-                    fixed (SurfaceNormal* surfaceNormalsFirst = &SurfaceNormalExt.Array[0])
                     {
                         var job = new CalcContactOtherBlockSurfacesJob
                         {
@@ -140,7 +139,6 @@ namespace BlockSystem
                             bottomChunkBlocksFirst = bottomChunkBlocksFirst,
                             forwardChunkBlocksFirst = forwardChunkBlocksFirst,
                             backChunkBlocksFirst = backChunkBlocksFirst,
-                            surfaceNormalsFirst = surfaceNormalsFirst,
                             surfaceNormalsCount = SurfaceNormalExt.Array.Length
                         };
 
@@ -168,8 +166,6 @@ namespace BlockSystem
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* bottomChunkBlocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* forwardChunkBlocksFirst;
             [NativeDisableUnsafePtrRestriction][ReadOnly] public BlockData* backChunkBlocksFirst;
-
-            [NativeDisableUnsafePtrRestriction][ReadOnly] public SurfaceNormal* surfaceNormalsFirst;
             [ReadOnly] public int surfaceNormalsCount;
 
             public void Execute()
@@ -185,7 +181,7 @@ namespace BlockSystem
 
                     for (int j = 0; j < surfaceNormalsCount; j++)
                     {
-                        var surface = *(surfaceNormalsFirst + j);
+                        var surface = SurfaceNormalExt.FromIndex(j);
                         var surfaceVector = surface.ToInt3();
 
                         var bcx = targetCoordinate.x + surfaceVector.x;
