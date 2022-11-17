@@ -23,6 +23,7 @@ namespace BlockSystem
 
         private const int NearChunkRadius = 1;
 
+        private IDisposable onChangePlayerChunkDisposal;
         private IDisposable updateDisposal;
 
         private bool createChunkInProgress = false;
@@ -35,38 +36,36 @@ namespace BlockSystem
         {
             cts?.Cancel();
             cts?.Dispose();
+            onChangePlayerChunkDisposal.Dispose();
             updateDisposal.Dispose();
             releaseChunkList.Dispose();
             createChunkQueue.Dispose();
         }
 
-        internal CreateChunkAroundPlayerSystem(Transform player, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
+        internal CreateChunkAroundPlayerSystem(PlayerChunkChangeDetector playerChunkChangeDetector, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
         {
             _chunkObjectPool = chunkObjectPool;
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            // 初回の作成
-            var lastPlayerChunk = GetPlayerChunk(player.position);
-            CreateNearChunk(lastPlayerChunk);
+            int3 playerChunk = default;
+            // プレイヤーチャンク変化時
+            onChangePlayerChunkDisposal = playerChunkChangeDetector.OnDetect
+                .Subscribe(pc =>
+                {
+                    playerChunk = pc;
 
-            // 毎フレーム監視
+                    // 範囲外のチャンクを解放
+                    ReleaseOutRangeChunk(playerChunk);
+
+                    // 近傍チャンクは同期的に生成
+                    CreateNearChunk(playerChunk);
+                });
+
+            // 毎フレーム遠方チャンクの作成をリクエスト
             updateDisposal = Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    // プレイヤーチャンクが変化したら
-                    var playerChunk = GetPlayerChunk(player.position);
-                    if (!playerChunk.Equals(lastPlayerChunk))
-                    {
-                        lastPlayerChunk = playerChunk;
-
-                        // 範囲外のチャンクを解放
-                        ReleaseOutRangeChunk(playerChunk);
-
-                        // 近傍チャンクは同期的に生成
-                        CreateNearChunk(playerChunk);
-                    }
-
                     CreateFarChunk(playerChunk).Forget();
 
                     // 別スレッドで作成したメッシュデータからChunkObjectを作成
@@ -76,16 +75,6 @@ namespace BlockSystem
                         chunkObject.SetMesh(item.Value);
                     }
                 });
-        }
-
-        /// <summary> プレイヤーがいるチャンクに変換 </summary>
-        private static int3 GetPlayerChunk(Vector3 playerPosition)
-        {
-            return new int3(
-                (int)math.floor(playerPosition.x) >> ChunkData.ChunkBlockSideShift,
-                (int)math.floor(playerPosition.y) >> ChunkData.ChunkBlockSideShift,
-                (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift
-            );
         }
 
         /// <summary> 読みこみ範囲外のチャンクオブジェクトを解放する </summary>

@@ -30,11 +30,11 @@ namespace BlockSystem
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkMeshCreatorDisposal = chunkMeshCreator;
             var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
+            var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
             breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
-            createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator);
-            // new UpdateChunkSystem(player, chunkObjectPool, chunkDataStore, chunkMeshCreator, this.GetCancellationTokenOnDestroy());
+            createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
         }
 
         private void OnApplicationQuit()
