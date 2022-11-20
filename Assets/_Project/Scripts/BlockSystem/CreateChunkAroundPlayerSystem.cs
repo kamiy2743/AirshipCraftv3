@@ -23,7 +23,7 @@ namespace BlockSystem
 
         private const int NearChunkRadius = 1;
 
-        private IDisposable onChangePlayerChunkDisposal;
+        private IDisposable chunkChangeDisposal;
         private IDisposable updateDisposal;
 
         private bool createChunkInProgress = false;
@@ -36,7 +36,7 @@ namespace BlockSystem
         {
             cts?.Cancel();
             cts?.Dispose();
-            onChangePlayerChunkDisposal.Dispose();
+            chunkChangeDisposal.Dispose();
             updateDisposal.Dispose();
             releaseChunkList.Dispose();
             createChunkQueue.Dispose();
@@ -48,25 +48,25 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            int3 playerChunk = default;
-            // プレイヤーチャンク変化時
-            onChangePlayerChunkDisposal = playerChunkChangeDetector.OnDetect
-                .Subscribe(pc =>
-                {
-                    playerChunk = pc;
+            // 初回作成
+            // 近傍チャンクは同期的に生成
+            CreateNearChunk(playerChunkChangeDetector.PlayerChunk);
 
+            // プレイヤーチャンク変化時
+            chunkChangeDisposal = playerChunkChangeDetector.OnDetect
+                .Subscribe(playerChunk =>
+                {
                     // 範囲外のチャンクを解放
                     ReleaseOutRangeChunk(playerChunk);
 
-                    // 近傍チャンクは同期的に生成
                     CreateNearChunk(playerChunk);
                 });
 
-            // 毎フレーム遠方チャンクの作成をリクエスト
             updateDisposal = Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    CreateFarChunk(playerChunk).Forget();
+                    // 毎フレーム遠方チャンクの作成をコール
+                    CreateFarChunk(playerChunkChangeDetector.PlayerChunk).Forget();
 
                     // 別スレッドで作成したメッシュデータからChunkObjectを作成
                     while (createChunkObjectQueue.TryDequeue(out var item))

@@ -5,33 +5,30 @@ using UnityEngine;
 
 namespace BlockSystem
 {
-    internal class PlayerChunkChangeDetector
+    internal class PlayerChunkChangeDetector : IDisposable
     {
-        internal readonly IObservable<int3> OnDetect;
+        private Transform player;
+        internal int3 PlayerChunk => GetPlayerChunk(player.position);
+
+        internal IObservable<int3> OnDetect => _onDetect;
+        private Subject<int3> _onDetect = new Subject<int3>();
+        private IDisposable updateDisposal;
 
         internal PlayerChunkChangeDetector(Transform player)
         {
-            int3 lastPlayerChunk = default;
-            var isFirst = true;
+            this.player = player;
+            int3 lastPlayerChunk = new int3() * int.MinValue;
 
-            OnDetect = player
+            updateDisposal = player
                 .ObserveEveryValueChanged(player => player.position)
                 .Select(position => GetPlayerChunk(position))
-                .Where(playerChunk =>
+                .Subscribe(playerChunk =>
                 {
-                    if (isFirst)
-                    {
-                        isFirst = false;
-                        return true;
-                    }
-
                     if (!playerChunk.Equals(lastPlayerChunk))
                     {
                         lastPlayerChunk = playerChunk;
-                        return true;
+                        _onDetect.OnNext(playerChunk);
                     }
-
-                    return false;
                 });
         }
 
@@ -43,6 +40,11 @@ namespace BlockSystem
                 (int)math.floor(playerPosition.y) >> ChunkData.ChunkBlockSideShift,
                 (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift
             );
+        }
+
+        public void Dispose()
+        {
+            updateDisposal.Dispose();
         }
     }
 }
