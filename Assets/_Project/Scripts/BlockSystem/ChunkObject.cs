@@ -33,7 +33,6 @@ namespace BlockSystem
                 mesh = new Mesh();
                 meshFilter.sharedMesh = mesh;
                 meshRenderer.enabled = true;
-                // meshCollider.enabled = true;
             }
 
             mesh.Clear();
@@ -44,8 +43,6 @@ namespace BlockSystem
             mesh.RecalculateNormals();
 
             meshData.Release();
-
-            // meshCollider.sharedMesh = mesh;
         }
 
         internal void ClearMesh()
@@ -55,9 +52,17 @@ namespace BlockSystem
                 Destroy(mesh);
                 mesh = null;
                 meshRenderer.enabled = false;
-                // meshCollider.enabled = false;
-                // meshCollider.sharedMesh = null;
+                meshCollider.enabled = false;
+                meshCollider.sharedMesh = null;
             }
+        }
+
+        internal void SetColliderEnabled(bool enabled)
+        {
+            if (meshCollider.enabled == enabled) return;
+
+            meshCollider.enabled = enabled;
+            meshCollider.sharedMesh = (enabled ? mesh : null);
         }
 
         public BlockData GetBlockData(Vector3 position, CancellationToken ct)

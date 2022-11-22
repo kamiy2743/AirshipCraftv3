@@ -37,7 +37,7 @@ namespace BlockSystem
 
             PlaceBlockSystem.StartInitial(blockDataUpdater);
             breakBlockSystem.StartInitial(blockDataUpdater, chunkDataStore);
-            chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector);
+            chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkObjectPool);
             createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
         }
 
