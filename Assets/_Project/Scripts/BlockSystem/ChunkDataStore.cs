@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
-using MessagePack;
 using UnityEngine;
 using BlockSystem.Serializer;
 using UniRx;
@@ -13,11 +12,10 @@ namespace BlockSystem
     /// <summary>
     /// チャンクデータを管理
     /// </summary>
-    internal class ChunkDataStore : IDisposable
+    internal class ChunkDataStore
     {
-        /// <summary> チャンクの保存位置を格納する </summary>
-        private Hashtable indexHashtable = new Hashtable();
-        private long createdChunkCount = 0;
+        private ChunkDataFileIO _chunkDataFileIO;
+        private MapGenerator _mapGenerator;
 
         private const int CacheCapacity = 128;
         private Hashtable chunkDataCache = new Hashtable(CacheCapacity);
@@ -25,35 +23,11 @@ namespace BlockSystem
         private HashSet<ChunkData> reusableChunkHashSet = new HashSet<ChunkData>();
         private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
 
-        private MapGenerator _mapGenerator;
 
-        private static readonly string RootDirectory = Application.persistentDataPath + "/" + nameof(ChunkDataStore);
-        private static readonly string ChunkDataFilePath = RootDirectory + "/ChunkData.bin";
-        private static readonly string IndexHashtablePath = RootDirectory + "/IndexHashtable.bin";
-
-        private readonly FileStream ChunkDataStream;
-        private readonly FileStream IndexHashtableStream;
-
-        internal ChunkDataStore(MapGenerator mapGenerator)
+        internal ChunkDataStore(ChunkDataFileIO chunkDataFileIO, MapGenerator mapGenerator)
         {
+            _chunkDataFileIO = chunkDataFileIO;
             _mapGenerator = mapGenerator;
-
-            Directory.CreateDirectory(RootDirectory);
-            ChunkDataStream = new FileStream(ChunkDataFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            IndexHashtableStream = new FileStream(IndexHashtablePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-
-            ChunkDataStream.SetLength(0);
-            IndexHashtableStream.SetLength(0);
-
-            // チャンクの保存位置を読み込む
-            var readBuffer = new byte[ChunkDataIndexSerializer.ChunkDataIndexByteSize];
-            while (IndexHashtableStream.Position < IndexHashtableStream.Length)
-            {
-                IndexHashtableStream.Read(readBuffer, 0, readBuffer.Length);
-                var chunkDataIndex = ChunkDataIndexSerializer.Deserialize(readBuffer);
-                indexHashtable.Add(chunkDataIndex.ChunkCoordinate, chunkDataIndex.Index);
-                createdChunkCount++;
-            }
         }
 
         /// <summary>
@@ -83,12 +57,8 @@ namespace BlockSystem
                 var useReusableChunkData = TryGetReusableChunkData(out ChunkData reusableChunkData);
 
                 ChunkData chunkData;
-                // 保存位置が存在すれば読み込み、無ければ作成
-                if (indexHashtable.ContainsKey(cc))
-                {
-                    chunkData = ReadChunk((long)indexHashtable[cc], reusableChunkData);
-                }
-                else
+                // 保存されていれば読み込み、無ければ作成
+                if (!_chunkDataFileIO.TryRead(cc, reusableChunkData, out chunkData))
                 {
                     chunkData = CreateNewChunk(cc, reusableChunkData);
                 }
@@ -159,7 +129,7 @@ namespace BlockSystem
             return reusableChunkHashSet.Remove(removeChunk);
         }
 
-        /// <summary> チャンクを新規作成し、チャンクとその保存位置を書き込む </summary>
+        /// <summary> チャンクを新規作成し保存 </summary>
         private ChunkData CreateNewChunk(ChunkCoordinate cc, ChunkData reusableChunkData)
         {
             ChunkData newChunkData;
@@ -174,46 +144,10 @@ namespace BlockSystem
                 newChunkData = ChunkData.NewConstructor(cc, _mapGenerator);
             }
 
-            // チャンクの保存位置を書き込む
-            var chunkDataIndexBytes = ChunkDataIndexSerializer.Serialize(new ChunkDataIndex(cc, createdChunkCount));
-            IndexHashtableStream.Write(chunkDataIndexBytes);
-            indexHashtable.Add(cc, createdChunkCount);
-
-            // チャンク本体を書き込む
-            var chunkDataBytes = ChunkDataSerializer.Serialize(newChunkData);
-            ChunkDataStream.Position = createdChunkCount * ChunkDataSerializer.ChunkDataByteSize;
-            ChunkDataStream.Write(chunkDataBytes);
-            createdChunkCount++;
+            // 保存
+            _chunkDataFileIO.Append(newChunkData);
 
             return newChunkData;
-        }
-
-        /// <summary> 保存されているチャンクを読み込む </summary>
-        private byte[] readBuffer = new byte[ChunkDataSerializer.ChunkDataByteSize];
-        private ChunkData ReadChunk(long index, ChunkData reusableChunkData)
-        {
-            ChunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
-            ChunkDataStream.Read(readBuffer, 0, readBuffer.Length);
-            return ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
-        }
-
-        public void Dispose()
-        {
-            ChunkDataStream.Dispose();
-            IndexHashtableStream.Dispose();
-        }
-    }
-
-    /// <summary> 保存位置を表す </summary>
-    internal struct ChunkDataIndex
-    {
-        internal ChunkCoordinate ChunkCoordinate;
-        internal long Index;
-
-        internal ChunkDataIndex(ChunkCoordinate cc, long index)
-        {
-            ChunkCoordinate = cc;
-            Index = index;
         }
     }
 }

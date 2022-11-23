@@ -6,16 +6,14 @@ using Cysharp.Threading.Tasks;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 namespace BlockSystem
 {
-    /// <summary>
-    /// 依存関係の解決を行う
-    /// </summary>
+    /// <summary> 依存関係の解決を行う </summary>
     internal class BlockSystemInitializer : MonoBehaviour
     {
         [SerializeField] private Transform player;
         [SerializeField] private ChunkObjectPool chunkObjectPool;
         [SerializeField] private BreakBlockSystem breakBlockSystem;
 
-        private IDisposable chunkDataStoreDisposal;
+        private IDisposable chunkDataFileIODisposal;
         private IDisposable chunkMeshCreatorDisposal;
         private IDisposable chunkColliderSystemDisposal;
         private IDisposable createChunkAroundPlayerSystemDisposal;
@@ -25,9 +23,10 @@ namespace BlockSystem
         {
             MasterBlockDataStore.InitialLoad();
 
+            var chunkDataFileIO = new ChunkDataFileIO();
+            chunkDataFileIODisposal = chunkDataFileIO;
             var mapGenerator = new MapGenerator(1024, 80);
-            var chunkDataStore = new ChunkDataStore(mapGenerator);
-            chunkDataStoreDisposal = chunkDataStore;
+            var chunkDataStore = new ChunkDataStore(chunkDataFileIO, mapGenerator);
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkMeshCreatorDisposal = chunkMeshCreator;
@@ -44,7 +43,7 @@ namespace BlockSystem
         private void OnApplicationQuit()
         {
             chunkObjectPool.Dispose();
-            chunkDataStoreDisposal.Dispose();
+            chunkDataFileIODisposal.Dispose();
             chunkMeshCreatorDisposal.Dispose();
             ChunkMeshData.DisposeNativeBuffer();
             playerChunkChangeDetectorDisposal.Dispose();
