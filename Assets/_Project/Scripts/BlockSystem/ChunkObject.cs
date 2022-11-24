@@ -40,6 +40,7 @@ namespace BlockSystem
             mesh.SetTriangles(meshData.Triangles.ToArray(), 0);
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
+            meshCollider.sharedMesh = mesh;
 
             meshData.Release();
         }
