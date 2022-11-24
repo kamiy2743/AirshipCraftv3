@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
+using System.Threading;
 using MasterData.Block;
-using Cysharp.Threading.Tasks;
-using Util;
 
 namespace BlockSystem
 {
@@ -23,19 +20,15 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
         }
 
-        public void BreakBlock(BlockCoordinate targetCoordinate, CancellationToken ct)
+        public void BreakBlock(BlockData targetBlockData, CancellationToken ct)
         {
-            var updateBlockData = new BlockData(BlockID.Air, targetCoordinate);
+            var updateBlockData = new BlockData(BlockID.Air, targetBlockData.BlockCoordinate);
             _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
 
-            // var cc = ChunkCoordinate.FromBlockCoordinate(targetCoordinate);
-            // var lc = LocalCoordinate.FromBlockCoordinate(targetCoordinate);
-            // var chunkData = _chunkDataStore.GetChunkData(cc, ct);
-            // var targetBlockData = chunkData.GetBlockData(lc);
-            // var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
-            // var dropItem = Instantiate(dropItemPrefab);
-            // dropItem.SetMesh(meshData);
-            // dropItem.SetPosition(targetCoordinate.Center);
+            var dropItem = Instantiate(dropItemPrefab);
+            var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
+            dropItem.SetMesh(meshData);
+            dropItem.SetPosition(targetBlockData.BlockCoordinate.Center);
         }
     }
 }

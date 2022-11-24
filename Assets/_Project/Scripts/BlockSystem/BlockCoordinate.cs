@@ -14,6 +14,8 @@ namespace BlockSystem
         internal readonly int y;
         internal readonly int z;
 
+        internal readonly Vector3 Center;
+
         internal const int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
         internal const int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
 
@@ -26,6 +28,7 @@ namespace BlockSystem
             this.x = x;
             this.y = y;
             this.z = z;
+            Center = new Vector3(x, y, z) + Vector3.one * 0.5f;
         }
 
         internal static bool IsValid(Vector3 position) => IsValid((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z));
