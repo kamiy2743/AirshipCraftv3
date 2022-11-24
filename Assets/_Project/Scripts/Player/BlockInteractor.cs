@@ -87,12 +87,12 @@ namespace Player
         private void PlaceBlock(BlockData selectedBlock, Vector3 hitNormal)
         {
             var position = selectedBlock.BlockCoordinate.ToVector3() + hitNormal;
-            PlaceBlockSystem.PlaceBlock(BlockID.Dirt, position, _cancellationToken).Forget();
+            PlaceBlockSystem.PlaceBlock(BlockID.Dirt, position, _cancellationToken);
         }
 
         private void BreakBlock(BlockData targetBlockData)
         {
-            BreakBlockSystem.Instance.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken).Forget();
+            BreakBlockSystem.Instance.BreakBlock(targetBlockData.BlockCoordinate, _cancellationToken);
         }
     }
 }

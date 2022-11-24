@@ -3,9 +3,7 @@ using System.Threading;
 
 namespace BlockSystem
 {
-    /// <summary>
-    /// チャンクのGameObject
-    /// </summary>
+    /// <summary> チャンクのGameObject </summary>
     internal class ChunkObject : MonoBehaviour, IBlockDataAccessor
     {
         [SerializeField] private MeshFilter meshFilter;
@@ -20,6 +18,7 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
         }
 
+        /// <summary> メインスレッドのみ </summary>
         internal void SetMesh(ChunkMeshData meshData)
         {
             if (meshData is null)

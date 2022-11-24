@@ -37,10 +37,12 @@ namespace BlockSystem
         internal IObservable<Unit> OnReleased => _onReleasedSubject;
         private Subject<Unit> _onReleasedSubject = new Subject<Unit>();
 
+        private static object syncObject = new object();
+
         internal ChunkMeshData() { }
         internal unsafe void Init(ChunkData chunkData, CancellationToken ct)
         {
-            lock (this)
+            lock (syncObject)
             {
                 verticesList.Clear();
                 trianglesList.Clear();

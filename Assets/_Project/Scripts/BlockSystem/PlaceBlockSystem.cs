@@ -16,12 +16,12 @@ namespace BlockSystem
             _blockDataUpdater = blockDataUpdater;
         }
 
-        public static async UniTask PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
+        public static void PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
         {
             if (!BlockCoordinate.IsValid(position)) return;
 
             var updateBlockData = new BlockData(blockID, new BlockCoordinate(position));
-            await _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
+            _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
         }
     }
 }

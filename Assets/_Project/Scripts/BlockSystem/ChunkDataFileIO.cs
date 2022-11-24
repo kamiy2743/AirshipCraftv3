@@ -29,48 +29,79 @@ namespace BlockSystem
             chunkDataStream = new FileStream(ChunkDataFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             positionIndexStream = new FileStream(PositionIndexFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-            chunkDataStream.SetLength(0);
-            positionIndexStream.SetLength(0);
+            // chunkDataStream.SetLength(0);
+            // positionIndexStream.SetLength(0);
 
             // チャンクの保存位置を読み込む
             var readBuffer = new byte[ChunkDataPositionIndexSerializer.ChunkDataPositionIndexByteSize];
             while (positionIndexStream.Position < positionIndexStream.Length)
             {
                 positionIndexStream.Read(readBuffer, 0, readBuffer.Length);
-                var chunkDataPositionIndex = ChunkDataPositionIndexSerializer.Deserialize(readBuffer);
-                positionIndexDictionary.Add(chunkDataPositionIndex.ChunkCoordinate, chunkDataPositionIndex.Index);
+                var positionIndex = ChunkDataPositionIndexSerializer.Deserialize(readBuffer);
+                positionIndexDictionary.Add(positionIndex.ChunkCoordinate, positionIndex.Index);
                 createdChunkCount++;
+            }
+        }
+
+        private void Write(long positionIndex, ChunkData chunkData)
+        {
+            lock (this)
+            {
+                var chunkDataBytes = ChunkDataSerializer.Serialize(chunkData);
+                chunkDataStream.Position = positionIndex * ChunkDataSerializer.ChunkDataByteSize;
+                chunkDataStream.Write(chunkDataBytes);
             }
         }
 
         internal void Append(ChunkData chunkData)
         {
-            // チャンクの保存位置を書き込む
-            var chunkDataPositionIndexBytes = ChunkDataPositionIndexSerializer.Serialize(new ChunkDataPositionIndex(chunkData.ChunkCoordinate, createdChunkCount));
-            positionIndexStream.Write(chunkDataPositionIndexBytes);
-            positionIndexDictionary.Add(chunkData.ChunkCoordinate, createdChunkCount);
+            lock (this)
+            {
+                // 保存位置のインデックス
+                var positionIndex = createdChunkCount;
 
-            // チャンク本体を書き込む
-            var chunkDataBytes = ChunkDataSerializer.Serialize(chunkData);
-            chunkDataStream.Position = createdChunkCount * ChunkDataSerializer.ChunkDataByteSize;
-            chunkDataStream.Write(chunkDataBytes);
-            createdChunkCount++;
+                // チャンクの保存位置を書き込む
+                var positionIndexBytes = ChunkDataPositionIndexSerializer.Serialize(new ChunkDataPositionIndex(chunkData.ChunkCoordinate, positionIndex));
+                positionIndexStream.Write(positionIndexBytes);
+                positionIndexDictionary.Add(chunkData.ChunkCoordinate, positionIndex);
+
+                // チャンク本体を書き込む
+                Write(positionIndex, chunkData);
+                createdChunkCount++;
+            }
+        }
+
+        internal bool Update(ChunkData chunkData)
+        {
+            lock (this)
+            {
+                if (positionIndexDictionary.TryGetValue(chunkData.ChunkCoordinate, out var positionIndex))
+                {
+                    Write(positionIndex, chunkData);
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         private byte[] readBuffer = new byte[ChunkDataSerializer.ChunkDataByteSize];
-        internal bool TryRead(ChunkCoordinate cc, out ChunkData result) => TryRead(cc, null, out result);
-        internal bool TryRead(ChunkCoordinate cc, ChunkData reusableChunkData, out ChunkData result)
+        internal bool Read(ChunkCoordinate cc, out ChunkData result) => Read(cc, null, out result);
+        internal bool Read(ChunkCoordinate cc, ChunkData reusableChunkData, out ChunkData result)
         {
-            if (!positionIndexDictionary.TryGetValue(cc, out var index))
+            lock (this)
             {
-                result = null;
-                return false;
-            }
+                if (!positionIndexDictionary.TryGetValue(cc, out var positionIndex))
+                {
+                    result = null;
+                    return false;
+                }
 
-            chunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * index;
-            chunkDataStream.Read(readBuffer, 0, readBuffer.Length);
-            result = ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
-            return true;
+                chunkDataStream.Position = ChunkDataSerializer.ChunkDataByteSize * positionIndex;
+                chunkDataStream.Read(readBuffer, 0, readBuffer.Length);
+                result = ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
+                return true;
+            }
         }
 
         public void Dispose()
@@ -78,7 +109,6 @@ namespace BlockSystem
             chunkDataStream.Dispose();
             positionIndexStream.Dispose();
         }
-
     }
 
     /// <summary> 保存位置を表す </summary>

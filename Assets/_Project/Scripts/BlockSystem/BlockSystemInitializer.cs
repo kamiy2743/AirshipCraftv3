@@ -30,7 +30,7 @@ namespace BlockSystem
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkMeshCreatorDisposal = chunkMeshCreator;
-            var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkObjectPool, chunkMeshCreator);
+            var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
             var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
             playerChunkChangeDetectorDisposal = playerChunkChangeDetector;
 

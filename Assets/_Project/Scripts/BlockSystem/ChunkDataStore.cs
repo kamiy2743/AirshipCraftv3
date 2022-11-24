@@ -58,7 +58,7 @@ namespace BlockSystem
 
                 ChunkData chunkData;
                 // 保存されていれば読み込み、無ければ作成
-                if (!_chunkDataFileIO.TryRead(cc, reusableChunkData, out chunkData))
+                if (!_chunkDataFileIO.Read(cc, reusableChunkData, out chunkData))
                 {
                     chunkData = CreateNewChunk(cc, reusableChunkData);
                 }
