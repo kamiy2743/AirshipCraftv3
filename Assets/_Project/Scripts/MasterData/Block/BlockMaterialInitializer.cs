@@ -4,6 +4,8 @@ namespace MasterData.Block
 {
     internal class BlockMaterialInitializer
     {
+        private const int EdgeMargin = 1;
+
         internal BlockMaterialInitializer(Material blockMaterial, int blockCount)
         {
             blockMaterial.mainTexture = GenerateTexture(blockCount);
@@ -13,7 +15,7 @@ namespace MasterData.Block
         {
             var side = Mathf.CeilToInt(Mathf.Sqrt(blockCount));
             var blockTextureSize = MasterBlockDataStore.GetData(BlockID.Empty).Texture.width;
-            var texture = new Texture2D((blockTextureSize + 2) * side, (blockTextureSize + 2) * side, TextureFormat.ARGB32, false);
+            var texture = new Texture2D((blockTextureSize + EdgeMargin * 2) * side, (blockTextureSize + EdgeMargin * 2) * side, TextureFormat.ARGB32, false);
             texture.wrapMode = TextureWrapMode.Clamp;
 
             for (int y = 0; y < side; y++)
@@ -33,36 +35,36 @@ namespace MasterData.Block
                     }
 
                     texture.SetPixels(
-                        x * (blockTextureSize + 2),
-                        y * (blockTextureSize + 2),
+                        x * (blockTextureSize + EdgeMargin * 2),
+                        y * (blockTextureSize + EdgeMargin * 2),
                         blockTextureSize,
                         blockTextureSize,
                         blockTexture.GetPixels());
 
                     texture.SetPixels(
-                        x * (blockTextureSize + 2),
-                        y * (blockTextureSize + 2) + 2,
+                        x * (blockTextureSize + EdgeMargin * 2),
+                        y * (blockTextureSize + EdgeMargin * 2) + EdgeMargin * 2,
                         blockTextureSize,
                         blockTextureSize,
                         blockTexture.GetPixels());
 
                     texture.SetPixels(
-                        x * (blockTextureSize + 2) + 2,
-                        y * (blockTextureSize + 2) + 2,
+                        x * (blockTextureSize + EdgeMargin * 2) + EdgeMargin * 2,
+                        y * (blockTextureSize + EdgeMargin * 2) + EdgeMargin * 2,
                         blockTextureSize,
                         blockTextureSize,
                         blockTexture.GetPixels());
 
                     texture.SetPixels(
-                        x * (blockTextureSize + 2) + 2,
-                        y * (blockTextureSize + 2),
+                        x * (blockTextureSize + EdgeMargin * 2) + EdgeMargin * 2,
+                        y * (blockTextureSize + EdgeMargin * 2),
                         blockTextureSize,
                         blockTextureSize,
                         blockTexture.GetPixels());
 
                     texture.SetPixels(
-                        x * (blockTextureSize + 2) + 1,
-                        y * (blockTextureSize + 2) + 1,
+                        x * (blockTextureSize + EdgeMargin * 2) + EdgeMargin,
+                        y * (blockTextureSize + EdgeMargin * 2) + EdgeMargin,
                         blockTextureSize,
                         blockTextureSize,
                         blockTexture.GetPixels());
