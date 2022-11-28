@@ -1,24 +1,19 @@
-using System;
-using System.IO;
 using System.Threading;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using BlockSystem.Serializer;
 using UniRx;
 
 namespace BlockSystem
 {
-    /// <summary>
-    /// チャンクデータを管理
-    /// </summary>
+    /// <summary> チャンクデータを管理 </summary>
     internal class ChunkDataStore
     {
+        private static readonly object SyncObject = new object();
+
         private ChunkDataFileIO _chunkDataFileIO;
         private MapGenerator _mapGenerator;
 
-        private const int CacheCapacity = 128;
-        private Hashtable chunkDataCache = new Hashtable(CacheCapacity);
+        private const int CacheCapacity = 256;
+        private Dictionary<ChunkCoordinate, ChunkData> chunkDataCache = new Dictionary<ChunkCoordinate, ChunkData>(CacheCapacity);
 
         private HashSet<ChunkData> reusableChunkHashSet = new HashSet<ChunkData>();
         private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
@@ -39,7 +34,7 @@ namespace BlockSystem
         {
             if (ct.IsCancellationRequested) return null;
 
-            lock (chunkDataCache)
+            lock (SyncObject)
             {
                 // キャッシュにあればそれを返す
                 if (chunkDataCache.ContainsKey(cc))
@@ -65,10 +60,6 @@ namespace BlockSystem
 
                 // キャッシュに追加
                 chunkDataCache.Add(cc, chunkData);
-                if (chunkDataCache.Count > CacheCapacity)
-                {
-                    UnityEngine.Debug.Log("キャッシュ容量を超えています: " + chunkDataCache.Count);
-                }
 
                 if (ct.IsCancellationRequested) return null;
 
@@ -115,7 +106,7 @@ namespace BlockSystem
         private void AddReusableChunk(ChunkData addChunk)
         {
             // イベントで呼び出されることを想定して自前でlockする
-            lock (this)
+            lock (SyncObject)
             {
                 reusableChunkHashSet.Add(addChunk);
                 reusableChunkQueue.Enqueue(addChunk);
