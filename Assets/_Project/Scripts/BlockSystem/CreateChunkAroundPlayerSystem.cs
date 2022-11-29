@@ -21,12 +21,11 @@ namespace BlockSystem
         private ChunkDataStore _chunkDataStore;
         private ChunkMeshCreator _chunkMeshCreator;
 
+        /// <summary> 常に作成されるべきプレイヤー近傍チャンクの半径 </summary>
         private const int NearChunkRadius = 1;
 
-        private IDisposable chunkChangeDisposal;
-        private IDisposable updateDisposal;
+        private CompositeDisposable disposals = new CompositeDisposable();
 
-        private bool createChunkInProgress = false;
         private CancellationTokenSource cts;
         private NativeList<ChunkCoordinate> releaseChunkList = new NativeList<ChunkCoordinate>(Allocator.Persistent);
         private NativeQueue<ChunkCoordinate> createChunkQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent);
@@ -36,8 +35,7 @@ namespace BlockSystem
         {
             cts?.Cancel();
             cts?.Dispose();
-            chunkChangeDisposal.Dispose();
-            updateDisposal.Dispose();
+            disposals.Dispose();
             releaseChunkList.Dispose();
             createChunkQueue.Dispose();
         }
@@ -48,33 +46,38 @@ namespace BlockSystem
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
 
-            // 初回作成
-            // 近傍チャンクは同期的に生成
-            CreateNearChunk(playerChunkChangeDetector.PlayerChunk);
-
-            // プレイヤーチャンク変化時
-            chunkChangeDisposal = playerChunkChangeDetector.OnDetect
-                .Subscribe(playerChunk =>
-                {
-                    // 範囲外のチャンクを解放
-                    ReleaseOutRangeChunk(playerChunk);
-
-                    CreateNearChunk(playerChunk);
-                });
-
-            updateDisposal = Observable.EveryUpdate()
+            // 数フレームごとにチャンクメッシュ作成をコール
+            Observable.EveryUpdate()
+                .ThrottleFirstFrame(4)
                 .Subscribe(_ =>
                 {
-                    // 毎フレーム遠方チャンクの作成をコール
-                    CreateFarChunk(playerChunkChangeDetector.PlayerChunk).Forget();
+                    CreateChunkMeshData(playerChunkChangeDetector.PlayerChunk).Forget();
+                })
+                .AddTo(disposals);
 
-                    // 別スレッドで作成したメッシュデータからChunkObjectを作成
+            // 別スレッドで作成したメッシュデータからChunkObjectを作成
+            Observable.EveryUpdate()
+                .Subscribe(_ =>
+                {
                     while (createChunkObjectQueue.TryDequeue(out var item))
                     {
                         var chunkObject = _chunkObjectPool.TakeChunkObject(item.Key);
                         chunkObject.SetMesh(item.Value);
                     }
-                });
+                })
+                .AddTo(disposals);
+
+            // プレイヤーチャンク変化時
+            playerChunkChangeDetector.OnDetect
+                .Subscribe(playerChunk =>
+                {
+                    // 範囲外のチャンクを解放
+                    ReleaseOutRangeChunk(playerChunk);
+
+                    // 近傍チャンク作成のためにここでも呼ぶ
+                    CreateChunkMeshData(playerChunk).Forget();
+                })
+                .AddTo(disposals);
         }
 
         /// <summary> 読みこみ範囲外のチャンクオブジェクトを解放する </summary>
@@ -138,44 +141,25 @@ namespace BlockSystem
             }
         }
 
-        private void CreateNearChunk(int3 playerChunk)
+        private int lastCalledFrame;
+        /// <summary> 描画距離内のチャンクのメッシュデータを作成 </summary>
+        private async UniTask CreateChunkMeshData(int3 playerChunk)
         {
-            for (int x = playerChunk.x - NearChunkRadius; x <= playerChunk.x + NearChunkRadius; x++)
-            {
-                for (int y = playerChunk.y - NearChunkRadius; y <= playerChunk.y + NearChunkRadius; y++)
-                {
-                    for (int z = playerChunk.z - NearChunkRadius; z <= playerChunk.z + NearChunkRadius; z++)
-                    {
-                        if (!ChunkCoordinate.IsValid(x, y, z)) continue;
-                        var cc = new ChunkCoordinate(x, y, z);
-                        if (_chunkObjectPool.CreatedChunks.Contains(cc)) continue;
+            // TODO あまり良くないやり方
+            // jobのスケジュールでエラーが出るから同じフレームでは一度しか呼ばない
+            if (lastCalledFrame == Time.frameCount) return;
+            lastCalledFrame = Time.frameCount;
 
-                        var chunkData = _chunkDataStore.GetChunkData(cc, default);
-                        var meshData = _chunkMeshCreator.CreateMeshData(chunkData, default);
-                        chunkData.ReferenceCounter.Release();
-
-                        var chunkObject = _chunkObjectPool.TakeChunkObject(cc);
-                        chunkObject.SetMesh(meshData);
-                    }
-                }
-            }
-        }
-
-        private async UniTask CreateFarChunk(int3 playerChunk)
-        {
+            // 前回の呼び出しをキャンセル
             if (cts is not null)
             {
                 cts.Cancel();
                 cts.Dispose();
                 cts = null;
+                createChunkQueue.Clear();
+                createChunkObjectQueue.Clear();
             }
 
-            if (createChunkInProgress) return;
-
-            createChunkInProgress = true;
-
-            createChunkQueue.Clear();
-            createChunkObjectQueue.Clear();
             cts = new CancellationTokenSource();
             var ct = cts.Token;
 
@@ -192,8 +176,6 @@ namespace BlockSystem
 
             // メインスレッドに戻す
             await UniTask.SwitchToMainThread();
-
-            createChunkInProgress = false;
         }
 
         /// <summary> 作成対象のチャンクをキューに追加する </summary>
@@ -233,7 +215,7 @@ namespace BlockSystem
                 if ((pcx >= ChunkCoordinate.Min && pcx <= ChunkCoordinate.Max) &&
                     (pcz >= ChunkCoordinate.Min && pcz <= ChunkCoordinate.Max))
                 {
-                    EnqueueChunk(pcx, pcz);
+                    EnqueueChunk(pcx, pcz, 0);
                 }
 
                 // 内側から順に作成
@@ -245,7 +227,7 @@ namespace BlockSystem
                         var xe = math.min(pcx + r - 1, ChunkCoordinate.Max);
                         for (int x = math.max(pcx - r, ChunkCoordinate.Min); x <= xe; x++)
                         {
-                            EnqueueChunk(x, pcz + r);
+                            EnqueueChunk(x, pcz + r, r);
                         }
                     }
                     // z-方向
@@ -254,7 +236,7 @@ namespace BlockSystem
                         var ze = math.max(pcz - r + 1, ChunkCoordinate.Min);
                         for (int z = math.min(pcz + r, ChunkCoordinate.Max); z >= ze; z--)
                         {
-                            EnqueueChunk(pcx + r, z);
+                            EnqueueChunk(pcx + r, z, r);
                         }
                     }
                     // x-方向
@@ -263,7 +245,7 @@ namespace BlockSystem
                         var xe = math.max(pcx - r + 1, ChunkCoordinate.Min);
                         for (int x = math.min(pcx + r, ChunkCoordinate.Max); x >= xe; x--)
                         {
-                            EnqueueChunk(x, pcz - r);
+                            EnqueueChunk(x, pcz - r, r);
                         }
                     }
                     // z+方向
@@ -272,28 +254,23 @@ namespace BlockSystem
                         var ze = math.min(pcz + r - 1, ChunkCoordinate.Max);
                         for (int z = math.max(pcz - r, ChunkCoordinate.Min); z <= ze; z++)
                         {
-                            EnqueueChunk(pcx - r, z);
+                            EnqueueChunk(pcx - r, z, r);
                         }
                     }
                 }
             }
 
             /// <summary> 指定されたxzにあるチャンクを下から順に作成キューに追加する </summary>
-            private void EnqueueChunk(int x, int z)
+            private void EnqueueChunk(int x, int z, int radius)
             {
                 // 下から順に追加
                 for (int y = yStart; y <= yEnd; y++)
                 {
-                    // 近傍チャンクは追加しない
-                    if (x <= playerChunk.x + NearChunkRadius && x >= playerChunk.x - NearChunkRadius &&
-                        z <= playerChunk.z + NearChunkRadius && z >= playerChunk.z - NearChunkRadius &&
-                        y <= playerChunk.y + NearChunkRadius && y >= playerChunk.y - NearChunkRadius)
+                    // 近傍チャンク以外はカメラの描画範囲に入っているか確認する
+                    if (radius > NearChunkRadius)
                     {
-                        continue;
+                        if (!InCameraRange(x, y, z)) continue;
                     }
-
-                    // カメラの描画範囲に入っているか
-                    if (!InCameraRange(x, y, z)) continue;
 
                     var cc = new ChunkCoordinate(x, y, z, true);
                     // 作成していなければ追加
@@ -306,6 +283,7 @@ namespace BlockSystem
 
             private bool InCameraRange(int x, int y, int z)
             {
+                // チャンクの角のどれかが描画範囲内ならtrueを返す
                 if (InCameraRangeHelper(x, y, z)) return true;
                 if (InCameraRangeHelper(x, y + 1, z)) return true;
                 if (InCameraRangeHelper(x, y, z + 1)) return true;
@@ -333,6 +311,7 @@ namespace BlockSystem
             private float3 WorldToViewportPoint(int x, int y, int z)
             {
                 var viewportPoint = MultiplyToViewportMatrix(x, y, z);
+                // x,y,zをwで割る
                 var div = 1 / viewportPoint.w;
                 return new float3(
                     viewportPoint.x * div,
@@ -341,6 +320,7 @@ namespace BlockSystem
                 );
             }
 
+            // math.mul()よりも速い
             private float4 MultiplyToViewportMatrix(float b1, float b2, float b3)
             {
                 return new float4(
