@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UniRx;
 using Unity.Mathematics;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {

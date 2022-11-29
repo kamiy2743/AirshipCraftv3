@@ -24,8 +24,7 @@ namespace BlockSystem
 
             var chunkDataFileIO = new ChunkDataFileIO();
             chunkDataFileIODisposal = chunkDataFileIO;
-            var mapGenerator = new MapGenerator(1024, 0.01f);
-            var chunkDataStore = new ChunkDataStore(chunkDataFileIO, mapGenerator);
+            var chunkDataStore = new ChunkDataStore(chunkDataFileIO);
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
             chunkMeshCreatorDisposal = chunkMeshCreator;

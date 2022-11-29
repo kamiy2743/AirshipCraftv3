@@ -11,6 +11,7 @@ using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {

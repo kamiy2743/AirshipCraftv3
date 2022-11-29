@@ -1,3 +1,5 @@
+using DataObject.Chunk;
+
 namespace BlockSystem.Serializer
 {
     internal static class ChunkDataPositionIndexSerializer

@@ -1,26 +1,26 @@
 using System;
-using UnityEngine;
+using DataObject.Block;
 
-namespace BlockSystem
+namespace DataObject.Chunk
 {
     /// <summary>
     /// ブロックを<see cref="ChunkData.ChunkBlockSide"/>で区切った単位
     /// </summary>
-    internal struct ChunkCoordinate : IEquatable<ChunkCoordinate>
+    public struct ChunkCoordinate : IEquatable<ChunkCoordinate>
     {
-        internal readonly short x;
-        internal readonly short y;
-        internal readonly short z;
+        public readonly short x;
+        public readonly short y;
+        public readonly short z;
 
         private long uniqueCode;
 
-        internal const int Max = short.MaxValue;
-        internal const int Min = short.MinValue;
+        public const int Max = short.MaxValue;
+        public const int Min = short.MinValue;
 
         /// <summary>
         /// シリアライズ用なのでそれ以外では使用しないでください
         /// </summary>
-        internal ChunkCoordinate(short x, short y, short z)
+        public ChunkCoordinate(short x, short y, short z)
         {
             this.x = x;
             this.y = y;
@@ -30,7 +30,7 @@ namespace BlockSystem
         }
 
         /// <param name="ignoreValidation">パフォーマンス追及以外の用途では絶対に使用しないでください</param>
-        internal ChunkCoordinate(int x, int y, int z, bool ignoreValidation = false)
+        public ChunkCoordinate(int x, int y, int z, bool ignoreValidation = false)
         {
             if (!ignoreValidation)
             {
@@ -49,7 +49,7 @@ namespace BlockSystem
             return (x << 32) + (y << 16) + z;
         }
 
-        internal static bool IsValid(int x, int y, int z)
+        public static bool IsValid(int x, int y, int z)
         {
             if (x < Min || x > Max) return false;
             if (y < Min || y > Max) return false;
@@ -57,7 +57,7 @@ namespace BlockSystem
             return true;
         }
 
-        internal static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        public static ChunkCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new ChunkCoordinate(
                 bc.x >> ChunkData.ChunkBlockSideShift,

@@ -13,7 +13,8 @@
         "Unity.PerformanceTesting",
         "Unity.Mathematics",
         "Unity.Burst",
-        "Unity.Collections"
+        "Unity.Collections",
+        "DataObject"
     ],
     "includePlatforms": [
         "Editor"

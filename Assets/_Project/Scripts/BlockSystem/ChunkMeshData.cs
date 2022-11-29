@@ -8,8 +8,9 @@ using Util;
 using UniRx;
 using System;
 using System.Threading;
-using System.Collections.Generic;
 using MasterData.Block;
+using DataObject.Block;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {
@@ -37,7 +38,7 @@ namespace BlockSystem
         internal IObservable<Unit> OnReleased => _onReleasedSubject;
         private Subject<Unit> _onReleasedSubject = new Subject<Unit>();
 
-        private static object syncObject = new object();
+        private static readonly object syncObject = new object();
 
         internal ChunkMeshData() { }
         internal unsafe void Init(ChunkData chunkData, CancellationToken ct)

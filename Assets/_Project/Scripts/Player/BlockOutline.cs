@@ -1,6 +1,6 @@
 using UnityEngine;
 using Util;
-using BlockSystem;
+using DataObject.Block;
 
 namespace Player
 {

@@ -15,6 +15,8 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using DataObject.Block;
+using DataObject.Chunk;
 
 public class Test
 {

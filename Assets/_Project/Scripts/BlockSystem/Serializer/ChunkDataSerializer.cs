@@ -5,6 +5,8 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using MasterData.Block;
 using Util;
+using DataObject.Block;
+using DataObject.Chunk;
 
 namespace BlockSystem.Serializer
 {

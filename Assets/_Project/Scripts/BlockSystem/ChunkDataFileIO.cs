@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using BlockSystem.Serializer;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {

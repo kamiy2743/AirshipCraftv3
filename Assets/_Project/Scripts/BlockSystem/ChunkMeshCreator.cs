@@ -5,11 +5,12 @@ using System.Collections.Concurrent;
 using UniRx;
 using Unity.Jobs;
 using Unity.Burst;
-using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Util;
 using MasterData.Block;
+using DataObject.Block;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {

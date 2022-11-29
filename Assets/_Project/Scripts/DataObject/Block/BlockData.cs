@@ -2,11 +2,8 @@ using Util;
 using MasterData.Block;
 using System;
 
-namespace BlockSystem
+namespace DataObject.Block
 {
-    /// <summary>
-    /// ブロックの内部データ
-    /// </summary>
     public struct BlockData : IEquatable<BlockData>
     {
         public readonly BlockID ID;
@@ -16,22 +13,20 @@ namespace BlockSystem
         /// 他のブロックと接している面
         /// 直接アクセスは非推奨、<see cref="BlockData.IsContactOtherBlock(SurfaceNormal)"/>でアクセスしてください
         /// </summary>
-        internal SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
+        public SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
         /// <summary> 接している面を再計算する必要があるかどうか </summary>
         /// // アクセスの度に計算するのだと遅いから値変更時に確定させておく
-        internal bool NeedToCalcContactSurfaces;
+        public bool NeedToCalcContactSurfaces;
 
         /// <summary> 描画をスキップするかどうか </summary>
         // アクセスの度に計算するのだと遅いから値変更時に確定させておく
-        internal bool IsRenderSkip;
+        public bool IsRenderSkip;
 
         public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
-        /// <summary>
-        /// シリアライズ用なのでそれ以外では使用しないでください
-        /// </summary>
-        internal BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
+        /// <summary> シリアライズ用なのでそれ以外では使用しないでください </summary>
+        public BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
         {
             ID = id;
             BlockCoordinate = bc;
@@ -41,7 +36,7 @@ namespace BlockSystem
             SetContactOtherBlockSurfaces(contactOtherBlockSurfaces);
         }
 
-        internal BlockData(BlockID id, BlockCoordinate bc)
+        public BlockData(BlockID id, BlockCoordinate bc)
         {
             ID = id;
             BlockCoordinate = bc;
@@ -51,7 +46,7 @@ namespace BlockSystem
             SetContactOtherBlockSurfaces(ContactOtherBlockSurfaces);
         }
 
-        internal void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
+        public void SetContactOtherBlockSurfaces(SurfaceNormal surfaces)
         {
             ContactOtherBlockSurfaces = surfaces;
             // 接地面情報が空なら計算が必要
@@ -60,10 +55,8 @@ namespace BlockSystem
             IsRenderSkip = (ID == BlockID.Air) || surfaces.IsFull();
         }
 
-        /// <summary>
-        /// 指定された面で他のブロックと接しているかを返します
-        /// </summary>
-        internal bool IsContactOtherBlock(SurfaceNormal surface)
+        /// <summary> 指定された面で他のブロックと接しているかを返します </summary>
+        public bool IsContactOtherBlock(SurfaceNormal surface)
         {
             return ContactOtherBlockSurfaces.Contains(surface);
         }

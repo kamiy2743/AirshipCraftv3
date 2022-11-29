@@ -1,8 +1,9 @@
 using UnityEngine;
 using System;
 using Unity.Mathematics;
+using DataObject.Chunk;
 
-namespace BlockSystem
+namespace DataObject.Block
 {
     /// <summary>
     /// ブロックの座標
@@ -10,18 +11,18 @@ namespace BlockSystem
     /// </summary>
     public struct BlockCoordinate : IEquatable<BlockCoordinate>
     {
-        internal readonly int x;
-        internal readonly int y;
-        internal readonly int z;
+        public readonly int x;
+        public readonly int y;
+        public readonly int z;
 
-        internal readonly Vector3 Center;
+        public readonly Vector3 Center;
 
         internal const int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
         internal const int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
 
-        internal BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
-        internal BlockCoordinate(int3 position) : this(position.x, position.y, position.z) { }
-        internal BlockCoordinate(int x, int y, int z)
+        public BlockCoordinate(Vector3 position) : this((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z)) { }
+        public BlockCoordinate(int3 position) : this(position.x, position.y, position.z) { }
+        public BlockCoordinate(int x, int y, int z)
         {
             if (!IsValid(x, y, z)) throw new System.Exception($"block({x}, {y}, {z}) is invalid");
 
@@ -31,9 +32,9 @@ namespace BlockSystem
             Center = new Vector3(x, y, z) + Vector3.one * 0.5f;
         }
 
-        internal static bool IsValid(Vector3 position) => IsValid((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z));
-        internal static bool IsValid(int3 position) => IsValid(position.x, position.y, position.z);
-        internal static bool IsValid(int x, int y, int z)
+        public static bool IsValid(Vector3 position) => IsValid((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z));
+        public static bool IsValid(int3 position) => IsValid(position.x, position.y, position.z);
+        public static bool IsValid(int x, int y, int z)
         {
             if (x < Min || x > Max) return false;
             if (y < Min || y > Max) return false;

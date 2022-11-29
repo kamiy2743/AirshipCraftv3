@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Threading;
+using DataObject.Block;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {

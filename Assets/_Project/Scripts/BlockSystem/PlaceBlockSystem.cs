@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using MasterData.Block;
-using Cysharp.Threading.Tasks;
-using Util;
+using DataObject.Block;
 
 namespace BlockSystem
 {

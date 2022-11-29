@@ -1,7 +1,9 @@
-namespace BlockSystem
+using DataObject.Block;
+
+namespace DataObject.Chunk
 {
     /// <summary> チャンク内の座標 </summary>
-    internal struct LocalCoordinate
+    public struct LocalCoordinate
     {
         internal readonly byte x;
         internal readonly byte y;
@@ -11,7 +13,7 @@ namespace BlockSystem
         /// 論理積をとればLocalCoordinateに変換できる 
         /// 極限のパフォーマンスのためのもので、通常<see cref="LocalCoordinate.FromBlockCoordinate(BlockCoordinate)"/>を使う
         /// </summary>
-        internal const byte ToLocalCoordinateMask = ChunkData.ChunkBlockSide - 1;
+        public const byte ToLocalCoordinateMask = ChunkData.ChunkBlockSide - 1;
 
         private LocalCoordinate(byte x, byte y, byte z)
         {
@@ -20,7 +22,7 @@ namespace BlockSystem
             this.z = z;
         }
 
-        internal static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
+        public static LocalCoordinate FromBlockCoordinate(BlockCoordinate bc)
         {
             return new LocalCoordinate(
                 (byte)(bc.x & ToLocalCoordinateMask),

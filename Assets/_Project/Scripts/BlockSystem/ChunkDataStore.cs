@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Collections.Generic;
 using UniRx;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {
@@ -10,7 +11,6 @@ namespace BlockSystem
         private static readonly object SyncObject = new object();
 
         private ChunkDataFileIO _chunkDataFileIO;
-        private MapGenerator _mapGenerator;
 
         private const int CacheCapacity = 256;
         private Dictionary<ChunkCoordinate, ChunkData> chunkDataCache = new Dictionary<ChunkCoordinate, ChunkData>(CacheCapacity);
@@ -19,10 +19,9 @@ namespace BlockSystem
         private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
 
 
-        internal ChunkDataStore(ChunkDataFileIO chunkDataFileIO, MapGenerator mapGenerator)
+        internal ChunkDataStore(ChunkDataFileIO chunkDataFileIO)
         {
             _chunkDataFileIO = chunkDataFileIO;
-            _mapGenerator = mapGenerator;
         }
 
         /// <summary>
@@ -128,11 +127,11 @@ namespace BlockSystem
             // 再利用可能なChunkDataがあれば再利用する
             if (reusableChunkData is not null)
             {
-                newChunkData = reusableChunkData.ReuseConstructor(cc, _mapGenerator);
+                newChunkData = reusableChunkData.ReuseConstructor(cc);
             }
             else
             {
-                newChunkData = ChunkData.NewConstructor(cc, _mapGenerator);
+                newChunkData = ChunkData.NewConstructor(cc);
             }
 
             // 保存

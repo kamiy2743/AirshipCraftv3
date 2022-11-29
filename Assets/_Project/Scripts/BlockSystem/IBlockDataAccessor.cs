@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Threading;
 
-namespace BlockSystem
+namespace DataObject.Block
 {
     public interface IBlockDataAccessor
     {

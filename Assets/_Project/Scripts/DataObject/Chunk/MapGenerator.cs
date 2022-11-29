@@ -1,8 +1,7 @@
 using Unity.Mathematics;
-using Random = Unity.Mathematics.Random;
 using MasterData.Block;
 
-namespace BlockSystem
+namespace DataObject.Chunk
 {
     internal struct MapGenerator
     {
@@ -11,8 +10,8 @@ namespace BlockSystem
         private readonly float seedZ;
         private readonly float relief;
 
-        private float Snoise(float x, float z) => (noise.snoise(new float2(x, z)) + 1) * 0.5f;
-        private float Snoise(float x, float y, float z) => (noise.snoise(new float3(x, y, z)) + 1) * 0.5f;
+        private static float Snoise(float x, float z) => (noise.snoise(new float2(x, z)) + 1) * 0.5f;
+        private static float Snoise(float x, float y, float z) => (noise.snoise(new float3(x, y, z)) + 1) * 0.5f;
 
         internal MapGenerator(uint seed, float relief)
         {

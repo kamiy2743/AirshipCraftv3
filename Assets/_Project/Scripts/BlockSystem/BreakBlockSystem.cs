@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Threading;
 using MasterData.Block;
+using DataObject.Block;
 
 namespace BlockSystem
 {

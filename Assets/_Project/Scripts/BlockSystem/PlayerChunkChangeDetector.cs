@@ -2,6 +2,7 @@ using System;
 using UniRx;
 using Unity.Mathematics;
 using UnityEngine;
+using DataObject.Chunk;
 
 namespace BlockSystem
 {
