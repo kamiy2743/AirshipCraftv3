@@ -82,6 +82,15 @@ namespace Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""InteractBlock"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd9bf491-c8f8-4ac8-a005-523da000f73f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -313,6 +322,17 @@ namespace Input
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e73381e1-50e9-4198-81ea-85e621a85473"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""InteractBlock"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -906,6 +926,7 @@ namespace Input
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_PlaceBlock = m_Player.FindAction("PlaceBlock", throwIfNotFound: true);
             m_Player_BreakBlock = m_Player.FindAction("BreakBlock", throwIfNotFound: true);
+            m_Player_InteractBlock = m_Player.FindAction("InteractBlock", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -983,6 +1004,7 @@ namespace Input
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_PlaceBlock;
         private readonly InputAction m_Player_BreakBlock;
+        private readonly InputAction m_Player_InteractBlock;
         public struct PlayerActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -993,6 +1015,7 @@ namespace Input
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @PlaceBlock => m_Wrapper.m_Player_PlaceBlock;
             public InputAction @BreakBlock => m_Wrapper.m_Player_BreakBlock;
+            public InputAction @InteractBlock => m_Wrapper.m_Player_InteractBlock;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1020,6 +1043,9 @@ namespace Input
                     @BreakBlock.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreakBlock;
                     @BreakBlock.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreakBlock;
                     @BreakBlock.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreakBlock;
+                    @InteractBlock.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractBlock;
+                    @InteractBlock.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractBlock;
+                    @InteractBlock.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractBlock;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1042,6 +1068,9 @@ namespace Input
                     @BreakBlock.started += instance.OnBreakBlock;
                     @BreakBlock.performed += instance.OnBreakBlock;
                     @BreakBlock.canceled += instance.OnBreakBlock;
+                    @InteractBlock.started += instance.OnInteractBlock;
+                    @InteractBlock.performed += instance.OnInteractBlock;
+                    @InteractBlock.canceled += instance.OnInteractBlock;
                 }
             }
         }
@@ -1204,6 +1233,7 @@ namespace Input
             void OnJump(InputAction.CallbackContext context);
             void OnPlaceBlock(InputAction.CallbackContext context);
             void OnBreakBlock(InputAction.CallbackContext context);
+            void OnInteractBlock(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

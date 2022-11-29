@@ -28,16 +28,16 @@ namespace Player
             _cancellationToken = this.GetCancellationTokenOnDestroy();
 
             var selectedBlock = new ReactiveProperty<BlockData>();
-            selectedBlock
-                .Subscribe(_ => SetBlockOutline(selectedBlock.Value))
-                .AddTo(this);
-
             RaycastHit raycastHit = default;
             this.UpdateAsObservable()
                 .Subscribe(_ =>
                 {
                     selectedBlock.Value = RaycastToBlock(out raycastHit);
                 })
+                .AddTo(this);
+
+            selectedBlock
+                .Subscribe(_ => SetBlockOutline(selectedBlock.Value))
                 .AddTo(this);
 
             var placeBlockStream = this.UpdateAsObservable().Where(_ => InputProvider.PlaceBlock());
@@ -55,6 +55,14 @@ namespace Player
             breakBlockStream
                 .Where(_ => selectedBlock.Value != BlockData.Empty)
                 .Subscribe(_ => BreakBlock(selectedBlock.Value))
+                .AddTo(this);
+
+            var interactBlockStream = this.UpdateAsObservable().Where(_ => InputProvider.InteractBlock());
+            interactBlockStream
+                .Where(_ => selectedBlock.Value != BlockData.Empty)
+                .Select(_ => MasterBlockDataStore.GetData(selectedBlock.Value.ID).InteractedBehaviour)
+                .Where(behaviour => behaviour is not null)
+                .Subscribe(behaviour => InteractBlock(selectedBlock.Value, behaviour))
                 .AddTo(this);
         }
 
@@ -89,12 +97,17 @@ namespace Player
         private void PlaceBlock(BlockData selectedBlock, Vector3 hitNormal)
         {
             var position = selectedBlock.BlockCoordinate.ToVector3() + hitNormal;
-            PlaceBlockSystem.PlaceBlock(BlockID.Dirt, position, _cancellationToken);
+            PlaceBlockSystem.PlaceBlock(BlockID.MUCore, position, _cancellationToken);
         }
 
         private void BreakBlock(BlockData targetBlockData)
         {
             BreakBlockSystem.Instance.BreakBlock(targetBlockData, _cancellationToken);
+        }
+
+        private void InteractBlock(BlockData targetBlockData, IInteractedBehaviour behaviour)
+        {
+            behaviour.OnInteracted(targetBlockData);
         }
     }
 }

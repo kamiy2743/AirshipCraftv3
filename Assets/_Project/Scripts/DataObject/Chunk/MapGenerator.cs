@@ -1,5 +1,5 @@
 using Unity.Mathematics;
-using MasterData.Block;
+using DataObject.Block;
 
 namespace DataObject.Chunk
 {

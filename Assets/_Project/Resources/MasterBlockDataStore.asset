@@ -16,11 +16,19 @@ MonoBehaviour:
   masterBlockDataList:
   - name: Empty
     texture: {fileID: 2800000, guid: 832efa5bc6f75904898f5b21ad57c705, type: 3}
+    behaviour: {fileID: 0}
   - name: Air
     texture: {fileID: 2800000, guid: 1ed4cde8e03fd6445adaac4059a29b0f, type: 3}
+    behaviour: {fileID: 0}
   - name: Dirt
     texture: {fileID: 2800000, guid: a4d13ff20c5fe9a4fbaf2999c1c03af3, type: 3}
+    behaviour: {fileID: 0}
   - name: Grass
     texture: {fileID: 2800000, guid: d14110906987d0b49be22096a3818c3d, type: 3}
+    behaviour: {fileID: 0}
   - name: Stone
     texture: {fileID: 2800000, guid: 79fb27112c96d99439f95c5da4fc5ff9, type: 3}
+    behaviour: {fileID: 0}
+  - name: MUCore
+    texture: {fileID: 2800000, guid: e4be87bfeac45a244b42cf12ec730ae9, type: 3}
+    behaviour: {fileID: 11500000, guid: 571e0b364e19c7e47959486f8c308c6e, type: 3}

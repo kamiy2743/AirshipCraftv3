@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using DataObject.Block;
 
 namespace MasterData.Block
 {
@@ -43,10 +44,10 @@ namespace MasterData.Block
         }
 
 #if UNITY_EDITOR
-        private const string BlockIDScriptPath = "Assets/_Project/Scripts/MasterData/Block/BlockID.cs";
+        private const string BlockIDScriptPath = "Assets/_Project/Scripts/DataObject/Block/BlockID.cs";
         internal void GenerateBlockIDScript()
         {
-            var code = "namespace MasterData.Block { public enum BlockID { ";
+            var code = "namespace DataObject.Block { public enum BlockID { ";
 
             foreach (var masterBlockData in masterBlockDataList)
             {

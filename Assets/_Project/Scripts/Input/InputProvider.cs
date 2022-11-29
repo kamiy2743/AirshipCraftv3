@@ -41,5 +41,10 @@ namespace Input
         {
             return inputActions.Player.BreakBlock.ReadValue<float>() > 0;
         }
+
+        public static bool InteractBlock()
+        {
+            return inputActions.Player.InteractBlock.triggered;
+        }
     }
 }

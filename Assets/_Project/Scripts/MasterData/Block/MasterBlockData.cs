@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Util;
+using DataObject.Block;
+using UnityEditor;
 
 namespace MasterData.Block
 {
@@ -9,11 +12,24 @@ namespace MasterData.Block
     {
         [SerializeField] private string name;
         [SerializeField] private Texture2D texture;
+        [SerializeField] private MonoScript behaviour;
 
         public BlockID ID { get; private set; }
         public string Name => name;
         public Texture2D Texture => texture;
         public MeshData MeshData { get; private set; }
+
+        public IInteractedBehaviour _interactedBehaviour;
+        public IInteractedBehaviour InteractedBehaviour
+        {
+            get
+            {
+                if (behaviour is null) return null;
+                if (_interactedBehaviour is not null) return _interactedBehaviour;
+                _interactedBehaviour = (IInteractedBehaviour)Activator.CreateInstance(behaviour.GetClass());
+                return _interactedBehaviour;
+            }
+        }
 
         internal void Init(int index, int blockCount)
         {
