@@ -14,15 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockMaterial: {fileID: 2100000, guid: 5be8c191c0023074c95b33d82bf40ef9, type: 2}
   masterBlockDataList:
-  - id: -1
-    name: Empty
+  - name: Empty
     texture: {fileID: 2800000, guid: 832efa5bc6f75904898f5b21ad57c705, type: 3}
-  - id: 0
-    name: Air
+  - name: Air
     texture: {fileID: 2800000, guid: 1ed4cde8e03fd6445adaac4059a29b0f, type: 3}
-  - id: 1
-    name: Dirt
+  - name: Dirt
     texture: {fileID: 2800000, guid: a4d13ff20c5fe9a4fbaf2999c1c03af3, type: 3}
-  - id: 2
-    name: Grass
+  - name: Grass
     texture: {fileID: 2800000, guid: d14110906987d0b49be22096a3818c3d, type: 3}
+  - name: Stone
+    texture: {fileID: 2800000, guid: 79fb27112c96d99439f95c5da4fc5ff9, type: 3}

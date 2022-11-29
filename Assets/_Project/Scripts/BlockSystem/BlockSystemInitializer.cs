@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using MasterData.Block;
-using Cysharp.Threading.Tasks;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 namespace BlockSystem
@@ -25,7 +24,7 @@ namespace BlockSystem
 
             var chunkDataFileIO = new ChunkDataFileIO();
             chunkDataFileIODisposal = chunkDataFileIO;
-            var mapGenerator = new MapGenerator(1024, 80);
+            var mapGenerator = new MapGenerator(1024, 0.01f);
             var chunkDataStore = new ChunkDataStore(chunkDataFileIO, mapGenerator);
             chunkObjectPool.StartInitial(chunkDataStore);
             var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
