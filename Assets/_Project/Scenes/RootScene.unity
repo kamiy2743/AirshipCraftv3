@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 44029763}
   - component: {fileID: 44029761}
   - component: {fileID: 44029764}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 686078256}
   - component: {fileID: 686078257}
   - component: {fileID: 686078258}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CM vcam1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 920373324}
   - component: {fileID: 920373326}
   - component: {fileID: 920373325}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -824,7 +824,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1036762686}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RaycastStartPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1297,7 +1297,7 @@ GameObject:
   - component: {fileID: 1855767557}
   - component: {fileID: 1855767556}
   - component: {fileID: 1855767558}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -7,6 +7,7 @@ using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
+using Util;
 
 namespace Player
 {
@@ -58,7 +59,7 @@ namespace Player
 
         private BlockData RaycastToBlock(out RaycastHit raycastHit)
         {
-            if (!Physics.Raycast(startPosition.position, playerCamera.Forward, out raycastHit, distance))
+            if (!Physics.Raycast(startPosition.position, playerCamera.Forward, out raycastHit, distance, 1 << Layer.Block))
             {
                 return BlockData.Empty;
             }
