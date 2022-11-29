@@ -28,7 +28,7 @@ namespace BlockSystem
 
         private CancellationTokenSource cts;
         private NativeList<ChunkCoordinate> releaseChunkList = new NativeList<ChunkCoordinate>(Allocator.Persistent);
-        private NativeQueue<ChunkCoordinate> createChunkQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent);
+        private NativeQueue<ChunkCoordinate> createChunkQueue;
         private ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> createChunkObjectQueue = new ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
 
         public void Dispose()
@@ -156,10 +156,11 @@ namespace BlockSystem
                 cts.Cancel();
                 cts.Dispose();
                 cts = null;
-                createChunkQueue.Clear();
+                createChunkQueue.Dispose();
                 createChunkObjectQueue.Clear();
             }
 
+            createChunkQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent);
             cts = new CancellationTokenSource();
             var ct = cts.Token;
 
