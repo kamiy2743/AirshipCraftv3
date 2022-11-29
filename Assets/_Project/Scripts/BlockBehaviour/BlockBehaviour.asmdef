@@ -1,10 +1,11 @@
 {
-    "name": "Util",
-    "rootNamespace": "Util",
+    "name": "BlockBehaviour",
+    "rootNamespace": "BlockBehaviour",
     "references": [
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:d8b63aba1907145bea998dd612889d6b",
-        "GUID:e0cd26848372d4e5c891c569017e11f1"
+        "GUID:4038a9bf76fafe74497dafcf5dab12f8",
+        "GUID:642077c89e5e22a408a431bd1476f8ec",
+        "GUID:590e28a01a05f2044b31bca6339c5602",
+        "GUID:9757762042090cf418e369bd0f3d0344"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

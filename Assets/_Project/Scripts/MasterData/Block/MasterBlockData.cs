@@ -4,6 +4,7 @@ using UnityEngine;
 using Util;
 using DataObject.Block;
 using UnityEditor;
+using BlockBehaviour.Core;
 
 namespace MasterData.Block
 {

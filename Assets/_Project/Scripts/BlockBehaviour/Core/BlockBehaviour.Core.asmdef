@@ -1,10 +1,8 @@
 {
-    "name": "Util",
-    "rootNamespace": "Util",
+    "name": "BlcokBehaviour.Core",
+    "rootNamespace": "BlockBehaviour.Core",
     "references": [
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:d8b63aba1907145bea998dd612889d6b",
-        "GUID:e0cd26848372d4e5c891c569017e11f1"
+        "GUID:4038a9bf76fafe74497dafcf5dab12f8"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

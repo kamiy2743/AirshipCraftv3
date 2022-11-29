@@ -1,5 +1,4 @@
 using UnityEngine;
-using BlockSystem;
 using MasterData.Block;
 using Input;
 using UniRx;
@@ -9,6 +8,9 @@ using System.Threading;
 using System;
 using Util;
 using DataObject.Block;
+using BlockBehaviour.Core;
+using BlockOperator;
+using DataStore;
 
 namespace Player
 {

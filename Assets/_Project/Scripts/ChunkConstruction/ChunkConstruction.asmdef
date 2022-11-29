@@ -1,0 +1,24 @@
+{
+    "name": "ChunkConstruction",
+    "rootNamespace": "ChunkConstruction",
+    "references": [
+        "GUID:4038a9bf76fafe74497dafcf5dab12f8",
+        "GUID:642077c89e5e22a408a431bd1476f8ec",
+        "GUID:2665a8d13d1b3f18800f46e256720795",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:e0cd26848372d4e5c891c569017e11f1",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:71a0fa64a93d7d9409ff635cbe6f0d54",
+        "GUID:da37531d2dab97b4e932cb397036697d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
