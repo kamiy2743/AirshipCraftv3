@@ -19,17 +19,7 @@ namespace MasterData.Block
         public Texture2D Texture => texture;
         public MeshData MeshData { get; private set; }
 
-        public IInteractedBehaviour _interactedBehaviour;
-        public IInteractedBehaviour InteractedBehaviour
-        {
-            get
-            {
-                if (behaviour is null) return null;
-                if (_interactedBehaviour is not null) return _interactedBehaviour;
-                _interactedBehaviour = (IInteractedBehaviour)Activator.CreateInstance(behaviour.GetClass());
-                return _interactedBehaviour;
-            }
-        }
+        public IInteractedBehaviour InteractedBehaviour { get; private set; }
 
         internal void Init(int index, int blockCount)
         {
@@ -38,10 +28,17 @@ namespace MasterData.Block
             if (ID == BlockID.Air)
             {
                 MeshData = new MeshData(new Vector3[0], new int[0], new Vector2[0]);
-                return;
+            }
+            else
+            {
+                MeshData = new MeshData(CubeMesh.Vertices, CubeMesh.Triangles, CreateCubeUV(index, blockCount));
             }
 
-            MeshData = new MeshData(CubeMesh.Vertices, CubeMesh.Triangles, CreateCubeUV(index, blockCount));
+            if (behaviour)
+            {
+                var behaviourObject = Activator.CreateInstance(behaviour.GetClass());
+                if (behaviourObject is IInteractedBehaviour) InteractedBehaviour = (IInteractedBehaviour)behaviourObject;
+            }
         }
 
         private Vector2[] CreateCubeUV(int index, int blockCount)
