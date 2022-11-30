@@ -14,7 +14,7 @@ using DataStore;
 
 namespace Player
 {
-    internal class BlockInteractor : MonoBehaviour
+    public class BlockInteractor : MonoBehaviour
     {
         [SerializeField] private BlockOutline blockOutline;
         [SerializeField] private Transform startPosition;
@@ -23,10 +23,12 @@ namespace Player
         [SerializeField] private float placeBlockInterval;
         [SerializeField] private float breakBlockInterval;
 
+        private BlockDataAccessor _blockDataAccessor;
         private CancellationToken _cancellationToken;
 
-        private void Start()
+        public void StartInitial(BlockDataAccessor blockDataAccessor)
         {
+            _blockDataAccessor = blockDataAccessor;
             _cancellationToken = this.GetCancellationTokenOnDestroy();
 
             var selectedBlock = new ReactiveProperty<BlockData>();
@@ -74,12 +76,8 @@ namespace Player
             {
                 return BlockData.Empty;
             }
-            if (!raycastHit.transform.TryGetComponent<IBlockDataAccessor>(out var blockDataAccessor))
-            {
-                return BlockData.Empty;
-            }
 
-            return blockDataAccessor.GetBlockData(raycastHit.point - (raycastHit.normal * 0.5f), _cancellationToken);
+            return _blockDataAccessor.GetBlockData(raycastHit.point - (raycastHit.normal * 0.5f), _cancellationToken);
         }
 
         private void SetBlockOutline(BlockData selectedBlock)

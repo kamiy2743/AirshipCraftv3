@@ -4,7 +4,6 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "BlockSystem",
         "UniTask",
         "Util",
         "MasterData",

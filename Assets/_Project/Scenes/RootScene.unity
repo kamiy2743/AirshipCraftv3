@@ -436,6 +436,7 @@ MonoBehaviour:
   player: {fileID: 920373323}
   chunkObjectPool: {fileID: 125769955}
   breakBlockSystem: {fileID: 694688722}
+  blockInteractor: {fileID: 920373325}
 --- !u!114 &694688722
 MonoBehaviour:
   m_ObjectHideFlags: 0
