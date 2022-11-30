@@ -1,6 +1,6 @@
 {
-    "name": "BlcokBehaviour.Core",
-    "rootNamespace": "BlockBehaviour.Core",
+    "name": "BlcokBehaviour.Interface",
+    "rootNamespace": "BlockBehaviour.Interface",
     "references": [
         "GUID:4038a9bf76fafe74497dafcf5dab12f8"
     ],
