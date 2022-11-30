@@ -68,7 +68,7 @@ namespace DataObject.Chunk
                     if (!ContainsBlockIDArray[i]) continue;
 
                     var blockID = i;
-                    var masterMeshData = MasterBlockDataStore.GetData(blockID).MeshData;
+                    var masterMeshData = MasterBlockDataStore.GetData((BlockID)blockID).MeshData;
 
                     var masterMeshDataInfo = new int2x2(
                         MasterVertices.Length, masterMeshData.Vertices.Length,

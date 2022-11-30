@@ -1,0 +1,18 @@
+{
+    "name": "BlockBehaviour.Injection",
+    "rootNamespace": "BlockBehaviour.Injection",
+    "references": [
+        "GUID:595a2011fe60557499983580bbada09b",
+        "GUID:9757762042090cf418e369bd0f3d0344",
+        "GUID:da37531d2dab97b4e932cb397036697d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

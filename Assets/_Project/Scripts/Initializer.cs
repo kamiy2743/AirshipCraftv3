@@ -6,6 +6,8 @@ using BlockOperator;
 using ChunkConstruction;
 using DataObject.Chunk;
 using Player;
+using BlockBehaviour;
+using BlockBehaviour.Injection;
 
 /// <summary> 依存関係の解決を行う </summary>
 internal class Initializer : MonoBehaviour
@@ -29,6 +31,8 @@ internal class Initializer : MonoBehaviour
         chunkDataFileIODisposal = chunkDataFileIO;
         var chunkDataStore = new ChunkDataStore(chunkDataFileIO);
         var blockDataAccessor = new BlockDataAccessor(chunkDataStore);
+        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor);
+        new BlockBehaviourInjector(blockBehaviourResolver);
         blockInteractor.StartInitial(blockDataAccessor);
         chunkObjectPool.StartInitial();
         var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);

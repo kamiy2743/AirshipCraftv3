@@ -1,6 +1,6 @@
 using DataObject.Block;
 
-namespace BlockBehaviour.Core
+namespace BlockBehaviour.Interface
 {
     public interface IInteractedBehaviour
     {

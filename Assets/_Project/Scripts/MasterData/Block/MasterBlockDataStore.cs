@@ -1,7 +1,8 @@
+using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.IO;
 using DataObject.Block;
 
 namespace MasterData.Block
@@ -12,7 +13,8 @@ namespace MasterData.Block
         [SerializeField] private Material blockMaterial;
         [SerializeField] private List<MasterBlockData> masterBlockDataList;
 
-        private static Dictionary<int, MasterBlockData> masterBlockDataDictionary = new Dictionary<int, MasterBlockData>();
+        private static Dictionary<BlockID, MasterBlockData> masterBlockDataDictionary = new Dictionary<BlockID, MasterBlockData>();
+        public static List<MasterBlockData> MasterBlockDataList => masterBlockDataDictionary.Values.ToList();
 
         public static void InitialLoad()
         {
@@ -25,7 +27,7 @@ namespace MasterData.Block
             {
                 var masterBlockData = entity.masterBlockDataList[i];
                 masterBlockData.Init(i, blockCount);
-                masterBlockDataDictionary.Add((int)masterBlockData.ID, masterBlockData);
+                masterBlockDataDictionary.Add(masterBlockData.ID, masterBlockData);
             }
 
             // マテリアルにテクスチャをセット
@@ -33,11 +35,6 @@ namespace MasterData.Block
         }
 
         public static MasterBlockData GetData(BlockID blockID)
-        {
-            return GetData((int)blockID);
-        }
-
-        public static MasterBlockData GetData(int blockID)
         {
             if (!masterBlockDataDictionary.ContainsKey(blockID)) return null;
             return masterBlockDataDictionary[blockID];

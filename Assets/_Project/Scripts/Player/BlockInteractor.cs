@@ -8,7 +8,7 @@ using System.Threading;
 using System;
 using Util;
 using DataObject.Block;
-using BlockBehaviour.Core;
+using BlockBehaviour.Interface;
 using BlockOperator;
 using DataStore;
 

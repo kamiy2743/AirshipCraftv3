@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Util;
 using DataObject.Block;
-using UnityEditor;
-using BlockBehaviour.Core;
+using BlockBehaviour.Interface;
 
 namespace MasterData.Block
 {
@@ -13,7 +12,6 @@ namespace MasterData.Block
     {
         [SerializeField] private string name;
         [SerializeField] private Texture2D texture;
-        [SerializeField] private MonoScript behaviour;
 
         public BlockID ID { get; private set; }
         public string Name => name;
@@ -34,12 +32,12 @@ namespace MasterData.Block
             {
                 MeshData = new MeshData(CubeMesh.Vertices, CubeMesh.Triangles, CreateCubeUV(index, blockCount));
             }
+        }
 
-            if (behaviour)
-            {
-                var behaviourObject = Activator.CreateInstance(behaviour.GetClass());
-                if (behaviourObject is IInteractedBehaviour) InteractedBehaviour = (IInteractedBehaviour)behaviourObject;
-            }
+        public void SetBlockBehaviour(IBlockBehaviour blockBehaviour)
+        {
+            if (blockBehaviour is null) return;
+            if (blockBehaviour is IInteractedBehaviour) InteractedBehaviour = (IInteractedBehaviour)blockBehaviour;
         }
 
         private Vector2[] CreateCubeUV(int index, int blockCount)
