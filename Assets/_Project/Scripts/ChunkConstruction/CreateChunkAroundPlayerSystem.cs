@@ -30,7 +30,6 @@ namespace ChunkConstruction
 
         private CancellationTokenSource cts;
         private NativeList<ChunkCoordinate> releaseChunkList = new NativeList<ChunkCoordinate>(Allocator.Persistent);
-        private NativeQueue<ChunkCoordinate> createChunkQueue;
         private ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> createChunkObjectQueue = new ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
 
         public void Dispose()
@@ -39,7 +38,6 @@ namespace ChunkConstruction
             cts?.Dispose();
             disposals.Dispose();
             releaseChunkList.Dispose();
-            createChunkQueue.Dispose();
         }
 
         public CreateChunkAroundPlayerSystem(PlayerChunkChangeDetector playerChunkChangeDetector, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
@@ -159,11 +157,9 @@ namespace ChunkConstruction
                 cts.Cancel();
                 cts.Dispose();
                 cts = null;
-                createChunkQueue.Dispose();
                 createChunkObjectQueue.Clear();
             }
 
-            createChunkQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent);
             cts = new CancellationTokenSource();
             var ct = cts.Token;
 
@@ -174,21 +170,23 @@ namespace ChunkConstruction
             // 別スレッドに退避
             await UniTask.SwitchToThreadPool();
 
-            SetupCreateChunkQueue(playerChunk, viewportMatrix);
+            var createMeshDataQueue = SetupCreateMeshDataQueue(playerChunk, viewportMatrix);
 
-            CreateMeshDataFromQueue(ct);
+            CreateMeshDataFromQueue(createMeshDataQueue, ct);
+
+            createMeshDataQueue.Dispose();
 
             // メインスレッドに戻す
             await UniTask.SwitchToMainThread();
         }
 
         /// <summary> 作成対象のチャンクをキューに追加する </summary>
-        private void SetupCreateChunkQueue(int3 playerChunk, float4x4 viewportMatrix)
+        private NativeQueue<ChunkCoordinate> SetupCreateMeshDataQueue(int3 playerChunk, float4x4 viewportMatrix)
         {
             var job = new SetupCreateChunkQueueJob
             {
                 createdChunks = _chunkObjectPool.CreatedChunks,
-                createMeshDataQueue = createChunkQueue,
+                createMeshDataQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent),
                 playerChunk = playerChunk,
                 yStart = math.max(playerChunk.y - World.LoadChunkRadius, ChunkCoordinate.Min),
                 yEnd = math.min(playerChunk.y + World.LoadChunkRadius, ChunkCoordinate.Max),
@@ -196,6 +194,7 @@ namespace ChunkConstruction
             };
 
             job.Schedule().Complete();
+            return job.createMeshDataQueue;
         }
 
         [BurstCompile]
@@ -337,11 +336,11 @@ namespace ChunkConstruction
         }
 
         /// <summary> キューにあるチャンクのメッシュを順次作成 </summary>
-        private void CreateMeshDataFromQueue(CancellationToken ct)
+        private void CreateMeshDataFromQueue(NativeQueue<ChunkCoordinate> createMeshDataQueue, CancellationToken ct)
         {
             if (ct.IsCancellationRequested) return;
 
-            while (createChunkQueue.TryDequeue(out var cc))
+            while (createMeshDataQueue.TryDequeue(out var cc))
             {
                 var chunkData = _chunkDataStore.GetChunkData(cc, ct);
                 if (chunkData is null) return;
