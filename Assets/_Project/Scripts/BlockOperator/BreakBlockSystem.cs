@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Linq;
 using System.Threading;
+using System.Collections.Generic;
 using MasterData.Block;
 using DataObject.Block;
 using DataStore;
@@ -10,6 +12,7 @@ namespace BlockOperator
     {
         [SerializeField] private DropItem dropItemPrefab;
 
+        // TODO シングルトンをやめる
         public static BreakBlockSystem Instance { get; private set; }
 
         private BlockDataUpdater _blockDataUpdater;
@@ -22,15 +25,31 @@ namespace BlockOperator
             _chunkDataStore = chunkDataStore;
         }
 
-        public void BreakBlock(BlockData targetBlockData, CancellationToken ct)
+        public void BreakBlock(BlockData targetBlock, CancellationToken ct)
         {
-            var updateBlockData = new BlockData(BlockID.Air, targetBlockData.BlockCoordinate);
-            _blockDataUpdater.UpdateBlockData(updateBlockData, ct);
+            var updateBlock = new BlockData(BlockID.Air, targetBlock.BlockCoordinate);
+            _blockDataUpdater.UpdateBlockData(updateBlock, ct);
 
+            CreateDropItem(targetBlock);
+        }
+
+        public void BreakBlock(IEnumerable<BlockData> targetBlocks, CancellationToken ct)
+        {
+            var updateBlocks = targetBlocks.Select(target => new BlockData(BlockID.Air, target.BlockCoordinate));
+            _blockDataUpdater.UpdateBlockData(updateBlocks, ct);
+
+            foreach (var block in targetBlocks)
+            {
+                CreateDropItem(block);
+            }
+        }
+
+        private void CreateDropItem(BlockData blockData)
+        {
             var dropItem = Instantiate(dropItemPrefab);
-            var meshData = MasterBlockDataStore.GetData(targetBlockData.ID).MeshData;
+            var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
             dropItem.SetMesh(meshData);
-            dropItem.SetPosition(targetBlockData.BlockCoordinate.Center);
+            dropItem.SetPosition(blockData.BlockCoordinate.Center);
         }
     }
 }

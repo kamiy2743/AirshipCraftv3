@@ -15,7 +15,7 @@ namespace DataObject.Block
         public readonly int y;
         public readonly int z;
 
-        public readonly Vector3 Center;
+        public Vector3 Center => new Vector3(x, y, z) + Vector3.one * 0.5f;
 
         internal const int Max = ChunkCoordinate.Max * ChunkData.ChunkBlockSide;
         internal const int Min = ChunkCoordinate.Min * ChunkData.ChunkBlockSide;
@@ -29,7 +29,6 @@ namespace DataObject.Block
             this.x = x;
             this.y = y;
             this.z = z;
-            Center = new Vector3(x, y, z) + Vector3.one * 0.5f;
         }
 
         public static bool IsValid(Vector3 position) => IsValid((int)math.floor(position.x), (int)math.floor(position.y), (int)math.floor(position.z));
