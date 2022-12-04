@@ -2,14 +2,13 @@ using System.Threading;
 using System.Collections.Generic;
 using UniRx;
 using DataObject.Chunk;
+using Util;
 
 namespace DataStore
 {
     /// <summary> チャンクデータを管理 </summary>
     public class ChunkDataStore
     {
-        private static readonly object SyncObject = new object();
-
         private ChunkDataFileIO _chunkDataFileIO;
 
         private const int CacheCapacity = 256;
@@ -33,8 +32,11 @@ namespace DataStore
         {
             if (ct.IsCancellationRequested) return null;
 
-            lock (SyncObject)
+            var spinLock = new FastSpinLock();
+            try
             {
+                spinLock.Enter();
+
                 // キャッシュにあればそれを返す
                 if (chunkDataCache.ContainsKey(cc))
                 {
@@ -65,7 +67,7 @@ namespace DataStore
                 // 参照追加
                 chunkData.ReferenceCounter.AddRef();
 
-                // 新規作成時のみ購読
+                // 再利用しなかった=新規作成 時のみ購読
                 if (!useReusableChunkData)
                 {
                     // 参照がなくなったら再利用リストに追加
@@ -73,6 +75,10 @@ namespace DataStore
                 }
 
                 return chunkData;
+            }
+            finally
+            {
+                spinLock.Exit();
             }
         }
 
@@ -105,10 +111,16 @@ namespace DataStore
         private void AddReusableChunk(ChunkData addChunk)
         {
             // イベントで呼び出されることを想定して自前でlockする
-            lock (SyncObject)
+            var spinLock = new FastSpinLock();
+            try
             {
+                spinLock.Enter();
                 reusableChunkHashSet.Add(addChunk);
                 reusableChunkQueue.Enqueue(addChunk);
+            }
+            finally
+            {
+                spinLock.Exit();
             }
         }
 

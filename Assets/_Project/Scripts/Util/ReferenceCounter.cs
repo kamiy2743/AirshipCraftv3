@@ -3,9 +3,6 @@ using UniRx;
 
 namespace Util
 {
-    /// <summary>
-    /// 参照数を管理する
-    /// </summary>
     public class ReferenceCounter
     {
         private int count = 0;
@@ -16,19 +13,31 @@ namespace Util
 
         public void AddRef()
         {
-            lock (this)
+            var spinLock = new FastSpinLock();
+            try
             {
+                spinLock.Enter();
                 count++;
+            }
+            finally
+            {
+                spinLock.Exit();
             }
         }
 
         public void Release()
         {
-            lock (this)
+            var spinLock = new FastSpinLock();
+            try
             {
+                spinLock.Enter();
                 if (count == 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
                 count--;
                 if (count == 0) _onAllReferenceReleased?.OnNext(default);
+            }
+            finally
+            {
+                spinLock.Exit();
             }
         }
     }
