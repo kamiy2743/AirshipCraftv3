@@ -1,44 +1,45 @@
 using System;
 using UniRx;
+using System.Threading;
 
 namespace Util
 {
-    public class ReferenceCounter
+    public class ReferenceCounter : IDisposable
     {
         private int count = 0;
-        public bool IsFree => count == 0;
 
-        private Subject<Unit> _onAllReferenceReleased;
         public IObservable<Unit> OnAllReferenceReleased => _onAllReferenceReleased ??= new Subject<Unit>();
+        private Subject<Unit> _onAllReferenceReleased;
+
+        private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
         public void AddRef()
         {
-            var spinLock = new FastSpinLock();
-            try
-            {
-                spinLock.Enter();
-                count++;
-            }
-            finally
-            {
-                spinLock.Exit();
-            }
+            Interlocked.Increment(ref count);
         }
 
         public void Release()
         {
-            var spinLock = new FastSpinLock();
-            try
-            {
-                spinLock.Enter();
-                if (count == 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
-                count--;
-                if (count == 0) _onAllReferenceReleased?.OnNext(default);
-            }
-            finally
-            {
-                spinLock.Exit();
-            }
+            rwLock.EnterWriteLock();
+
+            if (count == 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
+            count--;
+            if (count == 0) _onAllReferenceReleased?.OnNext(default);
+
+            rwLock.ExitWriteLock();
+        }
+
+        public bool IsFree()
+        {
+            rwLock.EnterReadLock();
+            var result = count == 0;
+            rwLock.ExitReadLock();
+            return result;
+        }
+
+        public void Dispose()
+        {
+            rwLock.Dispose();
         }
     }
 }

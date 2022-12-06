@@ -14,14 +14,14 @@ using DataStore;
 
 namespace ChunkConstruction
 {
-    /// <summary>
-    /// チャンク用のメッシュを作成する
-    /// </summary>
+    /// <summary> チャンク用のメッシュを作成する </summary>
     public class ChunkMeshCreator : IDisposable
     {
         private ChunkDataStore _chunkDataStore;
         private List<ChunkMeshData> allocatedMeshDataList = new List<ChunkMeshData>();
-        private ConcurrentQueue<ChunkMeshData> reusableMeshDataQueue = new ConcurrentQueue<ChunkMeshData>();
+        private Queue<ChunkMeshData> reusableMeshDataQueue = new Queue<ChunkMeshData>();
+
+        private object syncObject = new Object();
 
         public ChunkMeshCreator(ChunkDataStore chunkDataStore)
         {
@@ -60,12 +60,10 @@ namespace ChunkConstruction
             return meshData;
         }
 
-        /// <summary>
-        /// ChunkMeshDataをできるだけ再利用するようにして取得
-        /// </summary>
+        /// <summary> ChunkMeshDataをできるだけ再利用するようにして取得 </summary>
         private ChunkMeshData GetChunkMeshData()
         {
-            lock (this)
+            lock (syncObject)
             {
                 // 再利用キューから取得
                 if (reusableMeshDataQueue.TryDequeue(out ChunkMeshData meshData))
@@ -78,15 +76,19 @@ namespace ChunkConstruction
                 allocatedMeshDataList.Add(meshData);
 
                 // meshDataが解放されたら再利用キューに追加
-                meshData.OnReleased.Subscribe(_ => reusableMeshDataQueue.Enqueue(meshData));
+                meshData.OnReleased.Subscribe(_ =>
+                {
+                    lock (syncObject)
+                    {
+                        reusableMeshDataQueue.Enqueue(meshData);
+                    }
+                });
 
                 return meshData;
             }
         }
 
-        /// <summary>
-        /// チャンク内のすべてのブロックの描画面を計算する
-        /// </summary>
+        /// <summary> チャンク内のすべてのブロックの描画面を計算する </summary>
         private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
             // 指定された面のChunkDataを取得する

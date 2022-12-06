@@ -15,6 +15,8 @@ namespace BlockOperator
         private ChunkObjectPool _chunkObjectPool;
         private ChunkMeshCreator _chunkMeshCreator;
 
+        private object syncObject = new object();
+
         public BlockDataUpdater(ChunkDataStore chunkDataStore, ChunkDataFileIO chunkDataFileIO, ChunkObjectPool chunkObjectPool, ChunkMeshCreator chunkMeshCreator)
         {
             _chunkDataStore = chunkDataStore;
@@ -23,32 +25,22 @@ namespace BlockOperator
             _chunkMeshCreator = chunkMeshCreator;
         }
 
-        internal void UpdateBlockData(BlockData updateBlock, CancellationToken ct)
+        public void UpdateBlockData(BlockData updateBlock, CancellationToken ct)
         {
-            var spinLock = new FastSpinLock();
-            try
+            lock (syncObject)
             {
-                spinLock.Enter();
-
                 var updateChunks = new HashSet<ChunkData>();
 
                 SetUpdateBlockData(updateBlock, updateChunks, ct);
 
                 UpdateChunks(updateChunks, ct);
             }
-            finally
-            {
-                spinLock.Exit();
-            }
         }
 
-        internal void UpdateBlockData(IEnumerable<BlockData> updateBlocks, CancellationToken ct)
+        public void UpdateBlockData(IEnumerable<BlockData> updateBlocks, CancellationToken ct)
         {
-            var spinLock = new FastSpinLock();
-            try
+            lock (syncObject)
             {
-                spinLock.Enter();
-
                 var updateChunks = new HashSet<ChunkData>();
 
                 foreach (var block in updateBlocks)
@@ -57,10 +49,6 @@ namespace BlockOperator
                 }
 
                 UpdateChunks(updateChunks, ct);
-            }
-            finally
-            {
-                spinLock.Exit();
             }
         }
 

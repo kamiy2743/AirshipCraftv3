@@ -18,6 +18,7 @@ internal class Initializer : MonoBehaviour
     [SerializeField] private BlockInteractor blockInteractor;
 
     private IDisposable chunkDataFileIODisposal;
+    private IDisposable chunkDataStoreDisposal;
     private IDisposable chunkMeshCreatorDisposal;
     private IDisposable chunkColliderSystemDisposal;
     private IDisposable createChunkAroundPlayerSystemDisposal;
@@ -30,6 +31,7 @@ internal class Initializer : MonoBehaviour
         var chunkDataFileIO = new ChunkDataFileIO();
         chunkDataFileIODisposal = chunkDataFileIO;
         var chunkDataStore = new ChunkDataStore(chunkDataFileIO);
+        chunkDataStoreDisposal = chunkDataStore;
         var blockDataAccessor = new BlockDataAccessor(chunkDataStore);
         var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor);
         new BlockBehaviourInjector(blockBehaviourResolver);
@@ -51,8 +53,9 @@ internal class Initializer : MonoBehaviour
     {
         chunkObjectPool.Dispose();
         chunkDataFileIODisposal.Dispose();
+        chunkDataStoreDisposal.Dispose();
         chunkMeshCreatorDisposal.Dispose();
-        ChunkMeshData.DisposeNativeBuffer();
+        ChunkMeshData.DisposeStaticResource();
         playerChunkChangeDetectorDisposal.Dispose();
         chunkColliderSystemDisposal.Dispose();
         createChunkAroundPlayerSystemDisposal.Dispose();

@@ -21,6 +21,9 @@ namespace DataObject.Chunk
         private NativeList<int> trianglesList = new NativeList<int>(Allocator.Persistent);
         private NativeList<Vector2> uvsList = new NativeList<Vector2>(Allocator.Persistent);
 
+        internal IObservable<Unit> OnReleased => _onReleasedSubject;
+        private Subject<Unit> _onReleasedSubject = new Subject<Unit>();
+
         /// <typeparam name="int">BlockID</typeparam>
         /// <typeparam name="int2-0">v,tの開始位置</typeparam>
         /// <typeparam name="int2-1">v,tのサイズ</typeparam>
@@ -30,16 +33,12 @@ namespace DataObject.Chunk
         private static readonly NativeList<Vector3> MasterVertices = new NativeList<Vector3>(Allocator.Persistent);
         private static readonly NativeList<int> MasterTriangles = new NativeList<int>(Allocator.Persistent);
         private static readonly NativeList<Vector2> MasterUVs = new NativeList<Vector2>(Allocator.Persistent);
-
-        internal IObservable<Unit> OnReleased => _onReleasedSubject;
-        private Subject<Unit> _onReleasedSubject = new Subject<Unit>();
-
-        private static readonly object syncObject = new object();
+        private static readonly object SyncObject = new object();
 
         internal ChunkMeshData() { }
         internal unsafe void Init(ChunkData chunkData, CancellationToken ct)
         {
-            lock (syncObject)
+            lock (SyncObject)
             {
                 verticesList.Clear();
                 trianglesList.Clear();
@@ -124,7 +123,7 @@ namespace DataObject.Chunk
             uvsList.Dispose();
         }
 
-        public static void DisposeNativeBuffer()
+        public static void DisposeStaticResource()
         {
             MasterMeshDataInfoHashMap.Dispose();
             MasterVertices.Dispose();

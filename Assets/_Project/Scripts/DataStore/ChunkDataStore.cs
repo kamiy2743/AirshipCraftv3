@@ -1,22 +1,22 @@
+using System;
 using System.Threading;
 using System.Collections.Generic;
 using UniRx;
 using DataObject.Chunk;
-using Util;
 
 namespace DataStore
 {
     /// <summary> チャンクデータを管理 </summary>
-    public class ChunkDataStore
+    public class ChunkDataStore : IDisposable
     {
         private ChunkDataFileIO _chunkDataFileIO;
 
         private const int CacheCapacity = 256;
-        private Dictionary<ChunkCoordinate, ChunkData> chunkDataCache = new Dictionary<ChunkCoordinate, ChunkData>(CacheCapacity);
+        private Dictionary<ChunkCoordinate, ChunkData> allocatedChunkData = new Dictionary<ChunkCoordinate, ChunkData>(CacheCapacity);
 
-        private HashSet<ChunkData> reusableChunkHashSet = new HashSet<ChunkData>();
         private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
 
+        private static readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
         public ChunkDataStore(ChunkDataFileIO chunkDataFileIO)
         {
@@ -32,23 +32,24 @@ namespace DataStore
         {
             if (ct.IsCancellationRequested) return null;
 
-            var spinLock = new FastSpinLock();
+            rwLock.EnterReadLock();
             try
             {
-                spinLock.Enter();
-
                 // キャッシュにあればそれを返す
-                if (chunkDataCache.ContainsKey(cc))
+                if (allocatedChunkData.TryGetValue(cc, out var cache))
                 {
-                    var cache = (ChunkData)chunkDataCache[cc];
-
-                    // 再利用リストにあれば削除
-                    TryRemoveReusableChunk(cache);
                     cache.ReferenceCounter.AddRef();
-
                     return cache;
                 }
+            }
+            finally
+            {
+                rwLock.ExitReadLock();
+            }
 
+            rwLock.EnterWriteLock();
+            try
+            {
                 // 再利用可能チャンクの取得
                 var useReusableChunkData = TryGetReusableChunkData(out ChunkData reusableChunkData);
 
@@ -60,7 +61,7 @@ namespace DataStore
                 }
 
                 // キャッシュに追加
-                chunkDataCache.Add(cc, chunkData);
+                allocatedChunkData.Add(cc, chunkData);
 
                 if (ct.IsCancellationRequested) return null;
 
@@ -71,14 +72,14 @@ namespace DataStore
                 if (!useReusableChunkData)
                 {
                     // 参照がなくなったら再利用リストに追加
-                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => AddReusableChunk(chunkData));
+                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => reusableChunkQueue.Enqueue(chunkData));
                 }
 
                 return chunkData;
             }
             finally
             {
-                spinLock.Exit();
+                rwLock.ExitWriteLock();
             }
         }
 
@@ -88,7 +89,7 @@ namespace DataStore
             reusableChunkData = null;
 
             // キャッシュが埋まってなければ再利用はしない
-            if (chunkDataCache.Count < CacheCapacity)
+            if (allocatedChunkData.Count < CacheCapacity)
             {
                 return false;
             }
@@ -96,39 +97,14 @@ namespace DataStore
             while (reusableChunkQueue.TryDequeue(out var takeChunk))
             {
                 // キューには再利用可能チャンクから除外されているものも含まれているので、利用可能かチェックする
-                if (!reusableChunkHashSet.Contains(takeChunk)) continue;
+                if (!takeChunk.ReferenceCounter.IsFree()) continue;
 
                 reusableChunkData = takeChunk;
-                reusableChunkHashSet.Remove(takeChunk);
-                chunkDataCache.Remove(takeChunk.ChunkCoordinate);
+                allocatedChunkData.Remove(takeChunk.ChunkCoordinate);
                 return true;
             }
 
             return false;
-        }
-
-        /// <summary> 再利用可能チャンクに追加 </summary>
-        private void AddReusableChunk(ChunkData addChunk)
-        {
-            // イベントで呼び出されることを想定して自前でlockする
-            var spinLock = new FastSpinLock();
-            try
-            {
-                spinLock.Enter();
-                reusableChunkHashSet.Add(addChunk);
-                reusableChunkQueue.Enqueue(addChunk);
-            }
-            finally
-            {
-                spinLock.Exit();
-            }
-        }
-
-        /// <summary> 再利用可能チャンクから削除 </summary>
-        private bool TryRemoveReusableChunk(ChunkData removeChunk)
-        {
-            // キューはランダムアクセスができないのでここでは削除しない
-            return reusableChunkHashSet.Remove(removeChunk);
         }
 
         /// <summary> チャンクを新規作成し保存 </summary>
@@ -150,6 +126,15 @@ namespace DataStore
             _chunkDataFileIO.Append(newChunkData);
 
             return newChunkData;
+        }
+
+        public void Dispose()
+        {
+            rwLock.Dispose();
+            foreach (var chunkData in allocatedChunkData.Values)
+            {
+                chunkData.Dispose();
+            }
         }
     }
 }

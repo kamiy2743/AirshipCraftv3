@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DataStore.Serializer;
 using DataObject.Chunk;
+using System.Threading;
 
 namespace DataStore
 {
@@ -20,14 +21,16 @@ namespace DataStore
         private readonly FileStream chunkDataStream;
         private readonly FileStream positionIndexStream;
 
+        private static readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+
         public ChunkDataFileIO()
         {
             Directory.CreateDirectory(RootDirectory);
             chunkDataStream = new FileStream(ChunkDataFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             positionIndexStream = new FileStream(PositionIndexFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-            // chunkDataStream.SetLength(0);
-            // positionIndexStream.SetLength(0);
+            chunkDataStream.SetLength(0);
+            positionIndexStream.SetLength(0);
 
             // チャンクの保存位置を読み込む
             var readBuffer = new byte[ChunkDataPositionIndexSerializer.ChunkDataPositionIndexByteSize];
@@ -42,51 +45,55 @@ namespace DataStore
 
         private void Write(long positionIndex, ChunkData chunkData)
         {
-            lock (this)
-            {
-                var chunkDataBytes = ChunkDataSerializer.Serialize(chunkData);
-                chunkDataStream.Position = positionIndex * ChunkDataSerializer.ChunkDataByteSize;
-                chunkDataStream.Write(chunkDataBytes);
-            }
+            var isHeld = rwLock.IsWriteLockHeld;
+            if (!isHeld) rwLock.EnterWriteLock();
+
+            var chunkDataBytes = ChunkDataSerializer.Serialize(chunkData);
+            chunkDataStream.Position = positionIndex * ChunkDataSerializer.ChunkDataByteSize;
+            chunkDataStream.Write(chunkDataBytes);
+
+            if (!isHeld) rwLock.ExitWriteLock();
         }
 
         internal void Append(ChunkData chunkData)
         {
-            lock (this)
-            {
-                // 保存位置のインデックス
-                var positionIndex = createdChunkCount;
+            rwLock.EnterWriteLock();
 
-                // チャンクの保存位置を書き込む
-                var positionIndexBytes = ChunkDataPositionIndexSerializer.Serialize(new ChunkDataPositionIndex(chunkData.ChunkCoordinate, positionIndex));
-                positionIndexStream.Write(positionIndexBytes);
-                positionIndexDictionary.Add(chunkData.ChunkCoordinate, positionIndex);
+            // 保存位置のインデックス
+            var positionIndex = createdChunkCount;
 
-                // チャンク本体を書き込む
-                Write(positionIndex, chunkData);
-                createdChunkCount++;
-            }
+            // チャンクの保存位置を書き込む
+            var positionIndexBytes = ChunkDataPositionIndexSerializer.Serialize(new ChunkDataPositionIndex(chunkData.ChunkCoordinate, positionIndex));
+            positionIndexStream.Write(positionIndexBytes);
+            positionIndexDictionary.Add(chunkData.ChunkCoordinate, positionIndex);
+
+            // チャンク本体を書き込む
+            Write(positionIndex, chunkData);
+            createdChunkCount++;
+
+            rwLock.ExitWriteLock();
         }
 
-        public bool Update(ChunkData chunkData)
+        public void Update(ChunkData chunkData)
         {
-            lock (this)
-            {
-                if (positionIndexDictionary.TryGetValue(chunkData.ChunkCoordinate, out var positionIndex))
-                {
-                    Write(positionIndex, chunkData);
-                    return true;
-                }
+            rwLock.EnterReadLock();
 
-                return false;
+            var existPosition = positionIndexDictionary.TryGetValue(chunkData.ChunkCoordinate, out var positionIndex);
+
+            rwLock.ExitReadLock();
+
+            if (existPosition)
+            {
+                Write(positionIndex, chunkData);
             }
         }
 
-        private byte[] readBuffer = new byte[ChunkDataSerializer.ChunkDataByteSize];
+        private static byte[] readBuffer = new byte[ChunkDataSerializer.ChunkDataByteSize];
         internal bool Read(ChunkCoordinate cc, out ChunkData result) => Read(cc, null, out result);
         internal bool Read(ChunkCoordinate cc, ChunkData reusableChunkData, out ChunkData result)
         {
-            lock (this)
+            rwLock.EnterReadLock();
+            try
             {
                 if (!positionIndexDictionary.TryGetValue(cc, out var positionIndex))
                 {
@@ -99,12 +106,17 @@ namespace DataStore
                 result = ChunkDataSerializer.Deserialize(readBuffer, reusableChunkData);
                 return true;
             }
+            finally
+            {
+                rwLock.ExitReadLock();
+            }
         }
 
         public void Dispose()
         {
             chunkDataStream.Dispose();
             positionIndexStream.Dispose();
+            rwLock.Dispose();
         }
     }
 

@@ -9,7 +9,7 @@ using DataObject.Block;
 
 namespace DataObject.Chunk
 {
-    public class ChunkData : IEquatable<ChunkData>
+    public class ChunkData : IEquatable<ChunkData>, IDisposable
     {
         public ChunkCoordinate ChunkCoordinate { get; private set; }
         public BlockData[] Blocks { get; private set; }
@@ -144,6 +144,11 @@ namespace DataObject.Chunk
         public static bool operator !=(ChunkData left, ChunkData right)
         {
             return !(left == right);
+        }
+
+        public void Dispose()
+        {
+            ReferenceCounter.Dispose();
         }
 
         /// <summary>
