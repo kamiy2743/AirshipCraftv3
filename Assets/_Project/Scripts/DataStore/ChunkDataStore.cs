@@ -112,7 +112,7 @@ namespace DataStore
             return false;
         }
 
-        /// <summary> チャンクを新規作成し保存 </summary>
+        /// <summary> チャンクを新規作成 </summary>
         private ChunkData CreateNewChunk(ChunkCoordinate cc, ChunkData reusableChunkData)
         {
             ChunkData newChunkData;
@@ -126,9 +126,6 @@ namespace DataStore
             {
                 newChunkData = ChunkData.NewConstructor(cc);
             }
-
-            // 保存
-            _chunkDataFileIO.Append(newChunkData);
 
             return newChunkData;
         }

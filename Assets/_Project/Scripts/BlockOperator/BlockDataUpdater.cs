@@ -97,7 +97,7 @@ namespace BlockOperator
             foreach (var updateChunk in updateChunks)
             {
                 // ファイルを更新
-                _chunkDataFileIO.Update(updateChunk);
+                _chunkDataFileIO.AddOrUpdate(updateChunk);
 
                 // 生成されていなければスルー
                 if (!_chunkObjectPool.ChunkObjects.TryGetValue(updateChunk.ChunkCoordinate, out var chunkObject))

@@ -29,8 +29,8 @@ namespace DataStore
             chunkDataStream = new FileStream(ChunkDataFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             positionIndexStream = new FileStream(PositionIndexFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-            chunkDataStream.SetLength(0);
-            positionIndexStream.SetLength(0);
+            // chunkDataStream.SetLength(0);
+            // positionIndexStream.SetLength(0);
 
             // チャンクの保存位置を読み込む
             var readBuffer = new byte[ChunkDataPositionIndexSerializer.ChunkDataPositionIndexByteSize];
@@ -55,7 +55,7 @@ namespace DataStore
             if (!isHeld) rwLock.ExitWriteLock();
         }
 
-        internal void Append(ChunkData chunkData)
+        internal void Add(ChunkData chunkData)
         {
             rwLock.EnterWriteLock();
 
@@ -74,7 +74,7 @@ namespace DataStore
             rwLock.ExitWriteLock();
         }
 
-        public void Update(ChunkData chunkData)
+        public void AddOrUpdate(ChunkData chunkData)
         {
             rwLock.EnterReadLock();
 
@@ -85,6 +85,10 @@ namespace DataStore
             if (existPosition)
             {
                 Write(positionIndex, chunkData);
+            }
+            else
+            {
+                Add(chunkData);
             }
         }
 
