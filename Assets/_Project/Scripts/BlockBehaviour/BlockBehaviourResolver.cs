@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DataStore;
 using BlockBehaviour.Interface;
+using BlockOperator;
 
 namespace BlockBehaviour
 {
@@ -9,9 +10,9 @@ namespace BlockBehaviour
     {
         private Dictionary<Type, IBlockBehaviour> instanceLookUpTable = new Dictionary<Type, IBlockBehaviour>();
 
-        public BlockBehaviourResolver(BlockDataAccessor blockDataAccessor)
+        public BlockBehaviourResolver(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater)
         {
-            instanceLookUpTable.Add(typeof(MUCore), new MUCore(blockDataAccessor));
+            instanceLookUpTable.Add(typeof(MUCore), new MUCore(blockDataAccessor, blockDataUpdater));
         }
 
         public IBlockBehaviour GetBehaviourInstance(Type type)

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Threading;
 using DataObject.Block;
 using DataObject.Chunk;
+using Unity.Mathematics;
 
 namespace DataStore
 {
@@ -18,6 +19,13 @@ namespace DataStore
         {
             if (!BlockCoordinate.IsValid(position)) return BlockData.Empty;
             return GetBlockData(new BlockCoordinate(position), ct);
+        }
+
+        public BlockData GetBlockData(int3 position, CancellationToken ct) => GetBlockData(position.x, position.y, position.z, ct);
+        public BlockData GetBlockData(int x, int y, int z, CancellationToken ct)
+        {
+            if (!BlockCoordinate.IsValid(x, y, z)) return BlockData.Empty;
+            return GetBlockData(new BlockCoordinate(x, y, z), ct);
         }
 
         public BlockData GetBlockData(BlockCoordinate bc, CancellationToken ct)

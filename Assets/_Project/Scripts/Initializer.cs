@@ -33,13 +33,13 @@ internal class Initializer : MonoBehaviour
         var chunkDataStore = new ChunkDataStore(chunkDataFileIO);
         chunkDataStoreDisposal = chunkDataStore;
         var blockDataAccessor = new BlockDataAccessor(chunkDataStore);
-        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor);
-        new BlockBehaviourInjector(blockBehaviourResolver);
         blockInteractor.StartInitial(blockDataAccessor);
         chunkObjectPool.StartInitial();
         var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
         chunkMeshCreatorDisposal = chunkMeshCreator;
         var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
+        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater);
+        new BlockBehaviourInjector(blockBehaviourResolver);
         var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
         playerChunkChangeDetectorDisposal = playerChunkChangeDetector;
 
