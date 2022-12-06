@@ -16,7 +16,7 @@ namespace DataStore
 
         private Queue<ChunkData> reusableChunkQueue = new Queue<ChunkData>();
 
-        private static readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+        private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
         public ChunkDataStore(ChunkDataFileIO chunkDataFileIO)
         {
@@ -72,7 +72,12 @@ namespace DataStore
                 if (!useReusableChunkData)
                 {
                     // 参照がなくなったら再利用リストに追加
-                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ => reusableChunkQueue.Enqueue(chunkData));
+                    chunkData.ReferenceCounter.OnAllReferenceReleased.Subscribe(_ =>
+                    {
+                        rwLock.EnterWriteLock();
+                        reusableChunkQueue.Enqueue(chunkData);
+                        rwLock.ExitWriteLock();
+                    });
                 }
 
                 return chunkData;

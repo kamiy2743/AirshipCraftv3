@@ -21,7 +21,7 @@ namespace DataStore
         private readonly FileStream chunkDataStream;
         private readonly FileStream positionIndexStream;
 
-        private static readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+        private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
         public ChunkDataFileIO()
         {

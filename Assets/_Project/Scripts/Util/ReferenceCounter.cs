@@ -20,13 +20,9 @@ namespace Util
 
         public void Release()
         {
-            rwLock.EnterWriteLock();
-
-            if (count == 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
-            count--;
+            var after = Interlocked.Decrement(ref count);
+            if (count < 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
             if (count == 0) _onAllReferenceReleased?.OnNext(default);
-
-            rwLock.ExitWriteLock();
         }
 
         public bool IsFree()
