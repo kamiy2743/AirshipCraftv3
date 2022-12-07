@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DataObject.Block;
 using BlockBehaviour.Interface;
 using DataStore;
-using Unity.Jobs;
-using Unity.Burst;
 using Unity.Mathematics;
 using BlockOperator;
+using UnityEngine;
+using Util;
 
 namespace BlockBehaviour
 {
@@ -14,11 +14,13 @@ namespace BlockBehaviour
     {
         private BlockDataAccessor _blockDataAccessor;
         private BlockDataUpdater _blockDataUpdater;
+        private MUCoreObject _muCoreObjectPrefab;
 
-        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater)
+        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MUCoreObject muCoreObjectPrefab)
         {
             _blockDataAccessor = blockDataAccessor;
             _blockDataUpdater = blockDataUpdater;
+            _muCoreObjectPrefab = muCoreObjectPrefab;
         }
 
         public void OnInteracted(BlockData targetBlockData)
@@ -28,6 +30,12 @@ namespace BlockBehaviour
             // Airに置換
             var updateBlocks = chainedBlocks.Select(chainedBlock => new BlockData(BlockID.Air, chainedBlock.BlockCoordinate));
             _blockDataUpdater.UpdateBlockData(updateBlocks, default);
+
+            var muCoreObject = MonoBehaviour.Instantiate<MUCoreObject>(
+                _muCoreObjectPrefab,
+                targetBlockData.BlockCoordinate.Center,
+                Quaternion.identity);
+            muCoreObject.SetMesh(CubeMesh.MeshData);
         }
 
         private HashSet<BlockData> GetChainedBlocks(BlockData targetBlock, int maxCount)
@@ -69,15 +77,6 @@ namespace BlockBehaviour
             }
 
             return chainedBlocks;
-        }
-
-        [BurstCompile]
-        private struct GetChainedBlocksJob : IJob
-        {
-            public void Execute()
-            {
-
-            }
         }
     }
 }

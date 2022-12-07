@@ -16,7 +16,6 @@ namespace DataObject.Chunk
 {
     public class ChunkMeshData : IDisposable
     {
-        internal bool NoVertices => verticesList.Length == 0;
         private NativeList<Vector3> verticesList = new NativeList<Vector3>(Allocator.Persistent);
         private NativeList<int> trianglesList = new NativeList<int>(Allocator.Persistent);
         private NativeList<Vector2> uvsList = new NativeList<Vector2>(Allocator.Persistent);

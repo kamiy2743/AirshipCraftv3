@@ -125,5 +125,7 @@ namespace Util
             new Vector2(1, 1),
             new Vector2(1, 0)
         };
+
+        public static readonly MeshData MeshData = new MeshData(Vertices, Triangles, UVs);
     }
 }

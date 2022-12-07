@@ -17,6 +17,9 @@ internal class Initializer : MonoBehaviour
     [SerializeField] private BreakBlockSystem breakBlockSystem;
     [SerializeField] private BlockInteractor blockInteractor;
 
+    // TODO prefabはresourcesにおいてもいいかもしれない
+    [SerializeField] private MUCoreObject muCoreObjectPrefab;
+
     private IDisposable chunkDataFileIODisposal;
     private IDisposable chunkDataStoreDisposal;
     private IDisposable chunkMeshCreatorDisposal;
@@ -38,7 +41,7 @@ internal class Initializer : MonoBehaviour
         var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
         chunkMeshCreatorDisposal = chunkMeshCreator;
         var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
-        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater);
+        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater, muCoreObjectPrefab);
         new BlockBehaviourInjector(blockBehaviourResolver);
         var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
         playerChunkChangeDetectorDisposal = playerChunkChangeDetector;

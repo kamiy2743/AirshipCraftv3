@@ -1,10 +1,9 @@
 using UnityEngine;
 using Util;
 
-namespace DataObject.Chunk
+namespace BlockBehaviour
 {
-    /// <summary> チャンクのGameObject </summary>
-    public class ChunkObject : MonoBehaviour
+    public class MUCoreObject : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
@@ -13,7 +12,7 @@ namespace DataObject.Chunk
         private Mesh mesh;
 
         /// <summary> メインスレッドのみ </summary>
-        public void SetMesh(NativeMeshData meshData)
+        internal void SetMesh(MeshData meshData)
         {
             if (meshData is null || meshData.Vertices.Length == 0)
             {
@@ -27,6 +26,7 @@ namespace DataObject.Chunk
                 mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 meshFilter.sharedMesh = mesh;
                 meshRenderer.enabled = true;
+                meshCollider.enabled = true;
             }
             else
             {
@@ -34,33 +34,23 @@ namespace DataObject.Chunk
             }
 
             mesh.SetVertices(meshData.Vertices);
-            mesh.SetTriangles(meshData.Triangles.ToArray(), 0);
+            mesh.SetTriangles(meshData.Triangles, 0);
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
 
-            if (meshCollider.enabled)
-            {
-                meshCollider.sharedMesh = mesh;
-            }
+            meshCollider.sharedMesh = mesh;
         }
 
-        public void ClearMesh()
+        private void ClearMesh()
         {
             if (mesh is not null)
             {
                 Destroy(mesh);
                 mesh = null;
                 meshRenderer.enabled = false;
-                SetColliderEnabled(false);
+                meshCollider.enabled = false;
+                meshCollider.sharedMesh = null;
             }
-        }
-
-        public void SetColliderEnabled(bool enabled)
-        {
-            if (meshCollider.enabled == enabled) return;
-
-            meshCollider.enabled = enabled;
-            meshCollider.sharedMesh = (enabled ? mesh : null);
         }
 
         private void OnDestroy()

@@ -56,7 +56,6 @@ namespace ChunkConstruction
                 return null;
             }
 
-            if (meshData.NoVertices) return null;
             return meshData;
         }
 

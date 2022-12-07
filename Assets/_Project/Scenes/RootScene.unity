@@ -282,8 +282,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 694688719}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &125769955
 MonoBehaviour:
@@ -399,7 +399,7 @@ GameObject:
   - component: {fileID: 694688722}
   - component: {fileID: 694688723}
   m_Layer: 0
-  m_Name: BlockSystem
+  m_Name: Initializer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,10 +416,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 125769954}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &694688721
 MonoBehaviour:
@@ -437,6 +436,7 @@ MonoBehaviour:
   chunkObjectPool: {fileID: 125769955}
   breakBlockSystem: {fileID: 694688722}
   blockInteractor: {fileID: 920373325}
+  muCoreObjectPrefab: {fileID: 1494232460265758427, guid: 658ab5990b8fa6e4abb6d0bfd678deb4, type: 3}
 --- !u!114 &694688722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,7 +596,7 @@ Transform:
   - {fileID: 686078256}
   - {fileID: 1036762686}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &920373324
 MonoBehaviour:
@@ -614,7 +614,7 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 9
   gravity: 25
-  debugMoveSpeed: 100
+  debugMoveSpeed: 20
   isDebugMode: 1
 --- !u!114 &920373325
 MonoBehaviour:
@@ -880,7 +880,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1089282932
 MonoBehaviour:
@@ -1183,7 +1183,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1636052793
 GameObject:
@@ -1279,7 +1279,7 @@ RectTransform:
   m_Children:
   - {fileID: 1341398282}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
