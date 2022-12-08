@@ -8,7 +8,7 @@ namespace DataObject.Chunk
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private MeshCollider meshCollider;
+        [SerializeField] private ChunkCollider chunkCollider;
 
         private Mesh mesh;
 
@@ -38,9 +38,9 @@ namespace DataObject.Chunk
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
 
-            if (meshCollider.enabled)
+            if (chunkCollider.enabled)
             {
-                meshCollider.sharedMesh = mesh;
+                chunkCollider.SetMesh(mesh);
             }
         }
 
@@ -51,16 +51,14 @@ namespace DataObject.Chunk
                 Destroy(mesh);
                 mesh = null;
                 meshRenderer.enabled = false;
-                SetColliderEnabled(false);
+                chunkCollider.SetEnabled(false);
+                chunkCollider.Clear();
             }
         }
 
         public void SetColliderEnabled(bool enabled)
         {
-            if (meshCollider.enabled == enabled) return;
-
-            meshCollider.enabled = enabled;
-            meshCollider.sharedMesh = (enabled ? mesh : null);
+            chunkCollider.SetEnabled(enabled);
         }
 
         private void OnDestroy()
