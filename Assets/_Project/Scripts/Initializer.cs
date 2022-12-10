@@ -9,7 +9,9 @@ using Player;
 using BlockBehaviour;
 using BlockBehaviour.Injection;
 
-/// <summary> 依存関係の解決を行う </summary>
+/// <summary>
+/// 依存関係の解決を行う 
+/// </summary>
 internal class Initializer : MonoBehaviour
 {
     [SerializeField] private Transform player;

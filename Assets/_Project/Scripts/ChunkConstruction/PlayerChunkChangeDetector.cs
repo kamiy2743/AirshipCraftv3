@@ -33,7 +33,9 @@ namespace ChunkConstruction
                 });
         }
 
-        /// <summary> プレイヤーがいるチャンクに変換 </summary>
+        /// <summary> 
+        /// プレイヤーがいるチャンクに変換 
+        /// </summary>
         private static int3 GetPlayerChunk(Vector3 playerPosition)
         {
             return new int3(

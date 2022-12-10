@@ -16,14 +16,18 @@ using DataStore;
 
 namespace ChunkConstruction
 {
-    /// <summary> プレイヤーの周りのチャンクを作成する </summary>
+    /// <summary> 
+    /// プレイヤーの周りのチャンクを作成する 
+    /// </summary>
     public class CreateChunkAroundPlayerSystem : IDisposable
     {
         private ChunkObjectPool _chunkObjectPool;
         private ChunkDataStore _chunkDataStore;
         private ChunkMeshCreator _chunkMeshCreator;
 
-        /// <summary> 常に作成されるべきプレイヤー近傍チャンクの半径 </summary>
+        /// <summary> 
+        /// 常に作成されるべきプレイヤー近傍チャンクの半径 
+        /// </summary>
         private const int NearChunkRadius = 1;
 
         private CompositeDisposable disposals = new CompositeDisposable();
@@ -81,7 +85,9 @@ namespace ChunkConstruction
                 .AddTo(disposals);
         }
 
-        /// <summary> 読みこみ範囲外のチャンクオブジェクトを解放する </summary>
+        /// <summary> 
+        /// 読みこみ範囲外のチャンクオブジェクトを解放する 
+        /// </summary>
         private void ReleaseOutRangeChunk(int3 playerChunk)
         {
             var createdChunks = _chunkObjectPool.ChunkObjects.Keys.ToArray();
@@ -143,7 +149,9 @@ namespace ChunkConstruction
         }
 
         private int lastCalledFrame;
-        /// <summary> 描画距離内のチャンクのメッシュデータを作成 </summary>
+        /// <summary> 
+        /// 描画距離内のチャンクのメッシュデータを作成 
+        /// </summary>
         private async UniTask CreateChunkMeshData(int3 playerChunk)
         {
             // TODO あまり良くないやり方
@@ -180,7 +188,9 @@ namespace ChunkConstruction
             await UniTask.SwitchToMainThread();
         }
 
-        /// <summary> 作成対象のチャンクをキューに追加する </summary>
+        /// <summary> 
+        /// 作成対象のチャンクをキューに追加する 
+        /// </summary>
         private NativeQueue<ChunkCoordinate> SetupCreateMeshDataQueue(int3 playerChunk, float4x4 viewportMatrix)
         {
             var job = new SetupCreateChunkQueueJob
@@ -263,7 +273,9 @@ namespace ChunkConstruction
                 }
             }
 
-            /// <summary> 指定されたxzにあるチャンクを下から順に作成キューに追加する </summary>
+            /// <summary> 
+            /// 指定されたxzにあるチャンクを下から順に作成キューに追加する 
+            /// </summary>
             private void EnqueueChunk(int x, int z, int radius)
             {
                 // 下から順に追加
@@ -335,7 +347,9 @@ namespace ChunkConstruction
             }
         }
 
-        /// <summary> キューにあるチャンクのメッシュを順次作成 </summary>
+        /// <summary> 
+        /// キューにあるチャンクのメッシュを順次作成 
+        /// </summary>
         private void CreateMeshDataFromQueue(NativeQueue<ChunkCoordinate> createMeshDataQueue, CancellationToken ct)
         {
             if (ct.IsCancellationRequested) return;

@@ -14,17 +14,23 @@ namespace DataObject.Block
         /// </summary>
         public SurfaceNormal ContactOtherBlockSurfaces { get; private set; }
 
-        /// <summary> 接している面を再計算する必要があるかどうか </summary>
+        /// <summary> 
+        /// 接している面を再計算する必要があるかどうか 
+        /// </summary>
         /// // アクセスの度に計算するのだと遅いから値変更時に確定させておく
         public bool NeedToCalcContactSurfaces;
 
-        /// <summary> 描画をスキップするかどうか </summary>
+        /// <summary> 
+        /// 描画をスキップするかどうか 
+        /// </summary>
         // アクセスの度に計算するのだと遅いから値変更時に確定させておく
         public bool IsRenderSkip;
 
         public static readonly BlockData Empty = new BlockData(BlockID.Empty, new BlockCoordinate(0, 0, 0));
 
-        /// <summary> シリアライズ用なのでそれ以外では使用しないでください </summary>
+        /// <summary> 
+        /// シリアライズ用なのでそれ以外では使用しないでください 
+        /// </summary>
         public BlockData(BlockID id, BlockCoordinate bc, SurfaceNormal contactOtherBlockSurfaces)
         {
             ID = id;
@@ -54,7 +60,9 @@ namespace DataObject.Block
             IsRenderSkip = (ID == BlockID.Air) || surfaces.IsFull();
         }
 
-        /// <summary> 指定された面で他のブロックと接しているかを返します </summary>
+        /// <summary> 
+        /// 指定された面で他のブロックと接しているかを返します 
+        /// </summary>
         public bool IsContactOtherBlock(SurfaceNormal surface)
         {
             return ContactOtherBlockSurfaces.Contains(surface);

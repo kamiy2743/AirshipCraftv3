@@ -6,7 +6,9 @@ using DataObject.Chunk;
 
 namespace DataStore
 {
-    /// <summary> チャンクオブジェクトを管理 </summary>
+    /// <summary> 
+    /// チャンクオブジェクトを管理 
+    /// </summary>
     public class ChunkObjectPool : MonoBehaviour, IDisposable
     {
         [SerializeField] private ChunkObject chunkObjectPrefab;

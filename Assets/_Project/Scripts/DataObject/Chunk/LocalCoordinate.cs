@@ -2,7 +2,9 @@ using DataObject.Block;
 
 namespace DataObject.Chunk
 {
-    /// <summary> チャンク内の座標 </summary>
+    /// <summary> 
+    /// チャンク内の座標 
+    /// </summary>
     public struct LocalCoordinate
     {
         internal readonly byte x;

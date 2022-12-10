@@ -20,11 +20,15 @@ namespace DataObject.Chunk
 
         public static readonly ChunkData Empty = ForEmpty();
 
-        /// <summary>チャンク内を満たすブロックの立方体の一辺の長さ</summary>
+        /// <summary>
+        /// チャンク内を満たすブロックの立方体の一辺の長さ
+        /// </summary>
         public const byte ChunkBlockSide = 1 << ChunkBlockSideShift;
         public const byte ChunkBlockSideShift = 4;
 
-        /// <summary>チャンク内のブロックの総数</summary>
+        /// <summary>
+        /// チャンク内のブロックの総数
+        /// </summary>
         public const int BlockCountInChunk = ChunkBlockSide * ChunkBlockSide * ChunkBlockSide;
 
         private static readonly MapGenerator MapGenerator = new MapGenerator(1024, 0.01f);

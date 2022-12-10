@@ -10,7 +10,9 @@ namespace DataStore
 {
     public class ChunkDataFileIO : IDisposable
     {
-        /// <summary> チャンクの保存位置を格納する </summary>
+        /// <summary> 
+        /// チャンクの保存位置を格納する 
+        /// </summary>
         private Dictionary<ChunkCoordinate, long> positionIndexDictionary = new Dictionary<ChunkCoordinate, long>();
         private long createdChunkCount = 0;
 
@@ -124,7 +126,9 @@ namespace DataStore
         }
     }
 
-    /// <summary> 保存位置を表す </summary>
+    /// <summary> 
+    /// 保存位置を表す 
+    /// </summary>
     internal struct ChunkDataPositionIndex
     {
         internal ChunkCoordinate ChunkCoordinate;

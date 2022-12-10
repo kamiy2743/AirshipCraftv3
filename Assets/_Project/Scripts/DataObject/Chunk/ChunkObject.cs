@@ -3,7 +3,9 @@ using Util;
 
 namespace DataObject.Chunk
 {
-    /// <summary> チャンクのGameObject </summary>
+    /// <summary> 
+    /// チャンクのGameObject 
+    /// </summary>
     public class ChunkObject : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
@@ -12,7 +14,9 @@ namespace DataObject.Chunk
 
         private Mesh mesh;
 
-        /// <summary> メインスレッドのみ </summary>
+        /// <summary> 
+        /// メインスレッドのみ 
+        /// </summary>
         public void SetMesh(NativeMeshData meshData)
         {
             if (meshData is null || meshData.Vertices.Length == 0)

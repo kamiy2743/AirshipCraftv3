@@ -14,7 +14,9 @@ using DataStore;
 
 namespace ChunkConstruction
 {
-    /// <summary> チャンク用のメッシュを作成する </summary>
+    /// <summary> 
+    /// チャンク用のメッシュを作成する 
+    /// </summary>
     public class ChunkMeshCreator : IDisposable
     {
         private ChunkDataStore _chunkDataStore;
@@ -59,7 +61,9 @@ namespace ChunkConstruction
             return meshData;
         }
 
-        /// <summary> ChunkMeshDataをできるだけ再利用するようにして取得 </summary>
+        /// <summary> 
+        /// ChunkMeshDataをできるだけ再利用するようにして取得 
+        /// </summary>
         private ChunkMeshData GetChunkMeshData()
         {
             lock (syncObject)
@@ -87,7 +91,9 @@ namespace ChunkConstruction
             }
         }
 
-        /// <summary> チャンク内のすべてのブロックの描画面を計算する </summary>
+        /// <summary> 
+        /// チャンク内のすべてのブロックの描画面を計算する 
+        /// </summary>
         private void CalcContactOtherBlockSurfaces(ChunkData chunkData, CancellationToken ct)
         {
             // 指定された面のChunkDataを取得する

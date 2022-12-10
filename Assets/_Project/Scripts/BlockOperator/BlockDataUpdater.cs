@@ -52,7 +52,9 @@ namespace BlockOperator
             }
         }
 
-        /// <summary> 更新ブロックとその周囲のブロックをチャンクに反映 </summary>
+        /// <summary> 
+        /// 更新ブロックとその周囲のブロックをチャンクに反映 
+        /// </summary>
         private void SetUpdateBlockData(BlockData updateBlock, HashSet<ChunkData> updateChunks, CancellationToken ct)
         {
             // 更新対象のブロックデータをセットする
@@ -91,7 +93,9 @@ namespace BlockOperator
             }
         }
 
-        /// <summary> 更新チャンクをファイルに反映し、メッシュを再計算 </summary>
+        /// <summary> 
+        /// 更新チャンクをファイルに反映し、メッシュを再計算 
+        /// </summary>
         private void UpdateChunks(HashSet<ChunkData> updateChunks, CancellationToken ct)
         {
             foreach (var updateChunk in updateChunks)

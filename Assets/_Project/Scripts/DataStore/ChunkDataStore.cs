@@ -6,7 +6,9 @@ using DataObject.Chunk;
 
 namespace DataStore
 {
-    /// <summary> チャンクデータを管理 </summary>
+    /// <summary> 
+    /// チャンクデータを管理 
+    /// </summary>
     public class ChunkDataStore : IDisposable
     {
         private ChunkDataFileIO _chunkDataFileIO;
@@ -88,7 +90,9 @@ namespace DataStore
             }
         }
 
-        /// <summary> 再利用可能なチャンクの取得 </summary>
+        /// <summary> 
+        /// 再利用可能なチャンクの取得 
+        /// </summary>
         private bool TryGetReusableChunkData(out ChunkData reusableChunkData)
         {
             reusableChunkData = null;
@@ -112,7 +116,9 @@ namespace DataStore
             return false;
         }
 
-        /// <summary> チャンクを新規作成 </summary>
+        /// <summary> 
+        /// チャンクを新規作成 
+        /// </summary>
         private ChunkData CreateNewChunk(ChunkCoordinate cc, ChunkData reusableChunkData)
         {
             ChunkData newChunkData;

@@ -11,7 +11,9 @@ namespace BlockBehaviour
 
         private Mesh mesh;
 
-        /// <summary> メインスレッドのみ </summary>
+        /// <summary> 
+        /// メインスレッドのみ 
+        /// </summary>
         internal void SetMesh(MeshData meshData)
         {
             if (meshData is null || meshData.Vertices.Length == 0)
