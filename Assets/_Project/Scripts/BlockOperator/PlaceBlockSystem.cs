@@ -4,16 +4,16 @@ using DataObject.Block;
 
 namespace BlockOperator
 {
-    public static class PlaceBlockSystem
+    public class PlaceBlockSystem
     {
-        private static BlockDataUpdater _blockDataUpdater;
+        private BlockDataUpdater _blockDataUpdater;
 
-        public static void StartInitial(BlockDataUpdater blockDataUpdater)
+        public PlaceBlockSystem(BlockDataUpdater blockDataUpdater)
         {
             _blockDataUpdater = blockDataUpdater;
         }
 
-        public static void PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
+        public void PlaceBlock(BlockID blockID, Vector3 position, CancellationToken ct)
         {
             if (!BlockCoordinate.IsValid(position)) return;
 

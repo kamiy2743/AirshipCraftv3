@@ -29,6 +29,7 @@ namespace BlockBehaviour
 
             // Airに置換
             var updateBlocks = chainedBlocks.Select(chainedBlock => new BlockData(BlockID.Air, chainedBlock.BlockCoordinate));
+            // TODO ctを渡す
             _blockDataUpdater.UpdateBlockData(updateBlocks, default);
 
             var muCoreObject = MonoBehaviour.Instantiate<MUCoreObject>(
@@ -59,6 +60,7 @@ namespace BlockBehaviour
                             if (chainedBlocksCount >= maxCount) break;
                             if (chainedBlockCoordinates.Contains(new int3(x, y, z))) continue;
 
+                            // TODO ctを渡す
                             var blockData = _blockDataAccessor.GetBlockData(x, y, z, default);
 
                             if (blockData == BlockData.Empty) continue;

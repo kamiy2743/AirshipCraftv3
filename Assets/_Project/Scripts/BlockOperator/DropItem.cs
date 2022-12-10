@@ -3,7 +3,7 @@ using Util;
 
 namespace BlockOperator
 {
-    internal class DropItem : MonoBehaviour
+    public class DropItem : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
 

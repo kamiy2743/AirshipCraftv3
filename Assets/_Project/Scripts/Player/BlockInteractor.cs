@@ -24,11 +24,15 @@ namespace Player
         [SerializeField] private float breakBlockInterval;
 
         private BlockDataAccessor _blockDataAccessor;
+        private PlaceBlockSystem _placeBlockSystem;
+        private BreakBlockSystem _breakBlockSystem;
         private CancellationToken _cancellationToken;
 
-        public void StartInitial(BlockDataAccessor blockDataAccessor)
+        public void StartInitial(BlockDataAccessor blockDataAccessor, PlaceBlockSystem placeBlockSystem, BreakBlockSystem breakBlockSystem)
         {
             _blockDataAccessor = blockDataAccessor;
+            _placeBlockSystem = placeBlockSystem;
+            _breakBlockSystem = breakBlockSystem;
             _cancellationToken = this.GetCancellationTokenOnDestroy();
 
             var selectedBlock = new ReactiveProperty<BlockData>();
@@ -97,12 +101,12 @@ namespace Player
         private void PlaceBlock(BlockData selectedBlock, Vector3 hitNormal)
         {
             var position = selectedBlock.BlockCoordinate.ToVector3() + hitNormal;
-            PlaceBlockSystem.PlaceBlock(BlockID.MUCore, position, _cancellationToken);
+            _placeBlockSystem.PlaceBlock(BlockID.MUCore, position, _cancellationToken);
         }
 
         private void BreakBlock(BlockData targetBlockData)
         {
-            BreakBlockSystem.Instance.BreakBlock(targetBlockData, _cancellationToken);
+            _breakBlockSystem.BreakBlock(targetBlockData, _cancellationToken);
         }
 
         private void InteractBlock(BlockData targetBlockData, IInteractedBehaviour behaviour)

@@ -10,19 +10,15 @@ namespace BlockOperator
 {
     public class BreakBlockSystem : MonoBehaviour
     {
-        [SerializeField] private DropItem dropItemPrefab;
-
-        // TODO シングルトンをやめる
-        public static BreakBlockSystem Instance { get; private set; }
-
         private BlockDataUpdater _blockDataUpdater;
         private ChunkDataStore _chunkDataStore;
+        private DropItem _dropItemPrefab;
 
-        public void StartInitial(BlockDataUpdater blockDataUpdater, ChunkDataStore chunkDataStore)
+        public BreakBlockSystem(BlockDataUpdater blockDataUpdater, ChunkDataStore chunkDataStore, DropItem dropItemPrefab)
         {
-            Instance = this;
             _blockDataUpdater = blockDataUpdater;
             _chunkDataStore = chunkDataStore;
+            _dropItemPrefab = dropItemPrefab;
         }
 
         public void BreakBlock(BlockData targetBlock, CancellationToken ct)
@@ -46,7 +42,7 @@ namespace BlockOperator
 
         private void CreateDropItem(BlockData blockData)
         {
-            var dropItem = Instantiate(dropItemPrefab);
+            var dropItem = Instantiate(_dropItemPrefab);
             var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
             dropItem.SetMesh(meshData);
             dropItem.SetPosition(blockData.BlockCoordinate.Center);

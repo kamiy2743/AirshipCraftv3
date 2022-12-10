@@ -22,7 +22,7 @@ namespace Util
         {
             var after = Interlocked.Decrement(ref count);
             if (count < 0) throw new System.Exception("参照が0のオブジェクトを解放することはできません");
-            if (count == 0) _onAllReferenceReleased?.OnNext(default);
+            if (count == 0) _onAllReferenceReleased?.OnNext(Unit.Default);
         }
 
         public bool IsFree()

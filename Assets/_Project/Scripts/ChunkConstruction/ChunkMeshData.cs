@@ -112,7 +112,7 @@ namespace DataObject.Chunk
 
         public void Release()
         {
-            _onReleasedSubject.OnNext(default);
+            _onReleasedSubject.OnNext(Unit.Default);
         }
 
         public void Dispose()
