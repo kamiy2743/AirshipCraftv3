@@ -33,29 +33,39 @@ internal class Initializer : MonoBehaviour
 
     private void Start()
     {
+        // MasterData
         MasterBlockDataStore.InitialLoad();
 
+        // DataStore
         var chunkDataFileIO = new ChunkDataFileIO();
         chunkDataFileIODisposal = chunkDataFileIO;
         var chunkDataStore = new ChunkDataStore(chunkDataFileIO);
         chunkDataStoreDisposal = chunkDataStore;
         var chunkObjectPool = new ChunkObjectPool(chunkObjectPrefab, chunkObjectParent);
         chunkObjectPoolDisposal = chunkObjectPool;
-
         var blockDataAccessor = new BlockDataAccessor(chunkDataStore);
-        var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
-        chunkMeshCreatorDisposal = chunkMeshCreator;
-        var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
-        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater, muCoreObjectPrefab);
-        new BlockBehaviourInjector(blockBehaviourResolver);
+
+        // ChunkConstruction
         var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
         playerChunkChangeDetectorDisposal = playerChunkChangeDetector;
-
-        var placeBlockSystem = new PlaceBlockSystem(blockDataUpdater);
-        var breakBlockSystem = new BreakBlockSystem(blockDataUpdater, chunkDataStore, dropItemPrefab);
-        blockInteractor.StartInitial(blockDataAccessor, placeBlockSystem, breakBlockSystem);
+        var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
+        chunkMeshCreatorDisposal = chunkMeshCreator;
         chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkObjectPool);
         createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
+
+        // BlockOperator
+        var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
+        var placeBlockSystem = new PlaceBlockSystem(blockDataUpdater);
+        var breakBlockSystem = new BreakBlockSystem(blockDataUpdater, chunkDataStore, dropItemPrefab);
+
+        // Player
+        blockInteractor.StartInitial(blockDataAccessor, placeBlockSystem, breakBlockSystem);
+
+        // BlockBehaviour
+        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater, muCoreObjectPrefab);
+
+        // BlockBehaviour.Injection
+        new BlockBehaviourInjector(blockBehaviourResolver);
     }
 
     private void OnApplicationQuit()
