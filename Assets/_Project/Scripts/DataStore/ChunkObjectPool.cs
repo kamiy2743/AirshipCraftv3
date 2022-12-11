@@ -9,21 +9,23 @@ namespace DataStore
     /// <summary> 
     /// チャンクオブジェクトを管理 
     /// </summary>
-    public class ChunkObjectPool : MonoBehaviour, IDisposable
+    public class ChunkObjectPool : IDisposable
     {
-        [SerializeField] private ChunkObject chunkObjectPrefab;
+        private ChunkObject _chunkObjectPrefab;
+        private Transform _chunkObjectParent;
 
         private static readonly int Capacity = World.LoadChunkCount;
 
-        public NativeParallelHashSet<ChunkCoordinate> CreatedChunks;
+        public NativeParallelHashSet<ChunkCoordinate> CreatedChunks = new NativeParallelHashSet<ChunkCoordinate>(Capacity, Allocator.Persistent);
         public IReadOnlyDictionary<ChunkCoordinate, ChunkObject> ChunkObjects => _chunkObjects;
         private Dictionary<ChunkCoordinate, ChunkObject> _chunkObjects = new Dictionary<ChunkCoordinate, ChunkObject>(Capacity);
 
         private Queue<ChunkObject> availableChunkObjectQueue = new Queue<ChunkObject>(Capacity);
 
-        public void StartInitial()
+        public ChunkObjectPool(ChunkObject chunkObjectPrefab, Transform chunkObjectParent)
         {
-            CreatedChunks = new NativeParallelHashSet<ChunkCoordinate>(Capacity, Allocator.Persistent);
+            _chunkObjectPrefab = chunkObjectPrefab;
+            _chunkObjectParent = chunkObjectParent;
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace DataStore
             }
             else
             {
-                chunkObject = Instantiate(chunkObjectPrefab, parent: transform);
+                chunkObject = MonoBehaviour.Instantiate(_chunkObjectPrefab, parent: _chunkObjectParent);
             }
 
             CreatedChunks.Add(cc);

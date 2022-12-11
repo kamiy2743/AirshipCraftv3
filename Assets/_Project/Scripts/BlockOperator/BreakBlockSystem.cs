@@ -8,7 +8,7 @@ using DataStore;
 
 namespace BlockOperator
 {
-    public class BreakBlockSystem : MonoBehaviour
+    public class BreakBlockSystem
     {
         private BlockDataUpdater _blockDataUpdater;
         private ChunkDataStore _chunkDataStore;
@@ -42,7 +42,7 @@ namespace BlockOperator
 
         private void CreateDropItem(BlockData blockData)
         {
-            var dropItem = Instantiate(_dropItemPrefab);
+            var dropItem = MonoBehaviour.Instantiate(_dropItemPrefab);
             var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
             dropItem.SetMesh(meshData);
             dropItem.SetPosition(blockData.BlockCoordinate.Center);
