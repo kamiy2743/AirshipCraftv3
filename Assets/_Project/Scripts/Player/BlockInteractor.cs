@@ -23,13 +23,15 @@ namespace Player
         [SerializeField] private float placeBlockInterval;
         [SerializeField] private float breakBlockInterval;
 
+        private MasterBlockDataStore _masterBlockDataStore;
         private BlockDataAccessor _blockDataAccessor;
         private PlaceBlockSystem _placeBlockSystem;
         private BreakBlockSystem _breakBlockSystem;
         private CancellationToken _cancellationToken;
 
-        public void StartInitial(BlockDataAccessor blockDataAccessor, PlaceBlockSystem placeBlockSystem, BreakBlockSystem breakBlockSystem)
+        public void StartInitial(MasterBlockDataStore masterBlockDataStore, BlockDataAccessor blockDataAccessor, PlaceBlockSystem placeBlockSystem, BreakBlockSystem breakBlockSystem)
         {
+            _masterBlockDataStore = masterBlockDataStore;
             _blockDataAccessor = blockDataAccessor;
             _placeBlockSystem = placeBlockSystem;
             _breakBlockSystem = breakBlockSystem;
@@ -68,7 +70,7 @@ namespace Player
             var interactBlockStream = this.UpdateAsObservable().Where(_ => InputProvider.InteractBlock());
             interactBlockStream
                 .Where(_ => selectedBlock.Value != BlockData.Empty)
-                .Select(_ => MasterBlockDataStore.GetData(selectedBlock.Value.ID).InteractedBehaviour)
+                .Select(_ => _masterBlockDataStore.GetData(selectedBlock.Value.ID).InteractedBehaviour)
                 .Where(behaviour => behaviour is not null)
                 .Subscribe(behaviour => InteractBlock(selectedBlock.Value, behaviour))
                 .AddTo(this);
@@ -92,7 +94,7 @@ namespace Player
                 return;
             }
 
-            var meshData = MasterBlockDataStore.GetData(selectedBlock.ID).MeshData;
+            var meshData = _masterBlockDataStore.GetData(selectedBlock.ID).MeshData;
             blockOutline.SetMesh(meshData);
             blockOutline.SetPosition(selectedBlock.BlockCoordinate);
             blockOutline.SetVisible(true);

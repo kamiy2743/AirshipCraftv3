@@ -10,12 +10,14 @@ namespace BlockOperator
 {
     public class BreakBlockSystem
     {
+        private MasterBlockDataStore _masterBlockDataStore;
         private BlockDataUpdater _blockDataUpdater;
         private ChunkDataStore _chunkDataStore;
         private DropItem _dropItemPrefab;
 
-        public BreakBlockSystem(BlockDataUpdater blockDataUpdater, ChunkDataStore chunkDataStore, DropItem dropItemPrefab)
+        public BreakBlockSystem(MasterBlockDataStore masterBlockDataStore, BlockDataUpdater blockDataUpdater, ChunkDataStore chunkDataStore, DropItem dropItemPrefab)
         {
+            _masterBlockDataStore = masterBlockDataStore;
             _blockDataUpdater = blockDataUpdater;
             _chunkDataStore = chunkDataStore;
             _dropItemPrefab = dropItemPrefab;
@@ -43,7 +45,7 @@ namespace BlockOperator
         private void CreateDropItem(BlockData blockData)
         {
             var dropItem = MonoBehaviour.Instantiate(_dropItemPrefab);
-            var meshData = MasterBlockDataStore.GetData(blockData.ID).MeshData;
+            var meshData = _masterBlockDataStore.GetData(blockData.ID).MeshData;
             dropItem.SetMesh(meshData);
             dropItem.SetPosition(blockData.BlockCoordinate.Center);
         }

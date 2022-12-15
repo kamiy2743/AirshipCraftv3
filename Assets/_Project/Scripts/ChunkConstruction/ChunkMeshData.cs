@@ -16,6 +16,8 @@ namespace DataObject.Chunk
 {
     public class ChunkMeshData : IDisposable
     {
+        private MasterBlockDataStore _masterBlockDataStore;
+
         private NativeList<Vector3> verticesList = new NativeList<Vector3>(Allocator.Persistent);
         private NativeList<int> trianglesList = new NativeList<int>(Allocator.Persistent);
         private NativeList<Vector2> uvsList = new NativeList<Vector2>(Allocator.Persistent);
@@ -34,7 +36,11 @@ namespace DataObject.Chunk
         private static readonly NativeList<Vector2> MasterUVs = new NativeList<Vector2>(Allocator.Persistent);
         private static readonly object SyncObject = new object();
 
-        internal ChunkMeshData() { }
+        internal ChunkMeshData(MasterBlockDataStore masterBlockDataStore)
+        {
+            _masterBlockDataStore = masterBlockDataStore;
+        }
+
         internal unsafe void Init(ChunkData chunkData, CancellationToken ct)
         {
             lock (SyncObject)
@@ -66,7 +72,7 @@ namespace DataObject.Chunk
                     if (!ContainsBlockIDArray[i]) continue;
 
                     var blockID = i;
-                    var masterMeshData = MasterBlockDataStore.GetData((BlockID)blockID).MeshData;
+                    var masterMeshData = _masterBlockDataStore.GetData((BlockID)blockID).MeshData;
 
                     var masterMeshDataInfo = new int2x2(
                         MasterVertices.Length, masterMeshData.Vertices.Length,

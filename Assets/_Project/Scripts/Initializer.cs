@@ -23,6 +23,9 @@ internal class Initializer : MonoBehaviour
     [SerializeField] private DropItem dropItemPrefab;
     [SerializeField] private MUCoreObject muCoreObjectPrefab;
 
+    [SerializeField] private MasterBlockDataSettingsScriptableObject masterBlockDataSettingsScriptableObject;
+    [SerializeField] private Material blockMaterial;
+
     private IDisposable chunkDataFileIODisposal;
     private IDisposable chunkDataStoreDisposal;
     private IDisposable chunkObjectPoolDisposal;
@@ -34,7 +37,8 @@ internal class Initializer : MonoBehaviour
     private void Start()
     {
         // MasterData
-        MasterBlockDataStore.InitialLoad();
+        var masterBlockDataStore = new MasterBlockDataStore(masterBlockDataSettingsScriptableObject);
+        new BlockMaterialInitializer(masterBlockDataStore, blockMaterial);
 
         // DataStore
         var chunkDataFileIO = new ChunkDataFileIO();
@@ -48,7 +52,7 @@ internal class Initializer : MonoBehaviour
         // ChunkConstruction
         var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
         playerChunkChangeDetectorDisposal = playerChunkChangeDetector;
-        var chunkMeshCreator = new ChunkMeshCreator(chunkDataStore);
+        var chunkMeshCreator = new ChunkMeshCreator(masterBlockDataStore, chunkDataStore);
         chunkMeshCreatorDisposal = chunkMeshCreator;
         chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkObjectPool);
         createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
@@ -56,16 +60,16 @@ internal class Initializer : MonoBehaviour
         // BlockOperator
         var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
         var placeBlockSystem = new PlaceBlockSystem(blockDataUpdater);
-        var breakBlockSystem = new BreakBlockSystem(blockDataUpdater, chunkDataStore, dropItemPrefab);
+        var breakBlockSystem = new BreakBlockSystem(masterBlockDataStore, blockDataUpdater, chunkDataStore, dropItemPrefab);
 
         // Player
-        blockInteractor.StartInitial(blockDataAccessor, placeBlockSystem, breakBlockSystem);
+        blockInteractor.StartInitial(masterBlockDataStore, blockDataAccessor, placeBlockSystem, breakBlockSystem);
 
         // BlockBehaviour
         var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater, muCoreObjectPrefab);
 
         // BlockBehaviour.Injection
-        new BlockBehaviourInjector(blockBehaviourResolver);
+        new BlockBehaviourInjector(blockBehaviourResolver, masterBlockDataStore);
     }
 
     private void OnApplicationQuit()

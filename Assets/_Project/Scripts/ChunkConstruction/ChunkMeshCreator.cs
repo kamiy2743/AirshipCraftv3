@@ -11,6 +11,7 @@ using Util;
 using DataObject.Block;
 using DataObject.Chunk;
 using DataStore;
+using MasterData.Block;
 
 namespace ChunkConstruction
 {
@@ -19,14 +20,16 @@ namespace ChunkConstruction
     /// </summary>
     public class ChunkMeshCreator : IDisposable
     {
+        private MasterBlockDataStore _masterBlockDataStore;
         private ChunkDataStore _chunkDataStore;
         private List<ChunkMeshData> allocatedMeshDataList = new List<ChunkMeshData>();
         private Queue<ChunkMeshData> reusableMeshDataQueue = new Queue<ChunkMeshData>();
 
         private object syncObject = new Object();
 
-        public ChunkMeshCreator(ChunkDataStore chunkDataStore)
+        public ChunkMeshCreator(MasterBlockDataStore masterBlockDataStore, ChunkDataStore chunkDataStore)
         {
+            _masterBlockDataStore = masterBlockDataStore;
             _chunkDataStore = chunkDataStore;
         }
 
@@ -75,7 +78,7 @@ namespace ChunkConstruction
                 }
 
                 // 再利用できなければ新規作成
-                meshData = new ChunkMeshData();
+                meshData = new ChunkMeshData(_masterBlockDataStore);
                 allocatedMeshDataList.Add(meshData);
 
                 // meshDataが解放されたら再利用キューに追加

@@ -3,19 +3,14 @@ using DataObject.Block;
 
 namespace MasterData.Block
 {
-    internal class BlockMaterialInitializer
+    public class BlockMaterialInitializer
     {
         private const int EdgeMargin = 1;
 
-        internal BlockMaterialInitializer(Material blockMaterial, int blockCount)
+        public BlockMaterialInitializer(MasterBlockDataStore masterBlockDataStore, Material blockMaterial)
         {
-            blockMaterial.mainTexture = GenerateTexture(blockCount);
-        }
-
-        private Texture2D GenerateTexture(int blockCount)
-        {
-            var side = Mathf.CeilToInt(Mathf.Sqrt(blockCount));
-            var blockTextureSize = MasterBlockDataStore.GetData(BlockID.Empty).Texture.width;
+            var side = Mathf.CeilToInt(Mathf.Sqrt(masterBlockDataStore.BlocksCount));
+            var blockTextureSize = masterBlockDataStore.GetData(BlockID.Empty).Texture.width;
             var texture = new Texture2D((blockTextureSize + EdgeMargin * 2) * side, (blockTextureSize + EdgeMargin * 2) * side, TextureFormat.ARGB32, false);
             texture.wrapMode = TextureWrapMode.Clamp;
 
@@ -25,14 +20,14 @@ namespace MasterData.Block
                 {
                     Texture2D blockTexture = null;
 
-                    var masterBlockData = MasterBlockDataStore.GetData((BlockID)(side * y + x));
+                    var masterBlockData = masterBlockDataStore.GetData((BlockID)(side * y + x));
                     if (masterBlockData is not null)
                     {
                         blockTexture = masterBlockData.Texture;
                     }
                     else
                     {
-                        blockTexture = MasterBlockDataStore.GetData(BlockID.Empty).Texture;
+                        blockTexture = masterBlockDataStore.GetData(BlockID.Empty).Texture;
                     }
 
                     texture.SetPixels(
@@ -73,7 +68,7 @@ namespace MasterData.Block
             }
 
             texture.Apply();
-            return texture;
+            blockMaterial.mainTexture = texture;
         }
     }
 }
