@@ -52,7 +52,9 @@ internal class Initializer : MonoBehaviour
         // ChunkConstruction
         var playerChunkChangeDetector = new PlayerChunkChangeDetector(player);
         playerChunkChangeDetectorDisposal = playerChunkChangeDetector;
-        var chunkMeshCreator = new ChunkMeshCreator(masterBlockDataStore, chunkDataStore);
+        var chunkMeshCreatorUtil = new ChunkMeshCreatorUtil(chunkDataStore);
+        var meshCombiner = new MeshCombiner(masterBlockDataStore);
+        var chunkMeshCreator = new ChunkMeshCreator(chunkMeshCreatorUtil, meshCombiner);
         chunkMeshCreatorDisposal = chunkMeshCreator;
         chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkObjectPool);
         createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
@@ -78,7 +80,6 @@ internal class Initializer : MonoBehaviour
         chunkDataFileIODisposal.Dispose();
         chunkDataStoreDisposal.Dispose();
         chunkMeshCreatorDisposal.Dispose();
-        ChunkMeshData.DisposeStaticResource();
         playerChunkChangeDetectorDisposal.Dispose();
         chunkColliderSystemDisposal.Dispose();
         createChunkAroundPlayerSystemDisposal.Dispose();
