@@ -10,7 +10,6 @@ namespace DataObject.Chunk
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private ChunkCollider chunkCollider;
 
         private Mesh mesh;
 
@@ -41,28 +40,15 @@ namespace DataObject.Chunk
             mesh.SetTriangles(meshData.Triangles.ToArray(), 0);
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
-
-            if (chunkCollider.enabled)
-            {
-                chunkCollider.SetMesh(mesh);
-            }
         }
 
         public void ClearMesh()
         {
-            if (mesh is not null)
-            {
-                Destroy(mesh);
-                mesh = null;
-                meshRenderer.enabled = false;
-                chunkCollider.SetEnabled(false);
-                chunkCollider.Clear();
-            }
-        }
+            if (mesh is null) return;
 
-        public void SetColliderEnabled(bool enabled)
-        {
-            chunkCollider.SetEnabled(enabled);
+            Destroy(mesh);
+            mesh = null;
+            meshRenderer.enabled = false;
         }
 
         private void OnDestroy()
