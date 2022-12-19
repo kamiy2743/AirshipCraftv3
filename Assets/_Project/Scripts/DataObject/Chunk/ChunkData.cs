@@ -6,15 +6,19 @@ using Unity.Burst;
 using Unity.Mathematics;
 using Util;
 using DataObject.Block;
+using UniRx;
 
 namespace DataObject.Chunk
 {
-    public class ChunkData : IEquatable<ChunkData>, IDisposable
+    public unsafe class ChunkData : IEquatable<ChunkData>, IDisposable
     {
         public ChunkCoordinate ChunkCoordinate { get; private set; }
         public BlockData[] Blocks { get; private set; }
 
         public readonly ReferenceCounter ReferenceCounter = new ReferenceCounter();
+
+        public IObservable<BlockData> OnUpdateBlockData => _onUpdateBlockData;
+        private Subject<BlockData> _onUpdateBlockData = new Subject<BlockData>();
 
         private int hashCode = Guid.NewGuid().GetHashCode();
 
@@ -105,7 +109,7 @@ namespace DataObject.Chunk
             }
         }
 
-        public static int ToIndex(LocalCoordinate lc)
+        private static int ToIndex(LocalCoordinate lc)
         {
             return ToIndex(lc.x, lc.y, lc.z);
         }
@@ -118,6 +122,7 @@ namespace DataObject.Chunk
         public void SetBlockData(LocalCoordinate lc, BlockData blockData)
         {
             Blocks[ToIndex(lc)] = blockData;
+            _onUpdateBlockData.OnNext(blockData);
         }
 
         public BlockData GetBlockData(LocalCoordinate lc)

@@ -70,7 +70,7 @@ namespace BlockOperator
                 updateChunks.Add(chunkData);
             }
 
-            // 更新したブロックの周囲のブロックの接地ブロック情報を削除する
+            // 更新したブロックの周囲のブロックの接している面情報を削除する
             foreach (var surface in SurfaceNormalExt.Array)
             {
                 var aroundPosition = updateBlock.BlockCoordinate.ToInt3() + surface.ToInt3();
@@ -82,12 +82,14 @@ namespace BlockOperator
                 var chunkData = _chunkDataStore.GetChunkData(cc, ct);
                 if (chunkData is null) return;
 
-                var index = ChunkData.ToIndex(lc);
+                var blockData = chunkData.GetBlockData(lc);
 
                 // 空気は削除する意味がない
-                if (chunkData.Blocks[index].ID == BlockID.Air) continue;
+                if (blockData.ID == BlockID.Air) continue;
 
-                chunkData.Blocks[index].SetContactOtherBlockSurfaces(SurfaceNormal.Empty);
+                // 接している面情報を削除する
+                blockData.SetContactOtherBlockSurfaces(SurfaceNormal.Empty);
+                chunkData.SetBlockData(lc, blockData);
 
                 updateChunks.Add(chunkData);
             }
