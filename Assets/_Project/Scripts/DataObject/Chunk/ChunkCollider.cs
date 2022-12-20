@@ -1,22 +1,35 @@
+using System.Collections.Generic;
 using UnityEngine;
+using DataObject.Block;
 
-namespace DataObject
+namespace DataObject.Chunk
 {
-    internal class ChunkCollider : MonoBehaviour
+    public class ChunkCollider : MonoBehaviour
     {
-        internal void SetMesh(Mesh mesh)
-        {
+        private List<BoxCollider> colliders = new List<BoxCollider>();
 
+        public void UpdateCollider(BlockData[] blocks)
+        {
+            // TODO コンポーネントを再利用したい
+            foreach (var collider in colliders)
+            {
+                Destroy(collider);
+            }
+
+            foreach (var block in blocks)
+            {
+                if (block.IsRenderSkip) continue;
+
+                var collider = gameObject.AddComponent<BoxCollider>();
+                colliders.Add(collider);
+
+                collider.center = block.BlockCoordinate.Center;
+            }
         }
 
-        internal void SetEnabled(bool enabled)
+        public void SetActive(bool isActive)
         {
-            this.enabled = enabled;
-        }
-
-        internal void Clear()
-        {
-
+            gameObject.SetActive(isActive);
         }
     }
 }

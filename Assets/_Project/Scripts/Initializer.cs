@@ -16,10 +16,12 @@ internal class Initializer : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private Transform chunkObjectParent;
+    [SerializeField] private Transform chunkColliderParent;
     [SerializeField] private BlockInteractor blockInteractor;
 
     // TODO prefabはresourcesにおいてもいいかもしれない
     [SerializeField] private ChunkObject chunkObjectPrefab;
+    [SerializeField] private ChunkCollider chunkColliderPrefab;
     [SerializeField] private DropItem dropItemPrefab;
     [SerializeField] private MUCoreObject muCoreObjectPrefab;
 
@@ -56,7 +58,7 @@ internal class Initializer : MonoBehaviour
         var meshCombiner = new MeshCombiner(masterBlockDataStore);
         var chunkMeshCreator = new ChunkMeshCreator(chunkMeshCreatorUtil, meshCombiner);
         chunkMeshCreatorDisposal = chunkMeshCreator;
-        chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkObjectPool);
+        chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkDataStore, chunkMeshCreatorUtil, chunkColliderPrefab, chunkColliderParent);
         createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
 
         // BlockOperator
