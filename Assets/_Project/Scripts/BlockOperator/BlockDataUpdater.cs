@@ -102,21 +102,19 @@ namespace BlockOperator
         {
             foreach (var updateChunk in updateChunks)
             {
+                updateChunk.InvokeUpdateEvent();
+
                 // ファイルを更新
                 _chunkDataFileIO.AddOrUpdate(updateChunk);
 
-                // 生成されていなければスルー
-                if (!_chunkRendererPool.ChunkRenderers.TryGetValue(updateChunk.ChunkCoordinate, out var chunkRenderer))
+                // メッシュがあれば更新
+                if (_chunkRendererPool.ChunkRenderers.TryGetValue(updateChunk.ChunkCoordinate, out var chunkRenderer))
                 {
-                    continue;
+                    var meshData = _chunkMeshCreator.CreateMeshData(updateChunk, ct);
+                    chunkRenderer.SetMesh(meshData);
+                    meshData?.Release();
                 }
 
-                // 更新チャンクのメッシュを再計算する
-                var meshData = _chunkMeshCreator.CreateMeshData(updateChunk, ct);
-                // ChunkRendererにメッシュをセット
-                chunkRenderer.SetMesh(meshData);
-
-                meshData?.Release();
                 updateChunk.ReferenceCounter.Release();
             }
         }

@@ -85,8 +85,8 @@ namespace ChunkConstruction
                         collider.UpdateCollider(chunkData.Blocks);
 
                         // ブロックの更新に合わせてコライダーも更新
-                        var disposal = chunkData.OnUpdateBlockData
-                             .Subscribe(block =>
+                        var disposal = chunkData.OnUpdate
+                             .Subscribe(_ =>
                              {
                                  collider.UpdateCollider(chunkData.Blocks);
                              })
