@@ -12,16 +12,16 @@ namespace BlockOperator
     {
         private ChunkDataStore _chunkDataStore;
         private ChunkDataFileIO _chunkDataFileIO;
-        private ChunkObjectPool _chunkObjectPool;
+        private ChunkRendererPool _chunkRendererPool;
         private ChunkMeshCreator _chunkMeshCreator;
 
         private object syncObject = new object();
 
-        public BlockDataUpdater(ChunkDataStore chunkDataStore, ChunkDataFileIO chunkDataFileIO, ChunkObjectPool chunkObjectPool, ChunkMeshCreator chunkMeshCreator)
+        public BlockDataUpdater(ChunkDataStore chunkDataStore, ChunkDataFileIO chunkDataFileIO, ChunkRendererPool chunkRendererPool, ChunkMeshCreator chunkMeshCreator)
         {
             _chunkDataStore = chunkDataStore;
             _chunkDataFileIO = chunkDataFileIO;
-            _chunkObjectPool = chunkObjectPool;
+            _chunkRendererPool = chunkRendererPool;
             _chunkMeshCreator = chunkMeshCreator;
         }
 
@@ -106,15 +106,15 @@ namespace BlockOperator
                 _chunkDataFileIO.AddOrUpdate(updateChunk);
 
                 // 生成されていなければスルー
-                if (!_chunkObjectPool.ChunkObjects.TryGetValue(updateChunk.ChunkCoordinate, out var chunkObject))
+                if (!_chunkRendererPool.ChunkRenderers.TryGetValue(updateChunk.ChunkCoordinate, out var chunkRenderer))
                 {
                     continue;
                 }
 
                 // 更新チャンクのメッシュを再計算する
                 var meshData = _chunkMeshCreator.CreateMeshData(updateChunk, ct);
-                // ChunkObjectにメッシュをセット
-                chunkObject.SetMesh(meshData);
+                // ChunkRendererにメッシュをセット
+                chunkRenderer.SetMesh(meshData);
 
                 meshData?.Release();
                 updateChunk.ReferenceCounter.Release();

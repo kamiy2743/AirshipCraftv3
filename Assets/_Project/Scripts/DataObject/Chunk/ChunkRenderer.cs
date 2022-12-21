@@ -3,10 +3,7 @@ using Util;
 
 namespace DataObject.Chunk
 {
-    /// <summary> 
-    /// チャンクのGameObject 
-    /// </summary>
-    public class ChunkObject : MonoBehaviour
+    public class ChunkRenderer : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;

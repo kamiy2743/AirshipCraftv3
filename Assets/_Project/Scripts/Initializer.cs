@@ -15,12 +15,12 @@ using BlockBehaviour.Injection;
 internal class Initializer : MonoBehaviour
 {
     [SerializeField] private Transform player;
-    [SerializeField] private Transform chunkObjectParent;
+    [SerializeField] private Transform chunkRendererParent;
     [SerializeField] private Transform chunkColliderParent;
     [SerializeField] private BlockInteractor blockInteractor;
 
     // TODO prefabはresourcesにおいてもいいかもしれない
-    [SerializeField] private ChunkObject chunkObjectPrefab;
+    [SerializeField] private ChunkRenderer chunkRendererPrefab;
     [SerializeField] private ChunkCollider chunkColliderPrefab;
     [SerializeField] private DropItem dropItemPrefab;
     [SerializeField] private MUCoreObject muCoreObjectPrefab;
@@ -30,7 +30,7 @@ internal class Initializer : MonoBehaviour
 
     private IDisposable chunkDataFileIODisposal;
     private IDisposable chunkDataStoreDisposal;
-    private IDisposable chunkObjectPoolDisposal;
+    private IDisposable chunkRendererPoolDisposal;
     private IDisposable chunkMeshCreatorDisposal;
     private IDisposable chunkColliderSystemDisposal;
     private IDisposable createChunkAroundPlayerSystemDisposal;
@@ -47,8 +47,8 @@ internal class Initializer : MonoBehaviour
         chunkDataFileIODisposal = chunkDataFileIO;
         var chunkDataStore = new ChunkDataStore(chunkDataFileIO);
         chunkDataStoreDisposal = chunkDataStore;
-        var chunkObjectPool = new ChunkObjectPool(chunkObjectPrefab, chunkObjectParent);
-        chunkObjectPoolDisposal = chunkObjectPool;
+        var chunkRendererPool = new ChunkRendererPool(chunkRendererPrefab, chunkRendererParent);
+        chunkRendererPoolDisposal = chunkRendererPool;
         var blockDataAccessor = new BlockDataAccessor(chunkDataStore);
 
         // ChunkConstruction
@@ -59,10 +59,10 @@ internal class Initializer : MonoBehaviour
         var chunkMeshCreator = new ChunkMeshCreator(chunkMeshCreatorUtil, meshCombiner);
         chunkMeshCreatorDisposal = chunkMeshCreator;
         chunkColliderSystemDisposal = new ChunkColliderSystem(playerChunkChangeDetector, chunkDataStore, chunkMeshCreatorUtil, chunkColliderPrefab, chunkColliderParent);
-        createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkObjectPool, chunkDataStore, chunkMeshCreator);
+        createChunkAroundPlayerSystemDisposal = new CreateChunkAroundPlayerSystem(playerChunkChangeDetector, chunkRendererPool, chunkDataStore, chunkMeshCreator);
 
         // BlockOperator
-        var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkObjectPool, chunkMeshCreator);
+        var blockDataUpdater = new BlockDataUpdater(chunkDataStore, chunkDataFileIO, chunkRendererPool, chunkMeshCreator);
         var placeBlockSystem = new PlaceBlockSystem(blockDataUpdater);
         var breakBlockSystem = new BreakBlockSystem(masterBlockDataStore, blockDataUpdater, chunkDataStore, dropItemPrefab);
 
@@ -78,7 +78,7 @@ internal class Initializer : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        chunkObjectPoolDisposal.Dispose();
+        chunkRendererPoolDisposal.Dispose();
         chunkDataFileIODisposal.Dispose();
         chunkDataStoreDisposal.Dispose();
         chunkMeshCreatorDisposal.Dispose();

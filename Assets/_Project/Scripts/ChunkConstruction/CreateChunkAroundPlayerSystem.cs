@@ -21,7 +21,7 @@ namespace ChunkConstruction
     /// </summary>
     public class CreateChunkAroundPlayerSystem : IDisposable
     {
-        private ChunkObjectPool _chunkObjectPool;
+        private ChunkRendererPool _chunkRendererPool;
         private ChunkDataStore _chunkDataStore;
         private ChunkMeshCreator _chunkMeshCreator;
 
@@ -34,7 +34,7 @@ namespace ChunkConstruction
 
         private CancellationTokenSource cts;
         private NativeList<ChunkCoordinate> releaseChunkList = new NativeList<ChunkCoordinate>(Allocator.Persistent);
-        private ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> createChunkObjectQueue = new ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
+        private ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>> createChunkRendererQueue = new ConcurrentQueue<KeyValuePair<ChunkCoordinate, ChunkMeshData>>();
 
         public void Dispose()
         {
@@ -44,9 +44,9 @@ namespace ChunkConstruction
             releaseChunkList.Dispose();
         }
 
-        public CreateChunkAroundPlayerSystem(PlayerChunkChangeDetector playerChunkChangeDetector, ChunkObjectPool chunkObjectPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
+        public CreateChunkAroundPlayerSystem(PlayerChunkChangeDetector playerChunkChangeDetector, ChunkRendererPool chunkRendererPool, ChunkDataStore chunkDataStore, ChunkMeshCreator chunkMeshCreator)
         {
-            _chunkObjectPool = chunkObjectPool;
+            _chunkRendererPool = chunkRendererPool;
             _chunkDataStore = chunkDataStore;
             _chunkMeshCreator = chunkMeshCreator;
 
@@ -59,14 +59,14 @@ namespace ChunkConstruction
                 })
                 .AddTo(disposals);
 
-            // 別スレッドで作成したメッシュデータからChunkObjectを作成
+            // 別スレッドで作成したメッシュデータからChunkRendererを作成
             Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    while (createChunkObjectQueue.TryDequeue(out var item))
+                    while (createChunkRendererQueue.TryDequeue(out var item))
                     {
-                        var chunkObject = _chunkObjectPool.TakeChunkObject(item.Key);
-                        chunkObject.SetMesh(item.Value);
+                        var chunkRenderer = _chunkRendererPool.TakeChunkRenderer(item.Key);
+                        chunkRenderer.SetMesh(item.Value);
                         item.Value?.Release();
                     }
                 })
@@ -90,7 +90,7 @@ namespace ChunkConstruction
         /// </summary>
         private void ReleaseOutRangeChunk(int3 playerChunk)
         {
-            var createdChunks = _chunkObjectPool.ChunkObjects.Keys.ToArray();
+            var createdChunks = _chunkRendererPool.ChunkRenderers.Keys.ToArray();
             if (createdChunks.Length == 0) return;
 
             releaseChunkList.Clear();
@@ -111,7 +111,7 @@ namespace ChunkConstruction
 
             foreach (var cc in job.releaseChunkList)
             {
-                _chunkObjectPool.ReleaseChunkObject(cc);
+                _chunkRendererPool.ReleaseChunkRenderer(cc);
             }
         }
 
@@ -165,7 +165,7 @@ namespace ChunkConstruction
                 cts.Cancel();
                 cts.Dispose();
                 cts = null;
-                createChunkObjectQueue.Clear();
+                createChunkRendererQueue.Clear();
             }
 
             cts = new CancellationTokenSource();
@@ -195,7 +195,7 @@ namespace ChunkConstruction
         {
             var job = new SetupCreateChunkQueueJob
             {
-                createdChunks = _chunkObjectPool.CreatedChunks,
+                createdChunks = _chunkRendererPool.CreatedChunks,
                 createMeshDataQueue = new NativeQueue<ChunkCoordinate>(Allocator.Persistent),
                 playerChunk = playerChunk,
                 yStart = math.max(playerChunk.y - World.LoadChunkRadius, ChunkCoordinate.Min),
@@ -363,7 +363,7 @@ namespace ChunkConstruction
                 chunkData.ReferenceCounter.Release();
 
                 if (ct.IsCancellationRequested) return;
-                createChunkObjectQueue.Enqueue(new KeyValuePair<ChunkCoordinate, ChunkMeshData>(cc, meshData));
+                createChunkRendererQueue.Enqueue(new KeyValuePair<ChunkCoordinate, ChunkMeshData>(cc, meshData));
             }
         }
     }

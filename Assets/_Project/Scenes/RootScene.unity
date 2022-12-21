@@ -294,7 +294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 125769954}
   m_Layer: 0
-  m_Name: ChunkObjects
+  m_Name: ChunkRenderers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -449,10 +449,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 920373323}
-  chunkObjectParent: {fileID: 125769954}
+  chunkRendererParent: {fileID: 0}
   chunkColliderParent: {fileID: 92462854}
   blockInteractor: {fileID: 920373325}
-  chunkObjectPrefab: {fileID: 3715391981258457855, guid: a5f98469cd6fd774186d8f20027e90ca, type: 3}
+  chunkRendererPrefab: {fileID: 0}
   chunkColliderPrefab: {fileID: 4196407895324600114, guid: e9fae8d005a1fb748b1ff675cfa2d3ae, type: 3}
   dropItemPrefab: {fileID: 3569887538438418583, guid: 8eff85a4300058741888859503050db7, type: 3}
   muCoreObjectPrefab: {fileID: 1494232460265758427, guid: 658ab5990b8fa6e4abb6d0bfd678deb4, type: 3}
