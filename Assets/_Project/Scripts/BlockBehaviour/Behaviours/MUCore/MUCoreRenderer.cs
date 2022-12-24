@@ -1,13 +1,12 @@
 using UnityEngine;
 using Util;
 
-namespace BlockBehaviour
+namespace BlockBehaviour.MUCore
 {
-    public class MUCoreObject : MonoBehaviour
+    public class MUCoreRenderer : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private MeshCollider meshCollider;
 
         private Mesh mesh;
 
@@ -28,7 +27,6 @@ namespace BlockBehaviour
                 mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 meshFilter.sharedMesh = mesh;
                 meshRenderer.enabled = true;
-                meshCollider.enabled = true;
             }
             else
             {
@@ -39,8 +37,6 @@ namespace BlockBehaviour
             mesh.SetTriangles(meshData.Triangles, 0);
             mesh.SetUVs(0, meshData.UVs);
             mesh.RecalculateNormals();
-
-            meshCollider.sharedMesh = mesh;
         }
 
         private void ClearMesh()
@@ -50,8 +46,6 @@ namespace BlockBehaviour
                 Destroy(mesh);
                 mesh = null;
                 meshRenderer.enabled = false;
-                meshCollider.enabled = false;
-                meshCollider.sharedMesh = null;
             }
         }
 

@@ -8,19 +8,19 @@ using BlockOperator;
 using UnityEngine;
 using Util;
 
-namespace BlockBehaviour
+namespace BlockBehaviour.MUCore
 {
     internal class MUCore : IBlockBehaviour, IInteractedBehaviour
     {
         private BlockDataAccessor _blockDataAccessor;
         private BlockDataUpdater _blockDataUpdater;
-        private MUCoreObject _muCoreObjectPrefab;
+        private MUCoreRenderer _muCoreRendererPrefab;
 
-        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MUCoreObject muCoreObjectPrefab)
+        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MUCoreRenderer muCoreRendererPrefab)
         {
             _blockDataAccessor = blockDataAccessor;
             _blockDataUpdater = blockDataUpdater;
-            _muCoreObjectPrefab = muCoreObjectPrefab;
+            _muCoreRendererPrefab = muCoreRendererPrefab;
         }
 
         public void OnInteracted(BlockData targetBlockData)
@@ -32,11 +32,11 @@ namespace BlockBehaviour
             // TODO ctを渡す
             _blockDataUpdater.UpdateBlockData(updateBlocks, default);
 
-            var muCoreObject = MonoBehaviour.Instantiate<MUCoreObject>(
-                _muCoreObjectPrefab,
+            var muCoreRenderer = MonoBehaviour.Instantiate<MUCoreRenderer>(
+                _muCoreRendererPrefab,
                 targetBlockData.BlockCoordinate.Center,
                 Quaternion.identity);
-            muCoreObject.SetMesh(CubeMesh.MeshData);
+            muCoreRenderer.SetMesh(CubeMesh.MeshData);
         }
 
         private HashSet<BlockData> GetChainedBlocks(BlockData targetBlock, int maxCount)

@@ -10,9 +10,9 @@ namespace BlockBehaviour
     {
         private Dictionary<Type, IBlockBehaviour> instanceLookUpTable = new Dictionary<Type, IBlockBehaviour>();
 
-        public BlockBehaviourResolver(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MUCoreObject muCoreObjectPrefab)
+        public BlockBehaviourResolver(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MUCoreRenderer muCoreRendererPrefab)
         {
-            instanceLookUpTable.Add(typeof(MUCore), new MUCore(blockDataAccessor, blockDataUpdater, muCoreObjectPrefab));
+            instanceLookUpTable.Add(typeof(MUCore), new MUCore(blockDataAccessor, blockDataUpdater, muCoreRendererPrefab));
         }
 
         public IBlockBehaviour GetBehaviourInstance(Type type)
