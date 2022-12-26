@@ -86,8 +86,7 @@ namespace ChunkConstruction
 
                     var masterMeshDataInfo = new int2x2(
                         masterVertices.Length, masterMeshData.Vertices.Length,
-                        masterTriangles.Length, masterMeshData.Triangles.Length
-                    );
+                        masterTriangles.Length, masterMeshData.Triangles.Length);
                     masterMeshDataInfoHashMap.Add((int)blockID, masterMeshDataInfo);
 
                     unsafe

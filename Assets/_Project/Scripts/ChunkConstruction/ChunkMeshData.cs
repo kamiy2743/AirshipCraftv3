@@ -32,10 +32,9 @@ namespace DataObject.Chunk
             if (meshData is null) return null;
 
             return new NativeMeshData(
-                meshData.Vertices.AsArray(),
-                meshData.Triangles.AsArray(),
-                meshData.UVs.AsArray()
-            );
+                meshData.Vertices,
+                meshData.Triangles,
+                meshData.UVs);
         }
     }
 }

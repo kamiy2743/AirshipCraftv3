@@ -62,8 +62,7 @@ namespace DataObject.Chunk
             return new ChunkCoordinate(
                 bc.x >> ChunkData.ChunkBlockSideShift,
                 bc.y >> ChunkData.ChunkBlockSideShift,
-                bc.z >> ChunkData.ChunkBlockSideShift
-            );
+                bc.z >> ChunkData.ChunkBlockSideShift);
         }
 
         public override string ToString()

@@ -41,8 +41,7 @@ namespace ChunkConstruction
             return new int3(
                 (int)math.floor(playerPosition.x) >> ChunkData.ChunkBlockSideShift,
                 (int)math.floor(playerPosition.y) >> ChunkData.ChunkBlockSideShift,
-                (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift
-            );
+                (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift);
         }
 
         public void Dispose()

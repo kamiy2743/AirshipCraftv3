@@ -45,8 +45,7 @@ namespace MasterData.Block
 
             var leftBottom = new Vector2(
                 (Texture.width + 2) * x + 1,
-                (Texture.width + 2) * y + 1
-            );
+                (Texture.width + 2) * y + 1);
 
             var blockTextureSize = (Texture.width + 2) * side;
             var uvs = new List<Vector2>(24);

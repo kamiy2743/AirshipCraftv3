@@ -29,8 +29,7 @@ namespace DataObject.Chunk
             return new LocalCoordinate(
                 (byte)(bc.x & ToLocalCoordinateMask),
                 (byte)(bc.y & ToLocalCoordinateMask),
-                (byte)(bc.z & ToLocalCoordinateMask)
-            );
+                (byte)(bc.z & ToLocalCoordinateMask));
         }
 
         public override string ToString()

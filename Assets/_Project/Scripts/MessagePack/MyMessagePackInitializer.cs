@@ -13,8 +13,7 @@ namespace MyMessagePackExt
                 // Resolvers.GeneratedResolver.Instance,
                 StandardResolver.Instance,
                 MessagePack.Unity.UnityResolver.Instance,
-                MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance
-            );
+                MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance);
 
             var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
 

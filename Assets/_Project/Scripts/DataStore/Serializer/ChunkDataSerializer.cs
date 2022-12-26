@@ -150,8 +150,7 @@ namespace DataStore.Serializer
                     var bc = new BlockCoordinate(
                         chunkRoot.x + lcx,
                         chunkRoot.y + lcy,
-                        chunkRoot.z + lcz
-                    );
+                        chunkRoot.z + lcz);
 
                     // ContactOtherBlockSurfaces
                     var contactOtherBlockSurfaces = (SurfaceNormal)(*(bytesFirst + offset));

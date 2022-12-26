@@ -331,8 +331,7 @@ namespace ChunkConstruction
                 return new float3(
                     viewportPoint.x * div,
                     viewportPoint.y * div,
-                    viewportPoint.z * div
-                );
+                    viewportPoint.z * div);
             }
 
             // math.mul()よりも速い
@@ -342,8 +341,7 @@ namespace ChunkConstruction
                     (viewportMatrix.c0.x * b1) + (viewportMatrix.c1.x * b2) + (viewportMatrix.c2.x * b3) + (viewportMatrix.c3.x),
                     (viewportMatrix.c0.y * b1) + (viewportMatrix.c1.y * b2) + (viewportMatrix.c2.y * b3) + (viewportMatrix.c3.y),
                     (viewportMatrix.c0.z * b1) + (viewportMatrix.c1.z * b2) + (viewportMatrix.c2.z * b3) + (viewportMatrix.c3.z),
-                    (viewportMatrix.c0.w * b1) + (viewportMatrix.c1.w * b2) + (viewportMatrix.c2.w * b3) + (viewportMatrix.c3.w)
-                );
+                    (viewportMatrix.c0.w * b1) + (viewportMatrix.c1.w * b2) + (viewportMatrix.c2.w * b3) + (viewportMatrix.c3.w));
             }
         }
 

@@ -59,8 +59,8 @@ namespace ChunkConstruction
             return new Vector3(
                 (int)math.floor(playerPosition.x) >> ChunkData.ChunkBlockSideShift,
                 (int)math.floor(playerPosition.y) >> ChunkData.ChunkBlockSideShift,
-                (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift
-            );
+                (int)math.floor(playerPosition.z) >> ChunkData.ChunkBlockSideShift)
+           ;
         }
 
         private Color GetRadiusColor(int radius)
