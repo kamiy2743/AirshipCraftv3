@@ -10,20 +10,38 @@ namespace DataObject.Chunk
 
         public void UpdateCollider(BlockData[] blocks)
         {
-            // TODO コンポーネントを再利用したい
-            foreach (var collider in colliders)
-            {
-                Destroy(collider);
-            }
+            var renderCount = 0;
+            var collidersCount = colliders.Count;
 
             foreach (var block in blocks)
             {
                 if (block.IsRenderSkip) continue;
 
-                var collider = gameObject.AddComponent<BoxCollider>();
-                colliders.Add(collider);
+                BoxCollider collider;
+                // 作成済みコライダーがあれば再利用
+                if (renderCount < collidersCount)
+                {
+                    collider = colliders[renderCount];
+                }
+                else
+                {
+                    collider = gameObject.AddComponent<BoxCollider>();
+                    colliders.Add(collider);
+                }
 
                 collider.center = block.BlockCoordinate.Center;
+                renderCount++;
+            }
+
+            // コライダーが余剰なら削除
+            if (collidersCount > renderCount)
+            {
+                for (int i = renderCount; i < collidersCount; i++)
+                {
+                    Destroy(colliders[i]);
+                }
+
+                colliders.RemoveRange(renderCount, collidersCount - renderCount);
             }
         }
 
