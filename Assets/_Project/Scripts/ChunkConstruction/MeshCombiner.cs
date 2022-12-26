@@ -14,6 +14,7 @@ using DataObject.Chunk;
 
 namespace ChunkConstruction
 {
+    // TODO 汎用的に使えるからChunkConstruction以外に置きたい
     public class MeshCombiner : IDisposable
     {
         private MasterBlockDataStore _masterBlockDataStore;
@@ -43,7 +44,7 @@ namespace ChunkConstruction
             masterUVs.Dispose();
         }
 
-        internal unsafe void Combine(
+        public unsafe void Combine(
             BlockData[] blocks,
             NativeList<Vector3> resultVertices,
             NativeList<int> resultTriangles,

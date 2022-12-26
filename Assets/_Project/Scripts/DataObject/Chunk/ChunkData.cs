@@ -17,8 +17,8 @@ namespace DataObject.Chunk
 
         public readonly ReferenceCounter ReferenceCounter = new ReferenceCounter();
 
-        public IObservable<Unit> OnUpdate => _onUpdate;
-        private Subject<Unit> _onUpdate = new Subject<Unit>();
+        public IObservable<Unit> OnBlockUpdate => _onBlockUpdate;
+        private Subject<Unit> _onBlockUpdate = new Subject<Unit>();
 
         private int hashCode = Guid.NewGuid().GetHashCode();
 
@@ -119,9 +119,9 @@ namespace DataObject.Chunk
             return lcx + (lcy << ChunkBlockSideShift) + (lcz << (ChunkBlockSideShift * 2));
         }
 
-        public void InvokeUpdateEvent()
+        public void InvokeBlockUpdateEvent()
         {
-            _onUpdate.OnNext(Unit.Default);
+            _onBlockUpdate.OnNext(Unit.Default);
         }
 
         public void SetBlockData(LocalCoordinate lc, BlockData blockData)

@@ -102,7 +102,7 @@ namespace BlockOperator
         {
             foreach (var updateChunk in updateChunks)
             {
-                updateChunk.InvokeUpdateEvent();
+                updateChunk.InvokeBlockUpdateEvent();
 
                 // ファイルを更新
                 _chunkDataFileIO.AddOrUpdate(updateChunk);

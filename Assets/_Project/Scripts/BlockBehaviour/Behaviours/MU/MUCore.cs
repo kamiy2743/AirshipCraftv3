@@ -1,26 +1,37 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using DataObject.Block;
 using BlockBehaviour.Interface;
+using ChunkConstruction;
 using DataStore;
 using Unity.Mathematics;
+using Unity.Collections;
 using BlockOperator;
 using UnityEngine;
+using UniRx;
 using Util;
 
-namespace BlockBehaviour.MUCore
+namespace BlockBehaviour
 {
-    internal class MUCore : IBlockBehaviour, IInteractedBehaviour
+    internal class MUCore : IBlockBehaviour, IInteractedBehaviour, IDisposable
     {
         private BlockDataAccessor _blockDataAccessor;
         private BlockDataUpdater _blockDataUpdater;
-        private MUCoreRenderer _muCoreRendererPrefab;
+        private MeshCombiner _meshCombiner;
+        private MURenderer _muRendererPrefab;
 
-        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MUCoreRenderer muCoreRendererPrefab)
+        private object syncObject = new object();
+        private NativeList<Vector3> verticesBuffer = new NativeList<Vector3>(Allocator.Persistent);
+        private NativeList<int> trianglesBuffer = new NativeList<int>(Allocator.Persistent);
+        private NativeList<Vector2> uvsBuffer = new NativeList<Vector2>(Allocator.Persistent);
+
+        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MeshCombiner meshCombiner, MURenderer muRendererPrefab)
         {
             _blockDataAccessor = blockDataAccessor;
             _blockDataUpdater = blockDataUpdater;
-            _muCoreRendererPrefab = muCoreRendererPrefab;
+            _meshCombiner = meshCombiner;
+            _muRendererPrefab = muRendererPrefab;
         }
 
         public void OnInteracted(BlockData targetBlockData)
@@ -32,11 +43,29 @@ namespace BlockBehaviour.MUCore
             // TODO ctを渡す
             _blockDataUpdater.UpdateBlockData(updateBlocks, default);
 
-            var muCoreRenderer = MonoBehaviour.Instantiate<MUCoreRenderer>(
-                _muCoreRendererPrefab,
-                targetBlockData.BlockCoordinate.Center,
-                Quaternion.identity);
-            muCoreRenderer.SetMesh(CubeMesh.MeshData);
+            var muData = new MUData(chainedBlocks);
+            var muRenderer = MonoBehaviour.Instantiate<MURenderer>(_muRendererPrefab);
+
+            UpdateMesh();
+
+            muData.OnBlockUpdate
+                .Subscribe(_ => UpdateMesh());
+
+            void UpdateMesh()
+            {
+                lock (syncObject)
+                {
+                    // TODO ctを渡す
+                    _meshCombiner.Combine(
+                        muData.Blocks,
+                        verticesBuffer,
+                        trianglesBuffer,
+                        uvsBuffer,
+                        default);
+
+                    muRenderer.SetMesh(new NativeMeshData(verticesBuffer, trianglesBuffer, uvsBuffer));
+                }
+            }
         }
 
         private HashSet<BlockData> GetChainedBlocks(BlockData targetBlock, int maxCount)
@@ -79,6 +108,13 @@ namespace BlockBehaviour.MUCore
             }
 
             return chainedBlocks;
+        }
+
+        public void Dispose()
+        {
+            verticesBuffer.Dispose();
+            trianglesBuffer.Dispose();
+            uvsBuffer.Dispose();
         }
     }
 }
