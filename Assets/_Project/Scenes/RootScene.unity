@@ -456,6 +456,7 @@ MonoBehaviour:
   chunkColliderPrefab: {fileID: 4196407895324600114, guid: e9fae8d005a1fb748b1ff675cfa2d3ae, type: 3}
   dropItemPrefab: {fileID: 3569887538438418583, guid: 8eff85a4300058741888859503050db7, type: 3}
   muRendererPrefab: {fileID: 6052338802235250239, guid: 658ab5990b8fa6e4abb6d0bfd678deb4, type: 3}
+  muColliderPrefab: {fileID: -274918769318073565, guid: a0492b62c8870fa4288bf34573d19537, type: 3}
   masterBlockDataSettingsScriptableObject: {fileID: 11400000, guid: a76519731f1959e4abc6e610f8d8b923, type: 2}
   blockMaterial: {fileID: 2100000, guid: 5be8c191c0023074c95b33d82bf40ef9, type: 2}
 --- !u!114 &694688723

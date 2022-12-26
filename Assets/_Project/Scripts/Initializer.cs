@@ -24,6 +24,7 @@ internal class Initializer : MonoBehaviour
     [SerializeField] private ChunkCollider chunkColliderPrefab;
     [SerializeField] private DropItem dropItemPrefab;
     [SerializeField] private MURenderer muRendererPrefab;
+    [SerializeField] private MUCollider muColliderPrefab;
 
     [SerializeField] private MasterBlockDataSettingsScriptableObject masterBlockDataSettingsScriptableObject;
     [SerializeField] private Material blockMaterial;
@@ -70,7 +71,7 @@ internal class Initializer : MonoBehaviour
         blockInteractor.StartInitial(masterBlockDataStore, blockDataAccessor, placeBlockSystem, breakBlockSystem);
 
         // BlockBehaviour
-        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater, meshCombiner, muRendererPrefab);
+        var blockBehaviourResolver = new BlockBehaviourResolver(blockDataAccessor, blockDataUpdater, meshCombiner, muRendererPrefab, muColliderPrefab);
 
         // BlockBehaviour.Injection
         new BlockBehaviourInjector(blockBehaviourResolver, masterBlockDataStore);

@@ -20,18 +20,20 @@ namespace BlockBehaviour
         private BlockDataUpdater _blockDataUpdater;
         private MeshCombiner _meshCombiner;
         private MURenderer _muRendererPrefab;
+        private MUCollider _muColliderPrefab;
 
         private object syncObject = new object();
         private NativeList<Vector3> verticesBuffer = new NativeList<Vector3>(Allocator.Persistent);
         private NativeList<int> trianglesBuffer = new NativeList<int>(Allocator.Persistent);
         private NativeList<Vector2> uvsBuffer = new NativeList<Vector2>(Allocator.Persistent);
 
-        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MeshCombiner meshCombiner, MURenderer muRendererPrefab)
+        internal MUCore(BlockDataAccessor blockDataAccessor, BlockDataUpdater blockDataUpdater, MeshCombiner meshCombiner, MURenderer muRendererPrefab, MUCollider muColliderPrefab)
         {
             _blockDataAccessor = blockDataAccessor;
             _blockDataUpdater = blockDataUpdater;
             _meshCombiner = meshCombiner;
             _muRendererPrefab = muRendererPrefab;
+            _muColliderPrefab = muColliderPrefab;
         }
 
         public void OnInteracted(BlockData targetBlockData)
@@ -45,25 +47,29 @@ namespace BlockBehaviour
 
             var muData = new MUData(chainedBlocks);
             var muRenderer = MonoBehaviour.Instantiate<MURenderer>(_muRendererPrefab);
+            var muCollider = MonoBehaviour.Instantiate<MUCollider>(_muColliderPrefab);
 
-            UpdateMesh();
+            OnBlockUpdate();
 
             muData.OnBlockUpdate
-                .Subscribe(_ => UpdateMesh());
+                .Subscribe(_ => OnBlockUpdate());
 
-            void UpdateMesh()
+            void OnBlockUpdate()
             {
                 lock (syncObject)
                 {
+                    var blocks = muData.Blocks;
+
                     // TODO ctを渡す
                     _meshCombiner.Combine(
-                        muData.Blocks,
+                        blocks,
                         verticesBuffer,
                         trianglesBuffer,
                         uvsBuffer,
                         default);
 
                     muRenderer.SetMesh(new NativeMeshData(verticesBuffer, trianglesBuffer, uvsBuffer));
+                    muCollider.UpdateCollider(blocks);
                 }
             }
         }
