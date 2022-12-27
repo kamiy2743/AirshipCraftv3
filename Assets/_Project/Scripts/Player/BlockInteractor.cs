@@ -17,7 +17,6 @@ namespace Player
     public class BlockInteractor : MonoBehaviour
     {
         [SerializeField] private BlockOutline blockOutline;
-        [SerializeField] private Transform startPosition;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private float distance;
         [SerializeField] private float placeBlockInterval;
@@ -39,7 +38,7 @@ namespace Player
 
             var selectedBlock = new ReactiveProperty<BlockData>();
             RaycastHit raycastHit = default;
-            this.UpdateAsObservable()
+            this.FixedUpdateAsObservable()
                 .Subscribe(_ =>
                 {
                     selectedBlock.Value = RaycastToBlock(out raycastHit);
@@ -78,7 +77,7 @@ namespace Player
 
         private BlockData RaycastToBlock(out RaycastHit raycastHit)
         {
-            if (!Physics.Raycast(startPosition.position, playerCamera.Forward, out raycastHit, distance, 1 << Layer.Block))
+            if (!Physics.Raycast(playerCamera.Position, playerCamera.Forward, out raycastHit, distance, 1 << Layer.Block))
             {
                 return BlockData.Empty;
             }
