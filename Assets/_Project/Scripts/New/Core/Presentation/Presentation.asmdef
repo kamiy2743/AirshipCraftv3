@@ -1,0 +1,16 @@
+{
+    "name": "Presentation",
+    "rootNamespace": "Presentation",
+    "references": [
+        "GUID:fd7eeb2169756f04abc07f19555fdb29"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

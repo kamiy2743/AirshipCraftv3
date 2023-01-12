@@ -1,0 +1,17 @@
+{
+    "name": "Infrastructure",
+    "rootNamespace": "Infrastructure",
+    "references": [
+        "GUID:8c85115166f24b54587e4634a18ee680",
+        "GUID:fd7eeb2169756f04abc07f19555fdb29"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
