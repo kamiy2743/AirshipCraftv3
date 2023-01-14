@@ -4,24 +4,20 @@ using Unity.Mathematics;
 
 namespace UseCase
 {
-    internal class PlaceBlockUseCase
+    public class PlaceBlockUseCase
     {
-        private IChunkRepository chunkRepository;
-        private IChunkProvider chunkProvider;
+        private SetBlockService setBlockService;
 
-        internal PlaceBlockUseCase(IChunkRepository chunkRepository, IChunkProvider chunkProvider)
+        internal PlaceBlockUseCase(SetBlockService setBlockService)
         {
-            this.chunkRepository = chunkRepository;
-            this.chunkProvider = chunkProvider;
+            this.setBlockService = setBlockService;
         }
 
-        internal void PlaceBlock(float3 position)
+        public void PlaceBlock(float3 position)
         {
             if (!BlockGridCoordinate.TryParse(position, out var blockGridCoordinate)) return;
 
             var placeBlock = new Block(BlockTypeID.Dirt);
-
-            var setBlockService = new SetBlockService(chunkRepository, chunkProvider);
             setBlockService.SetBlock(blockGridCoordinate, placeBlock);
         }
     }

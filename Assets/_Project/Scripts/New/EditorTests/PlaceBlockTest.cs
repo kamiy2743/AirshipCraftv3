@@ -16,7 +16,8 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new ChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
+        var setBlockService = new SetBlockService(chunkRepository, chunkProvider);
+        var placeBlockUseCase = new PlaceBlockUseCase(setBlockService);
 
         placeBlockUseCase.PlaceBlock(new Vector3(0, 0, 0));
 
@@ -29,7 +30,8 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new ChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
+        var setBlockService = new SetBlockService(chunkRepository, chunkProvider);
+        var placeBlockUseCase = new PlaceBlockUseCase(setBlockService);
 
         placeBlockUseCase.PlaceBlock(new Vector3(8, 8, 8));
 
