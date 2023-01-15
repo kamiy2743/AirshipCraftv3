@@ -2,6 +2,7 @@ using Zenject;
 using Domain.Chunks;
 using Infrastructure;
 using UseCase;
+using Presentation;
 
 namespace Installers
 {
@@ -26,6 +27,9 @@ namespace Installers
 
             Container.Bind<SetBlockService>().AsCached();
             Container.Bind<PlaceBlockUseCase>().AsCached();
+
+            Container.Bind<EnterWorldUseCase>().AsCached();
+            Container.Bind<EnterWorldModel>().AsCached();
         }
     }
 }
