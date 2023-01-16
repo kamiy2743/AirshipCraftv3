@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using Extensions;
 
@@ -33,7 +34,7 @@ namespace Domain
                     return int3Ext.Back;
             }
 
-            return int3.zero;
+            throw new Exception("実装漏れ");
         }
 
         internal static AdjacentSurface Flip(this AdjacentSurface surface)
@@ -54,7 +55,7 @@ namespace Domain
                     return AdjacentSurface.Forward;
             }
 
-            return AdjacentSurface.Right;
+            throw new Exception("実装漏れ");
         }
     }
 }

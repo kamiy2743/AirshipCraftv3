@@ -28,6 +28,7 @@ namespace Installers
             Container.Bind<SetBlockService>().AsCached();
             Container.Bind<PlaceBlockUseCase>().AsCached();
 
+            Container.Bind<SceneLoader>().AsCached();
             Container.Bind<EnterWorldUseCase>().AsCached();
             Container.Bind<EnterWorldModel>().AsCached();
         }
