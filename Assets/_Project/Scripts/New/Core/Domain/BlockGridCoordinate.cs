@@ -13,7 +13,7 @@ namespace Domain
         private const int Max = ChunkGridCoordinate.Max * Chunk.BlockSide;
         private const int Min = ChunkGridCoordinate.Min * Chunk.BlockSide;
 
-        private BlockGridCoordinate(float3 value) : this((int)math.floor(value.x), (int)math.floor(value.y), (int)math.floor(value.z)) { }
+        internal BlockGridCoordinate(float3 value) : this((int)math.floor(value.x), (int)math.floor(value.y), (int)math.floor(value.z)) { }
         private BlockGridCoordinate(int3 value) : this(value.x, value.y, value.z) { }
         internal BlockGridCoordinate(int x, int y, int z)
         {
@@ -33,20 +33,6 @@ namespace Domain
             if (y > Max || y < Min) return false;
             if (z > Max || z < Min) return false;
             return true;
-        }
-
-        internal static bool TryGetAdjacentCoordinate(AdjacentSurface surface, BlockGridCoordinate from, out BlockGridCoordinate result)
-        {
-            try
-            {
-                result = new BlockGridCoordinate(new int3(from.x, from.y, from.z) + surface.ToInt3());
-                return true;
-            }
-            catch
-            {
-                result = null;
-                return false;
-            }
         }
 
         public static bool TryParse(float3 value, out BlockGridCoordinate result)

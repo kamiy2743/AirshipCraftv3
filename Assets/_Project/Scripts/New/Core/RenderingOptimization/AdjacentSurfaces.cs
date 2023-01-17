@@ -1,4 +1,4 @@
-namespace Domain
+namespace RenderingOptimization
 {
     internal class AdjacentSurfaces
     {

@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
+using Domain;
 using Domain.Chunks;
 using Infrastructure;
 using UseCase;
@@ -11,30 +12,40 @@ using UseCase;
 public class PlaceBlockTest
 {
     [Test]
-    public void BlockGridCoordinate_0_0_0に設置すると4つのチャンクを更新する()
+    public void BlockGridCoordinate_0_0_0にGrassを設置()
     {
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new ChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var setBlockService = new SetBlockService(chunkRepository, chunkProvider);
-        var placeBlockUseCase = new PlaceBlockUseCase(setBlockService);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
-        placeBlockUseCase.PlaceBlock(new Vector3(0, 0, 0));
+        var placePosition = new Vector3(0, 0, 0);
+        placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Grass);
 
-        Assert.AreEqual(4, chunkRepository.chunks.Values.Count);
+        var bgc = new BlockGridCoordinate(placePosition);
+        var cgc = ChunkGridCoordinate.Parse(bgc);
+        var rc = RelativeCoordinate.Parse(bgc);
+        var block = chunkRepository.Fetch(cgc).GetBlock(rc);
+
+        Assert.AreEqual(BlockTypeID.Grass, block.blockTypeID);
     }
 
     [Test]
-    public void BlockGridCoordinate_8_8_8に設置すると1つのチャンクを更新する()
+    public void BlockGridCoordinate_0_0_0にDirtを設置()
     {
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new ChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var setBlockService = new SetBlockService(chunkRepository, chunkProvider);
-        var placeBlockUseCase = new PlaceBlockUseCase(setBlockService);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
-        placeBlockUseCase.PlaceBlock(new Vector3(8, 8, 8));
+        var placePosition = new Vector3(0, 0, 0);
+        placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Dirt);
 
-        Assert.AreEqual(1, chunkRepository.chunks.Values.Count);
+        var bgc = new BlockGridCoordinate(placePosition);
+        var cgc = ChunkGridCoordinate.Parse(bgc);
+        var rc = RelativeCoordinate.Parse(bgc);
+        var block = chunkRepository.Fetch(cgc).GetBlock(rc);
+
+        Assert.AreEqual(BlockTypeID.Dirt, block.blockTypeID);
     }
 }

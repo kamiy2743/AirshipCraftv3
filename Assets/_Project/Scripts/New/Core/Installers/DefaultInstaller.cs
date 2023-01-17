@@ -25,7 +25,6 @@ namespace Installers
                 .To<ChunkProvider>()
                 .AsCached();
 
-            Container.Bind<SetBlockService>().AsCached();
             Container.Bind<PlaceBlockUseCase>().AsCached();
 
             Container.Bind<SceneLoader>().AsCached();

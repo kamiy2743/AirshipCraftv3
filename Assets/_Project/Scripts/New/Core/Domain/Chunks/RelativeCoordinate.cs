@@ -2,7 +2,7 @@ using System;
 
 namespace Domain.Chunks
 {
-    internal record RelativeCoordinate
+    public record RelativeCoordinate
     {
         public readonly int x;
         public readonly int y;
@@ -31,7 +31,7 @@ namespace Domain.Chunks
             return true;
         }
 
-        internal static RelativeCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
+        public static RelativeCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
         {
             return new RelativeCoordinate(
                 blockGridCoordinate.x & Max,

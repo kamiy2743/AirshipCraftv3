@@ -6,19 +6,26 @@ namespace UseCase
 {
     public class PlaceBlockUseCase
     {
-        private SetBlockService setBlockService;
+        private IChunkRepository chunkRepository;
+        private IChunkProvider chunkProvider;
 
-        internal PlaceBlockUseCase(SetBlockService setBlockService)
+        internal PlaceBlockUseCase(IChunkRepository chunkRepository, IChunkProvider chunkProvider)
         {
-            this.setBlockService = setBlockService;
+            this.chunkRepository = chunkRepository;
+            this.chunkProvider = chunkProvider;
         }
 
-        public void PlaceBlock(float3 position)
+        public void PlaceBlock(float3 position, BlockTypeID blockTypeID)
         {
             if (!BlockGridCoordinate.TryParse(position, out var blockGridCoordinate)) return;
 
-            var placeBlock = new Block(BlockTypeID.Dirt);
-            setBlockService.SetBlock(blockGridCoordinate, placeBlock);
+            var block = new Block(blockTypeID);
+
+            var cgc = ChunkGridCoordinate.Parse(blockGridCoordinate);
+            var rc = RelativeCoordinate.Parse(blockGridCoordinate);
+            var chunk = chunkProvider.GetChunk(cgc);
+            chunk.SetBlock(rc, block);
+            chunkRepository.Store(chunk);
         }
     }
 }

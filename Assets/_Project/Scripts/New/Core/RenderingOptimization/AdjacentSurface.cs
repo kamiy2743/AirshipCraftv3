@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace Domain
+namespace RenderingOptimization
 {
     internal enum AdjacentSurface
     {

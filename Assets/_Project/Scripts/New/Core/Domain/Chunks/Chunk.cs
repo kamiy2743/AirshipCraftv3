@@ -21,7 +21,7 @@ namespace Domain.Chunks
             return blocks.GetBlock(relativeCoordinate);
         }
 
-        internal void SetBlockDirectly(RelativeCoordinate relativeCoordinate, Block block)
+        public void SetBlock(RelativeCoordinate relativeCoordinate, Block block)
         {
             blocks.SetBlock(relativeCoordinate, block);
         }

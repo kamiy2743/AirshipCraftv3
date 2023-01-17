@@ -17,7 +17,7 @@ namespace Domain.Chunks
             this.z = z;
         }
 
-        internal static ChunkGridCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
+        public static ChunkGridCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
         {
             return new ChunkGridCoordinate(
                 (short)(blockGridCoordinate.x >> Chunk.BlockSideShift),
