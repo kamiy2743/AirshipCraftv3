@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using Domain;
 using Domain.Chunks;
 
-namespace RenderingOptimization
+namespace RenderingOptimization.RenderingSurface
 {
     public class UpdateBlockRenderingSurfaceService
     {
@@ -23,7 +23,7 @@ namespace RenderingOptimization
             var updateRenderingSurfaces = new HashSet<ChunkRenderingSurface>();
             var targetBlockRenderingSurface = new BlockRenderingSurface();
 
-            foreach (var surface in SurfaceExt.Array)
+            foreach (var surface in DirectionExt.Array)
             {
                 // 隣接しているブロックの座標を取得
                 if (!targetCoordinate.TryAdd(surface.ToInt3(), out var adjacentCoordinate))

@@ -1,6 +1,6 @@
 using Domain.Chunks;
 
-namespace RenderingOptimization
+namespace RenderingOptimization.RenderingSurface
 {
     internal interface IChunkRenderingSurfaceFactory
     {

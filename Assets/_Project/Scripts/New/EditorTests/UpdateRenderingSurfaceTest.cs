@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using RenderingOptimization;
+using RenderingOptimization.RenderingSurface;
 using Domain;
 using Domain.Chunks;
 using UseCase;
@@ -36,35 +36,35 @@ public class UpdateRenderingSurfaceTest
         var forward = renderingSurface.GetBlockRenderingSurface(targetRelativeCoordinate.Add(z: 1));
         var back = renderingSurface.GetBlockRenderingSurface(targetRelativeCoordinate.Add(z: -1));
 
-        Assert.AreEqual(false, target.Contains(Surface.Left));
-        Assert.AreEqual(false, target.Contains(Surface.Right));
-        Assert.AreEqual(false, target.Contains(Surface.Top));
-        Assert.AreEqual(false, target.Contains(Surface.Bottom));
-        Assert.AreEqual(false, target.Contains(Surface.Forward));
-        Assert.AreEqual(false, target.Contains(Surface.Back));
+        Assert.AreEqual(false, target.Contains(Direction.Left));
+        Assert.AreEqual(false, target.Contains(Direction.Right));
+        Assert.AreEqual(false, target.Contains(Direction.Top));
+        Assert.AreEqual(false, target.Contains(Direction.Bottom));
+        Assert.AreEqual(false, target.Contains(Direction.Forward));
+        Assert.AreEqual(false, target.Contains(Direction.Back));
 
-        Assert.AreEqual(false, right.Contains(Surface.Left));
-        Assert.AreEqual(false, left.Contains(Surface.Right));
-        Assert.AreEqual(false, top.Contains(Surface.Bottom));
-        Assert.AreEqual(false, bottom.Contains(Surface.Top));
-        Assert.AreEqual(false, forward.Contains(Surface.Back));
-        Assert.AreEqual(false, back.Contains(Surface.Forward));
+        Assert.AreEqual(false, right.Contains(Direction.Left));
+        Assert.AreEqual(false, left.Contains(Direction.Right));
+        Assert.AreEqual(false, top.Contains(Direction.Bottom));
+        Assert.AreEqual(false, bottom.Contains(Direction.Top));
+        Assert.AreEqual(false, forward.Contains(Direction.Back));
+        Assert.AreEqual(false, back.Contains(Direction.Forward));
 
         var targetBlock = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate);
         updateBlockRenderingSurfaceService.UpdateBlockRenderingSurface(targetCoordinate, targetBlock.blockTypeID);
 
-        Assert.AreEqual(false, target.Contains(Surface.Left));
-        Assert.AreEqual(false, target.Contains(Surface.Right));
-        Assert.AreEqual(false, target.Contains(Surface.Top));
-        Assert.AreEqual(false, target.Contains(Surface.Bottom));
-        Assert.AreEqual(false, target.Contains(Surface.Forward));
-        Assert.AreEqual(false, target.Contains(Surface.Back));
+        Assert.AreEqual(false, target.Contains(Direction.Left));
+        Assert.AreEqual(false, target.Contains(Direction.Right));
+        Assert.AreEqual(false, target.Contains(Direction.Top));
+        Assert.AreEqual(false, target.Contains(Direction.Bottom));
+        Assert.AreEqual(false, target.Contains(Direction.Forward));
+        Assert.AreEqual(false, target.Contains(Direction.Back));
 
-        Assert.AreEqual(false, right.Contains(Surface.Left));
-        Assert.AreEqual(false, left.Contains(Surface.Right));
-        Assert.AreEqual(false, top.Contains(Surface.Bottom));
-        Assert.AreEqual(false, bottom.Contains(Surface.Top));
-        Assert.AreEqual(false, forward.Contains(Surface.Back));
-        Assert.AreEqual(false, back.Contains(Surface.Forward));
+        Assert.AreEqual(false, right.Contains(Direction.Left));
+        Assert.AreEqual(false, left.Contains(Direction.Right));
+        Assert.AreEqual(false, top.Contains(Direction.Bottom));
+        Assert.AreEqual(false, bottom.Contains(Direction.Top));
+        Assert.AreEqual(false, forward.Contains(Direction.Back));
+        Assert.AreEqual(false, back.Contains(Direction.Forward));
     }
 }

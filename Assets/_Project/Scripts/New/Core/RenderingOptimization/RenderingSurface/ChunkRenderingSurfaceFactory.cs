@@ -1,7 +1,7 @@
 using Domain;
 using Domain.Chunks;
 
-namespace RenderingOptimization
+namespace RenderingOptimization.RenderingSurface
 {
     internal class ChunkRenderingSurfaceFactory : IChunkRenderingSurfaceFactory
     {
@@ -32,7 +32,7 @@ namespace RenderingOptimization
                         var rc = new RelativeCoordinate(x, y, z);
                         var blockRenderingSurface = new BlockRenderingSurface();
 
-                        foreach (var surface in SurfaceExt.Array)
+                        foreach (var surface in DirectionExt.Array)
                         {
                             var adjacentBlock = GetAdjacentBlock(surface, rc, context);
                             if (adjacentBlock.blockTypeID == BlockTypeID.Air)
@@ -49,28 +49,28 @@ namespace RenderingOptimization
             return surfaces;
         }
 
-        private Block GetAdjacentBlock(Surface surface, RelativeCoordinate rc, Context context)
+        private Block GetAdjacentBlock(Direction direction, RelativeCoordinate rc, Context context)
         {
-            var adjacentRelativeCoordinate = rc.Add(surface.ToInt3());
+            var adjacentRelativeCoordinate = rc.Add(direction.ToInt3());
 
-            switch (surface)
+            switch (direction)
             {
-                case Surface.Right:
+                case Direction.Right:
                     if (rc.x == RelativeCoordinate.Max) return context.RightChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Surface.Left:
+                case Direction.Left:
                     if (rc.x == RelativeCoordinate.Min) return context.LeftChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Surface.Top:
+                case Direction.Top:
                     if (rc.y == RelativeCoordinate.Max) return context.TopChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Surface.Bottom:
+                case Direction.Bottom:
                     if (rc.y == RelativeCoordinate.Min) return context.BottomChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Surface.Forward:
+                case Direction.Forward:
                     if (rc.z == RelativeCoordinate.Max) return context.ForwardChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Surface.Back:
+                case Direction.Back:
                     if (rc.z == RelativeCoordinate.Min) return context.BackChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
             }
@@ -91,17 +91,17 @@ namespace RenderingOptimization
             internal Context(ChunkGridCoordinate targetChunkGridCoordinate, IChunkProvider chunkProvider)
             {
                 TargetChunk = chunkProvider.GetChunk(targetChunkGridCoordinate);
-                RightChunk = GetAdjacentChunk(Surface.Right, targetChunkGridCoordinate, chunkProvider);
-                LeftChunk = GetAdjacentChunk(Surface.Left, targetChunkGridCoordinate, chunkProvider);
-                TopChunk = GetAdjacentChunk(Surface.Top, targetChunkGridCoordinate, chunkProvider);
-                BottomChunk = GetAdjacentChunk(Surface.Bottom, targetChunkGridCoordinate, chunkProvider);
-                ForwardChunk = GetAdjacentChunk(Surface.Forward, targetChunkGridCoordinate, chunkProvider);
-                BackChunk = GetAdjacentChunk(Surface.Back, targetChunkGridCoordinate, chunkProvider);
+                RightChunk = GetAdjacentChunk(Direction.Right, targetChunkGridCoordinate, chunkProvider);
+                LeftChunk = GetAdjacentChunk(Direction.Left, targetChunkGridCoordinate, chunkProvider);
+                TopChunk = GetAdjacentChunk(Direction.Top, targetChunkGridCoordinate, chunkProvider);
+                BottomChunk = GetAdjacentChunk(Direction.Bottom, targetChunkGridCoordinate, chunkProvider);
+                ForwardChunk = GetAdjacentChunk(Direction.Forward, targetChunkGridCoordinate, chunkProvider);
+                BackChunk = GetAdjacentChunk(Direction.Back, targetChunkGridCoordinate, chunkProvider);
             }
 
-            private Chunk GetAdjacentChunk(Surface surface, ChunkGridCoordinate source, IChunkProvider chunkProvider)
+            private Chunk GetAdjacentChunk(Direction direction, ChunkGridCoordinate source, IChunkProvider chunkProvider)
             {
-                if (!source.TryAdd(surface.ToInt3(), out var adjacentChunkGridCoordinate))
+                if (!source.TryAdd(direction.ToInt3(), out var adjacentChunkGridCoordinate))
                 {
                     // TODO ワールド端の処理
                     return null;

@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using RenderingOptimization;
+using RenderingOptimization.RenderingSurface;
 using Domain.Chunks;
 
 public class BlockRenderingSurfacesTest
@@ -14,11 +14,11 @@ public class BlockRenderingSurfacesTest
     {
         var source = new BlockRenderingSurfaces();
         var rc = new RelativeCoordinate(8, 8, 8);
-        var value = new BlockRenderingSurface(Surface.Left);
-        source.SetBlockRenderingSurfaceDirectly(rc, new BlockRenderingSurface(Surface.Left));
+        var value = new BlockRenderingSurface(Direction.Left);
+        source.SetBlockRenderingSurfaceDirectly(rc, new BlockRenderingSurface(Direction.Left));
 
         var copy = source.DeepCopy();
 
-        Assert.AreEqual(new BlockRenderingSurface(Surface.Left), copy.GetBlockRenderingSurface(rc));
+        Assert.AreEqual(new BlockRenderingSurface(Direction.Left), copy.GetBlockRenderingSurface(rc));
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Domain.Chunks;
-using RenderingOptimization;
+using RenderingOptimization.RenderingSurface;
 
 namespace Infrastructure
 {

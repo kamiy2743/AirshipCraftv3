@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using Domain;
 using Domain.Chunks;
-using RenderingOptimization;
+using RenderingOptimization.RenderingSurface;
 
 namespace UseCase
 {

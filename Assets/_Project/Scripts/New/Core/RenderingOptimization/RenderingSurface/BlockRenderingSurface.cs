@@ -1,4 +1,4 @@
-namespace RenderingOptimization
+namespace RenderingOptimization.RenderingSurface
 {
     internal record BlockRenderingSurface
     {
@@ -10,10 +10,10 @@ namespace RenderingOptimization
             surfacesByte = 0;
         }
 
-        internal BlockRenderingSurface(params Surface[] surfaces)
+        internal BlockRenderingSurface(params Direction[] directions)
         {
             var result = new BlockRenderingSurface();
-            foreach (var surface in surfaces)
+            foreach (var surface in directions)
             {
                 result += surface;
             }
@@ -26,20 +26,20 @@ namespace RenderingOptimization
             this.surfacesByte = surfacesByte;
         }
 
-        internal bool Contains(Surface surface)
+        internal bool Contains(Direction direction)
         {
-            return (surfacesByte & (byte)surface) == 1;
+            return (surfacesByte & (byte)direction) == 1;
         }
 
-        public static BlockRenderingSurface operator +(BlockRenderingSurface renderingSurface, Surface surface)
+        public static BlockRenderingSurface operator +(BlockRenderingSurface renderingSurface, Direction direction)
         {
-            var result = renderingSurface.surfacesByte | (byte)surface;
+            var result = renderingSurface.surfacesByte | (byte)direction;
             return new BlockRenderingSurface((byte)result);
         }
 
-        public static BlockRenderingSurface operator -(BlockRenderingSurface renderingSurface, Surface surface)
+        public static BlockRenderingSurface operator -(BlockRenderingSurface renderingSurface, Direction direction)
         {
-            var result = renderingSurface.surfacesByte ^ (byte)surface;
+            var result = renderingSurface.surfacesByte ^ (byte)direction;
             return new BlockRenderingSurface((byte)result);
         }
     }
