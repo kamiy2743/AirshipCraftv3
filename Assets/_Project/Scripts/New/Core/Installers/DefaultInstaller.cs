@@ -3,6 +3,7 @@ using Domain.Chunks;
 using Infrastructure;
 using UseCase;
 using Presentation;
+// using 
 
 namespace Installers
 {
@@ -26,6 +27,7 @@ namespace Installers
                 .AsCached();
 
             Container.Bind<PlaceBlockUseCase>().AsCached();
+            // Container.Bind <
 
             Container.Bind<SceneLoader>().AsCached();
             Container.Bind<EnterWorldUseCase>().AsCached();

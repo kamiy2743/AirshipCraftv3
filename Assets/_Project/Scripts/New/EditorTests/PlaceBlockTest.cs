@@ -8,6 +8,7 @@ using Domain;
 using Domain.Chunks;
 using Infrastructure;
 using UseCase;
+using RenderingOptimization;
 
 public class PlaceBlockTest
 {
@@ -17,7 +18,11 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
+        var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
+        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory();
+        var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
+        var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider, updateBlockRenderingSurfaceService);
 
         var placePosition = new Vector3(0, 0, 0);
         placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Grass);
@@ -36,7 +41,11 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
+        var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
+        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory();
+        var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
+        var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider, updateBlockRenderingSurfaceService);
 
         var placePosition = new Vector3(0, 0, 0);
         placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Dirt);
