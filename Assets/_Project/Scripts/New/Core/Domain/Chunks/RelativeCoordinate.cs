@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
@@ -8,8 +9,8 @@ namespace Domain.Chunks
         public readonly int y;
         public readonly int z;
 
-        private const int Max = Chunk.BlockSide - 1;
-        private const int Min = 0;
+        public const int Max = Chunk.BlockSide - 1;
+        public const int Min = 0;
 
         public RelativeCoordinate(int x, int y, int z)
         {
@@ -29,6 +30,11 @@ namespace Domain.Chunks
             if (y > Max || y < Min) return false;
             if (z > Max || z < Min) return false;
             return true;
+        }
+
+        public RelativeCoordinate Add(int3 value)
+        {
+            return Add(value.x, value.y, value.z);
         }
 
         internal RelativeCoordinate Add(int x = 0, int y = 0, int z = 0)

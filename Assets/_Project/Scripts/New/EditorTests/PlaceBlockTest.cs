@@ -19,7 +19,7 @@ public class PlaceBlockTest
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
         var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
-        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory();
+        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory(chunkProvider);
         var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
         var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
         var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider, updateBlockRenderingSurfaceService);
@@ -42,7 +42,7 @@ public class PlaceBlockTest
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
         var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
-        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory();
+        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory(chunkProvider);
         var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
         var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
         var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider, updateBlockRenderingSurfaceService);
