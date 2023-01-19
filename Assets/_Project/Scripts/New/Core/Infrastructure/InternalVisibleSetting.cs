@@ -1,5 +1,6 @@
-#if UNITY_EDITOR
 using System.Runtime.CompilerServices;
+#if UNITY_EDITOR
 [assembly: InternalsVisibleTo("EditorTests")]
-[assembly: InternalsVisibleTo("Installers")]
 #endif
+[assembly: InternalsVisibleTo("Installers")]
+

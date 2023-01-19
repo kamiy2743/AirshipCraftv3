@@ -8,7 +8,8 @@
         "Domain",
         "Infrastructure",
         "Presentation",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "RenderingOptimization"
     ],
     "includePlatforms": [
         "Editor"

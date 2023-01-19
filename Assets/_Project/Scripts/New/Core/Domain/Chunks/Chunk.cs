@@ -7,8 +7,8 @@ namespace Domain.Chunks
         public readonly ChunkGridCoordinate chunkGridCoordinate;
         private readonly ChunkBlocks blocks;
 
-        internal const int BlockSideShift = 4;
-        internal const int BlockSide = 1 << BlockSideShift;
+        public const int BlockSideShift = 4;
+        public const int BlockSide = 1 << BlockSideShift;
 
         internal Chunk(ChunkGridCoordinate chunkGridCoordinate, ChunkBlocks blocks)
         {
@@ -16,7 +16,7 @@ namespace Domain.Chunks
             this.blocks = blocks;
         }
 
-        internal Block GetBlock(RelativeCoordinate relativeCoordinate)
+        public Block GetBlock(RelativeCoordinate relativeCoordinate)
         {
             return blocks.GetBlock(relativeCoordinate);
         }

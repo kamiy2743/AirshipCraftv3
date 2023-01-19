@@ -15,7 +15,7 @@ public class PlaceBlockTest
     public void BlockGridCoordinate_0_0_0にGrassを設置()
     {
         var chunkRepository = new OnMemoryChunkRepository();
-        var chunkFactory = new ChunkFactory();
+        var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
         var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
@@ -34,7 +34,7 @@ public class PlaceBlockTest
     public void BlockGridCoordinate_0_0_0にDirtを設置()
     {
         var chunkRepository = new OnMemoryChunkRepository();
-        var chunkFactory = new ChunkFactory();
+        var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
         var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 

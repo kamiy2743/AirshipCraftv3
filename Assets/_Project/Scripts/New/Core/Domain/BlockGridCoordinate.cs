@@ -14,7 +14,6 @@ namespace Domain
         private const int Min = ChunkGridCoordinate.Min * Chunk.BlockSide;
 
         internal BlockGridCoordinate(float3 value) : this((int)math.floor(value.x), (int)math.floor(value.y), (int)math.floor(value.z)) { }
-        private BlockGridCoordinate(int3 value) : this(value.x, value.y, value.z) { }
         internal BlockGridCoordinate(int x, int y, int z)
         {
             if (!IsValid(x, y, z))
@@ -33,6 +32,20 @@ namespace Domain
             if (y > Max || y < Min) return false;
             if (z > Max || z < Min) return false;
             return true;
+        }
+
+        public bool TryAdd(int3 value, out BlockGridCoordinate result)
+        {
+            try
+            {
+                result = new BlockGridCoordinate(this.x + value.x, this.y + value.y, this.z + value.z);
+                return true;
+            }
+            catch
+            {
+                result = null;
+                return false;
+            }
         }
 
         public static bool TryParse(float3 value, out BlockGridCoordinate result)

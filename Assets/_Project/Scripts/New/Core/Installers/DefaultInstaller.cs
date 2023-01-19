@@ -17,7 +17,7 @@ namespace Installers
 
             Container
                 .Bind<IChunkFactory>()
-                .To<ChunkFactory>()
+                .To<AllDirtChunkFactory>()
                 .AsCached();
 
             Container

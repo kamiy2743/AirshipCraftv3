@@ -1,8 +1,6 @@
-using Domain.Chunks;
-
-namespace UseCase
+namespace Domain.Chunks
 {
-    internal interface IChunkProvider
+    public interface IChunkProvider
     {
         Chunk GetChunk(ChunkGridCoordinate chunkGridCoordinate);
     }

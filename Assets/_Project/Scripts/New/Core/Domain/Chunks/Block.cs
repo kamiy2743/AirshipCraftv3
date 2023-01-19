@@ -2,7 +2,7 @@ namespace Domain.Chunks
 {
     public class Block
     {
-        internal readonly BlockTypeID blockTypeID;
+        public readonly BlockTypeID blockTypeID;
 
         public Block(BlockTypeID blockTypeID)
         {
