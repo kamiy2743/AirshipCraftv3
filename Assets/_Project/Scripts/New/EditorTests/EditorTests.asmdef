@@ -9,7 +9,8 @@
         "Infrastructure",
         "Presentation",
         "Unity.Mathematics",
-        "RenderingOptimization"
+        "RenderingOptimization",
+        "Zenject"
     ],
     "includePlatforms": [
         "Editor"

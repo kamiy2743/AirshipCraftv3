@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
+using RenderingOptimization;
 using RenderingOptimization.RenderingSurface;
 
 public class BlockRenderingSurfaceTest

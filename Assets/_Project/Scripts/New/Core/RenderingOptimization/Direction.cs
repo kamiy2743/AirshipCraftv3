@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace RenderingOptimization.RenderingSurface
+namespace RenderingOptimization
 {
     internal enum Direction
     {

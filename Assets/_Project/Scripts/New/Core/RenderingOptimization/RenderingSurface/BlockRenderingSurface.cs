@@ -5,9 +5,12 @@ namespace RenderingOptimization.RenderingSurface
         private readonly byte surfacesByte;
         internal byte SurfaceByteDebug => surfacesByte;
 
+        internal readonly bool hasRenderingSurface;
+
         internal BlockRenderingSurface()
         {
             surfacesByte = 0;
+            hasRenderingSurface = false;
         }
 
         internal BlockRenderingSurface(params Direction[] directions)
@@ -19,11 +22,13 @@ namespace RenderingOptimization.RenderingSurface
             }
 
             surfacesByte = result.surfacesByte;
+            hasRenderingSurface = true;
         }
 
         private BlockRenderingSurface(byte surfacesByte)
         {
             this.surfacesByte = surfacesByte;
+            hasRenderingSurface = surfacesByte > 0;
         }
 
         internal bool Contains(Direction direction)

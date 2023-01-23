@@ -3,7 +3,9 @@ using Domain.Chunks;
 using Infrastructure;
 using UseCase;
 using Presentation;
-// using 
+using RenderingOptimization;
+using RenderingOptimization.RenderingSurface;
+using RenderingOptimization.ChunkMesh;
 
 namespace Installers
 {
@@ -27,11 +29,34 @@ namespace Installers
                 .AsCached();
 
             Container.Bind<PlaceBlockUseCase>().AsCached();
-            // Container.Bind <
 
             Container.Bind<SceneLoader>().AsCached();
             Container.Bind<EnterWorldUseCase>().AsCached();
             Container.Bind<EnterWorldModel>().AsCached();
+
+            Container.Bind<ChunkRendererFactory>().AsCached();
+
+            Container
+                .Bind<IChunkRenderingSurfaceRepository>()
+                .To<OnMemoryChunkRenderingSurfaceRepository>()
+                .AsCached();
+
+            Container
+                .Bind<IChunkRenderingSurfaceFactory>()
+                .To<ChunkRenderingSurfaceFactory>()
+                .AsCached();
+
+            Container
+                .Bind<IChunkRenderingSurfaceProvider>()
+                .To<ChunkRenderingSurfaceProvider>()
+                .AsCached();
+
+            Container
+                .Bind<IBlockMeshProvider>()
+                .To<BlockMeshProvider>()
+                .AsCached();
+
+            Container.Bind<ChunkMeshFactory>().AsCached();
         }
     }
 }
