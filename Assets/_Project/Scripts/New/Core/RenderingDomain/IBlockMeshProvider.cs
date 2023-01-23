@@ -1,6 +1,6 @@
 using Domain;
 
-namespace RenderingOptimization
+namespace RenderingDomain
 {
     internal interface IBlockMeshProvider
     {

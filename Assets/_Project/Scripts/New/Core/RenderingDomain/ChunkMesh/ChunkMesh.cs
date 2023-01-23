@@ -1,14 +1,14 @@
 using UnityEngine;
 
-namespace RenderingOptimization
+namespace RenderingDomain.ChunkMesh
 {
-    internal record MeshData
+    internal record ChunkMesh
     {
         internal readonly Vector3[] vertices;
         internal readonly int[] triangles;
         internal readonly Vector2[] uvs;
 
-        internal MeshData(Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        internal ChunkMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             this.vertices = vertices;
             this.triangles = triangles;

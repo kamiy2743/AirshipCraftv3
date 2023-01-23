@@ -1,7 +1,7 @@
 using Domain;
 using Domain.Chunks;
 
-namespace RenderingOptimization.RenderingSurface
+namespace RenderingDomain.RenderingSurface
 {
     internal class ChunkRenderingSurfaceFactory : IChunkRenderingSurfaceFactory
     {

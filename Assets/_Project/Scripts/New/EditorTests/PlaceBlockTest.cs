@@ -8,7 +8,7 @@ using Domain;
 using Domain.Chunks;
 using Infrastructure;
 using UseCase;
-using RenderingOptimization.RenderingSurface;
+using RenderingDomain.RenderingSurface;
 
 public class PlaceBlockTest
 {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Domain;
 
-namespace RenderingOptimization
+namespace RenderingDomain
 {
     internal class BlockMeshProvider : IBlockMeshProvider
     {

@@ -1,7 +1,7 @@
 using System;
 using Domain.Chunks;
 
-namespace RenderingOptimization.RenderingSurface
+namespace RenderingDomain.RenderingSurface
 {
     public class ChunkRenderingSurface : IEquatable<ChunkRenderingSurface>
     {

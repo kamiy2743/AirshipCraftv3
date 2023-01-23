@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace RenderingOptimization
+namespace RenderingDomain
 {
     internal record BlockMesh
     {

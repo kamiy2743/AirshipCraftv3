@@ -1,4 +1,4 @@
-namespace RenderingOptimization.RenderingSurface
+namespace RenderingDomain.RenderingSurface
 {
     internal record BlockRenderingSurface
     {

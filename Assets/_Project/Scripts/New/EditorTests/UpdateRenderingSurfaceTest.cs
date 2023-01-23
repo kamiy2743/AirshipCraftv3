@@ -4,8 +4,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using RenderingOptimization;
-using RenderingOptimization.RenderingSurface;
+using RenderingDomain;
+using RenderingDomain.RenderingSurface;
 using Domain;
 using Domain.Chunks;
 using UseCase;
