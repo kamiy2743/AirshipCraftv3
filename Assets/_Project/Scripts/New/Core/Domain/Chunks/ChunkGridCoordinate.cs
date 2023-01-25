@@ -33,11 +33,11 @@ namespace Domain.Chunks
             return true;
         }
 
-        public bool TryAdd(int3 value, out ChunkGridCoordinate result)
+        public static bool TryConstruct(int x, int y, int z, out ChunkGridCoordinate result)
         {
             try
             {
-                result = new ChunkGridCoordinate((short)(this.x + value.x), (short)(this.y + value.y), (short)(this.z + value.z));
+                result = new ChunkGridCoordinate(x, y, z);
                 return true;
             }
             catch
@@ -45,6 +45,11 @@ namespace Domain.Chunks
                 result = null;
                 return false;
             }
+        }
+
+        public bool TryAdd(int3 value, out ChunkGridCoordinate result)
+        {
+            return TryConstruct(this.x + value.x, this.y + value.y, this.z + value.z, out result);
         }
 
         public static ChunkGridCoordinate Parse(BlockGridCoordinate blockGridCoordinate)

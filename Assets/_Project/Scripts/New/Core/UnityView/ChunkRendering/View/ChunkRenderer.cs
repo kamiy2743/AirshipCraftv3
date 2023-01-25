@@ -1,12 +1,17 @@
 using UnityEngine;
 
-namespace Presentation
+namespace UnityView.ChunkRendering
 {
     internal class ChunkRenderer : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
 
         private Mesh mesh;
+
+        internal void SetRootPosition(Vector3 rootPosition)
+        {
+            transform.position = rootPosition;
+        }
 
         internal void SetMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {

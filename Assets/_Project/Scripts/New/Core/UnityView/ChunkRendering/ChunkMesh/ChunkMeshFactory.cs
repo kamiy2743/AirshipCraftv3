@@ -42,13 +42,13 @@ namespace RenderingDomain.ChunkMesh
                             continue;
                         }
 
-                        var blockMesh = blockMeshProvider.GetBlockMesh(block.blockTypeID);
                         var blockRenderingSurface = chunkRenderingSurface.GetBlockRenderingSurface(rc);
-
                         if (!blockRenderingSurface.hasRenderingSurface)
                         {
                             continue;
                         }
+
+                        var blockMesh = blockMeshProvider.GetBlockMesh(block.blockTypeID);
 
                         foreach (var direction in DirectionExt.Array)
                         {
@@ -65,7 +65,7 @@ namespace RenderingDomain.ChunkMesh
                             }
                             foreach (var v in partMesh.vertices)
                             {
-                                vertices.Add(v + (new Vector3(chunkGridCoordinate.x, chunkGridCoordinate.y, chunkGridCoordinate.z) * Chunk.BlockSide) + new Vector3(x, y, z));
+                                vertices.Add(v + new Vector3(x, y, z));
                             }
                             uvs.AddRange(partMesh.uvs);
                         }
@@ -76,7 +76,7 @@ namespace RenderingDomain.ChunkMesh
                         }
                         foreach (var v in blockMesh.otherPart.vertices)
                         {
-                            vertices.Add(v + (new Vector3(chunkGridCoordinate.x, chunkGridCoordinate.y, chunkGridCoordinate.z) * Chunk.BlockSide) + new Vector3(x, y, z));
+                            vertices.Add(v + new Vector3(x, y, z));
                         }
                         uvs.AddRange(blockMesh.otherPart.uvs);
                     }

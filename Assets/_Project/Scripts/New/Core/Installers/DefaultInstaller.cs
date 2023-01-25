@@ -34,8 +34,6 @@ namespace Installers
             Container.Bind<EnterWorldUseCase>().AsCached();
             Container.Bind<EnterWorldModel>().AsCached();
 
-            Container.Bind<ChunkRendererFactory>().AsCached();
-
             Container
                 .Bind<IChunkRenderingSurfaceRepository>()
                 .To<OnMemoryChunkRenderingSurfaceRepository>()

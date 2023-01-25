@@ -1,37 +1,19 @@
 @startuml DomainModel
 
-package チャンク集約 {
-    object チャンク {
-        チャンクグリッド座標
-        包含するブロックのリスト
+package Chunk {
+    object Chunk {
+        ChunkGridCoordinate
     }
 
-    object ブロック_チャンク {
-        ブロックタイプID
-        接面情報
+    object Block {
+        BlockTypeID
     }
 
-    チャンク o-- "0..n" ブロック_チャンク
+    Chunk *-- "16*16*16" Block
 }
 
-package マシンユニット集約 {
-    object コアブロック {
-        包含するブロックのリスト
-    }
-
-    object ブロック_MU {
-        ブロックタイプID
-        接面情報
-    }
-
-    コアブロック o-- "0..n" ブロック_MU
+package {
+    object Chunk
 }
-
-package プレイヤー集約 {
-    object Player {
-
-    }
-}
-
 
 @enduml
