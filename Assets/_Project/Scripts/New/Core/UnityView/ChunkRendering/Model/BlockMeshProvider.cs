@@ -1,7 +1,7 @@
 using UnityEngine;
 using Domain;
 
-namespace RenderingDomain
+namespace UnityView.ChunkRendering.Model
 {
     internal class BlockMeshProvider : IBlockMeshProvider
     {

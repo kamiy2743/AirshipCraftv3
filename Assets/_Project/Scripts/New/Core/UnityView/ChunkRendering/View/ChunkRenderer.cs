@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRendering.View
 {
     internal class ChunkRenderer : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using Domain.Chunks;
 
-namespace RenderingDomain.RenderingSurface
+namespace UnityView.ChunkRendering.Model.RenderingSurface
 {
     internal class BlockRenderingSurfaces
     {

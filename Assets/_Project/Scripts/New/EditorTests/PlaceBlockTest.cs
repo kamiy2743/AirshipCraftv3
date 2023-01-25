@@ -8,7 +8,7 @@ using Domain;
 using Domain.Chunks;
 using Infrastructure;
 using UseCase;
-using RenderingDomain.RenderingSurface;
+using UnityView.ChunkRendering.Model.RenderingSurface;
 
 public class PlaceBlockTest
 {
@@ -18,11 +18,7 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
-        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory(chunkProvider);
-        var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
-        var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider, updateBlockRenderingSurfaceService);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
         var placePosition = new Vector3(0, 0, 0);
         placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Grass);
@@ -41,11 +37,7 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory);
-        var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
-        var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory(chunkProvider);
-        var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
-        var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider, updateBlockRenderingSurfaceService);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
         var placePosition = new Vector3(0, 0, 0);
         placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Dirt);

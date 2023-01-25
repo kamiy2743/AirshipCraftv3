@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 using Domain.Chunks;
-using RenderingDomain.RenderingSurface;
+using UnityView.ChunkRendering.Model.RenderingSurface;
 
-namespace RenderingDomain.ChunkMesh
+namespace UnityView.ChunkRendering.Model.ChunkMesh
 {
     internal class ChunkMeshFactory
     {

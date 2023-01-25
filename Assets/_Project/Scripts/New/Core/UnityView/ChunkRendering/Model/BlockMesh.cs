@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace RenderingDomain
+namespace UnityView.ChunkRendering.Model
 {
     internal record BlockMesh
     {

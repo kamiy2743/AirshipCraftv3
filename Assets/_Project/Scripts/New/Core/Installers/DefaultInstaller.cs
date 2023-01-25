@@ -3,9 +3,9 @@ using Domain.Chunks;
 using Infrastructure;
 using UseCase;
 using Presentation;
-using RenderingDomain;
-using RenderingDomain.RenderingSurface;
-using RenderingDomain.ChunkMesh;
+using UnityView.ChunkRendering.Model;
+using UnityView.ChunkRendering.Model.ChunkMesh;
+using UnityView.ChunkRendering.Model.RenderingSurface;
 
 namespace Installers
 {

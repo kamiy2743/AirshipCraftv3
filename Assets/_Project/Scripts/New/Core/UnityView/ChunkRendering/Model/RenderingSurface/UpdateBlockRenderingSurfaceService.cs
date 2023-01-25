@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using Domain;
 using Domain.Chunks;
 
-namespace RenderingDomain.RenderingSurface
+namespace UnityView.ChunkRendering.Model.RenderingSurface
 {
     public class UpdateBlockRenderingSurfaceService
     {

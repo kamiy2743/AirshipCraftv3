@@ -1,6 +1,6 @@
 using Domain;
 
-namespace RenderingDomain
+namespace UnityView.ChunkRendering.Model
 {
     internal interface IBlockMeshProvider
     {

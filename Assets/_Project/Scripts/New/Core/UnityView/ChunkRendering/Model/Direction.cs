@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace RenderingDomain
+namespace UnityView.ChunkRendering.Model
 {
     internal enum Direction
     {

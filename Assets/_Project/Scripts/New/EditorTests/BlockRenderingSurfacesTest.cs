@@ -4,8 +4,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using RenderingDomain;
-using RenderingDomain.RenderingSurface;
+using UnityView.ChunkRendering.Model;
+using UnityView.ChunkRendering.Model.RenderingSurface;
 using Domain.Chunks;
 
 public class BlockRenderingSurfacesTest

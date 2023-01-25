@@ -1,7 +1,7 @@
 using System;
 using Domain.Chunks;
 
-namespace RenderingDomain.RenderingSurface
+namespace UnityView.ChunkRendering.Model.RenderingSurface
 {
     public class ChunkRenderingSurface : IEquatable<ChunkRenderingSurface>
     {

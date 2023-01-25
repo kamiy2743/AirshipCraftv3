@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Domain.Chunks;
-using RenderingDomain.RenderingSurface;
+using UnityView.ChunkRendering.Model.RenderingSurface;
 
 namespace Infrastructure
 {

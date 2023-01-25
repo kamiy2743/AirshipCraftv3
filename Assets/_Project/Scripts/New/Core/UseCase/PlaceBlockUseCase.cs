@@ -1,7 +1,6 @@
 using Unity.Mathematics;
 using Domain;
 using Domain.Chunks;
-using RenderingDomain.RenderingSurface;
 
 namespace UseCase
 {
@@ -9,13 +8,11 @@ namespace UseCase
     {
         private IChunkRepository chunkRepository;
         private IChunkProvider chunkProvider;
-        private UpdateBlockRenderingSurfaceService updateBlockRenderingSurfaceService;
 
-        internal PlaceBlockUseCase(IChunkRepository chunkRepository, IChunkProvider chunkProvider, UpdateBlockRenderingSurfaceService updateBlockRenderingSurfaceService)
+        internal PlaceBlockUseCase(IChunkRepository chunkRepository, IChunkProvider chunkProvider)
         {
             this.chunkRepository = chunkRepository;
             this.chunkProvider = chunkProvider;
-            this.updateBlockRenderingSurfaceService = updateBlockRenderingSurfaceService;
         }
 
         public void PlaceBlock(float3 position, BlockTypeID blockTypeID)
@@ -29,8 +26,6 @@ namespace UseCase
             var chunk = chunkProvider.GetChunk(cgc);
             chunk.SetBlock(rc, block);
             chunkRepository.Store(chunk);
-
-            updateBlockRenderingSurfaceService.UpdateBlockRenderingSurface(placeCoordinate, blockTypeID);
         }
     }
 }
