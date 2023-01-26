@@ -1,0 +1,85 @@
+@startuml
+
+package Presentation {
+    class BlockUpdatePresenter {
+
+    }
+}
+
+package ChunkRendering {
+    together {
+        class BlockUpdateReceptor {
+            UpdateBlock(BlockGridCoordinate)
+        }
+
+        class BlockUpdateApplyer {
+            Apply(BlockGridCoordinate)
+        }
+
+        class UpdatedChunkRenderingSurfaceCalculator {
+            Calculate(BlockGridCoordinate) : IEnumeable<ChunkRenderingSurface>
+        }
+
+        class ChunkRendererUpdater {
+            Update(ChunkGridCoordinate, ChunkMesh)
+        }
+    }
+
+    together {
+        class CreatedChunkRenderers {
+            Add(ChunkGridCoordinate, ChunkRenderer)
+            Contains(ChunkGridCoordinate) : bool
+            TryGetValue(ChunkGridCoordinate) : ChunkRenderer
+            Remove(ChunkGridCoordinate)
+        }
+
+        class ChunkRenderer {
+            SetMesh(ChunkMesh)
+        }
+    }
+
+    together {
+        class RenderingAroundPlayer {
+            毎フレームチャンクを描画する
+        }
+
+        together {
+            class InSightChunkCreator {
+                Execute(PlayerChunk, MaxRenderingDadius)
+            }
+            
+            class InSightChecker {
+                Check(Bounds) : bool
+            }
+
+            class ChunkRendererFactory {
+                Create(ChunkGridCoordinate) : ChunkRenderer
+            }
+        }
+
+        class OutOfRangeChunkDisposer {
+            Execute(PlayerChunk, MaxRenderingDadius)
+        }
+    }
+
+}
+
+BlockUpdatePresenter --> BlockUpdateReceptor : "更新するブロックの座標を送信"
+
+BlockUpdateReceptor --> BlockUpdateApplyer : "ブロックの更新をチャンク描画面に反映する"
+BlockUpdateApplyer --> UpdatedChunkRenderingSurfaceCalculator : "チャンク描画面の計算"
+
+BlockUpdateApplyer --> ChunkRendererUpdater : "Calculatorの戻り値をChunkRendererに反映"
+ChunkRendererUpdater --> CreatedChunkRenderers : "既に作成されていれば\nメッシュを更新"
+CreatedChunkRenderers *-- ChunkRenderer
+
+RenderingAroundPlayer --> InSightChunkCreator : "視界内かつ描画距離内の\nチャンクを作成"
+RenderingAroundPlayer --> OutOfRangeChunkDisposer : "描画範囲内のチャンクを削除する"
+
+InSightChunkCreator ---> CreatedChunkRenderers : "作成済みか問い合わせ\n作成されていなければ追加"
+InSightChunkCreator --> ChunkRendererFactory
+InSightChunkCreator --> InSightChecker : "チャンクが視界内にあるか判定"
+OutOfRangeChunkDisposer ---> CreatedChunkRenderers
+
+
+@enduml
