@@ -1,4 +1,5 @@
 using UnityEngine;
+using Domain;
 using Domain.Chunks;
 using UnityView.ChunkRendering.Mesh;
 using Unity.Mathematics;

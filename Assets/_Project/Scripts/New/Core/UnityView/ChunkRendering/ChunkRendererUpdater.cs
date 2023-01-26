@@ -1,4 +1,4 @@
-using Domain.Chunks;
+using Domain;
 using UnityView.ChunkRendering.Mesh;
 
 namespace UnityView.ChunkRendering

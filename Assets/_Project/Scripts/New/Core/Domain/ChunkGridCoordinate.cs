@@ -1,7 +1,8 @@
 using System;
 using Unity.Mathematics;
+using Domain.Chunks;
 
-namespace Domain.Chunks
+namespace Domain
 {
     public record ChunkGridCoordinate
     {

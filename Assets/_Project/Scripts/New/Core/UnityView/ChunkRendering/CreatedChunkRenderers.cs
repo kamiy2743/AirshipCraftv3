@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Domain.Chunks;
+using Domain;
 
 namespace UnityView.ChunkRendering
 {

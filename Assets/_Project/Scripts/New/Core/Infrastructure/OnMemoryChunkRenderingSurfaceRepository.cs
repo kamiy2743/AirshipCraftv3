@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Domain.Chunks;
+using Domain;
 using UnityView.ChunkRendering.RenderingSurface;
 
 namespace Infrastructure

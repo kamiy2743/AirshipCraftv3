@@ -1,4 +1,4 @@
-using Domain.Chunks;
+using Domain;
 
 namespace UnityView.ChunkRendering.RenderingSurface
 {

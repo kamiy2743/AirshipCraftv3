@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Domain.Chunks;
 
-namespace UseCase
+namespace Domain.Chunks
 {
     internal class ChunkProvider : IChunkProvider
     {

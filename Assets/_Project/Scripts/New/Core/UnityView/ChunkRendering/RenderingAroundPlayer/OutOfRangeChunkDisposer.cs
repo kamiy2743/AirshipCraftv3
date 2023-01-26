@@ -1,4 +1,4 @@
-using Domain.Chunks;
+using Domain;
 using Unity.Mathematics;
 
 namespace UnityView.ChunkRendering
