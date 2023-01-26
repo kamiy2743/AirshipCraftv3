@@ -37,7 +37,7 @@ namespace UnityView.ChunkRendering
             mesh.SetUVs(0, chunkMesh.uvs);
             mesh.RecalculateNormals();
 
-            transform.position = chunkMesh.rootPosition;
+            transform.position = chunkMesh.pivotCoordinate;
         }
 
         public void Dispose()

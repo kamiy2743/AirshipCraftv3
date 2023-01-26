@@ -53,6 +53,11 @@ namespace Domain
             return TryConstruct(this.x + value.x, this.y + value.y, this.z + value.z, out result);
         }
 
+        public float3 ToPivotCoordinate()
+        {
+            return new float3(x, y, z) * Chunk.BlockSide;
+        }
+
         public static ChunkGridCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
         {
             return new ChunkGridCoordinate(

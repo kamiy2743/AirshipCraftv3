@@ -56,8 +56,9 @@ namespace UnityView.ChunkRendering
 
         private Bounds CalcBounds(ChunkGridCoordinate cgc)
         {
-            var center = (new Vector3(cgc.x, cgc.y, cgc.z) * Chunk.BlockSide) + (Vector3.one * Chunk.BlockSide * 0.5f);
-            return new Bounds(center, Vector3.one * Chunk.BlockSide);
+            var size = Vector3.one * Chunk.BlockSide;
+            var center = (Vector3)cgc.ToPivotCoordinate() + (size * 0.5f);
+            return new Bounds(center, size);
         }
     }
 }

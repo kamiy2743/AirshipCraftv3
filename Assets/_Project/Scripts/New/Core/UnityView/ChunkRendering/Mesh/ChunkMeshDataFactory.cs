@@ -83,8 +83,7 @@ namespace UnityView.ChunkRendering.Mesh
                 }
             }
 
-            var rootPosition = new Vector3(chunkGridCoordinate.x, chunkGridCoordinate.y, chunkGridCoordinate.z) * Chunk.BlockSide;
-            return new ChunkMeshData(rootPosition, vertices.ToArray(), triangles.ToArray(), uvs.ToArray());
+            return new ChunkMeshData(chunkGridCoordinate.ToPivotCoordinate(), vertices.ToArray(), triangles.ToArray(), uvs.ToArray());
         }
     }
 }
