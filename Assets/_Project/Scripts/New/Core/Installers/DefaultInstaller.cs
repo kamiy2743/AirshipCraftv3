@@ -6,11 +6,14 @@ using Presentation;
 using UnityView.ChunkRendering;
 using UnityView.ChunkRendering.Mesh;
 using UnityView.ChunkRendering.RenderingSurface;
+using UnityEngine;
 
 namespace Installers
 {
     public class DefaultInstaller : MonoInstaller
     {
+        [SerializeField] private ChunkRendererFactory chunkRendererFactory;
+
         public override void InstallBindings()
         {
             Container
@@ -61,6 +64,10 @@ namespace Installers
             Container.Bind<UpdatedChunkRenderingSurfaceCalculator>().AsCached();
             Container.Bind<ChunkRendererUpdater>().AsCached();
             Container.Bind<CreatedChunkRenderers>().AsCached();
+
+            Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsCached();
+            Container.Bind<InSightChunkCreator>().AsCached();
+            Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsCached();
         }
     }
 }
