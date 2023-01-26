@@ -17,7 +17,7 @@ public class PlaceBlockTest
     {
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
-        var chunkProvider = new ChunkProvider(chunkFactory);
+        var chunkProvider = new ChunkProvider(chunkFactory, chunkRepository);
         var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
         var placePosition = new Vector3(0, 0, 0);
@@ -26,7 +26,7 @@ public class PlaceBlockTest
         var bgc = new BlockGridCoordinate(placePosition);
         var cgc = ChunkGridCoordinate.Parse(bgc);
         var rc = RelativeCoordinate.Parse(bgc);
-        var block = chunkRepository.Fetch(cgc).GetBlock(rc);
+        var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
         Assert.AreEqual(BlockTypeID.Grass, block.blockTypeID);
     }
@@ -36,7 +36,7 @@ public class PlaceBlockTest
     {
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
-        var chunkProvider = new ChunkProvider(chunkFactory);
+        var chunkProvider = new ChunkProvider(chunkFactory, chunkRepository);
         var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
 
         var placePosition = new Vector3(0, 0, 0);
@@ -45,7 +45,7 @@ public class PlaceBlockTest
         var bgc = new BlockGridCoordinate(placePosition);
         var cgc = ChunkGridCoordinate.Parse(bgc);
         var rc = RelativeCoordinate.Parse(bgc);
-        var block = chunkRepository.Fetch(cgc).GetBlock(rc);
+        var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
         Assert.AreEqual(BlockTypeID.Dirt, block.blockTypeID);
     }
