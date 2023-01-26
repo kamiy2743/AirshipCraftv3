@@ -20,7 +20,7 @@ namespace Installers
 
             Container
                 .Bind<IChunkFactory>()
-                .To<AllDirtChunkFactory>()
+                .To<SnoiseChunkFactory>()
                 .AsCached();
 
             Container
