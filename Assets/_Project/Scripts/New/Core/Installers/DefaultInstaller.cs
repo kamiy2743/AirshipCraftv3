@@ -68,6 +68,7 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsCached();
             Container.Bind<InSightChunkCreator>().AsCached();
             Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsCached();
+            Container.Bind<InSightChecker>().AsCached();
         }
     }
 }
