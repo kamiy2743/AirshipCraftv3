@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 using UnityView.ChunkRendering.Mesh;
 
 namespace UnityView.ChunkRendering
 {
-    internal class ChunkRenderer : MonoBehaviour
+    internal class ChunkRenderer : MonoBehaviour, IDisposable
     {
         [SerializeField] private MeshFilter meshFilter;
 
@@ -39,11 +40,12 @@ namespace UnityView.ChunkRendering
             transform.position = chunkMesh.rootPosition;
         }
 
-        private void OnDestroy()
+        public void Dispose()
         {
             if (mesh is not null)
             {
                 Destroy(mesh);
+                Destroy(this.gameObject);
             }
         }
     }

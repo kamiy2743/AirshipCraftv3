@@ -10,15 +10,17 @@ namespace UnityView.ChunkRendering
     internal class RenderingAroundPlayer : IInitializable, IDisposable
     {
         private InSightChunkCreator inSightChunkCreator;
+        private OutOfRangeChunkDisposer outOfRangeChunkRemover;
 
         private Transform cameraTransform;
         private CompositeDisposable disposals = new CompositeDisposable();
 
         private const int MaxRenderingRadius = 1;
 
-        internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator)
+        internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkRemover)
         {
             this.inSightChunkCreator = inSightChunkCreator;
+            this.outOfRangeChunkRemover = outOfRangeChunkRemover;
 
             cameraTransform = Camera.main.transform;
         }
@@ -32,6 +34,7 @@ namespace UnityView.ChunkRendering
                 {
                     var playerChunk = ChunkGridCoordinate.Parse(new BlockGridCoordinate(cameraTransform.position));
                     inSightChunkCreator.Execute(playerChunk, MaxRenderingRadius);
+                    outOfRangeChunkRemover.Execute(playerChunk, MaxRenderingRadius);
                 })
                 .AddTo(disposals);
         }

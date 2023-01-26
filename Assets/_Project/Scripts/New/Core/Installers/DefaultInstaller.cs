@@ -63,12 +63,13 @@ namespace Installers
             Container.Bind<BlockUpdateApplier>().AsCached();
             Container.Bind<UpdatedChunkRenderingSurfaceCalculator>().AsCached();
             Container.Bind<ChunkRendererUpdater>().AsCached();
-            Container.Bind<CreatedChunkRenderers>().AsCached();
+            Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsCached();
 
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsCached();
             Container.Bind<InSightChunkCreator>().AsCached();
             Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsCached();
             Container.Bind<InSightChecker>().AsCached();
+            Container.Bind<OutOfRangeChunkDisposer>().AsCached();
         }
     }
 }
