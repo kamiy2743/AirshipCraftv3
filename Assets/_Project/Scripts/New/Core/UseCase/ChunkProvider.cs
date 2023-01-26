@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Domain.Chunks;
 
 namespace UseCase
@@ -7,6 +8,8 @@ namespace UseCase
         private IChunkFactory chunkFactory;
         private IChunkRepository chunkRepository;
 
+        private Dictionary<ChunkGridCoordinate, Chunk> chunkCache = new Dictionary<ChunkGridCoordinate, Chunk>();
+
         internal ChunkProvider(IChunkFactory chunkFactory, IChunkRepository chunkRepository)
         {
             this.chunkFactory = chunkFactory;
@@ -15,13 +18,22 @@ namespace UseCase
 
         public Chunk GetChunk(ChunkGridCoordinate chunkGridCoordinate)
         {
+            if (chunkCache.TryGetValue(chunkGridCoordinate, out var cache))
+            {
+                return cache;
+            }
+
             try
             {
-                return chunkRepository.Fetch(chunkGridCoordinate);
+                var chunk = chunkRepository.Fetch(chunkGridCoordinate);
+                chunkCache.Add(chunkGridCoordinate, chunk);
+                return chunk;
             }
             catch
             {
-                return chunkFactory.Create(chunkGridCoordinate);
+                var chunk = chunkFactory.Create(chunkGridCoordinate);
+                chunkCache.Add(chunkGridCoordinate, chunk);
+                return chunk;
             }
         }
     }
