@@ -16,12 +16,13 @@ public class UpdateRenderingSurfaceTest
     [Test]
     public void _8_8_8のブロックとそれと接しているブロックの描画面の更新()
     {
+        var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
-        var chunkProvider = new ChunkProvider(chunkFactory);
+        var chunkProvider = new ChunkProvider(chunkFactory, chunkRepository);
         var renderingSurfaceRepository = new OnMemoryChunkRenderingSurfaceRepository();
         var renderingSurfaceFactory = new ChunkRenderingSurfaceFactory(chunkProvider);
         var renderingSurfaceProvider = new ChunkRenderingSurfaceProvider(renderingSurfaceRepository, renderingSurfaceFactory);
-        var updateBlockRenderingSurfaceService = new UpdateBlockRenderingSurfaceService(chunkProvider, renderingSurfaceRepository, renderingSurfaceProvider);
+        var updateBlockRenderingSurfaceService = new UpdatedChunkRenderingSurfaceCalculator(chunkProvider, renderingSurfaceProvider);
 
         var targetCoordinate = new BlockGridCoordinate(8, 8, 8);
         var targetRelativeCoordinate = RelativeCoordinate.Parse(targetCoordinate);
@@ -51,8 +52,7 @@ public class UpdateRenderingSurfaceTest
         Assert.AreEqual(false, forward.Contains(Direction.Back));
         Assert.AreEqual(false, back.Contains(Direction.Forward));
 
-        var targetBlock = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate);
-        updateBlockRenderingSurfaceService.UpdateBlockRenderingSurface(targetCoordinate, targetBlock.blockTypeID);
+        updateBlockRenderingSurfaceService.Calculate(targetCoordinate);
 
         Assert.AreEqual(false, target.Contains(Direction.Left));
         Assert.AreEqual(false, target.Contains(Direction.Right));

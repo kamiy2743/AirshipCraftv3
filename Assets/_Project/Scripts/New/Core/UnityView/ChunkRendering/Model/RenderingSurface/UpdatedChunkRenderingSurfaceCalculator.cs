@@ -1,32 +1,32 @@
 using System.Collections.Generic;
-using Unity.Mathematics;
 using Domain;
 using Domain.Chunks;
 
 namespace UnityView.ChunkRendering.Model.RenderingSurface
 {
-    public class UpdateBlockRenderingSurfaceService
+    internal class UpdatedChunkRenderingSurfaceCalculator
     {
         private IChunkProvider chunkProvider;
-        private IChunkRenderingSurfaceRepository renderingSurfaceRepository;
         private IChunkRenderingSurfaceProvider renderingSurfaceProvider;
 
-        internal UpdateBlockRenderingSurfaceService(IChunkProvider chunkProvider, IChunkRenderingSurfaceRepository renderingSurfaceRepository, IChunkRenderingSurfaceProvider renderingSurfaceProvider)
+        internal UpdatedChunkRenderingSurfaceCalculator(IChunkProvider chunkProvider, IChunkRenderingSurfaceProvider renderingSurfaceProvider)
         {
             this.chunkProvider = chunkProvider;
-            this.renderingSurfaceRepository = renderingSurfaceRepository;
             this.renderingSurfaceProvider = renderingSurfaceProvider;
         }
 
-        public void UpdateBlockRenderingSurface(BlockGridCoordinate targetCoordinate, BlockTypeID targetBlockTypeID)
+        internal IEnumerable<ChunkRenderingSurface> Calculate(BlockGridCoordinate updateCoordinate)
         {
-            var updateRenderingSurfaces = new HashSet<ChunkRenderingSurface>();
+            var updatedRenderingSurfaces = new Dictionary<ChunkGridCoordinate, ChunkRenderingSurface>();
             var targetBlockRenderingSurface = new BlockRenderingSurface();
+            var targetChunkGridCoordinate = ChunkGridCoordinate.Parse(updateCoordinate);
+            var targetRelativeCoordinate = RelativeCoordinate.Parse(updateCoordinate);
+            var targetBlockTypeID = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate).blockTypeID;
 
             foreach (var surface in DirectionExt.Array)
             {
                 // 隣接しているブロックの座標を取得
-                if (!targetCoordinate.TryAdd(surface.ToInt3(), out var adjacentCoordinate))
+                if (!updateCoordinate.TryAdd(surface.ToInt3(), out var adjacentCoordinate))
                 {
                     continue;
                 }
@@ -54,7 +54,7 @@ namespace UnityView.ChunkRendering.Model.RenderingSurface
                     if (!currentSurface.Contains(targetSurface))
                     {
                         adjacentRenderingSurface.SetBlockRenderingSurfaceDirectly(adjacentRelativeCoordinate, currentSurface + targetSurface);
-                        updateRenderingSurfaces.Add(adjacentRenderingSurface);
+                        updatedRenderingSurfaces[adjacentChunkGridCoordinate] = adjacentRenderingSurface;
                     }
                 }
                 else
@@ -62,26 +62,20 @@ namespace UnityView.ChunkRendering.Model.RenderingSurface
                     if (currentSurface.Contains(targetSurface))
                     {
                         adjacentRenderingSurface.SetBlockRenderingSurfaceDirectly(adjacentRelativeCoordinate, currentSurface - targetSurface);
-                        updateRenderingSurfaces.Add(adjacentRenderingSurface);
+                        updatedRenderingSurfaces[adjacentChunkGridCoordinate] = adjacentRenderingSurface;
                     }
                 }
             }
 
             // 対象ブロックの描画面を更新
             {
-                var cgc = ChunkGridCoordinate.Parse(targetCoordinate);
-                var rc = RelativeCoordinate.Parse(targetCoordinate);
-                var renderingSurface = renderingSurfaceProvider.GetRenderingSurface(cgc);
-                renderingSurface.SetBlockRenderingSurfaceDirectly(rc, targetBlockRenderingSurface);
+                var renderingSurface = renderingSurfaceProvider.GetRenderingSurface(targetChunkGridCoordinate);
+                renderingSurface.SetBlockRenderingSurfaceDirectly(targetRelativeCoordinate, targetBlockRenderingSurface);
 
-                updateRenderingSurfaces.Add(renderingSurface);
+                updatedRenderingSurfaces[targetChunkGridCoordinate] = renderingSurface;
             }
 
-            // 更新された描画面を保存
-            foreach (var renderingSurface in updateRenderingSurfaces)
-            {
-                renderingSurfaceRepository.Store(renderingSurface);
-            }
+            return updatedRenderingSurfaces.Values;
         }
     }
 }

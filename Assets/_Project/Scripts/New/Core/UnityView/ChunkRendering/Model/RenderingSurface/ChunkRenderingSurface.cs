@@ -1,9 +1,8 @@
-using System;
 using Domain.Chunks;
 
 namespace UnityView.ChunkRendering.Model.RenderingSurface
 {
-    public class ChunkRenderingSurface : IEquatable<ChunkRenderingSurface>
+    public class ChunkRenderingSurface
     {
         public readonly ChunkGridCoordinate chunkGridCoordinate;
         private readonly BlockRenderingSurfaces surfaces;
@@ -27,21 +26,6 @@ namespace UnityView.ChunkRendering.Model.RenderingSurface
         public ChunkRenderingSurface DeepCopy()
         {
             return new ChunkRenderingSurface(chunkGridCoordinate, surfaces.DeepCopy());
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ChunkRenderingSurface data && Equals(data);
-        }
-
-        public bool Equals(ChunkRenderingSurface other)
-        {
-            return this.chunkGridCoordinate == other.chunkGridCoordinate;
-        }
-
-        public override int GetHashCode()
-        {
-            return chunkGridCoordinate.GetHashCode();
         }
     }
 }

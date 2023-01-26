@@ -3,9 +3,11 @@ using Domain.Chunks;
 using Infrastructure;
 using UseCase;
 using Presentation;
+using UnityView.ChunkRendering;
 using UnityView.ChunkRendering.Model;
 using UnityView.ChunkRendering.Model.ChunkMesh;
 using UnityView.ChunkRendering.Model.RenderingSurface;
+using UnityView.ChunkRendering.View;
 
 namespace Installers
 {
@@ -55,6 +57,12 @@ namespace Installers
                 .AsCached();
 
             Container.Bind<ChunkMeshFactory>().AsCached();
+
+            Container.Bind<BlockUpdateReceptor>().AsCached();
+            Container.Bind<BlockUpdateApplier>().AsCached();
+            Container.Bind<UpdatedChunkRenderingSurfaceCalculator>().AsCached();
+            Container.Bind<ChunkRendererUpdater>().AsCached();
+            Container.Bind<CreatedChunkRenderers>().AsCached();
         }
     }
 }

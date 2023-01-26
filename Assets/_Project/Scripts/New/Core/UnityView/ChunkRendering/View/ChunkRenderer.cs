@@ -1,4 +1,6 @@
 using UnityEngine;
+using Domain.Chunks;
+using UnityView.ChunkRendering.Model.ChunkMesh;
 
 namespace UnityView.ChunkRendering.View
 {
@@ -8,18 +10,18 @@ namespace UnityView.ChunkRendering.View
 
         private Mesh mesh;
 
-        internal void SetRootPosition(Vector3 rootPosition)
+        internal void SetRootCoordinate(ChunkGridCoordinate coordinate)
         {
-            transform.position = rootPosition;
         }
 
-        internal void SetMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        internal void SetMesh(ChunkMesh chunkMesh)
         {
-            if (vertices.Length == 0 && mesh is not null)
+            if (chunkMesh.vertices.Length == 0 && mesh is not null)
             {
                 Destroy(mesh);
                 mesh = null;
                 meshFilter.sharedMesh = null;
+                transform.position = Vector3.zero;
                 return;
             }
 
@@ -34,10 +36,12 @@ namespace UnityView.ChunkRendering.View
                 mesh.Clear();
             }
 
-            mesh.SetVertices(vertices);
-            mesh.SetTriangles(triangles, 0);
-            mesh.SetUVs(0, uvs);
+            mesh.SetVertices(chunkMesh.vertices);
+            mesh.SetTriangles(chunkMesh.triangles, 0);
+            mesh.SetUVs(0, chunkMesh.uvs);
             mesh.RecalculateNormals();
+
+            transform.position = chunkMesh.rootPosition;
         }
 
         private void OnDestroy()
