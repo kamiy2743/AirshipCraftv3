@@ -4,8 +4,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using UnityView.ChunkRendering.Model;
-using UnityView.ChunkRendering.Model.RenderingSurface;
+using UnityView.ChunkRendering;
+using UnityView.ChunkRendering.RenderingSurface;
 using Domain;
 using Domain.Chunks;
 using UseCase;

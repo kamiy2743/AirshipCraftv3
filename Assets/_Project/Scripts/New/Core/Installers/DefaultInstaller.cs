@@ -4,10 +4,8 @@ using Infrastructure;
 using UseCase;
 using Presentation;
 using UnityView.ChunkRendering;
-using UnityView.ChunkRendering.Model;
-using UnityView.ChunkRendering.Model.ChunkMesh;
-using UnityView.ChunkRendering.Model.RenderingSurface;
-using UnityView.ChunkRendering.View;
+using UnityView.ChunkRendering.Mesh;
+using UnityView.ChunkRendering.RenderingSurface;
 
 namespace Installers
 {
@@ -56,7 +54,7 @@ namespace Installers
                 .To<BlockMeshProvider>()
                 .AsCached();
 
-            Container.Bind<ChunkMeshFactory>().AsCached();
+            Container.Bind<ChunkMeshDataFactory>().AsCached();
 
             Container.Bind<BlockUpdateReceptor>().AsCached();
             Container.Bind<BlockUpdateApplier>().AsCached();

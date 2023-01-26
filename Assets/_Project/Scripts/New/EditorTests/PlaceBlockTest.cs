@@ -8,7 +8,7 @@ using Domain;
 using Domain.Chunks;
 using Infrastructure;
 using UseCase;
-using UnityView.ChunkRendering.Model.RenderingSurface;
+using UnityView.ChunkRendering.RenderingSurface;
 
 public class PlaceBlockTest
 {
