@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Domain;
 
@@ -15,7 +16,9 @@ namespace UnityView.ChunkRendering.Mesh
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             var cubeMesh = cube.GetComponent<MeshFilter>().mesh;
             MonoBehaviour.Destroy(cube);
-            other = new BlockMeshData(cubeMesh.vertices, cubeMesh.triangles, cubeMesh.uv);
+
+            var vertices = cubeMesh.vertices.Select(v => v + new Vector3(0.5f, 0.5f, 0.5f)).ToArray();
+            other = new BlockMeshData(vertices, cubeMesh.triangles, cubeMesh.uv);
         }
 
         internal BlockMeshData GetBlockMeshData(BlockTypeID blockTypeID)

@@ -32,12 +32,12 @@ namespace UnityView.ChunkRendering.RenderingSurface
                         var rc = new RelativeCoordinate(x, y, z);
                         var blockRenderingSurface = new BlockRenderingSurface();
 
-                        foreach (var surface in DirectionExt.Array)
+                        foreach (var direction in DirectionExt.Array)
                         {
-                            var adjacentBlock = GetAdjacentBlock(surface, rc, context);
+                            var adjacentBlock = GetAdjacentBlock(direction, rc, context);
                             if (adjacentBlock.blockTypeID == BlockTypeID.Air)
                             {
-                                blockRenderingSurface += surface;
+                                blockRenderingSurface += direction;
                             }
                         }
 
