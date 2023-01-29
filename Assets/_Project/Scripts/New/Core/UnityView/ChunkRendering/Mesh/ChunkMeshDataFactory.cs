@@ -10,13 +10,13 @@ namespace UnityView.ChunkRendering.Mesh
     {
         private IChunkProvider chunkProvider;
         private ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider;
-        private BlockMeshProvider blockMeshProvider;
+        private BlockMeshDataProvider blockMeshDataProvider;
 
-        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider, BlockMeshProvider blockMeshProvider)
+        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider, BlockMeshDataProvider blockMeshDataProvider)
         {
             this.chunkProvider = chunkProvider;
             this.chunkRenderingSurfaceProvider = chunkRenderingSurfaceProvider;
-            this.blockMeshProvider = blockMeshProvider;
+            this.blockMeshDataProvider = blockMeshDataProvider;
         }
 
         internal ChunkMeshData Create(ChunkGridCoordinate chunkGridCoordinate)
@@ -48,7 +48,7 @@ namespace UnityView.ChunkRendering.Mesh
                             continue;
                         }
 
-                        var blockMesh = blockMeshProvider.GetBlockMesh(block.blockTypeID);
+                        var blockMesh = blockMeshDataProvider.GetBlockMeshData(block.blockTypeID);
 
                         foreach (var direction in DirectionExt.Array)
                         {

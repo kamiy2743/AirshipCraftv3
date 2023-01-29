@@ -21,7 +21,7 @@ namespace Installers
             Container.Bind<ChunkRenderingSurfaceFactory>().AsSingle();
             Container.Bind<ChunkRenderingSurfaceProvider>().AsSingle();
 
-            Container.Bind<BlockMeshProvider>().AsSingle();
+            Container.Bind<BlockMeshDataProvider>().AsSingle();
             Container.Bind<ChunkMeshDataFactory>().AsSingle();
 
             Container.Bind<BlockUpdateReceptor>().AsSingle();
