@@ -5,12 +5,15 @@ using UnityView.ChunkRendering;
 using UnityView.ChunkRendering.Mesh;
 using UnityView.ChunkRendering.RenderingSurface;
 using UnityView.Inputs;
+using UnityView.Players;
+using Cinemachine;
 
 namespace Installers
 {
     internal class UnityViewInstaller : MonoInstaller
     {
         [SerializeField] private ChunkRendererFactory chunkRendererFactory;
+        [SerializeField] private CinemachineVirtualCamera playerVcam;
 
         public override void InstallBindings()
         {
@@ -36,6 +39,8 @@ namespace Installers
             Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsSingle();
             Container.Bind<InSightChecker>().AsSingle();
             Container.Bind<OutOfRangeChunkDisposer>().AsSingle();
+
+            Container.BindInstance<PlayerCamera>(new PlayerCamera(playerVcam)).AsSingle();
 
             Container
                 .Bind<IInputProvider>()
