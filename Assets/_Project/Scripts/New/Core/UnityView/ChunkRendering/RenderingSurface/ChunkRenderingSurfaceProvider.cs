@@ -2,18 +2,18 @@ using Domain;
 
 namespace UnityView.ChunkRendering.RenderingSurface
 {
-    internal class ChunkRenderingSurfaceProvider : IChunkRenderingSurfaceProvider
+    internal class ChunkRenderingSurfaceProvider
     {
         private IChunkRenderingSurfaceRepository renderingSurfaceRepository;
-        private IChunkRenderingSurfaceFactory renderingSurfaceFactory;
+        private ChunkRenderingSurfaceFactory renderingSurfaceFactory;
 
-        internal ChunkRenderingSurfaceProvider(IChunkRenderingSurfaceRepository renderingSurfaceRepository, IChunkRenderingSurfaceFactory renderingSurfaceFactory)
+        internal ChunkRenderingSurfaceProvider(IChunkRenderingSurfaceRepository renderingSurfaceRepository, ChunkRenderingSurfaceFactory renderingSurfaceFactory)
         {
             this.renderingSurfaceRepository = renderingSurfaceRepository;
             this.renderingSurfaceFactory = renderingSurfaceFactory;
         }
 
-        public ChunkRenderingSurface GetRenderingSurface(ChunkGridCoordinate chunkGridCoordinate)
+        internal ChunkRenderingSurface GetRenderingSurface(ChunkGridCoordinate chunkGridCoordinate)
         {
             try
             {

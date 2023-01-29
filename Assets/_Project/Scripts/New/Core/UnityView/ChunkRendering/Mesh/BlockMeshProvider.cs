@@ -3,7 +3,7 @@ using Domain;
 
 namespace UnityView.ChunkRendering.Mesh
 {
-    internal class BlockMeshProvider : IBlockMeshProvider
+    internal class BlockMeshProvider
     {
         private BlockMesh air;
         private BlockMesh other;
@@ -18,7 +18,7 @@ namespace UnityView.ChunkRendering.Mesh
             other = new BlockMesh(cubeMesh.vertices, cubeMesh.triangles, cubeMesh.uv);
         }
 
-        public BlockMesh GetBlockMesh(BlockTypeID blockTypeID)
+        internal BlockMesh GetBlockMesh(BlockTypeID blockTypeID)
         {
             if (blockTypeID == BlockTypeID.Air)
             {

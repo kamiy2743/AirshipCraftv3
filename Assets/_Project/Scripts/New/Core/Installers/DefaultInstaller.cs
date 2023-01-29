@@ -42,21 +42,10 @@ namespace Installers
                 .To<OnMemoryChunkRenderingSurfaceRepository>()
                 .AsCached();
 
-            Container
-                .Bind<IChunkRenderingSurfaceFactory>()
-                .To<ChunkRenderingSurfaceFactory>()
-                .AsCached();
+            Container.Bind<ChunkRenderingSurfaceFactory>().AsCached();
+            Container.Bind<ChunkRenderingSurfaceProvider>().AsCached();
 
-            Container
-                .Bind<IChunkRenderingSurfaceProvider>()
-                .To<ChunkRenderingSurfaceProvider>()
-                .AsCached();
-
-            Container
-                .Bind<IBlockMeshProvider>()
-                .To<BlockMeshProvider>()
-                .AsCached();
-
+            Container.Bind<BlockMeshProvider>().AsCached();
             Container.Bind<ChunkMeshDataFactory>().AsCached();
 
             Container.Bind<BlockUpdateReceptor>().AsCached();

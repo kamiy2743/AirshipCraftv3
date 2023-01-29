@@ -9,10 +9,10 @@ namespace UnityView.ChunkRendering.Mesh
     internal class ChunkMeshDataFactory
     {
         private IChunkProvider chunkProvider;
-        private IChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider;
-        private IBlockMeshProvider blockMeshProvider;
+        private ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider;
+        private BlockMeshProvider blockMeshProvider;
 
-        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, IChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider, IBlockMeshProvider blockMeshProvider)
+        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider, BlockMeshProvider blockMeshProvider)
         {
             this.chunkProvider = chunkProvider;
             this.chunkRenderingSurfaceProvider = chunkRenderingSurfaceProvider;

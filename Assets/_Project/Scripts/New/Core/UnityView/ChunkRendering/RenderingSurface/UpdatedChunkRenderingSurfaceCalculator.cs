@@ -7,9 +7,9 @@ namespace UnityView.ChunkRendering.RenderingSurface
     internal class UpdatedChunkRenderingSurfaceCalculator
     {
         private IChunkProvider chunkProvider;
-        private IChunkRenderingSurfaceProvider renderingSurfaceProvider;
+        private ChunkRenderingSurfaceProvider renderingSurfaceProvider;
 
-        internal UpdatedChunkRenderingSurfaceCalculator(IChunkProvider chunkProvider, IChunkRenderingSurfaceProvider renderingSurfaceProvider)
+        internal UpdatedChunkRenderingSurfaceCalculator(IChunkProvider chunkProvider, ChunkRenderingSurfaceProvider renderingSurfaceProvider)
         {
             this.chunkProvider = chunkProvider;
             this.renderingSurfaceProvider = renderingSurfaceProvider;

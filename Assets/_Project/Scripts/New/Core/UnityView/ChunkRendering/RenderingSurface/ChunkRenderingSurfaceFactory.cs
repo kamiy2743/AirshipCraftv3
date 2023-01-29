@@ -3,7 +3,7 @@ using Domain.Chunks;
 
 namespace UnityView.ChunkRendering.RenderingSurface
 {
-    internal class ChunkRenderingSurfaceFactory : IChunkRenderingSurfaceFactory
+    internal class ChunkRenderingSurfaceFactory
     {
         private IChunkProvider chunkProvider;
 
@@ -12,7 +12,7 @@ namespace UnityView.ChunkRendering.RenderingSurface
             this.chunkProvider = chunkProvider;
         }
 
-        public ChunkRenderingSurface Create(ChunkGridCoordinate chunkGridCoordinate)
+        internal ChunkRenderingSurface Create(ChunkGridCoordinate chunkGridCoordinate)
         {
             var surfaces = CreateBlockRenderingSurfaces(chunkGridCoordinate);
             return new ChunkRenderingSurface(chunkGridCoordinate, surfaces);
