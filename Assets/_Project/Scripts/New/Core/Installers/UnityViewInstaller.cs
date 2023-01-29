@@ -4,6 +4,7 @@ using Infrastructure;
 using UnityView.ChunkRendering;
 using UnityView.ChunkRendering.Mesh;
 using UnityView.ChunkRendering.RenderingSurface;
+using UnityView.Inputs;
 
 namespace Installers
 {
@@ -35,6 +36,11 @@ namespace Installers
             Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsSingle();
             Container.Bind<InSightChecker>().AsSingle();
             Container.Bind<OutOfRangeChunkDisposer>().AsSingle();
+
+            Container
+                .Bind<IInputProvider>()
+                .To<InputSystemInputProvider>()
+                .AsSingle();
         }
     }
 }
