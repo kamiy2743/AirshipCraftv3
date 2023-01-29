@@ -33,7 +33,7 @@ namespace UnityView.ChunkRendering.RenderingSurface
 
         internal bool Contains(Direction direction)
         {
-            return (surfacesByte & (byte)direction) == 1;
+            return (surfacesByte & (byte)direction) > 0;
         }
 
         public static BlockRenderingSurface operator +(BlockRenderingSurface renderingSurface, Direction direction)

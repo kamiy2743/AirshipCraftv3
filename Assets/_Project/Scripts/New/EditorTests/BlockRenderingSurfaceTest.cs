@@ -31,8 +31,14 @@ public class BlockRenderingSurfaceTest
     }
 
     [Test]
-    public void Right_LeftにContains_Right_を呼ぶとTrueになる()
+    public void Right_LeftにContains_Rightを呼ぶとTrueになる()
     {
         Assert.AreEqual(true, new BlockRenderingSurface(Direction.Right, Direction.Left).Contains(Direction.Right));
+    }
+
+    [Test]
+    public void Right_LeftにContains_Leftを呼ぶとTrueになる()
+    {
+        Assert.AreEqual(true, new BlockRenderingSurface(Direction.Right, Direction.Left).Contains(Direction.Left));
     }
 }
