@@ -1,18 +1,19 @@
-using Unity.Mathematics;
+using System;
 
 namespace Domain.Chunks
 {
     internal class ChunkBlocks
     {
-        private readonly Block[] blocks;
+        internal readonly Block[] blocks;
 
         internal ChunkBlocks()
         {
-            blocks = new Block[(int)math.pow(Chunk.BlockSide, 3)];
+            blocks = new Block[Chunk.BlocksCount];
         }
 
-        private ChunkBlocks(Block[] blocks)
+        internal ChunkBlocks(Block[] blocks)
         {
+            if (blocks.Length != Chunk.BlocksCount) throw new ArgumentException("");
             this.blocks = blocks;
         }
 
@@ -26,9 +27,9 @@ namespace Domain.Chunks
             blocks[RelativeCoordinateToIndex(relativeCoordinate)] = block;
         }
 
-        private int RelativeCoordinateToIndex(RelativeCoordinate relativeCoordinate)
+        private int RelativeCoordinateToIndex(RelativeCoordinate rc)
         {
-            return (relativeCoordinate.x << (Chunk.BlockSideShift * 2)) + (relativeCoordinate.y << Chunk.BlockSideShift) + relativeCoordinate.z;
+            return (rc.x << (Chunk.BlockSideShift * 2)) + (rc.y << Chunk.BlockSideShift) + rc.z;
         }
 
         internal ChunkBlocks DeepCopy()

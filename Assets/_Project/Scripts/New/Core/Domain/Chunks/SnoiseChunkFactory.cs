@@ -1,3 +1,6 @@
+using Unity.Jobs;
+using Unity.Burst;
+using Unity.Collections;
 using Unity.Mathematics;
 
 namespace Domain.Chunks
@@ -13,23 +16,47 @@ namespace Domain.Chunks
 
         public Chunk Create(ChunkGridCoordinate chunkGridCoordinate)
         {
-            var blocks = new ChunkBlocks();
-            var rootCoordinate = new int3(chunkGridCoordinate.x, chunkGridCoordinate.y, chunkGridCoordinate.z) * Chunk.BlockSide;
+            var pivot = chunkGridCoordinate.ToPivotCoordinate();
 
-            for (int x = 0; x < Chunk.BlockSide; x++)
+            var job = new CreateTerrainJob
             {
-                for (int y = 0; y < Chunk.BlockSide; y++)
+                pivot = (int3)pivot,
+                generator = snoiseTerrainGenerator,
+                result = new NativeArray<Block>(Chunk.BlocksCount, Allocator.TempJob)
+            };
+
+            job.Schedule().Complete();
+
+            var blocks = new ChunkBlocks(job.result.ToArray());
+            job.result.Dispose();
+
+            return new Chunk(chunkGridCoordinate, blocks);
+        }
+
+        [BurstCompile]
+        private unsafe struct CreateTerrainJob : IJob
+        {
+            [ReadOnly] internal int3 pivot;
+            [ReadOnly] internal SnoiseTerrainGenerator generator;
+            internal NativeArray<Block> result;
+
+            public void Execute()
+            {
+                var seek = 0;
+
+                for (int x = 0; x < Chunk.BlockSide; x++)
                 {
-                    for (int z = 0; z < Chunk.BlockSide; z++)
+                    for (int y = 0; y < Chunk.BlockSide; y++)
                     {
-                        var rc = new RelativeCoordinate(x, y, z);
-                        var blockTypeID = snoiseTerrainGenerator.GetBlockTypeID(rootCoordinate.x + x, rootCoordinate.y + y, rootCoordinate.z + z);
-                        blocks.SetBlock(rc, new Block(blockTypeID));
+                        for (int z = 0; z < Chunk.BlockSide; z++)
+                        {
+                            var blockTypeID = generator.GetBlockTypeID(pivot.x + x, pivot.y + y, pivot.z + z);
+                            result[seek] = new Block(blockTypeID);
+                            seek++;
+                        }
                     }
                 }
             }
-
-            return new Chunk(chunkGridCoordinate, blocks);
         }
     }
 }

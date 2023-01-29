@@ -2,7 +2,7 @@ using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
-    internal class SnoiseTerrainGenerator
+    internal struct SnoiseTerrainGenerator
     {
         private readonly float seedX;
         private readonly float seedY;

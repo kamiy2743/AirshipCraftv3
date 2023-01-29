@@ -9,6 +9,7 @@ namespace Domain.Chunks
 
         public const int BlockSideShift = 4;
         public const int BlockSide = 1 << BlockSideShift;
+        public const int BlocksCount = BlockSide * BlockSide * BlockSide;
 
         internal Chunk(ChunkGridCoordinate chunkGridCoordinate, ChunkBlocks blocks)
         {

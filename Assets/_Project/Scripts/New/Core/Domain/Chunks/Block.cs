@@ -1,6 +1,6 @@
 namespace Domain.Chunks
 {
-    public class Block
+    public struct Block
     {
         public readonly BlockTypeID blockTypeID;
 

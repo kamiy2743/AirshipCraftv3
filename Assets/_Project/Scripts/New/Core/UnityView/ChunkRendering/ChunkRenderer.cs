@@ -45,8 +45,12 @@ namespace UnityView.ChunkRendering
             if (mesh is not null)
             {
                 Destroy(mesh);
-                Destroy(this.gameObject);
             }
+        }
+
+        private void OnDestroy()
+        {
+            Dispose();
         }
     }
 }
