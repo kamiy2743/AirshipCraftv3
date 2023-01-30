@@ -15,6 +15,7 @@ namespace UnityView.ChunkRendering
 
         private Transform cameraTransform;
         private CompositeDisposable disposals = new CompositeDisposable();
+        private CancellationTokenSource cts;
 
         private const int MaxRenderingRadius = 16;
 
@@ -28,11 +29,9 @@ namespace UnityView.ChunkRendering
 
         public void Initialize()
         {
-            CancellationTokenSource cts = null;
-
             Observable
                 .EveryUpdate()
-                .ThrottleFirstFrame(4)
+                .ThrottleFirstFrame(5)
                 .Subscribe(_ =>
                 {
                     var playerChunk = ChunkGridCoordinate.Parse(new BlockGridCoordinate(cameraTransform.position));
@@ -54,6 +53,8 @@ namespace UnityView.ChunkRendering
         public void Dispose()
         {
             disposals.Dispose();
+            cts?.Cancel();
+            cts?.Dispose();
         }
     }
 }

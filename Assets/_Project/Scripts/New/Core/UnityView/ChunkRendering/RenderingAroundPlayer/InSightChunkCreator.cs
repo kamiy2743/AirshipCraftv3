@@ -36,17 +36,15 @@ namespace UnityView.ChunkRendering
                     return;
                 }
 
-                if (!createdMeshes.TryDequeue(out var item))
+                while (createdMeshes.TryDequeue(out var item))
                 {
-                    continue;
+                    var cgc = item.Item1;
+                    var mesh = item.Item2;
+
+                    var chunkRenderer = chunkRendererFactory.Create();
+                    chunkRenderer.SetMesh(mesh);
+                    createdChunkRenderers.Add(cgc, chunkRenderer);
                 }
-
-                var cgc = item.Item1;
-                var mesh = item.Item2;
-
-                var chunkRenderer = chunkRendererFactory.Create();
-                chunkRenderer.SetMesh(mesh);
-                createdChunkRenderers.Add(cgc, chunkRenderer);
             }
         }
 
