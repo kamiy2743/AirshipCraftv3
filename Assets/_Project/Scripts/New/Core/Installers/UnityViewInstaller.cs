@@ -4,6 +4,7 @@ using Infrastructure;
 using UnityView.ChunkRendering;
 using UnityView.ChunkRendering.Mesh;
 using UnityView.ChunkRendering.RenderingSurface;
+using UnityView.Shared;
 using UnityView.Inputs;
 using UnityView.Players;
 using Cinemachine;
@@ -33,6 +34,8 @@ namespace Installers
             Container.Bind<UpdatedChunkRenderingSurfaceCalculator>().AsSingle();
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();
+
+            Container.Bind<PlayerChunkProvider>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsSingle();
             Container.Bind<InSightChunkCreator>().AsSingle();

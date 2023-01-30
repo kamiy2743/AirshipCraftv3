@@ -4,6 +4,7 @@ using UnityEngine;
 using UniRx;
 using Zenject;
 using Domain;
+using UnityView.Shared;
 using Cysharp.Threading.Tasks;
 
 namespace UnityView.ChunkRendering
@@ -12,19 +13,18 @@ namespace UnityView.ChunkRendering
     {
         private InSightChunkCreator inSightChunkCreator;
         private OutOfRangeChunkDisposer outOfRangeChunkDisposer;
+        private PlayerChunkProvider playerChunkProvider;
 
-        private Transform cameraTransform;
         private CompositeDisposable disposals = new CompositeDisposable();
         private CancellationTokenSource cts;
 
         private const int MaxRenderingRadius = 16;
 
-        internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkDisposer)
+        internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkDisposer, PlayerChunkProvider playerChunkProvider)
         {
             this.inSightChunkCreator = inSightChunkCreator;
             this.outOfRangeChunkDisposer = outOfRangeChunkDisposer;
-
-            cameraTransform = Camera.main.transform;
+            this.playerChunkProvider = playerChunkProvider;
         }
 
         public void Initialize()
@@ -34,7 +34,7 @@ namespace UnityView.ChunkRendering
                 .ThrottleFirstFrame(5)
                 .Subscribe(_ =>
                 {
-                    var playerChunk = ChunkGridCoordinate.Parse(new BlockGridCoordinate(cameraTransform.position));
+                    var playerChunk = playerChunkProvider.GetPlayerChunk();
 
                     outOfRangeChunkDisposer.Execute(playerChunk, MaxRenderingRadius);
 
