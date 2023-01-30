@@ -1,8 +1,11 @@
+using System.Threading;
+using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 using Domain.Chunks;
 using UnityView.ChunkRendering.Mesh;
 using Unity.Mathematics;
+using Cysharp.Threading.Tasks;
 
 namespace UnityView.ChunkRendering
 {
@@ -21,8 +24,42 @@ namespace UnityView.ChunkRendering
             this.inSightChecker = inSightChecker;
         }
 
-        internal void Execute(ChunkGridCoordinate playerChunk, int maxRenderingRadius)
+        internal async UniTask ExecuteAsync(ChunkGridCoordinate playerChunk, int maxRenderingRadius, CancellationToken ct)
         {
+            var createdMeshes = new Queue<(ChunkGridCoordinate, ChunkMeshData)>();
+            CreateMeshesTask(playerChunk, maxRenderingRadius, createdMeshes, ct).Forget();
+
+            while (true)
+            {
+                await UniTask.WaitForEndOfFrame();
+
+                if (ct.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                if (!createdMeshes.TryDequeue(out var item))
+                {
+                    continue;
+                }
+
+                var cgc = item.Item1;
+                var mesh = item.Item2;
+
+                var chunkRenderer = chunkRendererFactory.Create();
+                chunkRenderer.SetMesh(mesh);
+                createdChunkRenderers.Add(cgc, chunkRenderer);
+            }
+        }
+
+        private async UniTask CreateMeshesTask(
+            ChunkGridCoordinate playerChunk,
+            int maxRenderingRadius,
+            Queue<(ChunkGridCoordinate, ChunkMeshData)> createdMeshes,
+            CancellationToken ct)
+        {
+            var createChunkQueue = new CreateChunkQueue((int)math.pow(maxRenderingRadius * 2 + 1, 3));
+
             for (int x = -maxRenderingRadius; x <= maxRenderingRadius; x++)
             {
                 for (int y = -maxRenderingRadius; y <= maxRenderingRadius; y++)
@@ -34,24 +71,38 @@ namespace UnityView.ChunkRendering
                             continue;
                         }
 
-                        if (!inSightChecker.Check(CalcBounds(cgc)))
-                        {
-                            continue;
-                        }
-
                         if (createdChunkRenderers.Contains(cgc))
                         {
                             continue;
                         }
 
-                        var mesh = chunkMeshDataFactory.Create(cgc);
-                        var chunkRenderer = chunkRendererFactory.Create(cgc);
-                        chunkRenderer.SetMesh(mesh);
+                        // TODO Checkをマルチスレッド対応
+                        if (!inSightChecker.Check(CalcBounds(cgc)))
+                        {
+                            continue;
+                        }
 
-                        createdChunkRenderers.Add(cgc, chunkRenderer);
+                        var distance = (x * x) + (y * y) + (z * z);
+                        createChunkQueue.Enqueue(distance, cgc);
                     }
                 }
             }
+
+            // TODO このメッソド全体をマルチスレッド化する
+            await UniTask.SwitchToThreadPool();
+
+            while (createChunkQueue.TryDequeue(out var cgc))
+            {
+                if (ct.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                var mesh = chunkMeshDataFactory.Create(cgc);
+                createdMeshes.Enqueue((cgc, mesh));
+            }
+
+            await UniTask.SwitchToMainThread();
         }
 
         private Bounds CalcBounds(ChunkGridCoordinate cgc)

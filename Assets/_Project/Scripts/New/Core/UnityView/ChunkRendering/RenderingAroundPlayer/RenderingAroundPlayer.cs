@@ -1,40 +1,52 @@
 using System;
+using System.Threading;
 using UnityEngine;
 using UniRx;
 using Zenject;
 using Domain;
-using Domain.Chunks;
+using Cysharp.Threading.Tasks;
 
 namespace UnityView.ChunkRendering
 {
     internal class RenderingAroundPlayer : IInitializable, IDisposable
     {
         private InSightChunkCreator inSightChunkCreator;
-        private OutOfRangeChunkDisposer outOfRangeChunkRemover;
+        private OutOfRangeChunkDisposer outOfRangeChunkDisposer;
 
         private Transform cameraTransform;
         private CompositeDisposable disposals = new CompositeDisposable();
 
-        private const int MaxRenderingRadius = 1;
+        private const int MaxRenderingRadius = 16;
 
-        internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkRemover)
+        internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkDisposer)
         {
             this.inSightChunkCreator = inSightChunkCreator;
-            this.outOfRangeChunkRemover = outOfRangeChunkRemover;
+            this.outOfRangeChunkDisposer = outOfRangeChunkDisposer;
 
             cameraTransform = Camera.main.transform;
         }
 
         public void Initialize()
         {
+            CancellationTokenSource cts = null;
 
             Observable
                 .EveryUpdate()
+                .ThrottleFirstFrame(4)
                 .Subscribe(_ =>
                 {
                     var playerChunk = ChunkGridCoordinate.Parse(new BlockGridCoordinate(cameraTransform.position));
-                    inSightChunkCreator.Execute(playerChunk, MaxRenderingRadius);
-                    outOfRangeChunkRemover.Execute(playerChunk, MaxRenderingRadius);
+
+                    outOfRangeChunkDisposer.Execute(playerChunk, MaxRenderingRadius);
+
+                    if (cts is not null)
+                    {
+                        cts.Cancel();
+                        cts.Dispose();
+                    }
+
+                    cts = new CancellationTokenSource();
+                    inSightChunkCreator.ExecuteAsync(playerChunk, MaxRenderingRadius, cts.Token).Forget();
                 })
                 .AddTo(disposals);
         }

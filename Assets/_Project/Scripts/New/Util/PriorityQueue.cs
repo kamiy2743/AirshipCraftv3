@@ -7,10 +7,10 @@ namespace Utils
     public class PriorityQueue<T> where T : IComparable<T>
     {
         private readonly T[] _array;
-        private readonly IComparer _comparer;
+        private readonly IComparer<T> _comparer;
         public int Count { get; private set; } = 0;
 
-        public PriorityQueue(int capacity, IComparer comparer = null)
+        public PriorityQueue(int capacity, IComparer<T> comparer = null)
         {
             _array = new T[capacity];
             _comparer = comparer;
@@ -19,7 +19,7 @@ namespace Utils
         /// <summary>
         /// 要素を挿入する
         /// </summary>
-        public void Push(T item)
+        public void Enqueue(T item)
         {
             _array[this.Count] = item;
             Count += 1;
@@ -44,7 +44,7 @@ namespace Utils
         /// <summary>
         /// 優先度の一番高いものを取り出す
         /// </summary>
-        public T Pop()
+        public T Dequeue()
         {
             Swap(0, this.Count - 1);            // 先頭要素を末尾にする
             Count -= 1;
@@ -82,7 +82,7 @@ namespace Utils
             int count = Count;
             for (int i = 0; i < count; i++)
             {
-                if (withPop) yield return Pop();
+                if (withPop) yield return Dequeue();
                 else yield return _array[count - i - 1];
             }
         }

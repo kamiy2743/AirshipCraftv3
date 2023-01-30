@@ -8,7 +8,7 @@ namespace UnityView.ChunkRendering
         [SerializeField] private ChunkRenderer chunkRendererPrefab;
         [SerializeField] private Transform parent;
 
-        internal ChunkRenderer Create(ChunkGridCoordinate chunkGridCoordinate)
+        internal ChunkRenderer Create()
         {
             return Instantiate(chunkRendererPrefab, parent: parent);
         }
