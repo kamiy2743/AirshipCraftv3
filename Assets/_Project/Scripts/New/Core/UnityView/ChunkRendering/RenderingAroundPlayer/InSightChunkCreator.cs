@@ -14,14 +14,12 @@ namespace UnityView.ChunkRendering
         private ChunkRendererFactory chunkRendererFactory;
         private ChunkMeshDataFactory chunkMeshDataFactory;
         private CreatedChunkRenderers createdChunkRenderers;
-        private InSightChecker inSightChecker;
 
-        internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshDataFactory chunkMeshDataFactory, CreatedChunkRenderers createdChunkRenderers, InSightChecker inSightChecker)
+        internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshDataFactory chunkMeshDataFactory, CreatedChunkRenderers createdChunkRenderers)
         {
             this.chunkRendererFactory = chunkRendererFactory;
             this.chunkMeshDataFactory = chunkMeshDataFactory;
             this.createdChunkRenderers = createdChunkRenderers;
-            this.inSightChecker = inSightChecker;
         }
 
         internal async UniTask ExecuteAsync(ChunkGridCoordinate playerChunk, int maxRenderingRadius, CancellationToken ct)
@@ -58,7 +56,10 @@ namespace UnityView.ChunkRendering
             Queue<(ChunkGridCoordinate, ChunkMeshData)> createdMeshes,
             CancellationToken ct)
         {
+            var inSightChecker = new InSightChecker();
             var createChunkQueue = new CreateChunkQueue((int)math.pow(maxRenderingRadius * 2 + 1, 3));
+
+            await UniTask.SwitchToThreadPool();
 
             for (int x = -maxRenderingRadius; x <= maxRenderingRadius; x++)
             {
@@ -76,7 +77,6 @@ namespace UnityView.ChunkRendering
                             continue;
                         }
 
-                        // TODO Checkをマルチスレッド対応
                         if (!inSightChecker.Check(CalcBounds(cgc)))
                         {
                             continue;
@@ -87,9 +87,6 @@ namespace UnityView.ChunkRendering
                     }
                 }
             }
-
-            // TODO このメッソド全体をマルチスレッド化する
-            await UniTask.SwitchToThreadPool();
 
             while (createChunkQueue.TryDequeue(out var cgc))
             {

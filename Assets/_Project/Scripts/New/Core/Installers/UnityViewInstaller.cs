@@ -37,7 +37,6 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsSingle();
             Container.Bind<InSightChunkCreator>().AsSingle();
             Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsSingle();
-            Container.Bind<InSightChecker>().AsSingle();
             Container.Bind<OutOfRangeChunkDisposer>().AsSingle();
 
             Container.BindInstance<PlayerCamera>(new PlayerCamera(playerVcam)).AsSingle();
