@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 using Domain.Chunks;
-using UnityView.ChunkRender.Surfaces;
 
 namespace UnityView.ChunkRender.Mesh
 {

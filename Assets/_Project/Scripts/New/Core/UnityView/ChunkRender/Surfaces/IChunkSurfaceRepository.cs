@@ -1,6 +1,6 @@
 using Domain;
 
-namespace UnityView.ChunkRender.Surfaces
+namespace UnityView.ChunkRender
 {
     public interface IChunkSurfaceRepository
     {

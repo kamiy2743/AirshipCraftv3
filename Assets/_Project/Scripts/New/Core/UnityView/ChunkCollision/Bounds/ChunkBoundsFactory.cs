@@ -1,6 +1,6 @@
 using Domain;
 using Domain.Chunks;
-using UnityView.ChunkRender.Surfaces;
+using UnityView.ChunkRender;
 using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision

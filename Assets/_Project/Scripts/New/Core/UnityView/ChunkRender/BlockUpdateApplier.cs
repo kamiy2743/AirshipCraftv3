@@ -1,6 +1,6 @@
 using Domain;
 using UnityView.ChunkRender.Mesh;
-using UnityView.ChunkRender.Surfaces;
+using UnityView.ChunkRender;
 
 namespace UnityView.ChunkRender
 {
