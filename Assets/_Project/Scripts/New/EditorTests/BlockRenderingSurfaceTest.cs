@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 
 using UnityView.ChunkRender;
-using UnityView.ChunkRender.RenderingSurface;
+using UnityView.ChunkRender.Surfaces;
 
 public class BlockRenderingSurfaceTest
 {

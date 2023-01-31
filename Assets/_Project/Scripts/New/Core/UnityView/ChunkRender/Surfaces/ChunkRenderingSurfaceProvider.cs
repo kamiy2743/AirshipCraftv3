@@ -1,6 +1,6 @@
 using Domain;
 
-namespace UnityView.ChunkRender.RenderingSurface
+namespace UnityView.ChunkRender.Surfaces
 {
     internal class ChunkRenderingSurfaceProvider
     {
