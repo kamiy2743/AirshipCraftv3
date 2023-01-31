@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 using Domain.Chunks;
-using UnityView.ChunkRender.Mesh;
+using UnityView.ChunkRender;
 using Unity.Mathematics;
 using Cysharp.Threading.Tasks;
 

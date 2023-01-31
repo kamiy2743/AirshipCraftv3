@@ -1,5 +1,4 @@
 using Domain;
-using UnityView.ChunkRender.Mesh;
 using UnityView.ChunkRender;
 
 namespace UnityView.ChunkRender

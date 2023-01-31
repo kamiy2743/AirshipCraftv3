@@ -3,7 +3,7 @@ using UnityEngine;
 using Domain;
 using Domain.Chunks;
 
-namespace UnityView.ChunkRender.Mesh
+namespace UnityView.ChunkRender
 {
     internal class ChunkMeshDataFactory
     {
