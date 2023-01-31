@@ -5,20 +5,20 @@ using Domain.Chunks;
 
 namespace UnityView.ChunkRender
 {
-    internal class ChunkMeshDataFactory
+    internal class ChunkMeshFactory
     {
         private IChunkProvider chunkProvider;
         private ChunkSurfaceProvider chunkSurfaceProvider;
-        private BlockMeshDataProvider blockMeshDataProvider;
+        private BlockMeshProvider blockMeshProvider;
 
-        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider, BlockMeshDataProvider blockMeshDataProvider)
+        internal ChunkMeshFactory(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider, BlockMeshProvider blockMeshProvider)
         {
             this.chunkProvider = chunkProvider;
             this.chunkSurfaceProvider = chunkSurfaceProvider;
-            this.blockMeshDataProvider = blockMeshDataProvider;
+            this.blockMeshProvider = blockMeshProvider;
         }
 
-        internal ChunkMeshData Create(ChunkGridCoordinate chunkGridCoordinate)
+        internal ChunkMesh Create(ChunkGridCoordinate chunkGridCoordinate)
         {
             var chunk = chunkProvider.GetChunk(chunkGridCoordinate);
             var chunkRenderingSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
@@ -42,7 +42,7 @@ namespace UnityView.ChunkRender
                         }
 
                         var blockTypeID = chunk.GetBlock(rc).blockTypeID;
-                        var blockMesh = blockMeshDataProvider.GetBlockMeshData(blockTypeID);
+                        var blockMesh = blockMeshProvider.GetBlockMesh(blockTypeID);
 
                         foreach (var direction in DirectionExt.Array)
                         {
@@ -77,7 +77,7 @@ namespace UnityView.ChunkRender
                 }
             }
 
-            return new ChunkMeshData(chunkGridCoordinate.ToPivotCoordinate(), vertices.ToArray(), triangles.ToArray(), uvs.ToArray());
+            return new ChunkMesh(chunkGridCoordinate.ToPivotCoordinate(), vertices.ToArray(), triangles.ToArray(), uvs.ToArray());
         }
     }
 }

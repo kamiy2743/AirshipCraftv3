@@ -7,14 +7,14 @@ namespace UnityView.ChunkRender
     {
         private UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator;
         private ChunkRendererUpdater chunkRendererUpdater;
-        private ChunkMeshDataFactory chunkMeshDataFactory;
+        private ChunkMeshFactory chunkMeshFactory;
         private IChunkSurfaceRepository chunkSurfaceRepository;
 
-        internal BlockUpdateApplier(UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator, ChunkRendererUpdater chunkRendererUpdater, ChunkMeshDataFactory chunkMeshDataFactory, IChunkSurfaceRepository chunkSurfaceRepository)
+        internal BlockUpdateApplier(UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator, ChunkRendererUpdater chunkRendererUpdater, ChunkMeshFactory chunkMeshFactory, IChunkSurfaceRepository chunkSurfaceRepository)
         {
             this.updatedChunkSurfaceCalculator = updatedChunkSurfaceCalculator;
             this.chunkRendererUpdater = chunkRendererUpdater;
-            this.chunkMeshDataFactory = chunkMeshDataFactory;
+            this.chunkMeshFactory = chunkMeshFactory;
             this.chunkSurfaceRepository = chunkSurfaceRepository;
         }
 
@@ -27,7 +27,7 @@ namespace UnityView.ChunkRender
                 chunkSurfaceRepository.Store(renderingSurface);
 
                 var cgc = renderingSurface.chunkGridCoordinate;
-                var mesh = chunkMeshDataFactory.Create(cgc);
+                var mesh = chunkMeshFactory.Create(cgc);
                 chunkRendererUpdater.Update(cgc, mesh);
             }
         }

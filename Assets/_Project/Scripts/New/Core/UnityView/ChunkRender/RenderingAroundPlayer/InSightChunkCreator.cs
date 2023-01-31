@@ -12,19 +12,19 @@ namespace UnityView.ChunkRender
     internal class InSightChunkCreator
     {
         private ChunkRendererFactory chunkRendererFactory;
-        private ChunkMeshDataFactory chunkMeshDataFactory;
+        private ChunkMeshFactory chunkMeshFactory;
         private CreatedChunkRenderers createdChunkRenderers;
 
-        internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshDataFactory chunkMeshDataFactory, CreatedChunkRenderers createdChunkRenderers)
+        internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshFactory chunkMeshFactory, CreatedChunkRenderers createdChunkRenderers)
         {
             this.chunkRendererFactory = chunkRendererFactory;
-            this.chunkMeshDataFactory = chunkMeshDataFactory;
+            this.chunkMeshFactory = chunkMeshFactory;
             this.createdChunkRenderers = createdChunkRenderers;
         }
 
         internal async UniTask ExecuteAsync(ChunkGridCoordinate playerChunk, int maxRenderingRadius, CancellationToken ct)
         {
-            var createdMeshes = new Queue<(ChunkGridCoordinate, ChunkMeshData)>();
+            var createdMeshes = new Queue<(ChunkGridCoordinate, ChunkMesh)>();
             CreateMeshesTask(playerChunk, maxRenderingRadius, createdMeshes, ct).Forget();
 
             while (true)
@@ -51,7 +51,7 @@ namespace UnityView.ChunkRender
         private async UniTask CreateMeshesTask(
             ChunkGridCoordinate playerChunk,
             int maxRenderingRadius,
-            Queue<(ChunkGridCoordinate, ChunkMeshData)> createdMeshes,
+            Queue<(ChunkGridCoordinate, ChunkMesh)> createdMeshes,
             CancellationToken ct)
         {
             var inSightChecker = new InSightChecker();
@@ -93,7 +93,7 @@ namespace UnityView.ChunkRender
                     break;
                 }
 
-                var mesh = chunkMeshDataFactory.Create(cgc);
+                var mesh = chunkMeshFactory.Create(cgc);
                 createdMeshes.Enqueue((cgc, mesh));
             }
 

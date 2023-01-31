@@ -10,7 +10,7 @@ namespace UnityView.ChunkRender
 
         private UnityEngine.Mesh mesh;
 
-        internal void SetMesh(ChunkMeshData chunkMesh)
+        internal void SetMesh(ChunkMesh chunkMesh)
         {
             if (chunkMesh.vertices.Length == 0 && mesh is not null)
             {

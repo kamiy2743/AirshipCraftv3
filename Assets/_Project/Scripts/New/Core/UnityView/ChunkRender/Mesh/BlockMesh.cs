@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityView.ChunkRender
 {
-    internal record BlockMeshData
+    internal record BlockMesh
     {
         private readonly MeshData rightPart;
         private readonly MeshData leftPart;
@@ -15,7 +15,7 @@ namespace UnityView.ChunkRender
         private readonly MeshData backPart;
         internal readonly MeshData otherPart;
 
-        internal BlockMeshData(Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        internal BlockMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             rightPart = ExtractPartMesh(Direction.Right, vertices, triangles, uvs);
             leftPart = ExtractPartMesh(Direction.Left, vertices, triangles, uvs);

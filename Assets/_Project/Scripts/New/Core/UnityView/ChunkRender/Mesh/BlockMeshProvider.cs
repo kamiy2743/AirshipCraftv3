@@ -4,24 +4,24 @@ using Domain;
 
 namespace UnityView.ChunkRender
 {
-    internal class BlockMeshDataProvider
+    internal class BlockMeshProvider
     {
-        private BlockMeshData air;
-        private BlockMeshData other;
+        private BlockMesh air;
+        private BlockMesh other;
 
-        internal BlockMeshDataProvider()
+        internal BlockMeshProvider()
         {
-            air = new BlockMeshData(new Vector3[0], new int[0], new Vector2[0]);
+            air = new BlockMesh(new Vector3[0], new int[0], new Vector2[0]);
 
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             var cubeMesh = cube.GetComponent<MeshFilter>().mesh;
             MonoBehaviour.Destroy(cube);
 
             var vertices = cubeMesh.vertices.Select(v => v + new Vector3(0.5f, 0.5f, 0.5f)).ToArray();
-            other = new BlockMeshData(vertices, cubeMesh.triangles, cubeMesh.uv);
+            other = new BlockMesh(vertices, cubeMesh.triangles, cubeMesh.uv);
         }
 
-        internal BlockMeshData GetBlockMeshData(BlockTypeID blockTypeID)
+        internal BlockMesh GetBlockMesh(BlockTypeID blockTypeID)
         {
             if (blockTypeID == BlockTypeID.Air)
             {
