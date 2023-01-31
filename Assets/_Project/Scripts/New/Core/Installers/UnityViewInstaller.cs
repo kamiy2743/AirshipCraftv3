@@ -15,6 +15,7 @@ namespace Installers
         [SerializeField] private ChunkColliderFactory chunkColliderFactory;
         [SerializeField] private Transform playerTransform;
         [SerializeField] private PlayerCamera playerCamera;
+        [SerializeField] private FocusedBlockOutline focusedBlockOutline;
 
         public override void InstallBindings()
         {
@@ -58,6 +59,10 @@ namespace Installers
                 .Bind<IInputProvider>()
                 .To<InputSystemInputProvider>()
                 .AsSingle();
+
+            Container.Bind<FocusedBlockProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<FocusedBlockViewer>().AsSingle();
+            Container.BindInstance<FocusedBlockOutline>(focusedBlockOutline).AsSingle();
         }
     }
 }

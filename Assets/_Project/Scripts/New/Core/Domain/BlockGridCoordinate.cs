@@ -48,6 +48,11 @@ namespace Domain
             }
         }
 
+        public float3 ToPivotCoordinate()
+        {
+            return new float3(x, y, z);
+        }
+
         public static bool TryParse(float3 value, out BlockGridCoordinate result)
         {
             try

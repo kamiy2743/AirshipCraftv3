@@ -1,0 +1,44 @@
+@startuml
+
+together {
+    class FocusedBlockProvider  {
+        TryGetForcusedBlockInfo(out FocusedBlockInfo) : bool
+    }
+
+    class FocusedBlockInfo {
+        block
+        pivotCoordinate
+    }
+}
+
+together {
+    class FocusedBlockViewer {
+
+    }
+
+    class FocusedBlockOutline {
+        SetMesh(BlockMesh)
+    }
+}
+
+class BreakBlockHandler {
+
+}
+
+class PlaceBlockHandler {
+
+}
+
+class InteractBlockHandler {
+
+}
+
+FocusedBlockViewer --> FocusedBlockProvider : 毎フレーム取得
+FocusedBlockViewer --> FocusedBlockOutline
+
+BreakBlockHandler --> FocusedBlockProvider
+PlaceBlockHandler --> FocusedBlockProvider
+InteractBlockHandler --> FocusedBlockProvider
+
+
+@enduml

@@ -15,6 +15,9 @@ namespace UnityView.ChunkRender
         private readonly MeshData backPart;
         internal readonly MeshData otherPart;
 
+        // TODO ChunkRender以外でもBlockMeshを共有して使うのは良くないかも
+        internal readonly MeshData All;
+
         internal BlockMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             rightPart = ExtractPartMesh(Direction.Right, vertices, triangles, uvs);
@@ -25,6 +28,8 @@ namespace UnityView.ChunkRender
             backPart = ExtractPartMesh(Direction.Back, vertices, triangles, uvs);
 
             otherPart = new MeshData(new Vector3[0], new int[0], new Vector2[0]);
+
+            All = new MeshData(vertices, triangles, uvs);
         }
 
         private MeshData ExtractPartMesh(Direction direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)

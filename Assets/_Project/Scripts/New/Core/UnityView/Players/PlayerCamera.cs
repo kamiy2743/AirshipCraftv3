@@ -14,6 +14,7 @@ namespace UnityView.Players
         internal Quaternion HorizontalRotation => Quaternion.Euler(0, cinemachinePOV.m_HorizontalAxis.Value, 0);
         internal Quaternion VerticalRotation => Quaternion.Euler(cinemachinePOV.m_VerticalAxis.Value, 0, 0);
         internal Vector3 Forward => HorizontalRotation * VerticalRotation * Vector3.forward;
+        internal Vector3 Position => playerVcam.transform.position;
 
         internal float4x4 ViewportMatrix => math.mul(cameraMain.projectionMatrix, cameraMain.worldToCameraMatrix);
 
