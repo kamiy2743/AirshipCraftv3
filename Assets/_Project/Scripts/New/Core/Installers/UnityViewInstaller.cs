@@ -4,6 +4,7 @@ using Infrastructure;
 using UnityView.ChunkRendering;
 using UnityView.ChunkRendering.Mesh;
 using UnityView.ChunkRendering.RenderingSurface;
+using UnityView.ChunkCollision;
 using UnityView.Shared;
 using UnityView.Inputs;
 using UnityView.Players;
@@ -14,6 +15,7 @@ namespace Installers
     internal class UnityViewInstaller : MonoInstaller
     {
         [SerializeField] private ChunkRendererFactory chunkRendererFactory;
+        [SerializeField] private ChunkColliderFactory chunkColliderFactory;
         [SerializeField] private CinemachineVirtualCamera playerVcam;
 
         public override void InstallBindings()
@@ -35,12 +37,18 @@ namespace Installers
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();
 
-            Container.Bind<PlayerChunkProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerChunkProvider>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsSingle();
             Container.Bind<InSightChunkCreator>().AsSingle();
             Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsSingle();
             Container.Bind<OutOfRangeChunkDisposer>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<AroundPlayerColliderHandler>().AsSingle();
+            Container.Bind<AroundPlayerColliderCreator>().AsSingle();
+            Container.Bind<OutOfRangeColliderDisposer>().AsSingle();
+            Container.Bind<CreatedColliders>().AsSingle();
+            Container.BindInstance<ChunkColliderFactory>(chunkColliderFactory).AsSingle();
 
             Container.BindInstance<PlayerCamera>(new PlayerCamera(playerVcam)).AsSingle();
 

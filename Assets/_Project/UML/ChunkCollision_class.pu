@@ -1,0 +1,34 @@
+@startuml
+
+package ChunkCollision {
+    class AroundPlayerColliderHandler {
+        プレイヤーの移動でプレイヤーチャンクが変化したら
+        コライダーの作成、破棄を行う
+    }
+
+    class AroundPlayerColliderCreator {
+
+    }
+
+    class OutOfRangeColliderDisposer {
+
+    }
+
+    class CreatedColliders {
+
+    }
+
+    class ChunkCollider {
+
+    }
+}
+
+AroundPlayerColliderHandler --> AroundPlayerColliderCreator : "プレイヤーの周囲のチャンクを同期的に作成"
+AroundPlayerColliderHandler --> OutOfRangeColliderDisposer : "範囲外のチャンクを破棄"
+
+AroundPlayerColliderCreator --> CreatedColliders : "追加"
+OutOfRangeColliderDisposer --> CreatedColliders : "問い合わせ\n破棄"
+
+CreatedColliders *-- ChunkCollider
+
+@enduml
