@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 using Domain.Chunks;
-using UnityView.ChunkRendering.Mesh;
+using UnityView.ChunkRender.Mesh;
 using Unity.Mathematics;
 using Cysharp.Threading.Tasks;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     internal class InSightChunkCreator
     {

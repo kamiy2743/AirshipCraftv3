@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Domain;
 using Domain.Chunks;
 
-namespace UnityView.ChunkRendering.RenderingSurface
+namespace UnityView.ChunkRender.RenderingSurface
 {
     internal class UpdatedChunkRenderingSurfaceCalculator
     {

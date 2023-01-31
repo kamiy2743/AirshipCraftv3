@@ -1,9 +1,9 @@
 using UnityEngine;
 using Zenject;
 using Infrastructure;
-using UnityView.ChunkRendering;
-using UnityView.ChunkRendering.Mesh;
-using UnityView.ChunkRendering.RenderingSurface;
+using UnityView.ChunkRender;
+using UnityView.ChunkRender.Mesh;
+using UnityView.ChunkRender.RenderingSurface;
 using UnityView.ChunkCollision;
 using UnityView.Shared;
 using UnityView.Inputs;

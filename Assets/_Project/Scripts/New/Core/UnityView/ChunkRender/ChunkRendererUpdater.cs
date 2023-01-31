@@ -1,7 +1,7 @@
 using Domain;
-using UnityView.ChunkRendering.Mesh;
+using UnityView.ChunkRender.Mesh;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     internal class ChunkRendererUpdater
     {

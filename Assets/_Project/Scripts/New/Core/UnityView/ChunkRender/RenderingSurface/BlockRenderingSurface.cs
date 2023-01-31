@@ -1,4 +1,4 @@
-namespace UnityView.ChunkRendering.RenderingSurface
+namespace UnityView.ChunkRender.RenderingSurface
 {
     internal record BlockRenderingSurface
     {

@@ -1,6 +1,6 @@
 using Domain;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     public class BlockUpdateReceptor
     {

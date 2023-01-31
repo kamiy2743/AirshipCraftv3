@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using UnityView.ChunkRendering.Mesh;
+using UnityView.ChunkRender.Mesh;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     internal class ChunkRenderer : MonoBehaviour, IDisposable
     {

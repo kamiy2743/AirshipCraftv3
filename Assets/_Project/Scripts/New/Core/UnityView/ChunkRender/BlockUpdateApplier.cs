@@ -1,8 +1,8 @@
 using Domain;
-using UnityView.ChunkRendering.Mesh;
-using UnityView.ChunkRendering.RenderingSurface;
+using UnityView.ChunkRender.Mesh;
+using UnityView.ChunkRender.RenderingSurface;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     internal class BlockUpdateApplier
     {

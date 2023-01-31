@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Domain;
 using Utils;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     internal class CreateChunkQueue
     {

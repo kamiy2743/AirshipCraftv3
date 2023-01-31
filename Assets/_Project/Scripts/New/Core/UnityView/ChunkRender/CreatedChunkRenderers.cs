@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Domain;
 
-namespace UnityView.ChunkRendering
+namespace UnityView.ChunkRender
 {
     internal class CreatedChunkRenderers : IDisposable
     {
