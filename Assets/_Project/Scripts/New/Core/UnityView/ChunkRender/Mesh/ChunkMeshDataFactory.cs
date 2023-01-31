@@ -9,20 +9,20 @@ namespace UnityView.ChunkRender.Mesh
     internal class ChunkMeshDataFactory
     {
         private IChunkProvider chunkProvider;
-        private ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider;
+        private ChunkSurfaceProvider chunkSurfaceProvider;
         private BlockMeshDataProvider blockMeshDataProvider;
 
-        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider, BlockMeshDataProvider blockMeshDataProvider)
+        internal ChunkMeshDataFactory(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider, BlockMeshDataProvider blockMeshDataProvider)
         {
             this.chunkProvider = chunkProvider;
-            this.chunkRenderingSurfaceProvider = chunkRenderingSurfaceProvider;
+            this.chunkSurfaceProvider = chunkSurfaceProvider;
             this.blockMeshDataProvider = blockMeshDataProvider;
         }
 
         internal ChunkMeshData Create(ChunkGridCoordinate chunkGridCoordinate)
         {
             var chunk = chunkProvider.GetChunk(chunkGridCoordinate);
-            var chunkRenderingSurface = chunkRenderingSurfaceProvider.GetRenderingSurface(chunkGridCoordinate);
+            var chunkRenderingSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             var vertices = new List<Vector3>();
             var triangles = new List<int>();
@@ -36,7 +36,7 @@ namespace UnityView.ChunkRender.Mesh
                     {
                         var rc = new RelativeCoordinate(x, y, z);
 
-                        var blockRenderingSurface = chunkRenderingSurface.GetBlockRenderingSurface(rc);
+                        var blockRenderingSurface = chunkRenderingSurface.GetBlockSurface(rc);
                         if (!blockRenderingSurface.hasRenderingSurface)
                         {
                             continue;

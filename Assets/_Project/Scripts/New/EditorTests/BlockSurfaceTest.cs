@@ -7,38 +7,38 @@ using UnityEngine.TestTools;
 using UnityView.ChunkRender;
 using UnityView.ChunkRender.Surfaces;
 
-public class BlockRenderingSurfaceTest
+public class BlockSurfaceTest
 {
     [Test]
     public void 初期状態にRightを足すとRightになる()
     {
-        var result = new BlockRenderingSurface() + Direction.Right;
+        var result = new BlockSurface() + Direction.Right;
         Assert.AreEqual((byte)Direction.Right, result.SurfaceByteDebug);
     }
 
     [Test]
     public void RightにLeftを足すとRight_Leftになる()
     {
-        var result = new BlockRenderingSurface() + Direction.Right + Direction.Left;
+        var result = new BlockSurface() + Direction.Right + Direction.Left;
         Assert.AreEqual((byte)Direction.Right + (byte)Direction.Left, result.SurfaceByteDebug);
     }
 
     [Test]
     public void 複数のSurfaceを渡すコンストラクタ_Right_Left()
     {
-        var result = new BlockRenderingSurface(Direction.Right, Direction.Left);
+        var result = new BlockSurface(Direction.Right, Direction.Left);
         Assert.AreEqual((byte)Direction.Right + (byte)Direction.Left, result.SurfaceByteDebug);
     }
 
     [Test]
     public void Right_LeftにContains_Rightを呼ぶとTrueになる()
     {
-        Assert.AreEqual(true, new BlockRenderingSurface(Direction.Right, Direction.Left).Contains(Direction.Right));
+        Assert.AreEqual(true, new BlockSurface(Direction.Right, Direction.Left).Contains(Direction.Right));
     }
 
     [Test]
     public void Right_LeftにContains_Leftを呼ぶとTrueになる()
     {
-        Assert.AreEqual(true, new BlockRenderingSurface(Direction.Right, Direction.Left).Contains(Direction.Left));
+        Assert.AreEqual(true, new BlockSurface(Direction.Right, Direction.Left).Contains(Direction.Left));
     }
 }

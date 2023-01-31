@@ -1,23 +1,23 @@
 namespace UnityView.ChunkRender.Surfaces
 {
-    internal record BlockRenderingSurface
+    internal record BlockSurface
     {
         private readonly byte surfacesByte;
         internal byte SurfaceByteDebug => surfacesByte;
 
         internal readonly bool hasRenderingSurface;
 
-        internal static readonly BlockRenderingSurface Empty = CreateEmpty();
+        internal static readonly BlockSurface Empty = CreateEmpty();
 
-        internal BlockRenderingSurface()
+        internal BlockSurface()
         {
             surfacesByte = 0;
             hasRenderingSurface = false;
         }
 
-        internal BlockRenderingSurface(params Direction[] directions)
+        internal BlockSurface(params Direction[] directions)
         {
-            var result = new BlockRenderingSurface();
+            var result = new BlockSurface();
             foreach (var surface in directions)
             {
                 result += surface;
@@ -27,15 +27,15 @@ namespace UnityView.ChunkRender.Surfaces
             hasRenderingSurface = true;
         }
 
-        private BlockRenderingSurface(byte surfacesByte)
+        private BlockSurface(byte surfacesByte)
         {
             this.surfacesByte = surfacesByte;
             hasRenderingSurface = surfacesByte > 0;
         }
 
-        private static BlockRenderingSurface CreateEmpty()
+        private static BlockSurface CreateEmpty()
         {
-            return new BlockRenderingSurface((byte)0);
+            return new BlockSurface((byte)0);
         }
 
         internal bool Contains(Direction direction)
@@ -43,16 +43,16 @@ namespace UnityView.ChunkRender.Surfaces
             return (surfacesByte & (byte)direction) > 0;
         }
 
-        public static BlockRenderingSurface operator +(BlockRenderingSurface renderingSurface, Direction direction)
+        public static BlockSurface operator +(BlockSurface renderingSurface, Direction direction)
         {
             var result = renderingSurface.surfacesByte | (byte)direction;
-            return new BlockRenderingSurface((byte)result);
+            return new BlockSurface((byte)result);
         }
 
-        public static BlockRenderingSurface operator -(BlockRenderingSurface renderingSurface, Direction direction)
+        public static BlockSurface operator -(BlockSurface renderingSurface, Direction direction)
         {
             var result = renderingSurface.surfacesByte ^ (byte)direction;
-            return new BlockRenderingSurface((byte)result);
+            return new BlockSurface((byte)result);
         }
     }
 }

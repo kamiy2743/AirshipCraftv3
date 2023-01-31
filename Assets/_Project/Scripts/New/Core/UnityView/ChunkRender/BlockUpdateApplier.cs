@@ -6,26 +6,26 @@ namespace UnityView.ChunkRender
 {
     internal class BlockUpdateApplier
     {
-        private UpdatedChunkRenderingSurfaceCalculator updatedChunkRenderingSurfaceCalculator;
+        private UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator;
         private ChunkRendererUpdater chunkRendererUpdater;
         private ChunkMeshDataFactory chunkMeshDataFactory;
-        private IChunkRenderingSurfaceRepository chunkRenderingSurfaceRepository;
+        private IChunkSurfaceRepository chunkSurfaceRepository;
 
-        internal BlockUpdateApplier(UpdatedChunkRenderingSurfaceCalculator updatedChunkRenderingSurfaceCalculator, ChunkRendererUpdater chunkRendererUpdater, ChunkMeshDataFactory chunkMeshDataFactory, IChunkRenderingSurfaceRepository chunkRenderingSurfaceRepository)
+        internal BlockUpdateApplier(UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator, ChunkRendererUpdater chunkRendererUpdater, ChunkMeshDataFactory chunkMeshDataFactory, IChunkSurfaceRepository chunkSurfaceRepository)
         {
-            this.updatedChunkRenderingSurfaceCalculator = updatedChunkRenderingSurfaceCalculator;
+            this.updatedChunkSurfaceCalculator = updatedChunkSurfaceCalculator;
             this.chunkRendererUpdater = chunkRendererUpdater;
             this.chunkMeshDataFactory = chunkMeshDataFactory;
-            this.chunkRenderingSurfaceRepository = chunkRenderingSurfaceRepository;
+            this.chunkSurfaceRepository = chunkSurfaceRepository;
         }
 
         internal void Apply(BlockGridCoordinate updateCoordinate)
         {
-            var results = updatedChunkRenderingSurfaceCalculator.Calculate(updateCoordinate);
+            var results = updatedChunkSurfaceCalculator.Calculate(updateCoordinate);
 
             foreach (var renderingSurface in results)
             {
-                chunkRenderingSurfaceRepository.Store(renderingSurface);
+                chunkSurfaceRepository.Store(renderingSurface);
 
                 var cgc = renderingSurface.chunkGridCoordinate;
                 var mesh = chunkMeshDataFactory.Create(cgc);

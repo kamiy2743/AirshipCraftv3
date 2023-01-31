@@ -4,21 +4,21 @@ using Domain.Chunks;
 
 namespace UnityView.ChunkRender.Surfaces
 {
-    internal class UpdatedChunkRenderingSurfaceCalculator
+    internal class UpdatedChunkSurfaceCalculator
     {
         private IChunkProvider chunkProvider;
-        private ChunkRenderingSurfaceProvider renderingSurfaceProvider;
+        private ChunkSurfaceProvider chunkSurfaceProvider;
 
-        internal UpdatedChunkRenderingSurfaceCalculator(IChunkProvider chunkProvider, ChunkRenderingSurfaceProvider renderingSurfaceProvider)
+        internal UpdatedChunkSurfaceCalculator(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider)
         {
             this.chunkProvider = chunkProvider;
-            this.renderingSurfaceProvider = renderingSurfaceProvider;
+            this.chunkSurfaceProvider = chunkSurfaceProvider;
         }
 
-        internal IEnumerable<ChunkRenderingSurface> Calculate(BlockGridCoordinate updateCoordinate)
+        internal IEnumerable<ChunkSurface> Calculate(BlockGridCoordinate updateCoordinate)
         {
-            var updatedRenderingSurfaces = new Dictionary<ChunkGridCoordinate, ChunkRenderingSurface>();
-            var targetBlockRenderingSurface = new BlockRenderingSurface();
+            var updatedChunkSurfaces = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
+            var targetBlockSurface = new BlockSurface();
             var targetChunkGridCoordinate = ChunkGridCoordinate.Parse(updateCoordinate);
             var targetRelativeCoordinate = RelativeCoordinate.Parse(updateCoordinate);
             var targetBlockTypeID = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate).blockTypeID;
@@ -40,42 +40,42 @@ namespace UnityView.ChunkRender.Surfaces
                     // 対象ブロックの描画面に追加
                     if (adjacentBlock.blockTypeID == BlockTypeID.Air)
                     {
-                        targetBlockRenderingSurface += surface;
+                        targetBlockSurface += surface;
                     }
                 }
 
                 // 隣接ブロックの描画面を更新
-                var adjacentRenderingSurface = renderingSurfaceProvider.GetRenderingSurface(adjacentChunkGridCoordinate);
-                var currentSurface = adjacentRenderingSurface.GetBlockRenderingSurface(adjacentRelativeCoordinate);
+                var adjacentRenderingSurface = chunkSurfaceProvider.GetChunkSurface(adjacentChunkGridCoordinate);
+                var currentSurface = adjacentRenderingSurface.GetBlockSurface(adjacentRelativeCoordinate);
                 var targetSurface = surface.Flip();
 
                 if (targetBlockTypeID == BlockTypeID.Air)
                 {
                     if (!currentSurface.Contains(targetSurface))
                     {
-                        adjacentRenderingSurface.SetBlockRenderingSurfaceDirectly(adjacentRelativeCoordinate, currentSurface + targetSurface);
-                        updatedRenderingSurfaces[adjacentChunkGridCoordinate] = adjacentRenderingSurface;
+                        adjacentRenderingSurface.SetBlockSurfaceDirectly(adjacentRelativeCoordinate, currentSurface + targetSurface);
+                        updatedChunkSurfaces[adjacentChunkGridCoordinate] = adjacentRenderingSurface;
                     }
                 }
                 else
                 {
                     if (currentSurface.Contains(targetSurface))
                     {
-                        adjacentRenderingSurface.SetBlockRenderingSurfaceDirectly(adjacentRelativeCoordinate, currentSurface - targetSurface);
-                        updatedRenderingSurfaces[adjacentChunkGridCoordinate] = adjacentRenderingSurface;
+                        adjacentRenderingSurface.SetBlockSurfaceDirectly(adjacentRelativeCoordinate, currentSurface - targetSurface);
+                        updatedChunkSurfaces[adjacentChunkGridCoordinate] = adjacentRenderingSurface;
                     }
                 }
             }
 
             // 対象ブロックの描画面を更新
             {
-                var renderingSurface = renderingSurfaceProvider.GetRenderingSurface(targetChunkGridCoordinate);
-                renderingSurface.SetBlockRenderingSurfaceDirectly(targetRelativeCoordinate, targetBlockRenderingSurface);
+                var renderingSurface = chunkSurfaceProvider.GetChunkSurface(targetChunkGridCoordinate);
+                renderingSurface.SetBlockSurfaceDirectly(targetRelativeCoordinate, targetBlockSurface);
 
-                updatedRenderingSurfaces[targetChunkGridCoordinate] = renderingSurface;
+                updatedChunkSurfaces[targetChunkGridCoordinate] = renderingSurface;
             }
 
-            return updatedRenderingSurfaces.Values;
+            return updatedChunkSurfaces.Values;
         }
     }
 }

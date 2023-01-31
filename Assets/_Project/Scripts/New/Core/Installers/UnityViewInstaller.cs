@@ -21,19 +21,19 @@ namespace Installers
         public override void InstallBindings()
         {
             Container
-                .Bind<IChunkRenderingSurfaceRepository>()
-                .To<OnMemoryChunkRenderingSurfaceRepository>()
+                .Bind<IChunkSurfaceRepository>()
+                .To<OnMemoryChunkSurfaceRepository>()
                 .AsSingle();
 
-            Container.Bind<ChunkRenderingSurfaceFactory>().AsSingle();
-            Container.Bind<ChunkRenderingSurfaceProvider>().AsSingle();
+            Container.Bind<ChunkSurfaceFactory>().AsSingle();
+            Container.Bind<ChunkSurfaceProvider>().AsSingle();
 
             Container.Bind<BlockMeshDataProvider>().AsSingle();
             Container.Bind<ChunkMeshDataFactory>().AsSingle();
 
             Container.Bind<BlockUpdateReceptor>().AsSingle();
             Container.Bind<BlockUpdateApplier>().AsSingle();
-            Container.Bind<UpdatedChunkRenderingSurfaceCalculator>().AsSingle();
+            Container.Bind<UpdatedChunkSurfaceCalculator>().AsSingle();
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();
 

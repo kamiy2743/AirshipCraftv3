@@ -8,17 +8,17 @@ namespace UnityView.ChunkCollision
     internal class ChunkBoundsFactory
     {
         // TODO 仮実装
-        private ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider;
+        private ChunkSurfaceProvider chunkSurfaceProvider;
 
-        internal ChunkBoundsFactory(ChunkRenderingSurfaceProvider chunkRenderingSurfaceProvider)
+        internal ChunkBoundsFactory(ChunkSurfaceProvider chunkSurfaceProvider)
         {
-            this.chunkRenderingSurfaceProvider = chunkRenderingSurfaceProvider;
+            this.chunkSurfaceProvider = chunkSurfaceProvider;
         }
 
         internal ChunkBounds Create(ChunkGridCoordinate chunkGridCoordinate)
         {
             var ChunkBounds = new ChunkBounds(chunkGridCoordinate.ToPivotCoordinate());
-            var ChunkRenderingSurface = chunkRenderingSurfaceProvider.GetRenderingSurface(chunkGridCoordinate);
+            var ChunkRenderingSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             for (int x = 0; x < Chunk.BlockSide; x++)
             {
@@ -28,7 +28,7 @@ namespace UnityView.ChunkCollision
                     {
                         var rc = new RelativeCoordinate(x, y, z);
                         // TODO 仮実装
-                        var blockRenderingSurface = ChunkRenderingSurface.GetBlockRenderingSurface(rc);
+                        var blockRenderingSurface = ChunkRenderingSurface.GetBlockSurface(rc);
 
                         if (!blockRenderingSurface.hasRenderingSurface)
                         {

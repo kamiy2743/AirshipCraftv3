@@ -503,10 +503,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 685991790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f0feb7aef9a4974c92d192327ed87b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 9febc1c4037ae4b4c9c6e7aa1bfa92e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkColliderPrefab: {fileID: 1272873497254067375, guid: 21d22a9f3c63d5c49b6cee4fca809ecf, type: 3}
+  chunkColliderPrefab: {fileID: 6574531287909282808, guid: 21d22a9f3c63d5c49b6cee4fca809ecf, type: 3}
   parent: {fileID: 685991791}
 --- !u!1 &686078255
 GameObject:

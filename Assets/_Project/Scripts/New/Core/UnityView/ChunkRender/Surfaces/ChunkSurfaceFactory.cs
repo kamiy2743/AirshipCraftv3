@@ -3,18 +3,18 @@ using Domain.Chunks;
 
 namespace UnityView.ChunkRender.Surfaces
 {
-    internal class ChunkRenderingSurfaceFactory
+    internal class ChunkSurfaceFactory
     {
         private IChunkProvider chunkProvider;
 
-        internal ChunkRenderingSurfaceFactory(IChunkProvider chunkProvider)
+        internal ChunkSurfaceFactory(IChunkProvider chunkProvider)
         {
             this.chunkProvider = chunkProvider;
         }
 
-        internal ChunkRenderingSurface Create(ChunkGridCoordinate chunkGridCoordinate)
+        internal ChunkSurface Create(ChunkGridCoordinate chunkGridCoordinate)
         {
-            var chunkSurface = new ChunkRenderingSurface(chunkGridCoordinate);
+            var chunkSurface = new ChunkSurface(chunkGridCoordinate);
             var context = new Context(chunkGridCoordinate, chunkProvider);
 
             for (int x = 0; x < Chunk.BlockSide; x++)
@@ -24,7 +24,7 @@ namespace UnityView.ChunkRender.Surfaces
                     for (int z = 0; z < Chunk.BlockSide; z++)
                     {
                         var rc = new RelativeCoordinate(x, y, z);
-                        var blockRenderingSurface = new BlockRenderingSurface();
+                        var blockSurface = new BlockSurface();
 
                         var blockTypeID = context.TargetChunk.GetBlock(rc).blockTypeID;
                         if (blockTypeID == BlockTypeID.Air)
@@ -37,11 +37,11 @@ namespace UnityView.ChunkRender.Surfaces
                             var adjacentBlock = GetAdjacentBlock(direction, rc, context);
                             if (adjacentBlock.blockTypeID == BlockTypeID.Air)
                             {
-                                blockRenderingSurface += direction;
+                                blockSurface += direction;
                             }
                         }
 
-                        chunkSurface.SetBlockRenderingSurfaceDirectly(rc, blockRenderingSurface);
+                        chunkSurface.SetBlockSurfaceDirectly(rc, blockSurface);
                     }
                 }
             }
