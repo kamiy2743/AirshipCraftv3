@@ -1,6 +1,6 @@
 using System;
 using Zenject;
-using UnityView.Shared;
+using UnityView.Players;
 using UniRx;
 
 namespace UnityView.ChunkCollision

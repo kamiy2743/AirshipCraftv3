@@ -2,7 +2,8 @@ using System;
 using UnityEngine;
 using Domain;
 using UniRx;
-namespace UnityView.Shared
+
+namespace UnityView.Players
 {
     internal class PlayerChunkProvider : IDisposable
     {
@@ -12,9 +13,9 @@ namespace UnityView.Shared
         private Transform playerTransform;
         private CompositeDisposable disposals = new CompositeDisposable();
 
-        internal PlayerChunkProvider()
+        internal PlayerChunkProvider(Transform playerTransform)
         {
-            playerTransform = Camera.main.transform;
+            this.playerTransform = playerTransform;
 
             var lastPlayerChunk = GetPlayerChunk();
             Observable

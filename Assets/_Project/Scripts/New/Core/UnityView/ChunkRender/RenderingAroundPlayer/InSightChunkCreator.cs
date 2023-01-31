@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 using Domain.Chunks;
-using UnityView.ChunkRender;
 using Unity.Mathematics;
 using Cysharp.Threading.Tasks;
+using UnityView.Players;
 
 namespace UnityView.ChunkRender
 {
@@ -14,12 +14,14 @@ namespace UnityView.ChunkRender
         private ChunkRendererFactory chunkRendererFactory;
         private ChunkMeshFactory chunkMeshFactory;
         private CreatedChunkRenderers createdChunkRenderers;
+        private PlayerCamera playerCamera;
 
-        internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshFactory chunkMeshFactory, CreatedChunkRenderers createdChunkRenderers)
+        internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshFactory chunkMeshFactory, CreatedChunkRenderers createdChunkRenderers, PlayerCamera playerCamera)
         {
             this.chunkRendererFactory = chunkRendererFactory;
             this.chunkMeshFactory = chunkMeshFactory;
             this.createdChunkRenderers = createdChunkRenderers;
+            this.playerCamera = playerCamera;
         }
 
         internal async UniTask ExecuteAsync(ChunkGridCoordinate playerChunk, int maxRenderingRadius, CancellationToken ct)
@@ -54,7 +56,7 @@ namespace UnityView.ChunkRender
             Queue<(ChunkGridCoordinate, ChunkMesh)> createdMeshes,
             CancellationToken ct)
         {
-            var inSightChecker = new InSightChecker();
+            var inSightChecker = new InSightChecker(playerCamera.ViewportMatrix);
             var createChunkQueue = new CreateChunkQueue((int)math.pow(maxRenderingRadius * 2 + 1, 3));
 
             await UniTask.SwitchToThreadPool();

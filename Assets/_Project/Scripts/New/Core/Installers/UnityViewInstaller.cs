@@ -1,12 +1,11 @@
+using System;
 using UnityEngine;
 using Zenject;
 using Infrastructure;
 using UnityView.ChunkRender;
 using UnityView.ChunkCollision;
-using UnityView.Shared;
 using UnityView.Inputs;
 using UnityView.Players;
-using Cinemachine;
 
 namespace Installers
 {
@@ -14,7 +13,8 @@ namespace Installers
     {
         [SerializeField] private ChunkRendererFactory chunkRendererFactory;
         [SerializeField] private ChunkColliderFactory chunkColliderFactory;
-        [SerializeField] private CinemachineVirtualCamera playerVcam;
+        [SerializeField] private Transform playerTransform;
+        [SerializeField] private PlayerCamera playerCamera;
 
         public override void InstallBindings()
         {
@@ -35,7 +35,10 @@ namespace Installers
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();
 
-            Container.BindInterfacesAndSelfTo<PlayerChunkProvider>().AsSingle();
+            Container
+                .BindInterfacesAndSelfTo<PlayerChunkProvider>()
+                .FromInstance(new PlayerChunkProvider(playerTransform))
+                .AsSingle();
 
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsSingle();
             Container.Bind<InSightChunkCreator>().AsSingle();
@@ -49,7 +52,7 @@ namespace Installers
             Container.BindInstance<ChunkColliderFactory>(chunkColliderFactory).AsSingle();
             Container.Bind<ChunkBoundsFactory>().AsSingle();
 
-            Container.BindInstance<PlayerCamera>(new PlayerCamera(playerVcam)).AsSingle();
+            Container.BindInstance<PlayerCamera>(playerCamera).AsSingle();
 
             Container
                 .Bind<IInputProvider>()

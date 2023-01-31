@@ -3,14 +3,13 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkRender
 {
-    internal class InSightChecker
+    internal record InSightChecker
     {
         private readonly float4x4 viewportMatrix;
 
-        internal InSightChecker()
+        internal InSightChecker(float4x4 viewportMatrix)
         {
-            var camera = Camera.main;
-            viewportMatrix = camera.projectionMatrix * camera.worldToCameraMatrix;
+            this.viewportMatrix = viewportMatrix;
         }
 
         internal bool Check(Bounds bounds)

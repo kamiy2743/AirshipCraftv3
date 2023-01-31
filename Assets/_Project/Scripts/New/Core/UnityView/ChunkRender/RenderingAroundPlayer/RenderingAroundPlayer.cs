@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 using Zenject;
 using Domain;
-using UnityView.Shared;
+using UnityView.Players;
 using Cysharp.Threading.Tasks;
 
 namespace UnityView.ChunkRender
