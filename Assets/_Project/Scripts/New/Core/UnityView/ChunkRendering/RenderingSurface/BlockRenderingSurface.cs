@@ -7,6 +7,8 @@ namespace UnityView.ChunkRendering.RenderingSurface
 
         internal readonly bool hasRenderingSurface;
 
+        internal static readonly BlockRenderingSurface Empty = CreateEmpty();
+
         internal BlockRenderingSurface()
         {
             surfacesByte = 0;
@@ -29,6 +31,11 @@ namespace UnityView.ChunkRendering.RenderingSurface
         {
             this.surfacesByte = surfacesByte;
             hasRenderingSurface = surfacesByte > 0;
+        }
+
+        private static BlockRenderingSurface CreateEmpty()
+        {
+            return new BlockRenderingSurface((byte)0);
         }
 
         internal bool Contains(Direction direction)

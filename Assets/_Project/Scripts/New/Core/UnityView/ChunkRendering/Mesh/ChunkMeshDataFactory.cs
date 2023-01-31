@@ -36,19 +36,14 @@ namespace UnityView.ChunkRendering.Mesh
                     {
                         var rc = new RelativeCoordinate(x, y, z);
 
-                        var block = chunk.GetBlock(rc);
-                        if (block.blockTypeID == BlockTypeID.Air)
-                        {
-                            continue;
-                        }
-
                         var blockRenderingSurface = chunkRenderingSurface.GetBlockRenderingSurface(rc);
                         if (!blockRenderingSurface.hasRenderingSurface)
                         {
                             continue;
                         }
 
-                        var blockMesh = blockMeshDataProvider.GetBlockMeshData(block.blockTypeID);
+                        var blockTypeID = chunk.GetBlock(rc).blockTypeID;
+                        var blockMesh = blockMeshDataProvider.GetBlockMeshData(blockTypeID);
 
                         foreach (var direction in DirectionExt.Array)
                         {

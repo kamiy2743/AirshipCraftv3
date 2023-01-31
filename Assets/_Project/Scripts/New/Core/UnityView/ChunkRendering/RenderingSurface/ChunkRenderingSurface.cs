@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Domain;
 using Domain.Chunks;
 
@@ -6,27 +7,43 @@ namespace UnityView.ChunkRendering.RenderingSurface
     public class ChunkRenderingSurface
     {
         public readonly ChunkGridCoordinate chunkGridCoordinate;
-        private readonly BlockRenderingSurfaces surfaces;
+        private Dictionary<RelativeCoordinate, BlockRenderingSurface> blockSurfaces = new Dictionary<RelativeCoordinate, BlockRenderingSurface>();
 
-        internal ChunkRenderingSurface(ChunkGridCoordinate chunkGridCoordinate, BlockRenderingSurfaces surfaces)
+        internal ChunkRenderingSurface(ChunkGridCoordinate chunkGridCoordinate)
         {
             this.chunkGridCoordinate = chunkGridCoordinate;
-            this.surfaces = surfaces;
+        }
+
+        private ChunkRenderingSurface(ChunkGridCoordinate chunkGridCoordinate, Dictionary<RelativeCoordinate, BlockRenderingSurface> blockSurfaces)
+        {
+            this.chunkGridCoordinate = chunkGridCoordinate;
+            this.blockSurfaces = blockSurfaces;
         }
 
         internal BlockRenderingSurface GetBlockRenderingSurface(RelativeCoordinate relativeCoordinate)
         {
-            return surfaces.GetBlockRenderingSurface(relativeCoordinate);
+            if (blockSurfaces.TryGetValue(relativeCoordinate, out var result))
+            {
+                return result;
+            }
+
+            return BlockRenderingSurface.Empty;
         }
 
         internal void SetBlockRenderingSurfaceDirectly(RelativeCoordinate relativeCoordinate, BlockRenderingSurface blockRenderingSurface)
         {
-            surfaces.SetBlockRenderingSurfaceDirectly(relativeCoordinate, blockRenderingSurface);
+            blockSurfaces[relativeCoordinate] = blockRenderingSurface;
         }
 
         public ChunkRenderingSurface DeepCopy()
         {
-            return new ChunkRenderingSurface(chunkGridCoordinate, surfaces.DeepCopy());
+            var blockSurfacesCopy = new Dictionary<RelativeCoordinate, BlockRenderingSurface>(blockSurfaces.Count);
+            foreach (var item in blockSurfaces)
+            {
+                blockSurfaces[item.Key] = item.Value;
+            }
+
+            return new ChunkRenderingSurface(chunkGridCoordinate, blockSurfacesCopy);
         }
     }
 }

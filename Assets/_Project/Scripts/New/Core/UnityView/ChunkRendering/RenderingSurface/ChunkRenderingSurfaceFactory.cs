@@ -14,14 +14,8 @@ namespace UnityView.ChunkRendering.RenderingSurface
 
         internal ChunkRenderingSurface Create(ChunkGridCoordinate chunkGridCoordinate)
         {
-            var surfaces = CreateBlockRenderingSurfaces(chunkGridCoordinate);
-            return new ChunkRenderingSurface(chunkGridCoordinate, surfaces);
-        }
-
-        private BlockRenderingSurfaces CreateBlockRenderingSurfaces(ChunkGridCoordinate targetChunkGridCoordinate)
-        {
-            var surfaces = new BlockRenderingSurfaces();
-            var context = new Context(targetChunkGridCoordinate, chunkProvider);
+            var chunkSurface = new ChunkRenderingSurface(chunkGridCoordinate);
+            var context = new Context(chunkGridCoordinate, chunkProvider);
 
             for (int x = 0; x < Chunk.BlockSide; x++)
             {
@@ -35,8 +29,6 @@ namespace UnityView.ChunkRendering.RenderingSurface
                         var blockTypeID = context.TargetChunk.GetBlock(rc).blockTypeID;
                         if (blockTypeID == BlockTypeID.Air)
                         {
-                            // TODO 空気ならセットしなくてもいいように、BlockRenderingSurfacesの実装をDictionaryにする
-                            surfaces.SetBlockRenderingSurfaceDirectly(rc, blockRenderingSurface);
                             continue;
                         }
 
@@ -49,12 +41,12 @@ namespace UnityView.ChunkRendering.RenderingSurface
                             }
                         }
 
-                        surfaces.SetBlockRenderingSurfaceDirectly(rc, blockRenderingSurface);
+                        chunkSurface.SetBlockRenderingSurfaceDirectly(rc, blockRenderingSurface);
                     }
                 }
             }
 
-            return surfaces;
+            return chunkSurface;
         }
 
         private Block GetAdjacentBlock(Direction direction, RelativeCoordinate rc, Context context)
