@@ -32,6 +32,14 @@ namespace UnityView.ChunkRendering.RenderingSurface
                         var rc = new RelativeCoordinate(x, y, z);
                         var blockRenderingSurface = new BlockRenderingSurface();
 
+                        var blockTypeID = context.TargetChunk.GetBlock(rc).blockTypeID;
+                        if (blockTypeID == BlockTypeID.Air)
+                        {
+                            // TODO 空気ならセットしなくてもいいように、BlockRenderingSurfacesの実装をDictionaryにする
+                            surfaces.SetBlockRenderingSurfaceDirectly(rc, blockRenderingSurface);
+                            continue;
+                        }
+
                         foreach (var direction in DirectionExt.Array)
                         {
                             var adjacentBlock = GetAdjacentBlock(direction, rc, context);

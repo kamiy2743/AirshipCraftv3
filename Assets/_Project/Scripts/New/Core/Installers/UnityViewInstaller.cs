@@ -49,6 +49,7 @@ namespace Installers
             Container.Bind<OutOfRangeColliderDisposer>().AsSingle();
             Container.Bind<CreatedColliders>().AsSingle();
             Container.BindInstance<ChunkColliderFactory>(chunkColliderFactory).AsSingle();
+            Container.Bind<ChunkBoundsFactory>().AsSingle();
 
             Container.BindInstance<PlayerCamera>(new PlayerCamera(playerVcam)).AsSingle();
 

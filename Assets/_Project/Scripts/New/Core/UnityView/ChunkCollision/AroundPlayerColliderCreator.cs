@@ -7,11 +7,13 @@ namespace UnityView.ChunkCollision
     {
         private CreatedColliders createdColliders;
         private ChunkColliderFactory chunkColliderFactory;
+        private ChunkBoundsFactory chunkBoundsFactory;
 
-        internal AroundPlayerColliderCreator(CreatedColliders createdColliders, ChunkColliderFactory chunkColliderFactory)
+        internal AroundPlayerColliderCreator(CreatedColliders createdColliders, ChunkColliderFactory chunkColliderFactory, ChunkBoundsFactory chunkBoundsFactory)
         {
             this.createdColliders = createdColliders;
             this.chunkColliderFactory = chunkColliderFactory;
+            this.chunkBoundsFactory = chunkBoundsFactory;
         }
 
         internal void Execute(ChunkGridCoordinate playerChunk, int radius)
@@ -33,6 +35,9 @@ namespace UnityView.ChunkCollision
                         }
 
                         var chunkCollider = chunkColliderFactory.Create();
+                        var chunkBounds = chunkBoundsFactory.Create(cgc);
+                        chunkCollider.SetBounds(chunkBounds);
+
                         createdColliders.Add(cgc, chunkCollider);
                     }
                 }
