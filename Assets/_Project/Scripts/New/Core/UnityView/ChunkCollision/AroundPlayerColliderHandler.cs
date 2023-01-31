@@ -30,6 +30,7 @@ namespace UnityView.ChunkCollision
                 .OnPlayerChunkChanged
                 .Subscribe(playerChunk =>
                 {
+                    outOfRangeColliderDisposer.Execute(playerChunk, ColliderRadius);
                     aroundPlayerColliderCreator.Execute(playerChunk, ColliderRadius);
                 })
                 .AddTo(disposals);

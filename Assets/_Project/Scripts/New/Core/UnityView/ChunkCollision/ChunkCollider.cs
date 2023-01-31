@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace UnityView.ChunkCollision
 {
-    internal class ChunkCollider : MonoBehaviour
+    internal class ChunkCollider : MonoBehaviour, IDisposable
     {
         internal void SetBounds(ChunkBounds chunkBounds)
         {
@@ -14,6 +15,11 @@ namespace UnityView.ChunkCollision
                 collider.center = blockBounds.center;
                 collider.size = blockBounds.size;
             }
+        }
+
+        public void Dispose()
+        {
+            Destroy(gameObject);
         }
     }
 }
