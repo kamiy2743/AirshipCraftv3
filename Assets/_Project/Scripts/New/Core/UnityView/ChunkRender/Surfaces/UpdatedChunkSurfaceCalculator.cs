@@ -35,11 +35,6 @@ namespace UnityView.ChunkRender
                 var adjacentRelativeCoordinate = RelativeCoordinate.Parse(adjacentCoordinate);
                 var adjacentBlockTypeID = chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate).blockTypeID;
 
-                if (adjacentBlockTypeID == BlockTypeID.Air)
-                {
-                    continue;
-                }
-
                 if (targetBlockTypeID != BlockTypeID.Air)
                 {
                     // 対象ブロックの描画面に追加
@@ -47,6 +42,11 @@ namespace UnityView.ChunkRender
                     {
                         targetBlockSurface += direction;
                     }
+                }
+
+                if (adjacentBlockTypeID == BlockTypeID.Air)
+                {
+                    continue;
                 }
 
                 if (!updatedChunkSurfaces.TryGetValue(adjacentChunkGridCoordinate, out var adjacentChunkSurface))

@@ -17,7 +17,8 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory, chunkRepository);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
+        var chunkBlockSetter = new ChunkBlockSetter(chunkRepository, chunkProvider);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkBlockSetter);
 
         var placePosition = new Vector3(0, 0, 0);
         placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Grass);
@@ -36,7 +37,8 @@ public class PlaceBlockTest
         var chunkRepository = new OnMemoryChunkRepository();
         var chunkFactory = new AllDirtChunkFactory();
         var chunkProvider = new ChunkProvider(chunkFactory, chunkRepository);
-        var placeBlockUseCase = new PlaceBlockUseCase(chunkRepository, chunkProvider);
+        var chunkBlockSetter = new ChunkBlockSetter(chunkRepository, chunkProvider);
+        var placeBlockUseCase = new PlaceBlockUseCase(chunkBlockSetter);
 
         var placePosition = new Vector3(0, 0, 0);
         placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Dirt);

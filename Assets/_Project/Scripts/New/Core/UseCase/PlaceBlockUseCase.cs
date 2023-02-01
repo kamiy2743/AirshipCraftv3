@@ -6,26 +6,21 @@ namespace UseCase
 {
     public class PlaceBlockUseCase
     {
-        private IChunkRepository chunkRepository;
-        private IChunkProvider chunkProvider;
+        private ChunkBlockSetter chunkBlockSetter;
 
-        internal PlaceBlockUseCase(IChunkRepository chunkRepository, IChunkProvider chunkProvider)
+        internal PlaceBlockUseCase(ChunkBlockSetter chunkBlockSetter)
         {
-            this.chunkRepository = chunkRepository;
-            this.chunkProvider = chunkProvider;
+            this.chunkBlockSetter = chunkBlockSetter;
         }
 
+        // TODO 設置するブロックのIDをViewから受け取るのはおかしい
         public void PlaceBlock(float3 position, BlockTypeID blockTypeID)
         {
-            if (!BlockGridCoordinate.TryParse(position, out var placeCoordinate)) return;
-
-            var block = new Block(blockTypeID);
-
-            var cgc = ChunkGridCoordinate.Parse(placeCoordinate);
-            var rc = RelativeCoordinate.Parse(placeCoordinate);
-            var chunk = chunkProvider.GetChunk(cgc);
-            chunk.SetBlock(rc, block);
-            chunkRepository.Store(chunk);
+            if (BlockGridCoordinate.TryParse(position, out var placeCoordinate))
+            {
+                var block = new Block(blockTypeID);
+                chunkBlockSetter.SetBlock(placeCoordinate, block);
+            }
         }
     }
 }
