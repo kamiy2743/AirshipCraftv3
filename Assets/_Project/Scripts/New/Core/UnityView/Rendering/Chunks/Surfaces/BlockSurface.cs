@@ -1,4 +1,4 @@
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal record BlockSurface
     {

@@ -1,7 +1,7 @@
 using Domain;
 using Unity.Mathematics;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal class OutOfRangeChunkDisposer
     {

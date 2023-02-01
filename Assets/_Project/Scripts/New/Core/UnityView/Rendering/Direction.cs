@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace UnityView.Render
+namespace UnityView.Rendering
 {
     // TODO Render以外でも使う
     internal enum Direction

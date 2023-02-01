@@ -1,7 +1,7 @@
 using System;
 using Zenject;
 using UniRx;
-using UnityView.Render;
+using UnityView.Rendering;
 
 namespace UnityView.Players
 {

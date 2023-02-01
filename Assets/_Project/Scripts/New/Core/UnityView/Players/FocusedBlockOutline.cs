@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityView.Render;
+using UnityView.Rendering;
 
 namespace UnityView.Players
 {

@@ -3,7 +3,7 @@ using UnityEngine;
 using Domain;
 using Domain.Chunks;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal class ChunkMeshFactory
     {
@@ -21,7 +21,7 @@ namespace UnityView.Render.Chunks
         internal ChunkMesh Create(ChunkGridCoordinate chunkGridCoordinate)
         {
             var chunk = chunkProvider.GetChunk(chunkGridCoordinate);
-            var chunkRenderingSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
+            var chunkSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             var vertices = new List<Vector3>();
             var triangles = new List<int>();
@@ -35,8 +35,8 @@ namespace UnityView.Render.Chunks
                     {
                         var rc = new RelativeCoordinate(x, y, z);
 
-                        var blockRenderingSurface = chunkRenderingSurface.GetBlockSurface(rc);
-                        if (!blockRenderingSurface.hasRenderingSurface)
+                        var blockSurface = chunkSurface.GetBlockSurface(rc);
+                        if (!blockSurface.hasRenderingSurface)
                         {
                             continue;
                         }
@@ -46,7 +46,7 @@ namespace UnityView.Render.Chunks
 
                         foreach (var direction in DirectionExt.Array)
                         {
-                            if (!blockRenderingSurface.Contains(direction))
+                            if (!blockSurface.Contains(direction))
                             {
                                 continue;
                             }

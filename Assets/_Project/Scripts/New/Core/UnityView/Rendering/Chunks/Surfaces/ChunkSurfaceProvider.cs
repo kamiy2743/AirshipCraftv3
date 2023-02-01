@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Domain;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal class ChunkSurfaceProvider
     {

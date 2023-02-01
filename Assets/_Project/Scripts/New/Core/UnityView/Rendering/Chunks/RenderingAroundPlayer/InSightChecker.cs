@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Mathematics;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal record InSightChecker
     {

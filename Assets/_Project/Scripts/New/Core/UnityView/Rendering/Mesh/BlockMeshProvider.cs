@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using Domain;
 
-namespace UnityView.Render
+namespace UnityView.Rendering
 {
     internal class BlockMeshProvider
     {

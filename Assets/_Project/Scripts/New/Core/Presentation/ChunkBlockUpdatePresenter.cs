@@ -2,7 +2,7 @@ using System;
 using Zenject;
 using UniRx;
 using UseCase;
-using UnityView.Render.Chunks;
+using UnityView.Rendering.Chunks;
 using UnityView.ChunkCollision;
 
 namespace Presentation
@@ -11,12 +11,12 @@ namespace Presentation
     {
         private ChunkBlockSetter chunkBlockSetter;
         // TODO クラス名変更
-        private UnityView.Render.Chunks.BlockUpdateApplier blockUpdateApplier_render;
+        private UnityView.Rendering.Chunks.BlockUpdateApplier blockUpdateApplier_render;
         private UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision;
 
         private CompositeDisposable disposals = new CompositeDisposable();
 
-        internal ChunkBlockUpdatePresenter(ChunkBlockSetter chunkBlockSetter, UnityView.Render.Chunks.BlockUpdateApplier blockUpdateApplier_render, UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision)
+        internal ChunkBlockUpdatePresenter(ChunkBlockSetter chunkBlockSetter, UnityView.Rendering.Chunks.BlockUpdateApplier blockUpdateApplier_render, UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision)
         {
             this.chunkBlockSetter = chunkBlockSetter;
             this.blockUpdateApplier_render = blockUpdateApplier_render;

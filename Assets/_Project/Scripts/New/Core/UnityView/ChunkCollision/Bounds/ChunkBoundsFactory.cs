@@ -1,6 +1,6 @@
 using Domain;
 using Domain.Chunks;
-using UnityView.Render.Chunks;
+using UnityView.Rendering.Chunks;
 using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
@@ -28,9 +28,9 @@ namespace UnityView.ChunkCollision
                     {
                         var rc = new RelativeCoordinate(x, y, z);
                         // TODO 仮実装
-                        var blockRenderingSurface = chunkSurface.GetBlockSurface(rc);
+                        var blockSurface = chunkSurface.GetBlockSurface(rc);
 
-                        if (!blockRenderingSurface.hasRenderingSurface)
+                        if (!blockSurface.hasRenderingSurface)
                         {
                             continue;
                         }

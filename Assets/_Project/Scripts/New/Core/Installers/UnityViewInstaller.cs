@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 using Zenject;
 using Infrastructure;
-using UnityView.Render;
-using UnityView.Render.Chunks;
+using UnityView.Rendering;
+using UnityView.Rendering.Chunks;
 using UnityView.ChunkCollision;
 using UnityView.Inputs;
 using UnityView.Players;
@@ -31,7 +31,7 @@ namespace Installers
             Container.Bind<BlockMeshProvider>().AsSingle();
             Container.Bind<ChunkMeshFactory>().AsSingle();
 
-            Container.Bind<UnityView.Render.Chunks.BlockUpdateApplier>().AsSingle();
+            Container.Bind<UnityView.Rendering.Chunks.BlockUpdateApplier>().AsSingle();
             Container.Bind<UpdatedChunkSurfaceCalculator>().AsSingle();
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();

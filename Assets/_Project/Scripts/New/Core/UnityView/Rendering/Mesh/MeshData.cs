@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityView.Render
+namespace UnityView.Rendering
 {
     internal record MeshData
     {

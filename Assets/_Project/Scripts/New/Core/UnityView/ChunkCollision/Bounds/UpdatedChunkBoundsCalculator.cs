@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Domain;
-using UnityView.Render;
-using UnityView.Render.Chunks;
+using UnityView.Rendering;
+using UnityView.Rendering.Chunks;
 
 namespace UnityView.ChunkCollision
 {

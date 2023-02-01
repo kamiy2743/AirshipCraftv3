@@ -1,7 +1,7 @@
 using UnityEngine;
 using Domain;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal class ChunkRendererFactory : MonoBehaviour
     {

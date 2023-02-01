@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Domain;
 using Domain.Chunks;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     public class ChunkSurface
     {

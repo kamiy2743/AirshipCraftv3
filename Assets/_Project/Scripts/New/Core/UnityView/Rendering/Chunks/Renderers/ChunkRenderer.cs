@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using UnityView.Render.Chunks;
+using UnityView.Rendering.Chunks;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Rendering.Chunks
 {
     internal class ChunkRenderer : MonoBehaviour, IDisposable
     {
