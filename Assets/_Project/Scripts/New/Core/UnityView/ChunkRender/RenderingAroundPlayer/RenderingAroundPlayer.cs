@@ -18,7 +18,7 @@ namespace UnityView.ChunkRender
         private CompositeDisposable disposals = new CompositeDisposable();
         private CancellationTokenSource cts;
 
-        private const int MaxRenderingRadius = 1;
+        private const int MaxRenderingRadius = 16;
 
         internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkDisposer, PlayerChunkProvider playerChunkProvider)
         {
