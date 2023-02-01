@@ -9,6 +9,8 @@ namespace Installers
         {
             Container.Bind<PlaceBlockUseCase>().AsSingle();
             Container.Bind<BreakBlockUseCase>().AsSingle();
+            Container.Bind<ChunkBlockSetter>().AsSingle();
+
             Container.Bind<EnterWorldUseCase>().AsSingle();
         }
     }
