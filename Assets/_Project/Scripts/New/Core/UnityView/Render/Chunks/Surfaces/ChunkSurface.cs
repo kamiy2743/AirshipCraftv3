@@ -30,9 +30,9 @@ namespace UnityView.Render.Chunks
             return BlockSurface.Empty;
         }
 
-        internal void SetBlockSurfaceDirectly(RelativeCoordinate relativeCoordinate, BlockSurface blockRenderingSurface)
+        internal void SetBlockSurfaceDirectly(RelativeCoordinate relativeCoordinate, BlockSurface blockSurface)
         {
-            blockSurfaces[relativeCoordinate] = blockRenderingSurface;
+            blockSurfaces[relativeCoordinate] = blockSurface;
         }
 
         public ChunkSurface DeepCopy()

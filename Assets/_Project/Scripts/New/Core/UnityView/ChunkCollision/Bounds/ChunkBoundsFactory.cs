@@ -17,8 +17,8 @@ namespace UnityView.ChunkCollision
 
         internal ChunkBounds Create(ChunkGridCoordinate chunkGridCoordinate)
         {
-            var ChunkBounds = new ChunkBounds(chunkGridCoordinate);
-            var ChunkRenderingSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
+            var chunkBounds = new ChunkBounds(chunkGridCoordinate);
+            var chunkSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             for (int x = 0; x < Chunk.BlockSide; x++)
             {
@@ -28,7 +28,7 @@ namespace UnityView.ChunkCollision
                     {
                         var rc = new RelativeCoordinate(x, y, z);
                         // TODO 仮実装
-                        var blockRenderingSurface = ChunkRenderingSurface.GetBlockSurface(rc);
+                        var blockRenderingSurface = chunkSurface.GetBlockSurface(rc);
 
                         if (!blockRenderingSurface.hasRenderingSurface)
                         {
@@ -36,12 +36,12 @@ namespace UnityView.ChunkCollision
                         }
 
                         var blockBounds = BlockBounds.CreateCubeBounds(new float3(x, y, z));
-                        ChunkBounds.SetBlockBoundsDirectly(rc, blockBounds);
+                        chunkBounds.SetBlockBoundsDirectly(rc, blockBounds);
                     }
                 }
             }
 
-            return ChunkBounds;
+            return chunkBounds;
         }
     }
 }
