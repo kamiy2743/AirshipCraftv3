@@ -19,5 +19,10 @@ namespace UnityView.Inputs
 
             return new Vector3(horizontal.x, vertical, horizontal.y).normalized;
         }
+
+        public bool BreakBlock()
+        {
+            return inputActions.Player.BreakBlock.ReadValue<float>() > 0;
+        }
     }
 }

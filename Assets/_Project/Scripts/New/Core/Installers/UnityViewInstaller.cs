@@ -63,6 +63,8 @@ namespace Installers
             Container.Bind<FocusedBlockInfoProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<FocusedBlockViewer>().AsSingle();
             Container.BindInstance<FocusedBlockOutline>(focusedBlockOutline).AsSingle();
+
+            Container.BindInterfacesAndSelfTo<BreakBlockHandler>().AsSingle();
         }
     }
 }

@@ -5,5 +5,6 @@ namespace UnityView.Inputs
     internal interface IInputProvider
     {
         Vector3 DebugFly();
+        bool BreakBlock();
     }
 }
