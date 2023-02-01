@@ -40,7 +40,7 @@ namespace UnityView.ChunkRender
             var blockSurfacesCopy = new Dictionary<RelativeCoordinate, BlockSurface>(blockSurfaces.Count);
             foreach (var item in blockSurfaces)
             {
-                blockSurfaces[item.Key] = item.Value;
+                blockSurfacesCopy[item.Key] = item.Value;
             }
 
             return new ChunkSurface(chunkGridCoordinate, blockSurfacesCopy);

@@ -1,9 +1,8 @@
 using Domain;
-using UnityView.ChunkRender;
 
 namespace UnityView.ChunkRender
 {
-    internal class BlockUpdateApplier
+    public class BlockUpdateApplier
     {
         private UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator;
         private ChunkRendererUpdater chunkRendererUpdater;
@@ -18,15 +17,15 @@ namespace UnityView.ChunkRender
             this.chunkSurfaceRepository = chunkSurfaceRepository;
         }
 
-        internal void Apply(BlockGridCoordinate updateCoordinate)
+        public void Apply(BlockGridCoordinate updateCoordinate)
         {
             var results = updatedChunkSurfaceCalculator.Calculate(updateCoordinate);
 
-            foreach (var renderingSurface in results)
+            foreach (var chunkSurface in results)
             {
-                chunkSurfaceRepository.Store(renderingSurface);
+                chunkSurfaceRepository.Store(chunkSurface);
 
-                var cgc = renderingSurface.chunkGridCoordinate;
+                var cgc = chunkSurface.chunkGridCoordinate;
                 var mesh = chunkMeshFactory.Create(cgc);
                 chunkRendererUpdater.Update(cgc, mesh);
             }

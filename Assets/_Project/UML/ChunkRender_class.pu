@@ -6,18 +6,14 @@ package Presentation {
     }
 }
 
-package ChunkRendering {
+package ChunkRender {
     together {
-        class BlockUpdateReceptor {
-            UpdateBlock(BlockGridCoordinate)
-        }
-
-        class BlockUpdateApplyer {
+        class BlockUpdateApplier {
             Apply(BlockGridCoordinate)
         }
 
-        class UpdatedChunkRenderingSurfaceCalculator {
-            Calculate(BlockGridCoordinate) : IEnumeable<ChunkRenderingSurface>
+        class UpdatedChunkSurfaceCalculator {
+            Calculate(BlockGridCoordinate) : IEnumeable<ChunkSurface>
         }
 
         class ChunkRendererUpdater {
@@ -64,12 +60,10 @@ package ChunkRendering {
 
 }
 
-BlockUpdatePresenter --> BlockUpdateReceptor : "更新するブロックの座標を送信"
+BlockUpdatePresenter --> BlockUpdateApplier : "ブロックの更新をチャンク描画面に反映する"
+BlockUpdateApplier --> UpdatedChunkSurfaceCalculator : "チャンク描画面の計算"
 
-BlockUpdateReceptor --> BlockUpdateApplyer : "ブロックの更新をチャンク描画面に反映する"
-BlockUpdateApplyer --> UpdatedChunkRenderingSurfaceCalculator : "チャンク描画面の計算"
-
-BlockUpdateApplyer --> ChunkRendererUpdater : "Calculatorの戻り値をChunkRendererに反映"
+BlockUpdateApplier --> ChunkRendererUpdater : "Calculatorの戻り値をChunkRendererに反映"
 ChunkRendererUpdater --> CreatedChunkRenderers : "既に作成されていれば\nメッシュを更新"
 CreatedChunkRenderers *-- ChunkRenderer
 

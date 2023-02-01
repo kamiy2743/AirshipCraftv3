@@ -30,7 +30,6 @@ namespace Installers
             Container.Bind<BlockMeshProvider>().AsSingle();
             Container.Bind<ChunkMeshFactory>().AsSingle();
 
-            Container.Bind<BlockUpdateReceptor>().AsSingle();
             Container.Bind<BlockUpdateApplier>().AsSingle();
             Container.Bind<UpdatedChunkSurfaceCalculator>().AsSingle();
             Container.Bind<ChunkRendererUpdater>().AsSingle();
