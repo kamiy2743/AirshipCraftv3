@@ -1,6 +1,6 @@
 using Domain;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     public class BlockUpdateApplier
     {

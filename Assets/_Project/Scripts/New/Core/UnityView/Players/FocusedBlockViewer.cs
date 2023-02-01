@@ -1,7 +1,7 @@
 using System;
 using Zenject;
 using UniRx;
-using UnityView.ChunkRender;
+using UnityView.Render.Chunks;
 
 namespace UnityView.Players
 {

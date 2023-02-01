@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using Domain;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     internal class BlockMeshProvider
     {

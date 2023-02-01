@@ -7,7 +7,7 @@ using Domain;
 using UnityView.Players;
 using Cysharp.Threading.Tasks;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     internal class RenderingAroundPlayer : IInitializable, IDisposable
     {

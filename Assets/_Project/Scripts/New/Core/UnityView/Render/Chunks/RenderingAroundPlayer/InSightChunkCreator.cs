@@ -7,7 +7,7 @@ using Unity.Mathematics;
 using Cysharp.Threading.Tasks;
 using UnityView.Players;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     internal class InSightChunkCreator
     {

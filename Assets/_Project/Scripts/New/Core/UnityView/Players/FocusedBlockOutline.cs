@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityView.ChunkRender;
+using UnityView.Render.Chunks;
 
 namespace UnityView.Players
 {

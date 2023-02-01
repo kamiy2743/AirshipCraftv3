@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     internal enum Direction
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     internal record BlockMesh
     {

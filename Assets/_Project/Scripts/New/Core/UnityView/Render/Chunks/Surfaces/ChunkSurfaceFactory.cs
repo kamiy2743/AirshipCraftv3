@@ -1,7 +1,7 @@
 using Domain;
 using Domain.Chunks;
 
-namespace UnityView.ChunkRender
+namespace UnityView.Render.Chunks
 {
     internal class ChunkSurfaceFactory
     {
