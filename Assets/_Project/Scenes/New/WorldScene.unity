@@ -1321,7 +1321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ac5f51d29e8d8848afd4c20afb1f926, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkRendererPrefab: {fileID: 1479042564334771405, guid: 299d518fa28f04a4bbef11369a3688ff, type: 3}
+  chunkRendererPrefab: {fileID: 2519611079936750876, guid: 299d518fa28f04a4bbef11369a3688ff, type: 3}
   parent: {fileID: 1658695631}
 --- !u!1 &1673385978
 GameObject:
