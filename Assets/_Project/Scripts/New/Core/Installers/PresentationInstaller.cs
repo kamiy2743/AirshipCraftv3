@@ -9,7 +9,9 @@ namespace Installers
         {
             Container.Bind<SceneLoader>().AsSingle();
             Container.Bind<EnterWorldModel>().AsSingle();
+
             Container.BindInterfacesAndSelfTo<BreakBlockPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ChunkBlockUpdatePresenter>().AsSingle();
         }
     }
 }
