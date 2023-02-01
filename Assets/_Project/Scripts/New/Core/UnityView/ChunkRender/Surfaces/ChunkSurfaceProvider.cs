@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Domain;
 
 namespace UnityView.ChunkRender
@@ -7,6 +8,8 @@ namespace UnityView.ChunkRender
         private IChunkSurfaceRepository chunkSurfaceRepository;
         private ChunkSurfaceFactory chunkSurfaceFactory;
 
+        private Dictionary<ChunkGridCoordinate, ChunkSurface> surfaceCache = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
+
         internal ChunkSurfaceProvider(IChunkSurfaceRepository chunkSurfaceRepository, ChunkSurfaceFactory chunkSurfaceFactory)
         {
             this.chunkSurfaceRepository = chunkSurfaceRepository;
@@ -15,13 +18,25 @@ namespace UnityView.ChunkRender
 
         internal ChunkSurface GetChunkSurface(ChunkGridCoordinate chunkGridCoordinate)
         {
+            if (surfaceCache.TryGetValue(chunkGridCoordinate, out var cache))
+            {
+                return cache;
+            }
+
             try
             {
-                return chunkSurfaceRepository.Fetch(chunkGridCoordinate);
+                var surface = chunkSurfaceRepository.Fetch(chunkGridCoordinate);
+
+                surfaceCache.Add(chunkGridCoordinate, surface);
+                return surface;
             }
             catch
             {
-                return chunkSurfaceFactory.Create(chunkGridCoordinate);
+                var surface = chunkSurfaceFactory.Create(chunkGridCoordinate);
+                chunkSurfaceRepository.Store(surface);
+
+                surfaceCache.Add(chunkGridCoordinate, surface);
+                return surface;
             }
         }
     }
