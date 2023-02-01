@@ -77,7 +77,7 @@ namespace UnityView.ChunkRender
                 }
             }
 
-            return new ChunkMesh(chunkGridCoordinate.ToPivotCoordinate(), vertices.ToArray(), triangles.ToArray(), uvs.ToArray());
+            return new ChunkMesh(chunkGridCoordinate, vertices.ToArray(), triangles.ToArray(), uvs.ToArray());
         }
     }
 }

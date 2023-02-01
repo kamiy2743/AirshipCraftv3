@@ -25,9 +25,8 @@ namespace UnityView.ChunkRender
             {
                 chunkSurfaceRepository.Store(chunkSurface);
 
-                var cgc = chunkSurface.chunkGridCoordinate;
-                var mesh = chunkMeshFactory.Create(cgc);
-                chunkRendererUpdater.Update(cgc, mesh);
+                var mesh = chunkMeshFactory.Create(chunkSurface.chunkGridCoordinate);
+                chunkRendererUpdater.Update(mesh);
             }
         }
     }

@@ -12,14 +12,14 @@ namespace UnityView.ChunkRender
             this.createdChunkRenderers = createdChunkRenderers;
         }
 
-        internal void Update(ChunkGridCoordinate updateCoordinate, ChunkMesh mesh)
+        internal void Update(ChunkMesh chunkMesh)
         {
-            if (!createdChunkRenderers.TryGetValue(updateCoordinate, out var chunkRenderer))
+            if (!createdChunkRenderers.TryGetValue(chunkMesh.chunkGridCoordinate, out var chunkRenderer))
             {
                 return;
             }
 
-            chunkRenderer.SetMesh(mesh);
+            chunkRenderer.SetMesh(chunkMesh);
         }
     }
 }
