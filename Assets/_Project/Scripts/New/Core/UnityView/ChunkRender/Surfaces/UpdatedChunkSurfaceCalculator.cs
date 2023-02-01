@@ -17,7 +17,7 @@ namespace UnityView.ChunkRender
 
         internal IEnumerable<ChunkSurface> Calculate(BlockGridCoordinate updateCoordinate)
         {
-            var updatedChunkSurfaces = new Dictionary<ChunkGridCoordinate, ChunkSurface>(5);
+            var updatedChunkSurfaces = new Dictionary<ChunkGridCoordinate, ChunkSurface>(4);
             var targetBlockSurface = new BlockSurface();
             var targetChunkGridCoordinate = ChunkGridCoordinate.Parse(updateCoordinate);
             var targetRelativeCoordinate = RelativeCoordinate.Parse(updateCoordinate);
@@ -33,12 +33,17 @@ namespace UnityView.ChunkRender
 
                 var adjacentChunkGridCoordinate = ChunkGridCoordinate.Parse(adjacentCoordinate);
                 var adjacentRelativeCoordinate = RelativeCoordinate.Parse(adjacentCoordinate);
+                var adjacentBlockTypeID = chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate).blockTypeID;
+
+                if (adjacentBlockTypeID == BlockTypeID.Air)
+                {
+                    continue;
+                }
 
                 if (targetBlockTypeID != BlockTypeID.Air)
                 {
                     // 対象ブロックの描画面に追加
-                    var adjacentBlock = chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate);
-                    if (adjacentBlock.blockTypeID == BlockTypeID.Air)
+                    if (adjacentBlockTypeID == BlockTypeID.Air)
                     {
                         targetBlockSurface += direction;
                     }
