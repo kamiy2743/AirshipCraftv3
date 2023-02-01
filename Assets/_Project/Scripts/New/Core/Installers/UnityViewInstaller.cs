@@ -60,7 +60,7 @@ namespace Installers
                 .To<InputSystemInputProvider>()
                 .AsSingle();
 
-            Container.Bind<FocusedBlockProvider>().AsSingle();
+            Container.Bind<FocusedBlockInfoProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<FocusedBlockViewer>().AsSingle();
             Container.BindInstance<FocusedBlockOutline>(focusedBlockOutline).AsSingle();
         }

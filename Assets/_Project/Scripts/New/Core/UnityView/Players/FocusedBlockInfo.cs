@@ -1,16 +1,16 @@
 using UnityEngine;
-using Domain.Chunks;
+using Domain;
 
 namespace UnityView.Players
 {
     internal record FocusedBlockInfo
     {
-        internal readonly Block block;
+        internal readonly BlockTypeID blockTypeID;
         internal readonly Vector3 pivotCoordinate;
 
-        internal FocusedBlockInfo(Block block, Vector3 pivotCoordinate)
+        internal FocusedBlockInfo(BlockTypeID blockTypeID, Vector3 pivotCoordinate)
         {
-            this.block = block;
+            this.blockTypeID = blockTypeID;
             this.pivotCoordinate = pivotCoordinate;
         }
     }

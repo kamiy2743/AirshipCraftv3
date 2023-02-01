@@ -4,14 +4,14 @@ using Domain.Chunks;
 
 namespace UnityView.Players
 {
-    internal class FocusedBlockProvider
+    internal class FocusedBlockInfoProvider
     {
         private PlayerCamera playerCamera;
         private IChunkProvider chunkProvider;
 
         private const float MaxFocusDistance = 5;
 
-        internal FocusedBlockProvider(PlayerCamera playerCamera, IChunkProvider chunkProvider)
+        internal FocusedBlockInfoProvider(PlayerCamera playerCamera, IChunkProvider chunkProvider)
         {
             this.playerCamera = playerCamera;
             this.chunkProvider = chunkProvider;
@@ -35,7 +35,7 @@ namespace UnityView.Players
             var rc = RelativeCoordinate.Parse(bgc);
             var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-            result = new FocusedBlockInfo(block, bgc.ToPivotCoordinate());
+            result = new FocusedBlockInfo(block.blockTypeID, bgc.ToPivotCoordinate());
             return true;
         }
     }

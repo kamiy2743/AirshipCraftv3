@@ -7,15 +7,15 @@ namespace UnityView.Players
 {
     internal class FocusedBlockViewer : IInitializable, IDisposable
     {
-        private FocusedBlockProvider focusedBlockProvider;
+        private FocusedBlockInfoProvider focusedBlockInfoProvider;
         private BlockMeshProvider blockMeshProvider;
         private FocusedBlockOutline focusedBlockOutline;
 
         private CompositeDisposable disposals = new CompositeDisposable();
 
-        internal FocusedBlockViewer(FocusedBlockProvider focusedBlockProvider, BlockMeshProvider blockMeshProvider, FocusedBlockOutline focusedBlockOutline)
+        internal FocusedBlockViewer(FocusedBlockInfoProvider focusedBlockInfoProvider, BlockMeshProvider blockMeshProvider, FocusedBlockOutline focusedBlockOutline)
         {
-            this.focusedBlockProvider = focusedBlockProvider;
+            this.focusedBlockInfoProvider = focusedBlockInfoProvider;
             this.blockMeshProvider = blockMeshProvider;
             this.focusedBlockOutline = focusedBlockOutline;
         }
@@ -26,13 +26,13 @@ namespace UnityView.Players
                 .EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    if (!focusedBlockProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
+                    if (!focusedBlockInfoProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
                     {
                         focusedBlockOutline.SetVisible(false);
                         return;
                     }
 
-                    var blockMesh = blockMeshProvider.GetBlockMesh(focusedBlockInfo.block.blockTypeID);
+                    var blockMesh = blockMeshProvider.GetBlockMesh(focusedBlockInfo.blockTypeID);
                     focusedBlockOutline.SetMesh(blockMesh.All);
                     focusedBlockOutline.SetVisible(true);
                     focusedBlockOutline.SetPivot(focusedBlockInfo.pivotCoordinate);
