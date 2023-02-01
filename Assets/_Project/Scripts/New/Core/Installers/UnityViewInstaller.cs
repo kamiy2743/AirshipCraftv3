@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Zenject;
 using Infrastructure;
+using UnityView.Render;
 using UnityView.Render.Chunks;
 using UnityView.ChunkCollision;
 using UnityView.Inputs;

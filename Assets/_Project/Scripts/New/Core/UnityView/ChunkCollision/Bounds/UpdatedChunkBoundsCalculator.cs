@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Domain;
-using Domain.Chunks;
+using UnityView.Render;
 using UnityView.Render.Chunks;
 
 namespace UnityView.ChunkCollision

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Render
 {
     internal record MeshData
     {

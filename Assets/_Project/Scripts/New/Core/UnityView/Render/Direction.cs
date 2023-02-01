@@ -2,8 +2,9 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace UnityView.Render.Chunks
+namespace UnityView.Render
 {
+    // TODO Render以外でも使う
     internal enum Direction
     {
         Right = 1 << 0,

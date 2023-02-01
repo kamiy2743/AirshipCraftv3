@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
+using UnityView.Render;
 using UnityView.Render.Chunks;
 
 public class BlockSurfaceTest
