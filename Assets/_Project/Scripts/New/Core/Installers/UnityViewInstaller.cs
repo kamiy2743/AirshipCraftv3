@@ -30,7 +30,7 @@ namespace Installers
             Container.Bind<BlockMeshProvider>().AsSingle();
             Container.Bind<ChunkMeshFactory>().AsSingle();
 
-            Container.Bind<BlockUpdateApplier>().AsSingle();
+            Container.Bind<UnityView.ChunkRender.BlockUpdateApplier>().AsSingle();
             Container.Bind<UpdatedChunkSurfaceCalculator>().AsSingle();
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();
@@ -51,6 +51,11 @@ namespace Installers
             Container.Bind<CreatedColliders>().AsSingle();
             Container.BindInstance<ChunkColliderFactory>(chunkColliderFactory).AsSingle();
             Container.Bind<ChunkBoundsFactory>().AsSingle();
+
+            // TODO Installerを分けたい
+            Container.Bind<UnityView.ChunkCollision.BlockUpdateApplier>().AsSingle();
+            Container.Bind<UpdatedChunkBoundsCalculator>().AsSingle();
+            Container.Bind<ChunkColliderUpdater>().AsSingle();
 
             Container.BindInstance<PlayerCamera>(playerCamera).AsSingle();
 

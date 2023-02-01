@@ -1,19 +1,19 @@
 using System.Collections.Generic;
-using UnityEngine;
+using Domain;
 using Domain.Chunks;
 
 namespace UnityView.ChunkCollision
 {
     internal class ChunkBounds
     {
-        internal readonly Vector3 pivotCoordinate;
+        internal readonly ChunkGridCoordinate chunkGridCoordinate;
 
         private Dictionary<RelativeCoordinate, BlockBounds> boundsDictionary = new Dictionary<RelativeCoordinate, BlockBounds>();
         internal IReadOnlyCollection<BlockBounds> BlockBoundsCollection => boundsDictionary.Values;
 
-        internal ChunkBounds(Vector3 pivotCoordinate)
+        internal ChunkBounds(ChunkGridCoordinate chunkGridCoordinate)
         {
-            this.pivotCoordinate = pivotCoordinate;
+            this.chunkGridCoordinate = chunkGridCoordinate;
         }
 
         internal void SetBlockBoundsDirectly(RelativeCoordinate relativeCoordinate, BlockBounds bounds)

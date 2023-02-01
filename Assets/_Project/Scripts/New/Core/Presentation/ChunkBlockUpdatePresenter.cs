@@ -3,20 +3,24 @@ using Zenject;
 using UniRx;
 using UseCase;
 using UnityView.ChunkRender;
+using UnityView.ChunkCollision;
 
 namespace Presentation
 {
     internal class ChunkBlockUpdatePresenter : IInitializable, IDisposable
     {
         private ChunkBlockSetter chunkBlockSetter;
-        private BlockUpdateApplier blockUpdateApplier;
+        // TODO クラス名変更
+        private UnityView.ChunkRender.BlockUpdateApplier blockUpdateApplier_render;
+        private UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision;
 
         private CompositeDisposable disposals = new CompositeDisposable();
 
-        internal ChunkBlockUpdatePresenter(ChunkBlockSetter chunkBlockSetter, BlockUpdateApplier blockUpdateApplier)
+        internal ChunkBlockUpdatePresenter(ChunkBlockSetter chunkBlockSetter, UnityView.ChunkRender.BlockUpdateApplier blockUpdateApplier_render, UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision)
         {
             this.chunkBlockSetter = chunkBlockSetter;
-            this.blockUpdateApplier = blockUpdateApplier;
+            this.blockUpdateApplier_render = blockUpdateApplier_render;
+            this.blockUpdateApplier_collision = blockUpdateApplier_collision;
         }
 
         public void Initialize()
@@ -25,7 +29,8 @@ namespace Presentation
                 .OnBlockUpdated
                 .Subscribe(coordinate =>
                 {
-                    blockUpdateApplier.Apply(coordinate);
+                    blockUpdateApplier_render.Apply(coordinate);
+                    blockUpdateApplier_collision.Apply(coordinate);
                 })
                 .AddTo(disposals);
         }

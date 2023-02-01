@@ -17,7 +17,7 @@ namespace UnityView.ChunkCollision
 
         internal ChunkBounds Create(ChunkGridCoordinate chunkGridCoordinate)
         {
-            var ChunkBounds = new ChunkBounds(chunkGridCoordinate.ToPivotCoordinate());
+            var ChunkBounds = new ChunkBounds(chunkGridCoordinate);
             var ChunkRenderingSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             for (int x = 0; x < Chunk.BlockSide; x++)
