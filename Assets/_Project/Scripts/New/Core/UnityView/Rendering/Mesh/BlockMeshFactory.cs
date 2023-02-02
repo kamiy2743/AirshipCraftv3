@@ -70,15 +70,15 @@ namespace UnityView.Rendering
             switch (direction)
             {
                 case Direction.Right:
-                    return Mathf.Approximately(v1.x, 1) && Mathf.Approximately(v2.x, 1) && Mathf.Approximately(v3.x, 1);
+                    return Approximately1(v1.x) && Approximately1(v2.x) && Approximately1(v3.x);
                 case Direction.Left:
                     return Approximately0(v1.x) && Approximately0(v2.x) && Approximately0(v3.x);
                 case Direction.Top:
-                    return Mathf.Approximately(v1.y, 1) && Mathf.Approximately(v2.y, 1) && Mathf.Approximately(v3.y, 1);
+                    return Approximately1(v1.y) && Approximately1(v2.y) && Approximately1(v3.y);
                 case Direction.Bottom:
                     return Approximately0(v1.y) && Approximately0(v2.y) && Approximately0(v3.y);
                 case Direction.Forward:
-                    return Mathf.Approximately(v1.z, 1) && Mathf.Approximately(v2.z, 1) && Mathf.Approximately(v3.z, 1);
+                    return Approximately1(v1.z) && Approximately1(v2.z) && Approximately1(v3.z);
                 case Direction.Back:
                     return Approximately0(v1.z) && Approximately0(v2.z) && Approximately0(v3.z);
             }
@@ -90,6 +90,11 @@ namespace UnityView.Rendering
         private bool Approximately0(float a)
         {
             return a < 0.01f && a > -0.01f;
+        }
+
+        private bool Approximately1(float a)
+        {
+            return a < 1.01f && a > 0.99f;
         }
 
         private MeshData ExtractOtherPartMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
