@@ -33,7 +33,7 @@ namespace UnityView.Players
                     }
 
                     var blockMesh = blockMeshProvider.GetBlockMesh(focusedBlockInfo.blockTypeID);
-                    focusedBlockOutline.SetMesh(blockMesh.All);
+                    focusedBlockOutline.SetMesh(blockMesh.value);
                     focusedBlockOutline.SetVisible(true);
                     focusedBlockOutline.SetPivot(focusedBlockInfo.pivotCoordinate);
                 })

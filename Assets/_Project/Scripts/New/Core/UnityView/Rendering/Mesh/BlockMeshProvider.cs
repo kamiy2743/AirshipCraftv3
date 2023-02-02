@@ -7,20 +7,22 @@ namespace UnityView.Rendering
 {
     internal class BlockMeshProvider
     {
+        private BlockMeshFactory blockMeshFactory;
         private MasterBlockShapeMeshes masterBlockShapeMeshes;
 
         private BlockMesh air;
         private BlockMesh other;
 
-        internal BlockMeshProvider(MasterBlockShapeMeshes masterBlockShapeMeshes)
+        internal BlockMeshProvider(BlockMeshFactory blockMeshFactory, MasterBlockShapeMeshes masterBlockShapeMeshes)
         {
+            this.blockMeshFactory = blockMeshFactory;
             this.masterBlockShapeMeshes = masterBlockShapeMeshes;
 
-            air = new BlockMesh(new Vector3[0], new int[0], new Vector2[0]);
+            air = blockMeshFactory.Create(new Vector3[0], new int[0], new Vector2[0]);
 
             var cubeMesh = masterBlockShapeMeshes.BlockShapeMeshDic[BlockShapeID.Cube];
             var vertices = cubeMesh.vertices.Select(v => v + new Vector3(0.5f, 0.5f, 0.5f)).ToArray();
-            other = new BlockMesh(vertices, cubeMesh.triangles, cubeMesh.uv);
+            other = blockMeshFactory.Create(vertices, cubeMesh.triangles, cubeMesh.uv);
         }
 
         internal BlockMesh GetBlockMesh(BlockTypeID blockTypeID)
