@@ -13,7 +13,7 @@ namespace Domain.Chunks
                     for (int z = 0; z < Chunk.BlockSide; z++)
                     {
                         var rc = new RelativeCoordinate(x, y, z);
-                        blocks.SetBlock(rc, new Block(BlockTypeID.Dirt));
+                        blocks.SetBlock(rc, new Block(BlockType.Dirt));
                     }
                 }
             }

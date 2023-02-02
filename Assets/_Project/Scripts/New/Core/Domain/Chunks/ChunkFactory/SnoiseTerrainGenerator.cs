@@ -21,13 +21,13 @@ namespace Domain.Chunks
             this.relief = relief;
         }
 
-        internal BlockTypeID GetBlockTypeID(int x, int y, int z)
+        internal BlockType GetBlockType(int x, int y, int z)
         {
             if (y >= 0) return ForGround(x, y, z);
             return ForUnderGround(x, y, z);
         }
 
-        private BlockTypeID ForGround(int x, int y, int z)
+        private BlockType ForGround(int x, int y, int z)
         {
             var noise1 = Snoise(
                 (x + seedX) * relief,
@@ -35,20 +35,20 @@ namespace Domain.Chunks
 
             var noiseY = (int)(noise1 * 16);
 
-            if (noiseY == y) return BlockTypeID.Grass;
-            if (noiseY > y) return BlockTypeID.Dirt;
-            return BlockTypeID.Air;
+            if (noiseY == y) return BlockType.Grass;
+            if (noiseY > y) return BlockType.Dirt;
+            return BlockType.Air;
         }
 
-        private BlockTypeID ForUnderGround(int x, int y, int z)
+        private BlockType ForUnderGround(int x, int y, int z)
         {
             var noise = Snoise(
                 (x + seedX) * relief,
                 (y + seedY) * relief,
                 (z + seedZ) * relief);
 
-            if (noise > 0.4f) return BlockTypeID.Stone;
-            return BlockTypeID.Air;
+            if (noise > 0.4f) return BlockType.Stone;
+            return BlockType.Air;
         }
     }
 }

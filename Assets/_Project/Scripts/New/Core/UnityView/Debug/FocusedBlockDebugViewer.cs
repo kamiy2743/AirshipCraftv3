@@ -15,7 +15,7 @@ namespace UnityView.Debug
         {
             if (focusedBlockInfoProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
             {
-                text.text = $"Focused: {focusedBlockInfo.pivotCoordinate}, {focusedBlockInfo.blockTypeID}";
+                text.text = $"Focused: {focusedBlockInfo.pivotCoordinate}, {focusedBlockInfo.blockType}";
             }
             else
             {

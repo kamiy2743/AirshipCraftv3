@@ -21,7 +21,7 @@ namespace UnityView.Rendering.Chunks
             var targetBlockSurface = new BlockSurface();
             var targetChunkGridCoordinate = ChunkGridCoordinate.Parse(updateCoordinate);
             var targetRelativeCoordinate = RelativeCoordinate.Parse(updateCoordinate);
-            var targetBlockTypeID = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate).blockTypeID;
+            var targetBlockType = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate).blockType;
 
             foreach (var direction in DirectionExt.Array)
             {
@@ -33,18 +33,18 @@ namespace UnityView.Rendering.Chunks
 
                 var adjacentChunkGridCoordinate = ChunkGridCoordinate.Parse(adjacentCoordinate);
                 var adjacentRelativeCoordinate = RelativeCoordinate.Parse(adjacentCoordinate);
-                var adjacentBlockTypeID = chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate).blockTypeID;
+                var adjacentBlockType = chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate).blockType;
 
-                if (targetBlockTypeID != BlockTypeID.Air)
+                if (targetBlockType != BlockType.Air)
                 {
                     // 対象ブロックの描画面に追加
-                    if (adjacentBlockTypeID == BlockTypeID.Air)
+                    if (adjacentBlockType == BlockType.Air)
                     {
                         targetBlockSurface += direction;
                     }
                 }
 
-                if (adjacentBlockTypeID == BlockTypeID.Air)
+                if (adjacentBlockType == BlockType.Air)
                 {
                     continue;
                 }
@@ -57,7 +57,7 @@ namespace UnityView.Rendering.Chunks
                 var currentSurface = adjacentChunkSurface.GetBlockSurface(adjacentRelativeCoordinate);
                 var targetDirection = direction.Flip();
 
-                if (targetBlockTypeID == BlockTypeID.Air)
+                if (targetBlockType == BlockType.Air)
                 {
                     if (!currentSurface.Contains(targetDirection))
                     {

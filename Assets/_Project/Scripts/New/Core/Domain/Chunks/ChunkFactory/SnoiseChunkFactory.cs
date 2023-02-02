@@ -50,8 +50,8 @@ namespace Domain.Chunks
                     {
                         for (int z = 0; z < Chunk.BlockSide; z++)
                         {
-                            var blockTypeID = generator.GetBlockTypeID(pivot.x + x, pivot.y + y, pivot.z + z);
-                            result[seek] = new Block(blockTypeID);
+                            var blockType = generator.GetBlockType(pivot.x + x, pivot.y + y, pivot.z + z);
+                            result[seek] = new Block(blockType);
                             seek++;
                         }
                     }

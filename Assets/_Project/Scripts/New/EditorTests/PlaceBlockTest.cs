@@ -21,14 +21,14 @@ public class PlaceBlockTest
         var placeBlockUseCase = new PlaceBlockUseCase(chunkBlockSetter);
 
         var placePosition = new Vector3(0, 0, 0);
-        placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Grass);
+        placeBlockUseCase.PlaceBlock(placePosition, BlockType.Grass);
 
         var bgc = new BlockGridCoordinate(placePosition);
         var cgc = ChunkGridCoordinate.Parse(bgc);
         var rc = RelativeCoordinate.Parse(bgc);
         var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-        Assert.AreEqual(BlockTypeID.Grass, block.blockTypeID);
+        Assert.AreEqual(BlockType.Grass, block.blockType);
     }
 
     [Test]
@@ -41,13 +41,13 @@ public class PlaceBlockTest
         var placeBlockUseCase = new PlaceBlockUseCase(chunkBlockSetter);
 
         var placePosition = new Vector3(0, 0, 0);
-        placeBlockUseCase.PlaceBlock(placePosition, BlockTypeID.Dirt);
+        placeBlockUseCase.PlaceBlock(placePosition, BlockType.Dirt);
 
         var bgc = new BlockGridCoordinate(placePosition);
         var cgc = ChunkGridCoordinate.Parse(bgc);
         var rc = RelativeCoordinate.Parse(bgc);
         var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-        Assert.AreEqual(BlockTypeID.Dirt, block.blockTypeID);
+        Assert.AreEqual(BlockType.Dirt, block.blockType);
     }
 }

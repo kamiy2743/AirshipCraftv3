@@ -1,6 +1,6 @@
 namespace Domain
 {
-    public enum BlockShapeID
+    public enum BlockShape
     {
         Cube,
         Half,

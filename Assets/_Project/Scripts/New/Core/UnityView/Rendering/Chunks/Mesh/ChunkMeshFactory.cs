@@ -41,8 +41,8 @@ namespace UnityView.Rendering.Chunks
                             continue;
                         }
 
-                        var blockTypeID = chunk.GetBlock(rc).blockTypeID;
-                        var blockMesh = blockMeshProvider.GetBlockMesh(blockTypeID);
+                        var blockType = chunk.GetBlock(rc).blockType;
+                        var blockMesh = blockMeshProvider.GetBlockMesh(blockType);
 
                         foreach (var direction in DirectionExt.Array)
                         {

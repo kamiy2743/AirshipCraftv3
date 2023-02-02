@@ -26,8 +26,8 @@ namespace UnityView.Rendering.Chunks
                         var rc = new RelativeCoordinate(x, y, z);
                         var blockSurface = new BlockSurface();
 
-                        var blockTypeID = context.TargetChunk.GetBlock(rc).blockTypeID;
-                        if (blockTypeID == BlockTypeID.Air)
+                        var blockType = context.TargetChunk.GetBlock(rc).blockType;
+                        if (blockType == BlockType.Air)
                         {
                             continue;
                         }
@@ -35,7 +35,7 @@ namespace UnityView.Rendering.Chunks
                         foreach (var direction in DirectionExt.Array)
                         {
                             var adjacentBlock = GetAdjacentBlock(direction, rc, context);
-                            if (adjacentBlock.blockTypeID == BlockTypeID.Air)
+                            if (adjacentBlock.blockType == BlockType.Air)
                             {
                                 blockSurface += direction;
                             }

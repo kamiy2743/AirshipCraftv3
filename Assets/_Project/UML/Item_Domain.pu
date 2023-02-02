@@ -1,0 +1,19 @@
+@startuml
+
+object Item {
+    ItemID
+}
+
+object ItemID {
+
+}
+
+object BlockType {
+
+}
+
+object BlockShape {
+    
+}
+
+@enduml

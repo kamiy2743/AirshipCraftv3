@@ -14,11 +14,11 @@ namespace UseCase
         }
 
         // TODO 設置するブロックのIDをViewから受け取るのはおかしい
-        public void PlaceBlock(float3 position, BlockTypeID blockTypeID)
+        public void PlaceBlock(float3 position, BlockType blockType)
         {
             if (BlockGridCoordinate.TryParse(position, out var placeCoordinate))
             {
-                var block = new Block(blockTypeID);
+                var block = new Block(blockType);
                 chunkBlockSetter.SetBlock(placeCoordinate, block);
             }
         }

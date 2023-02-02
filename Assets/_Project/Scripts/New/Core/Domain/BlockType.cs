@@ -1,6 +1,6 @@
 namespace Domain
 {
-    public enum BlockTypeID
+    public enum BlockType
     {
         Air,
         Grass,

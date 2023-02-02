@@ -11,14 +11,14 @@ namespace MasterData
     {
         [SerializeField] private List<BlockShapeMesh> meshes;
 
-        public IReadOnlyDictionary<BlockShapeID, Mesh> BlockShapeMeshDic => _blockShapeMeshDic ??= meshes.ToDictionary(record => record.blockShapeID, record => record.mesh);
-        private Dictionary<BlockShapeID, Mesh> _blockShapeMeshDic;
+        public IReadOnlyDictionary<BlockShape, Mesh> BlockShapeMeshDic => _blockShapeMeshDic ??= meshes.ToDictionary(record => record.blockShape, record => record.mesh);
+        private Dictionary<BlockShape, Mesh> _blockShapeMeshDic;
     }
 
     [Serializable]
     internal record BlockShapeMesh
     {
-        public BlockShapeID blockShapeID;
+        public BlockShape blockShape;
         public Mesh mesh;
     }
 }

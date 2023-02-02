@@ -25,7 +25,7 @@ namespace Presentation
                 .OnPlaceBlock
                 .Subscribe(placePosition =>
                 {
-                    placeBlockUseCase.PlaceBlock(placePosition, Domain.BlockTypeID.Stone);
+                    placeBlockUseCase.PlaceBlock(placePosition, Domain.BlockType.Stone);
                 })
                 .AddTo(disposals);
         }

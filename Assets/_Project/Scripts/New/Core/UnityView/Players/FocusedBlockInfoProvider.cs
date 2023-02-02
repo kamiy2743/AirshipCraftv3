@@ -35,7 +35,7 @@ namespace UnityView.Players
             var rc = RelativeCoordinate.Parse(bgc);
             var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-            result = new FocusedBlockInfo(block.blockTypeID, bgc.ToPivotCoordinate(), raycastHit.point, raycastHit.normal);
+            result = new FocusedBlockInfo(block.blockType, bgc.ToPivotCoordinate(), raycastHit.point, raycastHit.normal);
             return true;
         }
     }

@@ -17,7 +17,7 @@ namespace UseCase
         {
             if (BlockGridCoordinate.TryParse(position, out var breakCoordinate))
             {
-                chunkBlockSetter.SetBlock(breakCoordinate, new Block(BlockTypeID.Air));
+                chunkBlockSetter.SetBlock(breakCoordinate, new Block(BlockType.Air));
             }
         }
     }
