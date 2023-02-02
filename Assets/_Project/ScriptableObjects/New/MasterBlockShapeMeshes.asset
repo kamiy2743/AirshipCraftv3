@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: MasterBlockShapeMeshes
   m_EditorClassIdentifier: 
   meshes:
-  - blockShapeID: 0
+  - blockShape: 0
     mesh: {fileID: 4493585093827132993, guid: 48f13025792b924499a73ea5dc5d6a6f, type: 3}
-  - blockShapeID: 1
+  - blockShape: 1
     mesh: {fileID: -5495902117074765545, guid: aa34ce327be99ff4e90bf6f1d2240f1c, type: 3}
-  - blockShapeID: 2
+  - blockShape: 2
     mesh: {fileID: -5495902117074765545, guid: 1e527acfe79d743408672626781a94e1, type: 3}
-  - blockShapeID: 3
+  - blockShape: 3
     mesh: {fileID: 4493585093827132993, guid: 8ad7b31792b70bc4aa33904f84ea464c, type: 3}
-  - blockShapeID: 4
+  - blockShape: 4
     mesh: {fileID: 4493585093827132993, guid: 1824cbb5aca7c8940afaa2099539de95, type: 3}

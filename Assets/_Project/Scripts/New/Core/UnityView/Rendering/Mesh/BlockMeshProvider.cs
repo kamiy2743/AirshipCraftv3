@@ -20,7 +20,7 @@ namespace UnityView.Rendering
 
             air = blockMeshFactory.Create(new Vector3[0], new int[0], new Vector2[0]);
 
-            var cubeMesh = masterBlockShapeMeshes.BlockShapeMeshDic[BlockShape.Cube];
+            var cubeMesh = masterBlockShapeMeshes.BlockShapeMeshes[BlockShape.Cube];
             var vertices = cubeMesh.vertices.Select(v => v + new Vector3(0.5f, 0.5f, 0.5f)).ToArray();
             other = blockMeshFactory.Create(vertices, cubeMesh.triangles, cubeMesh.uv);
         }

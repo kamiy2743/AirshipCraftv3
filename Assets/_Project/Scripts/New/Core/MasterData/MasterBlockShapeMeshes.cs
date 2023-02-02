@@ -11,8 +11,8 @@ namespace MasterData
     {
         [SerializeField] private List<BlockShapeMesh> meshes;
 
-        public IReadOnlyDictionary<BlockShape, Mesh> BlockShapeMeshDic => _blockShapeMeshDic ??= meshes.ToDictionary(record => record.blockShape, record => record.mesh);
-        private Dictionary<BlockShape, Mesh> _blockShapeMeshDic;
+        public IReadOnlyDictionary<BlockShape, Mesh> BlockShapeMeshes => _blockShapeMeshes ??= meshes.ToDictionary(v => v.blockShape, v => v.mesh);
+        private Dictionary<BlockShape, Mesh> _blockShapeMeshes;
     }
 
     [Serializable]
