@@ -1,22 +1,24 @@
 using System.Linq;
 using UnityEngine;
 using Domain;
+using MasterData;
 
 namespace UnityView.Rendering
 {
     internal class BlockMeshProvider
     {
+        private MasterBlockShapeMeshes masterBlockShapeMeshes;
+
         private BlockMesh air;
         private BlockMesh other;
 
-        internal BlockMeshProvider()
+        internal BlockMeshProvider(MasterBlockShapeMeshes masterBlockShapeMeshes)
         {
+            this.masterBlockShapeMeshes = masterBlockShapeMeshes;
+
             air = new BlockMesh(new Vector3[0], new int[0], new Vector2[0]);
 
-            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            var cubeMesh = cube.GetComponent<MeshFilter>().mesh;
-            MonoBehaviour.Destroy(cube);
-
+            var cubeMesh = masterBlockShapeMeshes.BlockShapeMeshDic[BlockShapeID.Cube];
             var vertices = cubeMesh.vertices.Select(v => v + new Vector3(0.5f, 0.5f, 0.5f)).ToArray();
             other = new BlockMesh(vertices, cubeMesh.triangles, cubeMesh.uv);
         }

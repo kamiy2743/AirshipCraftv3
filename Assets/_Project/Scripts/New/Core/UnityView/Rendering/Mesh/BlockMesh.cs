@@ -79,20 +79,26 @@ namespace UnityView.Rendering
             switch (direction)
             {
                 case Direction.Right:
-                    return v1.x == 1 && v2.x == 1 && v3.x == 1;
+                    return Mathf.Approximately(v1.x, 1) && Mathf.Approximately(v2.x, 1) && Mathf.Approximately(v3.x, 1);
                 case Direction.Left:
-                    return v1.x == 0 && v2.x == 0 && v3.x == 0;
+                    return Approximately0(v1.x) && Approximately0(v2.x) && Approximately0(v3.x);
                 case Direction.Top:
-                    return v1.y == 1 && v2.y == 1 && v3.y == 1;
+                    return Mathf.Approximately(v1.y, 1) && Mathf.Approximately(v2.y, 1) && Mathf.Approximately(v3.y, 1);
                 case Direction.Bottom:
-                    return v1.y == 0 && v2.y == 0 && v3.y == 0;
+                    return Approximately0(v1.y) && Approximately0(v2.y) && Approximately0(v3.y);
                 case Direction.Forward:
-                    return v1.z == 1 && v2.z == 1 && v3.z == 1;
+                    return Mathf.Approximately(v1.z, 1) && Mathf.Approximately(v2.z, 1) && Mathf.Approximately(v3.z, 1);
                 case Direction.Back:
-                    return v1.z == 0 && v2.z == 0 && v3.z == 0;
+                    return Approximately0(v1.z) && Approximately0(v2.z) && Approximately0(v3.z);
             }
 
             throw new Exception("実装漏れ");
+        }
+
+        // Mathf.Approximately(a, 0)だとfalseを返すことがある
+        private bool Approximately0(float a)
+        {
+            return a < 0.01f && a > -0.01f;
         }
 
         internal MeshData GetPartMesh(Direction direction)
