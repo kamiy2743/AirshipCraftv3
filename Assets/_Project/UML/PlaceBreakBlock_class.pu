@@ -1,13 +1,15 @@
 @startuml
 
 together {
-    class FocusedBlockProvider  {
+    class FocusedBlockInfoProvider  {
         TryGetForcusedBlockInfo(out FocusedBlockInfo) : bool
     }
 
     class FocusedBlockInfo {
-        block
+        blockType
         pivotCoordinate
+        hitPoint
+        hitNormal
     }
 }
 
@@ -29,16 +31,11 @@ class PlaceBlockHandler {
 
 }
 
-class InteractBlockHandler {
-
-}
-
-FocusedBlockViewer --> FocusedBlockProvider : 毎フレーム取得
+FocusedBlockViewer --> FocusedBlockInfoProvider : 毎フレーム取得
 FocusedBlockViewer --> FocusedBlockOutline
 
-BreakBlockHandler --> FocusedBlockProvider
-PlaceBlockHandler --> FocusedBlockProvider
-InteractBlockHandler --> FocusedBlockProvider
+BreakBlockHandler --> FocusedBlockInfoProvider
+PlaceBlockHandler --> FocusedBlockInfoProvider
 
 
 @enduml
