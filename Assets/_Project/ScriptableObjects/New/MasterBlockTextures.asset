@@ -15,4 +15,8 @@ MonoBehaviour:
   asset_3D_Blocks_3_0_Textures:
   - blockType: 1
     texture: {fileID: 2800000, guid: a5bf91d1226210e4181cd2eea02559c6, type: 3}
+  - blockType: 2
+    texture: {fileID: 2800000, guid: 3474590e363254742a3c6d77644367e1, type: 3}
+  - blockType: 3
+    texture: {fileID: 2800000, guid: 8cbc1e244cb571a4b8c08368307744ac, type: 3}
   sixTextures: []

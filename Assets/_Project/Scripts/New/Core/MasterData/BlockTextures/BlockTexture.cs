@@ -5,13 +5,16 @@ namespace MasterData
 {
     public record BlockTexture
     {
-        internal BlockType blockType;
+        public BlockType blockType;
         public Texture2D right;
         public Texture2D left;
         public Texture2D top;
         public Texture2D bottom;
         public Texture2D forward;
         public Texture2D back;
+
+        public const int Size = 256;
+        public const int Count = 6;
 
         internal BlockTexture(
             BlockType blockType,

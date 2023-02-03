@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 namespace Domain
 {
     public enum BlockType
@@ -7,5 +10,11 @@ namespace Domain
         Dirt,
         Stone,
         MachineUnitCore
+    }
+
+    public static class BlockTypeExt
+    {
+        private static BlockType[] _array;
+        public static BlockType[] Array => _array ??= Enum.GetValues(typeof(BlockType)).Cast<BlockType>().ToArray();
     }
 }

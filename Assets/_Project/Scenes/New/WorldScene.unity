@@ -647,6 +647,7 @@ MonoBehaviour:
   playerTransform: {fileID: 920373323}
   playerCamera: {fileID: 920373330}
   focusedBlockOutline: {fileID: 1238019924}
+  blockMaterial: {fileID: 2100000, guid: e7bbc478a3846f94ca144b321d475a48, type: 2}
 --- !u!1 &920373322
 GameObject:
   m_ObjectHideFlags: 0

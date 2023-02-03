@@ -1,7 +1,7 @@
-using System;
 using UnityEngine;
 using Zenject;
 using Infrastructure;
+using UnityView;
 using UnityView.Rendering;
 using UnityView.Rendering.Chunks;
 using UnityView.ChunkCollision;
@@ -17,6 +17,7 @@ namespace Installers
         [SerializeField] private Transform playerTransform;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private FocusedBlockOutline focusedBlockOutline;
+        [SerializeField] private Material blockMaterial;
 
         public override void InstallBindings()
         {
@@ -72,6 +73,8 @@ namespace Installers
 
             Container.BindInterfacesAndSelfTo<PlaceBlockHandler>().AsSingle();
             Container.BindInterfacesAndSelfTo<BreakBlockHandler>().AsSingle();
+
+            Container.BindInterfacesTo<BlockTextureAtlasCreator>().AsSingle().WithArguments(blockMaterial);
         }
     }
 }

@@ -13,14 +13,13 @@ namespace MasterData
 
         private List<Texture> createdTextures = new List<Texture>();
 
-        private const int UnitSize = 256;
-
         public BlockTexture ToBlockTexture()
         {
-            var rightLeftPixels = texture.GetPixels(0, 0, UnitSize, UnitSize);
-            var forwardBackPixels = texture.GetPixels(UnitSize, 0, UnitSize, UnitSize);
-            var topPixels = texture.GetPixels(UnitSize, UnitSize, UnitSize, UnitSize);
-            var bottomPixels = texture.GetPixels(0, UnitSize, UnitSize, UnitSize);
+            var size = BlockTexture.Size;
+            var rightLeftPixels = texture.GetPixels(0, 0, size, size);
+            var forwardBackPixels = texture.GetPixels(size, 0, size, size);
+            var topPixels = texture.GetPixels(size, size, size, size);
+            var bottomPixels = texture.GetPixels(0, size, size, size);
 
             var rightLeftTexture = CreateTexture(rightLeftPixels);
             var forwardBackTexture = CreateTexture(forwardBackPixels);
@@ -40,7 +39,7 @@ namespace MasterData
 
         private Texture2D CreateTexture(Color[] pixels)
         {
-            var texture = new Texture2D(UnitSize, UnitSize);
+            var texture = new Texture2D(BlockTexture.Size, BlockTexture.Size);
 
             texture.SetPixels(pixels);
             texture.Apply();
