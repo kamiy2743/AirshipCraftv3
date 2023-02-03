@@ -1,1 +1,0 @@
-namespace DataObject.Block { public enum BlockID { Empty,Air,Dirt,Grass,Stone,MUCore,}}
