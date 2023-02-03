@@ -2,13 +2,17 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Domain;
+using MasterData;
 
 namespace UnityView.Rendering
 {
     internal class BlockMeshFactory
     {
-        internal BlockMesh Create(Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        internal BlockMesh Create(BlockType blockType, Vector3[] vertices, int[] triangles, Vector2[] originalUVs)
         {
+            var uvs = MatchUVs(blockType, originalUVs);
+
             var value = new MeshData(vertices, triangles, uvs);
 
             var rightPart = ExtractPartMesh(Direction.Right, vertices, triangles, uvs);
@@ -21,6 +25,24 @@ namespace UnityView.Rendering
             var otherPart = ExtractOtherPartMesh(vertices, triangles, uvs);
 
             return new BlockMesh(value, rightPart, leftPart, topPart, bottomPart, forwardPart, backPart, otherPart);
+        }
+
+        private Vector2[] MatchUVs(BlockType blockType, Vector2[] originalUVs)
+        {
+            var toAtlasUVScale = (float)BlockTexture.Size / (float)BlockTextureAtlasCreator.CalcTextureSize();
+
+            // TODO BlockTextureAtlasCreatorと重複
+            var side = BlockTexture.Count * Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, BlockTexture.Count));
+            var pivot = new Vector2((int)blockType / side * BlockTexture.Count, (int)blockType % side) * toAtlasUVScale;
+
+            return originalUVs
+                .Select(uv =>
+                {
+                    var x = pivot.x + (uv.x * BlockTexture.Count * toAtlasUVScale);
+                    var y = pivot.y + (uv.y * toAtlasUVScale);
+                    return new Vector2(x, y);
+                })
+                .ToArray();
         }
 
         private MeshData ExtractPartMesh(Direction direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)

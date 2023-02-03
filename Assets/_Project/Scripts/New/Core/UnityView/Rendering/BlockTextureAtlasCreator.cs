@@ -43,7 +43,8 @@ namespace UnityView
         }
 
         // ブロックのテクスチャを整列して並べられて、かつ2にべき乗のサイズを計算する
-        private int CalcTextureSize()
+        // TODO まともな実装ではない
+        internal static int CalcTextureSize()
         {
             var x = Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, BlockTexture.Count));
             var y = Mathf.CeilToInt(Mathf.Log(BlockTexture.Size * BlockTexture.Count * x, 2));
@@ -54,7 +55,8 @@ namespace UnityView
 
         private Vector2Int CalcTexturePivot(BlockType blockType)
         {
-            return new Vector2Int((int)blockType / BlockTexture.Count, (int)blockType % BlockTexture.Count) * BlockTexture.Size;
+            var side = BlockTexture.Count * Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, BlockTexture.Count));
+            return new Vector2Int((int)blockType / side * BlockTexture.Count, (int)blockType % side) * BlockTexture.Size;
         }
 
         public void Dispose()
