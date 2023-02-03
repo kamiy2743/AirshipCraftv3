@@ -2,10 +2,9 @@ using System;
 using Unity.Mathematics;
 using Extensions;
 
-namespace UnityView.Rendering
+namespace Domain
 {
-    // TODO Render以外でも使う
-    internal enum Direction
+    public enum Direction
     {
         Right = 1 << 0,
         Left = 1 << 1,
@@ -15,9 +14,9 @@ namespace UnityView.Rendering
         Back = 1 << 5
     }
 
-    internal static class DirectionExt
+    public static class DirectionExt
     {
-        internal static readonly Direction[] Array = new Direction[]
+        public static readonly Direction[] Array = new Direction[]
         {
             Direction.Right,
             Direction.Left,
@@ -27,7 +26,7 @@ namespace UnityView.Rendering
             Direction.Back
         };
 
-        internal static int3 ToInt3(this Direction direction)
+        public static int3 ToInt3(this Direction direction)
         {
             switch (direction)
             {
@@ -48,7 +47,7 @@ namespace UnityView.Rendering
             throw new Exception("実装漏れ");
         }
 
-        internal static Direction Flip(this Direction direction)
+        public static Direction Flip(this Direction direction)
         {
             switch (direction)
             {
