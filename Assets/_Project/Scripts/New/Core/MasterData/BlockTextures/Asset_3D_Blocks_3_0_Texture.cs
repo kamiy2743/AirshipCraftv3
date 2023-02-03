@@ -1,14 +1,17 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Domain;
 
 namespace MasterData
 {
     [Serializable]
-    internal record Asset_3D_Blocks_3_0_Texture : IBlockTextureConvertible
+    internal record Asset_3D_Blocks_3_0_Texture : IBlockTextureConvertible, IDisposable
     {
         public BlockType blockType;
         public Texture2D texture;
+
+        private List<Texture> createdTextures = new List<Texture>();
 
         private const int UnitSize = 256;
 
@@ -35,13 +38,23 @@ namespace MasterData
             );
         }
 
-        // TODO textureは明示的に廃棄しないといけないかも
         private Texture2D CreateTexture(Color[] pixels)
         {
-            var result = new Texture2D(UnitSize, UnitSize);
-            result.SetPixels(pixels);
-            result.Apply();
-            return result;
+            var texture = new Texture2D(UnitSize, UnitSize);
+
+            texture.SetPixels(pixels);
+            texture.Apply();
+            createdTextures.Add(texture);
+
+            return texture;
+        }
+
+        public void Dispose()
+        {
+            foreach (var texture in createdTextures)
+            {
+                MonoBehaviour.Destroy(texture);
+            }
         }
     }
 }

@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Domain;
+using Zenject;
 
 namespace MasterData
 {
     [CreateAssetMenu(fileName = "MasterBlockTextures", menuName = "ScriptableObjects/MasterBlockTextures")]
-    public class MasterBlockTextures : ScriptableObject
+    public class MasterBlockTextures : ScriptableObject, IDisposable
     {
         [SerializeField] private List<Asset_3D_Blocks_3_0_Texture> asset_3D_Blocks_3_0_Textures;
         [SerializeField] private List<SixTexture> sixTextures;
@@ -27,6 +29,14 @@ namespace MasterData
             }
 
             return blockTextures;
+        }
+
+        public void Dispose()
+        {
+            foreach (var texture in asset_3D_Blocks_3_0_Textures)
+            {
+                texture.Dispose();
+            }
         }
     }
 }

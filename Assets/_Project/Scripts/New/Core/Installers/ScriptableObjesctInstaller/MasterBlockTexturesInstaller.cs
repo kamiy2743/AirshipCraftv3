@@ -11,7 +11,7 @@ namespace Installers
 
         public override void InstallBindings()
         {
-            Container.BindInstance<MasterBlockTextures>(instance).AsSingle();
+            Container.BindInterfacesAndSelfTo<MasterBlockTextures>().FromInstance(instance).AsSingle();
         }
     }
 }
