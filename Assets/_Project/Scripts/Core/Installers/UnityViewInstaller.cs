@@ -75,6 +75,7 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<BreakBlockHandler>().AsSingle();
 
             Container.BindInterfacesTo<BlockTextureAtlasCreator>().AsSingle().WithArguments(blockMaterial);
+            Container.Bind<BlockTextureUVCreator>().AsSingle();
         }
     }
 }
