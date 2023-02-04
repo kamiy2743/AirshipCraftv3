@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e277f84d4d8de2448a1ac0acc8cc6f23, type: 3}
+  m_Script: {fileID: 11500000, guid: 7cbbfb3b41234c3458d7f3dff4020ca3, type: 3}
   m_Name: MasterBlockShapeMeshes
   m_EditorClassIdentifier: 
   meshes:
   - blockShape: 0
     mesh: {fileID: -5495902117074765545, guid: 600ed7942262f0440a47379209cdca37, type: 3}
+  - blockShape: 2
+    mesh: {fileID: 3402742096233047544, guid: 701ab8756f71c864db1bb0f27257ec9f, type: 3}

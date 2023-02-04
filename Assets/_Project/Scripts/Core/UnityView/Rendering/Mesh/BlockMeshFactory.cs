@@ -8,16 +8,16 @@ namespace UnityView.Rendering
 {
     internal class BlockMeshFactory
     {
-        private BlockTextureUVCreator blockTextureUVCreator;
+        private SixFaceUVCreator sixFaceUVCreator;
 
-        internal BlockMeshFactory(BlockTextureUVCreator blockTextureUVCreator)
+        internal BlockMeshFactory(SixFaceUVCreator blockTextureUVCreator)
         {
-            this.blockTextureUVCreator = blockTextureUVCreator;
+            this.sixFaceUVCreator = blockTextureUVCreator;
         }
 
         internal BlockMesh Create(BlockType blockType, Vector3[] vertices, int[] triangles, Vector2[] originalUVs)
         {
-            var uvs = blockTextureUVCreator.Create(blockType, originalUVs);
+            var uvs = sixFaceUVCreator.Create(blockType, originalUVs);
 
             var value = new MeshData(vertices, triangles, uvs);
 

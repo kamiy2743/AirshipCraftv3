@@ -1,28 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Domain;
-using MasterData;
 
 namespace UnityView.Rendering
 {
     internal class BlockMeshProvider
     {
         private BlockMeshFactory blockMeshFactory;
-        private MasterBlockShapeMeshes masterBlockShapeMeshes;
+        private IBlockShapeMeshProvider blockShapeMeshProvider;
 
         private BlockMesh air;
         private Dictionary<BlockType, BlockMesh> blockMeshes = new Dictionary<BlockType, BlockMesh>();
 
-        internal BlockMeshProvider(BlockMeshFactory blockMeshFactory, MasterBlockShapeMeshes masterBlockShapeMeshes)
+        internal BlockMeshProvider(BlockMeshFactory blockMeshFactory, IBlockShapeMeshProvider blockShapeMeshProvider)
         {
             this.blockMeshFactory = blockMeshFactory;
-            this.masterBlockShapeMeshes = masterBlockShapeMeshes;
+            this.blockShapeMeshProvider = blockShapeMeshProvider;
 
             air = blockMeshFactory.Create(BlockType.Air, new Vector3[0], new int[0], new Vector2[0]);
 
             foreach (var blockType in BlockTypeExt.Array)
             {
-                var cubeMesh = masterBlockShapeMeshes.BlockShapeMeshes[BlockShape.Cube];
+                var cubeMesh = blockShapeMeshProvider.GetMesh(BlockShape.Cube);
                 var blockMesh = blockMeshFactory.Create(blockType, cubeMesh.vertices, cubeMesh.triangles, cubeMesh.uv);
                 blockMeshes.Add(blockType, blockMesh);
             }

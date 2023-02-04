@@ -4,6 +4,7 @@ using Extensions;
 
 namespace Domain
 {
+    // TODO 面を表すFaceを別に定義する
     public enum Direction
     {
         Right = 1 << 0,

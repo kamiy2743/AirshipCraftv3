@@ -1,7 +1,6 @@
 using UnityEngine;
 using Zenject;
 using Infrastructure;
-using UnityView;
 using UnityView.Rendering;
 using UnityView.Rendering.Chunks;
 using UnityView.ChunkCollision;
@@ -74,8 +73,8 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<PlaceBlockHandler>().AsSingle();
             Container.BindInterfacesAndSelfTo<BreakBlockHandler>().AsSingle();
 
-            Container.BindInterfacesTo<BlockTextureAtlasCreator>().AsSingle().WithArguments(blockMaterial);
-            Container.Bind<BlockTextureUVCreator>().AsSingle();
+            Container.BindInterfacesTo<SixFaceTextureAtlasCreator>().AsSingle().WithArguments(blockMaterial);
+            Container.Bind<SixFaceUVCreator>().AsSingle();
         }
     }
 }
