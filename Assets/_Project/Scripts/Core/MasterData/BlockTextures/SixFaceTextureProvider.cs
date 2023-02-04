@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Domain;
 using UnityView.Rendering;
 
@@ -5,29 +6,19 @@ namespace MasterData
 {
     internal class SixFaceTextureProvider : ISixFaceTextureProvider
     {
-        private MasterBlockTextures masterBlockTextures;
+        private Dictionary<BlockType, SixFaceTexture> textures = new Dictionary<BlockType, SixFaceTexture>();
 
         internal SixFaceTextureProvider(MasterBlockTextures masterBlockTextures)
         {
-            this.masterBlockTextures = masterBlockTextures;
+            foreach (var item in masterBlockTextures.Asset_3D_Blocks_3_0_Textures)
+            {
+                textures.Add(item.blockType, item.ToSixFaceTexture());
+            }
         }
 
         public bool TryGetSixFaceTexture(BlockType blockType, out SixFaceTexture result)
         {
-            if (!masterBlockTextures.BlockTextures.TryGetValue(blockType, out var blockTexture))
-            {
-                result = null;
-                return false;
-            }
-
-            result = new SixFaceTexture(
-                blockTexture.right,
-                blockTexture.left,
-                blockTexture.top,
-                blockTexture.bottom,
-                blockTexture.forward,
-                blockTexture.back);
-            return true;
+            return textures.TryGetValue(blockType, out result);
         }
     }
 }

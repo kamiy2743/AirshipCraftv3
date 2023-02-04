@@ -2,20 +2,21 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Domain;
+using UnityView.Rendering;
 
 namespace MasterData
 {
     [Serializable]
-    internal record Asset_3D_Blocks_3_0_Texture : IBlockTextureConvertible, IDisposable
+    internal record Asset_3D_Blocks_3_0_Texture : IDisposable
     {
         public BlockType blockType;
         public Texture2D texture;
 
+        private int size => texture.width / 2;
         private List<Texture> createdTextures = new List<Texture>();
 
-        public BlockTexture ToBlockTexture()
+        public SixFaceTexture ToSixFaceTexture()
         {
-            var size = BlockTexture.Size;
             var rightLeftPixels = texture.GetPixels(0, 0, size, size);
             var forwardBackPixels = texture.GetPixels(size, 0, size, size);
             var topPixels = texture.GetPixels(size, size, size, size);
@@ -26,8 +27,7 @@ namespace MasterData
             var topTexture = CreateTexture(topPixels);
             var bottomTexture = CreateTexture(bottomPixels);
 
-            return new BlockTexture(
-                blockType,
+            return new SixFaceTexture(
                 rightLeftTexture,
                 rightLeftTexture,
                 topTexture,
@@ -39,7 +39,7 @@ namespace MasterData
 
         private Texture2D CreateTexture(Color[] pixels)
         {
-            var texture = new Texture2D(BlockTexture.Size, BlockTexture.Size);
+            var texture = new Texture2D(size, size);
 
             texture.SetPixels(pixels);
             texture.Apply();
