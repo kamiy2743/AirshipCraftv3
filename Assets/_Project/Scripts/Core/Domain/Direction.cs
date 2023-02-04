@@ -17,6 +17,8 @@ namespace Domain
 
     public static class DirectionExt
     {
+        public const int ElemCount = 6;
+
         public static readonly Direction[] Array = new Direction[]
         {
             Direction.Right,
