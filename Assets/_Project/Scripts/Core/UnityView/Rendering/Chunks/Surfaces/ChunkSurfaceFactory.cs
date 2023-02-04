@@ -37,7 +37,7 @@ namespace UnityView.Rendering.Chunks
                             var adjacentBlock = GetAdjacentBlock(direction, rc, context);
                             if (adjacentBlock.blockType == BlockType.Air)
                             {
-                                blockSurface += direction;
+                                blockSurface += FaceExt.Parse(direction);
                             }
                         }
 
@@ -61,17 +61,17 @@ namespace UnityView.Rendering.Chunks
                 case Direction.Left:
                     if (rc.x == RelativeCoordinate.Min) return context.LeftChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Direction.Top:
+                case Direction.Up:
                     if (rc.y == RelativeCoordinate.Max) return context.TopChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Direction.Bottom:
+                case Direction.Down:
                     if (rc.y == RelativeCoordinate.Min) return context.BottomChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
                 case Direction.Forward:
                     if (rc.z == RelativeCoordinate.Max) return context.ForwardChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
-                case Direction.Back:
-                    if (rc.z == RelativeCoordinate.Min) return context.BackChunk.GetBlock(adjacentRelativeCoordinate);
+                case Direction.BackWard:
+                    if (rc.z == RelativeCoordinate.Min) return context.BackwardChunk.GetBlock(adjacentRelativeCoordinate);
                     break;
             }
 
@@ -86,17 +86,17 @@ namespace UnityView.Rendering.Chunks
             internal Chunk TopChunk;
             internal Chunk BottomChunk;
             internal Chunk ForwardChunk;
-            internal Chunk BackChunk;
+            internal Chunk BackwardChunk;
 
             internal Context(ChunkGridCoordinate targetChunkGridCoordinate, IChunkProvider chunkProvider)
             {
                 TargetChunk = chunkProvider.GetChunk(targetChunkGridCoordinate);
                 RightChunk = GetAdjacentChunk(Direction.Right, targetChunkGridCoordinate, chunkProvider);
                 LeftChunk = GetAdjacentChunk(Direction.Left, targetChunkGridCoordinate, chunkProvider);
-                TopChunk = GetAdjacentChunk(Direction.Top, targetChunkGridCoordinate, chunkProvider);
-                BottomChunk = GetAdjacentChunk(Direction.Bottom, targetChunkGridCoordinate, chunkProvider);
+                TopChunk = GetAdjacentChunk(Direction.Up, targetChunkGridCoordinate, chunkProvider);
+                BottomChunk = GetAdjacentChunk(Direction.Down, targetChunkGridCoordinate, chunkProvider);
                 ForwardChunk = GetAdjacentChunk(Direction.Forward, targetChunkGridCoordinate, chunkProvider);
-                BackChunk = GetAdjacentChunk(Direction.Back, targetChunkGridCoordinate, chunkProvider);
+                BackwardChunk = GetAdjacentChunk(Direction.BackWard, targetChunkGridCoordinate, chunkProvider);
             }
 
             private Chunk GetAdjacentChunk(Direction direction, ChunkGridCoordinate source, IChunkProvider chunkProvider)

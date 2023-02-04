@@ -17,12 +17,12 @@ namespace UnityView.Rendering.Chunks
             hasRenderingSurface = false;
         }
 
-        internal BlockSurface(params Direction[] directions)
+        internal BlockSurface(params Face[] faces)
         {
             var result = new BlockSurface();
-            foreach (var surface in directions)
+            foreach (var face in faces)
             {
-                result += surface;
+                result += face;
             }
 
             surfacesByte = result.surfacesByte;
@@ -40,20 +40,20 @@ namespace UnityView.Rendering.Chunks
             return new BlockSurface((byte)0);
         }
 
-        internal bool Contains(Direction direction)
+        internal bool Contains(Face face)
         {
-            return (surfacesByte & (byte)direction) > 0;
+            return (surfacesByte & (byte)face) > 0;
         }
 
-        public static BlockSurface operator +(BlockSurface renderingSurface, Direction direction)
+        public static BlockSurface operator +(BlockSurface renderingSurface, Face face)
         {
-            var result = renderingSurface.surfacesByte | (byte)direction;
+            var result = renderingSurface.surfacesByte | (byte)face;
             return new BlockSurface((byte)result);
         }
 
-        public static BlockSurface operator -(BlockSurface renderingSurface, Direction direction)
+        public static BlockSurface operator -(BlockSurface renderingSurface, Face face)
         {
-            var result = renderingSurface.surfacesByte ^ (byte)direction;
+            var result = renderingSurface.surfacesByte ^ (byte)face;
             return new BlockSurface((byte)result);
         }
     }

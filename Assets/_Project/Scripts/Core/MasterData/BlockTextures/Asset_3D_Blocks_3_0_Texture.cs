@@ -18,12 +18,12 @@ namespace MasterData
         public SixFaceTexture ToSixFaceTexture()
         {
             var rightLeftPixels = texture.GetPixels(0, 0, size, size);
-            var forwardBackPixels = texture.GetPixels(size, 0, size, size);
+            var forwardBackwardPixels = texture.GetPixels(size, 0, size, size);
             var topPixels = texture.GetPixels(size, size, size, size);
             var bottomPixels = texture.GetPixels(0, size, size, size);
 
             var rightLeftTexture = CreateTexture(rightLeftPixels);
-            var forwardBackTexture = CreateTexture(forwardBackPixels);
+            var forwardBackwardTexture = CreateTexture(forwardBackwardPixels);
             var topTexture = CreateTexture(topPixels);
             var bottomTexture = CreateTexture(bottomPixels);
 
@@ -32,8 +32,8 @@ namespace MasterData
                 rightLeftTexture,
                 topTexture,
                 bottomTexture,
-                forwardBackTexture,
-                forwardBackTexture
+                forwardBackwardTexture,
+                forwardBackwardTexture
             );
         }
 

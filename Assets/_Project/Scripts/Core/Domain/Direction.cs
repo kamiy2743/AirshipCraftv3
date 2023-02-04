@@ -9,10 +9,10 @@ namespace Domain
     {
         Right = 1 << 0,
         Left = 1 << 1,
-        Top = 1 << 2,
-        Bottom = 1 << 3,
+        Up = 1 << 2,
+        Down = 1 << 3,
         Forward = 1 << 4,
-        Back = 1 << 5
+        BackWard = 1 << 5
     }
 
     public static class DirectionExt
@@ -23,10 +23,10 @@ namespace Domain
         {
             Direction.Right,
             Direction.Left,
-            Direction.Top,
-            Direction.Bottom,
+            Direction.Up,
+            Direction.Down,
             Direction.Forward,
-            Direction.Back
+            Direction.BackWard
         };
 
         public static int3 ToInt3(this Direction direction)
@@ -34,17 +34,17 @@ namespace Domain
             switch (direction)
             {
                 case Direction.Right:
-                    return int3Ext.Right;
+                    return int3Ext.PositiveX;
                 case Direction.Left:
-                    return int3Ext.Left;
-                case Direction.Top:
-                    return int3Ext.Top;
-                case Direction.Bottom:
-                    return int3Ext.Bottom;
+                    return int3Ext.NegativeX;
+                case Direction.Up:
+                    return int3Ext.PositiveY;
+                case Direction.Down:
+                    return int3Ext.NegativeY;
                 case Direction.Forward:
-                    return int3Ext.Forward;
-                case Direction.Back:
-                    return int3Ext.Back;
+                    return int3Ext.PositiveZ;
+                case Direction.BackWard:
+                    return int3Ext.NegativeZ;
             }
 
             throw new Exception("実装漏れ");
@@ -58,13 +58,13 @@ namespace Domain
                     return Direction.Left;
                 case Direction.Left:
                     return Direction.Right;
-                case Direction.Top:
-                    return Direction.Bottom;
-                case Direction.Bottom:
-                    return Direction.Top;
+                case Direction.Up:
+                    return Direction.Down;
+                case Direction.Down:
+                    return Direction.Up;
                 case Direction.Forward:
-                    return Direction.Back;
-                case Direction.Back:
+                    return Direction.BackWard;
+                case Direction.BackWard:
                     return Direction.Forward;
             }
 

@@ -24,12 +24,12 @@ namespace UnityView.Rendering
                 var pivot = GetPivot(blockType);
                 var size = SixFaceTexture.Size;
 
-                texture.SetPixels(pivot.x + size * 0, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Right).GetPixels());
-                texture.SetPixels(pivot.x + size * 1, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Left).GetPixels());
-                texture.SetPixels(pivot.x + size * 2, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Top).GetPixels());
-                texture.SetPixels(pivot.x + size * 3, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Bottom).GetPixels());
-                texture.SetPixels(pivot.x + size * 4, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Forward).GetPixels());
-                texture.SetPixels(pivot.x + size * 5, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Back).GetPixels());
+                texture.SetPixels(pivot.x + size * 0, pivot.y, size, size, sixFaceTexture.GetFace(Face.Right).GetPixels());
+                texture.SetPixels(pivot.x + size * 1, pivot.y, size, size, sixFaceTexture.GetFace(Face.Left).GetPixels());
+                texture.SetPixels(pivot.x + size * 2, pivot.y, size, size, sixFaceTexture.GetFace(Face.Top).GetPixels());
+                texture.SetPixels(pivot.x + size * 3, pivot.y, size, size, sixFaceTexture.GetFace(Face.Bottom).GetPixels());
+                texture.SetPixels(pivot.x + size * 4, pivot.y, size, size, sixFaceTexture.GetFace(Face.Front).GetPixels());
+                texture.SetPixels(pivot.x + size * 5, pivot.y, size, size, sixFaceTexture.GetFace(Face.Back).GetPixels());
             }
             texture.Apply();
         }

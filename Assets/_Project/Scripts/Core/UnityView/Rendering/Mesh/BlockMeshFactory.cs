@@ -21,23 +21,23 @@ namespace UnityView.Rendering
 
             var value = new MeshData(vertices, triangles, uvs);
 
-            var rightPart = ExtractPartMesh(Direction.Right, vertices, triangles, uvs);
-            var leftPart = ExtractPartMesh(Direction.Left, vertices, triangles, uvs);
-            var topPart = ExtractPartMesh(Direction.Top, vertices, triangles, uvs);
-            var bottomPart = ExtractPartMesh(Direction.Bottom, vertices, triangles, uvs);
-            var forwardPart = ExtractPartMesh(Direction.Forward, vertices, triangles, uvs);
-            var backPart = ExtractPartMesh(Direction.Back, vertices, triangles, uvs);
+            var rightFace = ExtractFaceMesh(Face.Right, vertices, triangles, uvs);
+            var leftFace = ExtractFaceMesh(Face.Left, vertices, triangles, uvs);
+            var topFace = ExtractFaceMesh(Face.Top, vertices, triangles, uvs);
+            var bottomFace = ExtractFaceMesh(Face.Bottom, vertices, triangles, uvs);
+            var frontFace = ExtractFaceMesh(Face.Front, vertices, triangles, uvs);
+            var backFace = ExtractFaceMesh(Face.Back, vertices, triangles, uvs);
 
             var otherPart = ExtractOtherPartMesh(vertices, triangles, uvs);
 
-            return new BlockMesh(value, rightPart, leftPart, topPart, bottomPart, forwardPart, backPart, otherPart);
+            return new BlockMesh(value, rightFace, leftFace, topFace, bottomFace, frontFace, backFace, otherPart);
         }
 
-        private MeshData ExtractPartMesh(Direction direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        private MeshData ExtractFaceMesh(Face direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             var verticesMap = new Dictionary<int, (Vector3, int)>();
             var preTriangles = new List<int>();
-            var partUVs = new List<Vector2>();
+            var faceUVs = new List<Vector2>();
 
             for (int i = 0; i < triangles.Length; i += 3)
             {
@@ -48,19 +48,19 @@ namespace UnityView.Rendering
                 var v2 = vertices[t2];
                 var v3 = vertices[t3];
 
-                if (IsPartPolygon(direction, v1, v2, v3))
+                if (IsFacePolygon(direction, v1, v2, v3))
                 {
                     if (verticesMap.TryAdd(t1, (v1, verticesMap.Count)))
                     {
-                        partUVs.Add(uvs[t1]);
+                        faceUVs.Add(uvs[t1]);
                     }
                     if (verticesMap.TryAdd(t2, (v2, verticesMap.Count)))
                     {
-                        partUVs.Add(uvs[t2]);
+                        faceUVs.Add(uvs[t2]);
                     }
                     if (verticesMap.TryAdd(t3, (v3, verticesMap.Count)))
                     {
-                        partUVs.Add(uvs[t3]);
+                        faceUVs.Add(uvs[t3]);
                     }
 
                     preTriangles.Add(t1);
@@ -69,27 +69,27 @@ namespace UnityView.Rendering
                 }
             }
 
-            var partVertices = verticesMap.Values.Select(value => value.Item1).ToArray();
-            var partTriangles = preTriangles.Select(value => verticesMap[value].Item2).ToArray();
+            var faceVertices = verticesMap.Values.Select(value => value.Item1).ToArray();
+            var faceTriangles = preTriangles.Select(value => verticesMap[value].Item2).ToArray();
 
-            return new MeshData(partVertices, partTriangles, partUVs.ToArray());
+            return new MeshData(faceVertices, faceTriangles, faceUVs.ToArray());
         }
 
-        private bool IsPartPolygon(Direction direction, Vector3 v1, Vector3 v2, Vector3 v3)
+        private bool IsFacePolygon(Face direction, Vector3 v1, Vector3 v2, Vector3 v3)
         {
             switch (direction)
             {
-                case Direction.Right:
+                case Face.Right:
                     return Approximately1(v1.x) && Approximately1(v2.x) && Approximately1(v3.x);
-                case Direction.Left:
+                case Face.Left:
                     return Approximately0(v1.x) && Approximately0(v2.x) && Approximately0(v3.x);
-                case Direction.Top:
+                case Face.Top:
                     return Approximately1(v1.y) && Approximately1(v2.y) && Approximately1(v3.y);
-                case Direction.Bottom:
+                case Face.Bottom:
                     return Approximately0(v1.y) && Approximately0(v2.y) && Approximately0(v3.y);
-                case Direction.Forward:
+                case Face.Front:
                     return Approximately1(v1.z) && Approximately1(v2.z) && Approximately1(v3.z);
-                case Direction.Back:
+                case Face.Back:
                     return Approximately0(v1.z) && Approximately0(v2.z) && Approximately0(v3.z);
             }
 
@@ -122,17 +122,17 @@ namespace UnityView.Rendering
                 var v2 = vertices[t2];
                 var v3 = vertices[t3];
 
-                var isOtherPart = true;
-                foreach (var direction in DirectionExt.Array)
+                var isOtherFace = true;
+                foreach (var face in FaceExt.Array)
                 {
-                    if (IsPartPolygon(direction, v1, v2, v3))
+                    if (IsFacePolygon(face, v1, v2, v3))
                     {
-                        isOtherPart = false;
+                        isOtherFace = false;
                         break;
                     }
                 }
 
-                if (isOtherPart)
+                if (isOtherFace)
                 {
                     if (verticesMap.TryAdd(t1, (v1, verticesMap.Count)))
                     {

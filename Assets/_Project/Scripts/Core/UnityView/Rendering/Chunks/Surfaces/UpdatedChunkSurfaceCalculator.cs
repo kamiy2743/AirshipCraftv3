@@ -40,7 +40,7 @@ namespace UnityView.Rendering.Chunks
                     // 対象ブロックの描画面に追加
                     if (adjacentBlockType == BlockType.Air)
                     {
-                        targetBlockSurface += direction;
+                        targetBlockSurface += FaceExt.Parse(direction);
                     }
                 }
 
@@ -55,21 +55,21 @@ namespace UnityView.Rendering.Chunks
                 }
 
                 var currentSurface = adjacentChunkSurface.GetBlockSurface(adjacentRelativeCoordinate);
-                var targetDirection = direction.Flip();
+                var targetFace = FaceExt.Parse(direction.Flip());
 
                 if (targetBlockType == BlockType.Air)
                 {
-                    if (!currentSurface.Contains(targetDirection))
+                    if (!currentSurface.Contains(targetFace))
                     {
-                        adjacentChunkSurface.SetBlockSurfaceDirectly(adjacentRelativeCoordinate, currentSurface + targetDirection);
+                        adjacentChunkSurface.SetBlockSurfaceDirectly(adjacentRelativeCoordinate, currentSurface + targetFace);
                         updatedChunkSurfaces[adjacentChunkGridCoordinate] = adjacentChunkSurface;
                     }
                 }
                 else
                 {
-                    if (currentSurface.Contains(targetDirection))
+                    if (currentSurface.Contains(targetFace))
                     {
-                        adjacentChunkSurface.SetBlockSurfaceDirectly(adjacentRelativeCoordinate, currentSurface - targetDirection);
+                        adjacentChunkSurface.SetBlockSurfaceDirectly(adjacentRelativeCoordinate, currentSurface - targetFace);
                         updatedChunkSurfaces[adjacentChunkGridCoordinate] = adjacentChunkSurface;
                     }
                 }

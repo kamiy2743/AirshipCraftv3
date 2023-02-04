@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using Domain;
+using UnityView.Rendering;
 using UnityView.Rendering.Chunks;
 
 public class BlockSurfaceTest
@@ -12,33 +12,33 @@ public class BlockSurfaceTest
     [Test]
     public void 初期状態にRightを足すとRightになる()
     {
-        var result = new BlockSurface() + Direction.Right;
-        Assert.AreEqual((byte)Direction.Right, result.SurfaceByteDebug);
+        var result = new BlockSurface() + Face.Right;
+        Assert.AreEqual((byte)Face.Right, result.SurfaceByteDebug);
     }
 
     [Test]
     public void RightにLeftを足すとRight_Leftになる()
     {
-        var result = new BlockSurface() + Direction.Right + Direction.Left;
-        Assert.AreEqual((byte)Direction.Right + (byte)Direction.Left, result.SurfaceByteDebug);
+        var result = new BlockSurface() + Face.Right + Face.Left;
+        Assert.AreEqual((byte)Face.Right + (byte)Face.Left, result.SurfaceByteDebug);
     }
 
     [Test]
     public void 複数のSurfaceを渡すコンストラクタ_Right_Left()
     {
-        var result = new BlockSurface(Direction.Right, Direction.Left);
-        Assert.AreEqual((byte)Direction.Right + (byte)Direction.Left, result.SurfaceByteDebug);
+        var result = new BlockSurface(Face.Right, Face.Left);
+        Assert.AreEqual((byte)Face.Right + (byte)Face.Left, result.SurfaceByteDebug);
     }
 
     [Test]
     public void Right_LeftにContains_Rightを呼ぶとTrueになる()
     {
-        Assert.AreEqual(true, new BlockSurface(Direction.Right, Direction.Left).Contains(Direction.Right));
+        Assert.AreEqual(true, new BlockSurface(Face.Right, Face.Left).Contains(Face.Right));
     }
 
     [Test]
     public void Right_LeftにContains_Leftを呼ぶとTrueになる()
     {
-        Assert.AreEqual(true, new BlockSurface(Direction.Right, Direction.Left).Contains(Direction.Left));
+        Assert.AreEqual(true, new BlockSurface(Face.Right, Face.Left).Contains(Face.Left));
     }
 }

@@ -7,31 +7,31 @@ namespace UnityView.Rendering
     internal record BlockMesh
     {
         internal readonly MeshData value;
-        private Dictionary<Direction, MeshData> partMeshes;
+        private Dictionary<Face, MeshData> faceMeshes;
         internal readonly MeshData otherPart;
 
         internal BlockMesh(
             MeshData value,
-            MeshData rightPart,
-            MeshData leftPart,
-            MeshData topPart,
-            MeshData bottomPart,
-            MeshData forwardPart,
-            MeshData backPart,
+            MeshData rightFace,
+            MeshData leftFace,
+            MeshData topFace,
+            MeshData bottomFace,
+            MeshData frontFace,
+            MeshData backFace,
             MeshData otherPart)
         {
             this.value = value;
             this.otherPart = otherPart;
 
-            partMeshes = new Dictionary<Direction, MeshData>(DirectionExt.ElemCount);
-            partMeshes[Direction.Right] = rightPart;
-            partMeshes[Direction.Left] = leftPart;
-            partMeshes[Direction.Top] = topPart;
-            partMeshes[Direction.Bottom] = bottomPart;
-            partMeshes[Direction.Forward] = forwardPart;
-            partMeshes[Direction.Back] = backPart;
+            faceMeshes = new Dictionary<Face, MeshData>(FaceExt.ElemCount);
+            faceMeshes[Face.Right] = rightFace;
+            faceMeshes[Face.Left] = leftFace;
+            faceMeshes[Face.Top] = topFace;
+            faceMeshes[Face.Bottom] = bottomFace;
+            faceMeshes[Face.Front] = frontFace;
+            faceMeshes[Face.Back] = backFace;
         }
 
-        internal MeshData GetPartMesh(Direction direction) => partMeshes[direction];
+        internal MeshData GetFaceMesh(Face face) => faceMeshes[face];
     }
 }

@@ -44,24 +44,24 @@ namespace UnityView.Rendering.Chunks
                         var blockType = chunk.GetBlock(rc).blockType;
                         var blockMesh = blockMeshProvider.GetBlockMesh(blockType);
 
-                        foreach (var direction in DirectionExt.Array)
+                        foreach (var face in FaceExt.Array)
                         {
-                            if (!blockSurface.Contains(direction))
+                            if (!blockSurface.Contains(face))
                             {
                                 continue;
                             }
 
-                            var partMesh = blockMesh.GetPartMesh(direction);
+                            var faceMesh = blockMesh.GetFaceMesh(face);
 
-                            foreach (var t in partMesh.triangles)
+                            foreach (var t in faceMesh.triangles)
                             {
                                 triangles.Add(vertices.Count + t);
                             }
-                            foreach (var v in partMesh.vertices)
+                            foreach (var v in faceMesh.vertices)
                             {
                                 vertices.Add(v + new Vector3(x, y, z));
                             }
-                            uvs.AddRange(partMesh.uvs);
+                            uvs.AddRange(faceMesh.uvs);
                         }
 
                         foreach (var t in blockMesh.otherPart.triangles)
