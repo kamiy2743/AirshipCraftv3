@@ -6,19 +6,23 @@ namespace UnityView.Rendering
 {
     internal class SixFaceUVCreator
     {
+        private SixFaceTextureAtlas sixFaceTextureAtlas;
+
+        internal SixFaceUVCreator(SixFaceTextureAtlas sixFaceTextureAtlas)
+        {
+            this.sixFaceTextureAtlas = sixFaceTextureAtlas;
+        }
+
         internal Vector2[] Create(BlockType blockType, Vector2[] originalUVs)
         {
-            var toAtlasUVScale = (float)SixFaceTexture.Size / (float)SixFaceTextureAtlasCreator.CalcTextureSize();
-
-            // TODO SixFaceTextureAtlasCreatorと重複
-            var side = SixFaceTexture.TextureCount * Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, SixFaceTexture.TextureCount));
-            var pivot = new Vector2((int)blockType / side * SixFaceTexture.TextureCount, (int)blockType % side) * toAtlasUVScale;
+            var toUVScale = (float)SixFaceTexture.Size / (float)sixFaceTextureAtlas.Size;
+            var pivot = (Vector2)sixFaceTextureAtlas.GetPivot(blockType) / (float)SixFaceTexture.Size * toUVScale;
 
             return originalUVs
                 .Select(uv =>
                 {
-                    var x = pivot.x + (uv.x * SixFaceTexture.TextureCount * toAtlasUVScale);
-                    var y = pivot.y + (uv.y * toAtlasUVScale);
+                    var x = pivot.x + (uv.x * SixFaceTexture.TextureCount * toUVScale);
+                    var y = pivot.y + (uv.y * toUVScale);
                     return new Vector2(x, y);
                 })
                 .ToArray();

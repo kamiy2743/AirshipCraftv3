@@ -73,8 +73,10 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<PlaceBlockHandler>().AsSingle();
             Container.BindInterfacesAndSelfTo<BreakBlockHandler>().AsSingle();
 
-            Container.BindInterfacesTo<SixFaceTextureAtlasCreator>().AsSingle().WithArguments(blockMaterial);
+            Container.BindInterfacesAndSelfTo<SixFaceTextureAtlas>().AsSingle();
             Container.Bind<SixFaceUVCreator>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<TextureAtlasApplier>().AsSingle().WithArguments(blockMaterial);
         }
     }
 }

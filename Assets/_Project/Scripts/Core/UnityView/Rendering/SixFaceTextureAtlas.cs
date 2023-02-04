@@ -1,28 +1,18 @@
 using System;
 using UnityEngine;
-using Zenject;
 using Domain;
 
 namespace UnityView.Rendering
 {
-    internal class SixFaceTextureAtlasCreator : IInitializable, IDisposable
+    internal record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
     {
-        internal Material blockMaterial;
-        internal ISixFaceTextureProvider sixFaceTextureProvider;
+        private Texture2D texture;
+        internal int Size => texture.width;
 
-        internal Texture2D createdTexture;
-
-        internal SixFaceTextureAtlasCreator(Material blockMaterial, ISixFaceTextureProvider sixFaceTextureProvider)
-        {
-            this.blockMaterial = blockMaterial;
-            this.sixFaceTextureProvider = sixFaceTextureProvider;
-        }
-
-        public void Initialize()
+        internal SixFaceTextureAtlas(ISixFaceTextureProvider sixFaceTextureProvider)
         {
             var textureSize = CalcTextureSize();
-            var texture = new Texture2D(textureSize, textureSize);
-            createdTexture = texture;
+            texture = new Texture2D(textureSize, textureSize);
 
             foreach (var blockType in BlockTypeExt.Array)
             {
@@ -31,7 +21,7 @@ namespace UnityView.Rendering
                     continue;
                 }
 
-                var pivot = CalcTexturePivot(blockType);
+                var pivot = GetPivot(blockType);
                 var size = SixFaceTexture.Size;
 
                 texture.SetPixels(pivot.x + size * 0, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Right).GetPixels());
@@ -42,12 +32,10 @@ namespace UnityView.Rendering
                 texture.SetPixels(pivot.x + size * 5, pivot.y, size, size, sixFaceTexture.GetFace(Direction.Back).GetPixels());
             }
             texture.Apply();
-
-            blockMaterial.mainTexture = texture;
         }
 
         // ブロックのテクスチャを整列して並べられて、かつ2にべき乗のサイズを計算する
-        internal static int CalcTextureSize()
+        private int CalcTextureSize()
         {
             var x = Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, SixFaceTexture.TextureCount));
             var y = Mathf.CeilToInt(Mathf.Log(SixFaceTexture.Size * SixFaceTexture.TextureCount * x, 2));
@@ -56,7 +44,12 @@ namespace UnityView.Rendering
             return textureSize;
         }
 
-        private Vector2Int CalcTexturePivot(BlockType blockType)
+        public Texture2D GetAtlas()
+        {
+            return texture;
+        }
+
+        internal Vector2Int GetPivot(BlockType blockType)
         {
             var side = SixFaceTexture.TextureCount * Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, SixFaceTexture.TextureCount));
             return new Vector2Int((int)blockType / side * SixFaceTexture.TextureCount, (int)blockType % side) * SixFaceTexture.Size;
@@ -64,7 +57,7 @@ namespace UnityView.Rendering
 
         public void Dispose()
         {
-            MonoBehaviour.Destroy(createdTexture);
+            MonoBehaviour.Destroy(texture);
         }
     }
 }
