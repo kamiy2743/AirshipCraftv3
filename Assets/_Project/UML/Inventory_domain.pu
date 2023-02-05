@@ -1,0 +1,23 @@
+@startuml
+
+interface IInventory {
+    
+}
+
+class Slot {
+    
+}
+
+class PlayerInventory
+class FurnaceInventory
+class StorageInventory
+
+IInventory <|.. PlayerInventory
+IInventory <|.. FurnaceInventory
+IInventory <|.. StorageInventory
+
+PlayerInventory *-- Slot
+FurnaceInventory *-- Slot
+StorageInventory *-- Slot
+
+@enduml

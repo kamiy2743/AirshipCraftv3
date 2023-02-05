@@ -1,19 +1,56 @@
 @startuml
 
-object Item {
-    ItemID
+interface IItem {
+    GetItemID()
+    GetMaxAmount()
 }
 
-object ItemID {
-
+interface IMiningTool {
+    GetMiningSpeed()
+    UseDurability()
 }
 
-object BlockType {
-
+interface IWeapon {
+    GetStrength()
+    UseDurability()
 }
 
-object BlockShape {
-    
+interface IBlock {
+    Place()
 }
+
+interface IUseable {
+    Use()
+}
+
+class ピッケル
+class オノ
+class 剣
+
+class 土
+class 石
+
+class 弓
+class パン
+class 地図
+
+IItem <|.. IMiningTool
+IItem <|.. IWeapon
+IItem <|.. IBlock
+IItem <|.. IUseable
+
+IMiningTool <|.. ピッケル
+IMiningTool <|.. オノ
+
+IWeapon <|.. ピッケル
+IWeapon <|.. オノ
+IWeapon <|.. 剣
+
+IBlock <|.. 土
+IBlock <|.. 石
+
+IUseable <|.. 弓
+IUseable <|.. パン
+IUseable <|.. 地図
 
 @enduml
