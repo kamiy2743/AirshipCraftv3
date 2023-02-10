@@ -1,5 +1,4 @@
 using UnityEngine;
-using Domain;
 
 namespace UnityView.Rendering.Chunks
 {

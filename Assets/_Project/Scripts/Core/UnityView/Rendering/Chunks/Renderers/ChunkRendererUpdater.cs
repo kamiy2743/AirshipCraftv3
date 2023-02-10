@@ -1,6 +1,3 @@
-using Domain;
-using UnityView.Rendering.Chunks;
-
 namespace UnityView.Rendering.Chunks
 {
     class ChunkRendererUpdater
