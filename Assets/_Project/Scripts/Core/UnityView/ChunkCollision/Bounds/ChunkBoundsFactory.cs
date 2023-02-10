@@ -5,20 +5,20 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    internal class ChunkBoundsFactory
+    class ChunkBoundsFactory
     {
         // TODO 仮実装
-        private ChunkSurfaceProvider chunkSurfaceProvider;
+        readonly ChunkSurfaceProvider _chunkSurfaceProvider;
 
         internal ChunkBoundsFactory(ChunkSurfaceProvider chunkSurfaceProvider)
         {
-            this.chunkSurfaceProvider = chunkSurfaceProvider;
+            _chunkSurfaceProvider = chunkSurfaceProvider;
         }
 
         internal ChunkBounds Create(ChunkGridCoordinate chunkGridCoordinate)
         {
             var chunkBounds = new ChunkBounds(chunkGridCoordinate);
-            var chunkSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
+            var chunkSurface = _chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             for (int x = 0; x < Chunk.BlockSide; x++)
             {
@@ -30,7 +30,7 @@ namespace UnityView.ChunkCollision
                         // TODO 仮実装
                         var blockSurface = chunkSurface.GetBlockSurface(rc);
 
-                        if (!blockSurface.hasRenderingSurface)
+                        if (!blockSurface.HasRenderingSurface)
                         {
                             continue;
                         }

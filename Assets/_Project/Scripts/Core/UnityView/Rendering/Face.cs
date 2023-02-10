@@ -43,9 +43,9 @@ namespace UnityView.Rendering
                     return Face.Front;
                 case Direction.BackWard:
                     return Face.Back;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-
-            throw new Exception("実装漏れ");
         }
     }
 }

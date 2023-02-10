@@ -8,40 +8,40 @@ namespace UnityView.Players
 {
     public class BreakBlockHandler : IInitializable, IDisposable
     {
-        private IInputProvider inputProvider;
-        private FocusedBlockInfoProvider focusedBlockInfoProvider;
+        readonly IInputProvider _inputProvider;
+        readonly FocusedBlockInfoProvider _focusedBlockInfoProvider;
 
-        private Subject<Vector3> _onBreakBlock = new Subject<Vector3>();
+        readonly Subject<Vector3> _onBreakBlock = new Subject<Vector3>();
         public IObservable<Vector3> OnBreakBlock => _onBreakBlock;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable _disposals = new CompositeDisposable();
 
-        private const float breakBlockInterval = 0.5f;
+        const float BreakBlockInterval = 0.5f;
 
         internal BreakBlockHandler(IInputProvider inputProvider, FocusedBlockInfoProvider focusedBlockInfoProvider)
         {
-            this.inputProvider = inputProvider;
-            this.focusedBlockInfoProvider = focusedBlockInfoProvider;
+            _inputProvider = inputProvider;
+            _focusedBlockInfoProvider = focusedBlockInfoProvider;
         }
 
         public void Initialize()
         {
-            var breakBlockStream = Observable.EveryUpdate().Where(_ => inputProvider.BreakBlock());
-            var stopBreakBlockStream = Observable.EveryUpdate().Where(_ => !inputProvider.BreakBlock());
+            var breakBlockStream = Observable.EveryUpdate().Where(_ => _inputProvider.BreakBlock());
+            var stopBreakBlockStream = Observable.EveryUpdate().Where(_ => !_inputProvider.BreakBlock());
 
             FocusedBlockInfo focusedBlockInfo = null;
             breakBlockStream
-                .Where(_ => focusedBlockInfoProvider.TryGetFocusedBlockInfo(out focusedBlockInfo))
-                .ThrottleFirst(TimeSpan.FromSeconds(breakBlockInterval))
+                .Where(_ => _focusedBlockInfoProvider.TryGetFocusedBlockInfo(out focusedBlockInfo))
+                .ThrottleFirst(TimeSpan.FromSeconds(BreakBlockInterval))
                 .TakeUntil(stopBreakBlockStream)
                 .Repeat()
-                .Subscribe(_ => _onBreakBlock.OnNext(focusedBlockInfo.pivotCoordinate))
-                .AddTo(disposals);
+                .Subscribe(_ => _onBreakBlock.OnNext(focusedBlockInfo.PivotCoordinate))
+                .AddTo(_disposals);
         }
 
         public void Dispose()
         {
-            disposals.Dispose();
+            _disposals.Dispose();
         }
     }
 }

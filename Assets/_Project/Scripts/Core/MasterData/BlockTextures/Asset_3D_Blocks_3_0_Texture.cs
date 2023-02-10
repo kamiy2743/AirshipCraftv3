@@ -7,20 +7,20 @@ using UnityView.Rendering;
 namespace MasterData
 {
     [Serializable]
-    internal record Asset_3D_Blocks_3_0_Texture : IDisposable
+    record Asset_3D_Blocks_3_0_Texture : IDisposable
     {
         public BlockType blockType;
         public Texture2D texture;
 
-        private int size => texture.width / 2;
-        private List<Texture> createdTextures = new List<Texture>();
+        int Size => texture.width / 2;
+        List<Texture> _createdTextures = new List<Texture>();
 
         public SixFaceTexture ToSixFaceTexture()
         {
-            var rightLeftPixels = texture.GetPixels(0, 0, size, size);
-            var forwardBackwardPixels = texture.GetPixels(size, 0, size, size);
-            var topPixels = texture.GetPixels(size, size, size, size);
-            var bottomPixels = texture.GetPixels(0, size, size, size);
+            var rightLeftPixels = texture.GetPixels(0, 0, Size, Size);
+            var forwardBackwardPixels = texture.GetPixels(Size, 0, Size, Size);
+            var topPixels = texture.GetPixels(Size, Size, Size, Size);
+            var bottomPixels = texture.GetPixels(0, Size, Size, Size);
 
             var rightLeftTexture = CreateTexture(rightLeftPixels);
             var forwardBackwardTexture = CreateTexture(forwardBackwardPixels);
@@ -37,20 +37,20 @@ namespace MasterData
             );
         }
 
-        private Texture2D CreateTexture(Color[] pixels)
+        Texture2D CreateTexture(Color[] pixels)
         {
-            var texture = new Texture2D(size, size);
+            var texture = new Texture2D(Size, Size);
 
             texture.SetPixels(pixels);
             texture.Apply();
-            createdTextures.Add(texture);
+            _createdTextures.Add(texture);
 
             return texture;
         }
 
         public void Dispose()
         {
-            foreach (var texture in createdTextures)
+            foreach (var texture in _createdTextures)
             {
                 MonoBehaviour.Destroy(texture);
             }

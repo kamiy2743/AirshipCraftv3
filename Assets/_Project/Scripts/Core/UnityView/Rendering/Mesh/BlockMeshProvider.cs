@@ -4,26 +4,20 @@ using Domain;
 
 namespace UnityView.Rendering
 {
-    internal class BlockMeshProvider
+    class BlockMeshProvider
     {
-        private BlockMeshFactory blockMeshFactory;
-        private IBlockShapeMeshProvider blockShapeMeshProvider;
-
-        private BlockMesh air;
-        private Dictionary<BlockType, BlockMesh> blockMeshes = new Dictionary<BlockType, BlockMesh>();
+        readonly BlockMesh _air;
+        readonly Dictionary<BlockType, BlockMesh> _blockMeshes = new Dictionary<BlockType, BlockMesh>();
 
         internal BlockMeshProvider(BlockMeshFactory blockMeshFactory, IBlockShapeMeshProvider blockShapeMeshProvider)
         {
-            this.blockMeshFactory = blockMeshFactory;
-            this.blockShapeMeshProvider = blockShapeMeshProvider;
-
-            air = blockMeshFactory.Create(BlockType.Air, new Vector3[0], new int[0], new Vector2[0]);
+            _air = blockMeshFactory.Create(BlockType.Air, new Vector3[0], new int[0], new Vector2[0]);
 
             foreach (var blockType in BlockTypeExt.Array)
             {
                 var cubeMesh = blockShapeMeshProvider.GetMesh(BlockShape.Cube);
                 var blockMesh = blockMeshFactory.Create(blockType, cubeMesh.vertices, cubeMesh.triangles, cubeMesh.uv);
-                blockMeshes.Add(blockType, blockMesh);
+                _blockMeshes.Add(blockType, blockMesh);
             }
         }
 
@@ -31,10 +25,10 @@ namespace UnityView.Rendering
         {
             if (blockType == BlockType.Air)
             {
-                return air;
+                return _air;
             }
 
-            return blockMeshes[blockType];
+            return _blockMeshes[blockType];
         }
     }
 }

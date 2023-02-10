@@ -4,15 +4,15 @@ using Domain;
 
 namespace UnityView.Rendering
 {
-    internal record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
+    record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
     {
-        private Texture2D texture;
-        internal int Size => texture.width;
+        readonly Texture2D _texture;
+        internal int Size => _texture.width;
 
         internal SixFaceTextureAtlas(ISixFaceTextureProvider sixFaceTextureProvider)
         {
             var textureSize = CalcTextureSize();
-            texture = new Texture2D(textureSize, textureSize);
+            _texture = new Texture2D(textureSize, textureSize);
 
             foreach (var blockType in BlockTypeExt.Array)
             {
@@ -22,20 +22,20 @@ namespace UnityView.Rendering
                 }
 
                 var pivot = GetPivot(blockType);
-                var size = SixFaceTexture.Size;
+                const int size = SixFaceTexture.Size;
 
-                texture.SetPixels(pivot.x + size * 0, pivot.y, size, size, sixFaceTexture.GetFace(Face.Right).GetPixels());
-                texture.SetPixels(pivot.x + size * 1, pivot.y, size, size, sixFaceTexture.GetFace(Face.Left).GetPixels());
-                texture.SetPixels(pivot.x + size * 2, pivot.y, size, size, sixFaceTexture.GetFace(Face.Top).GetPixels());
-                texture.SetPixels(pivot.x + size * 3, pivot.y, size, size, sixFaceTexture.GetFace(Face.Bottom).GetPixels());
-                texture.SetPixels(pivot.x + size * 4, pivot.y, size, size, sixFaceTexture.GetFace(Face.Front).GetPixels());
-                texture.SetPixels(pivot.x + size * 5, pivot.y, size, size, sixFaceTexture.GetFace(Face.Back).GetPixels());
+                _texture.SetPixels(pivot.x + size * 0, pivot.y, size, size, sixFaceTexture.GetFace(Face.Right).GetPixels());
+                _texture.SetPixels(pivot.x + size * 1, pivot.y, size, size, sixFaceTexture.GetFace(Face.Left).GetPixels());
+                _texture.SetPixels(pivot.x + size * 2, pivot.y, size, size, sixFaceTexture.GetFace(Face.Top).GetPixels());
+                _texture.SetPixels(pivot.x + size * 3, pivot.y, size, size, sixFaceTexture.GetFace(Face.Bottom).GetPixels());
+                _texture.SetPixels(pivot.x + size * 4, pivot.y, size, size, sixFaceTexture.GetFace(Face.Front).GetPixels());
+                _texture.SetPixels(pivot.x + size * 5, pivot.y, size, size, sixFaceTexture.GetFace(Face.Back).GetPixels());
             }
-            texture.Apply();
+            _texture.Apply();
         }
 
         // ブロックのテクスチャを整列して並べられて、かつ2にべき乗のサイズを計算する
-        private int CalcTextureSize()
+        static int CalcTextureSize()
         {
             var x = Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, SixFaceTexture.TextureCount));
             var y = Mathf.CeilToInt(Mathf.Log(SixFaceTexture.Size * SixFaceTexture.TextureCount * x, 2));
@@ -46,7 +46,7 @@ namespace UnityView.Rendering
 
         public Texture2D GetAtlas()
         {
-            return texture;
+            return _texture;
         }
 
         internal Vector2Int GetPivot(BlockType blockType)
@@ -57,7 +57,7 @@ namespace UnityView.Rendering
 
         public void Dispose()
         {
-            MonoBehaviour.Destroy(texture);
+            MonoBehaviour.Destroy(_texture);
         }
     }
 }

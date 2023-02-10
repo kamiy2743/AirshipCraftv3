@@ -4,29 +4,29 @@ namespace UnityView.Rendering.Chunks
 {
     public class BlockUpdateApplier
     {
-        private UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator;
-        private ChunkRendererUpdater chunkRendererUpdater;
-        private ChunkMeshFactory chunkMeshFactory;
-        private IChunkSurfaceRepository chunkSurfaceRepository;
+        readonly UpdatedChunkSurfaceCalculator _updatedChunkSurfaceCalculator;
+        readonly ChunkRendererUpdater _chunkRendererUpdater;
+        readonly ChunkMeshFactory _chunkMeshFactory;
+        readonly IChunkSurfaceRepository _chunkSurfaceRepository;
 
         internal BlockUpdateApplier(UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator, ChunkRendererUpdater chunkRendererUpdater, ChunkMeshFactory chunkMeshFactory, IChunkSurfaceRepository chunkSurfaceRepository)
         {
-            this.updatedChunkSurfaceCalculator = updatedChunkSurfaceCalculator;
-            this.chunkRendererUpdater = chunkRendererUpdater;
-            this.chunkMeshFactory = chunkMeshFactory;
-            this.chunkSurfaceRepository = chunkSurfaceRepository;
+            _updatedChunkSurfaceCalculator = updatedChunkSurfaceCalculator;
+            _chunkRendererUpdater = chunkRendererUpdater;
+            _chunkMeshFactory = chunkMeshFactory;
+            _chunkSurfaceRepository = chunkSurfaceRepository;
         }
 
         public void Apply(BlockGridCoordinate updateCoordinate)
         {
-            var results = updatedChunkSurfaceCalculator.Calculate(updateCoordinate);
+            var results = _updatedChunkSurfaceCalculator.Calculate(updateCoordinate);
 
             foreach (var chunkSurface in results)
             {
-                chunkSurfaceRepository.Store(chunkSurface);
+                _chunkSurfaceRepository.Store(chunkSurface);
 
-                var mesh = chunkMeshFactory.Create(chunkSurface.chunkGridCoordinate);
-                chunkRendererUpdater.Update(mesh);
+                var mesh = _chunkMeshFactory.Create(chunkSurface.ChunkGridCoordinate);
+                _chunkRendererUpdater.Update(mesh);
             }
         }
     }

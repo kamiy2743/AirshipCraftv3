@@ -9,22 +9,22 @@ using Cysharp.Threading.Tasks;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class RenderingAroundPlayer : IInitializable, IDisposable
+    class RenderingAroundPlayer : IInitializable, IDisposable
     {
-        private InSightChunkCreator inSightChunkCreator;
-        private OutOfRangeChunkDisposer outOfRangeChunkDisposer;
-        private PlayerChunkProvider playerChunkProvider;
+        readonly InSightChunkCreator _inSightChunkCreator;
+        readonly OutOfRangeChunkDisposer _outOfRangeChunkDisposer;
+        readonly PlayerChunkProvider _playerChunkProvider;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
-        private CancellationTokenSource cts;
+        readonly CompositeDisposable _disposals = new CompositeDisposable();
+        CancellationTokenSource _cts;
 
-        private const int MaxRenderingRadius = 16;
+        const int MaxRenderingRadius = 16;
 
         internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkDisposer, PlayerChunkProvider playerChunkProvider)
         {
-            this.inSightChunkCreator = inSightChunkCreator;
-            this.outOfRangeChunkDisposer = outOfRangeChunkDisposer;
-            this.playerChunkProvider = playerChunkProvider;
+            _inSightChunkCreator = inSightChunkCreator;
+            _outOfRangeChunkDisposer = outOfRangeChunkDisposer;
+            _playerChunkProvider = playerChunkProvider;
         }
 
         public void Initialize()
@@ -34,27 +34,27 @@ namespace UnityView.Rendering.Chunks
                 .ThrottleFirstFrame(5)
                 .Subscribe(_ =>
                 {
-                    var playerChunk = playerChunkProvider.GetPlayerChunk();
+                    var playerChunk = _playerChunkProvider.GetPlayerChunk();
 
-                    outOfRangeChunkDisposer.Execute(playerChunk, MaxRenderingRadius);
+                    _outOfRangeChunkDisposer.Execute(playerChunk, MaxRenderingRadius);
 
-                    if (cts is not null)
+                    if (_cts is not null)
                     {
-                        cts.Cancel();
-                        cts.Dispose();
+                        _cts.Cancel();
+                        _cts.Dispose();
                     }
 
-                    cts = new CancellationTokenSource();
-                    inSightChunkCreator.ExecuteAsync(playerChunk, MaxRenderingRadius, cts.Token).Forget();
+                    _cts = new CancellationTokenSource();
+                    _inSightChunkCreator.ExecuteAsync(playerChunk, MaxRenderingRadius, _cts.Token).Forget();
                 })
-                .AddTo(disposals);
+                .AddTo(_disposals);
         }
 
         public void Dispose()
         {
-            disposals.Dispose();
-            cts?.Cancel();
-            cts?.Dispose();
+            _disposals.Dispose();
+            _cts?.Cancel();
+            _cts?.Dispose();
         }
     }
 }

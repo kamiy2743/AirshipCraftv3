@@ -4,11 +4,11 @@ using Domain;
 
 namespace UnityView.Rendering
 {
-    internal record BlockMesh
+    record BlockMesh
     {
-        internal readonly MeshData value;
-        private Dictionary<Face, MeshData> faceMeshes;
-        internal readonly MeshData otherPart;
+        internal readonly MeshData Value;
+        readonly Dictionary<Face, MeshData> _faceMeshes;
+        internal readonly MeshData OtherPart;
 
         internal BlockMesh(
             MeshData value,
@@ -20,18 +20,18 @@ namespace UnityView.Rendering
             MeshData backFace,
             MeshData otherPart)
         {
-            this.value = value;
-            this.otherPart = otherPart;
+            Value = value;
+            OtherPart = otherPart;
 
-            faceMeshes = new Dictionary<Face, MeshData>(FaceExt.ElemCount);
-            faceMeshes[Face.Right] = rightFace;
-            faceMeshes[Face.Left] = leftFace;
-            faceMeshes[Face.Top] = topFace;
-            faceMeshes[Face.Bottom] = bottomFace;
-            faceMeshes[Face.Front] = frontFace;
-            faceMeshes[Face.Back] = backFace;
+            _faceMeshes = new Dictionary<Face, MeshData>(FaceExt.ElemCount);
+            _faceMeshes[Face.Right] = rightFace;
+            _faceMeshes[Face.Left] = leftFace;
+            _faceMeshes[Face.Top] = topFace;
+            _faceMeshes[Face.Bottom] = bottomFace;
+            _faceMeshes[Face.Front] = frontFace;
+            _faceMeshes[Face.Back] = backFace;
         }
 
-        internal MeshData GetFaceMesh(Face face) => faceMeshes[face];
+        internal MeshData GetFaceMesh(Face face) => _faceMeshes[face];
     }
 }

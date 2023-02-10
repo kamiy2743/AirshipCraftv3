@@ -4,24 +4,24 @@ using Domain;
 
 namespace UnityView.ChunkCollision
 {
-    internal class CreatedColliders
+    class CreatedColliders
     {
-        private Dictionary<ChunkGridCoordinate, ChunkCollider> colliders = new Dictionary<ChunkGridCoordinate, ChunkCollider>();
-        internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => colliders.Keys.ToList();
+        readonly Dictionary<ChunkGridCoordinate, ChunkCollider> _colliders = new Dictionary<ChunkGridCoordinate, ChunkCollider>();
+        internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => _colliders.Keys.ToList();
 
         internal void Add(ChunkGridCoordinate chunkGridCoordinate, ChunkCollider collider)
         {
-            colliders.Add(chunkGridCoordinate, collider);
+            _colliders.Add(chunkGridCoordinate, collider);
         }
 
         internal bool Contains(ChunkGridCoordinate chunkGridCoordinate)
         {
-            return colliders.ContainsKey(chunkGridCoordinate);
+            return _colliders.ContainsKey(chunkGridCoordinate);
         }
 
         internal bool TryGetValue(ChunkGridCoordinate chunkGridCoordinate, out ChunkCollider result)
         {
-            return colliders.TryGetValue(chunkGridCoordinate, out result);
+            return _colliders.TryGetValue(chunkGridCoordinate, out result);
         }
 
         internal void Dispose(ChunkGridCoordinate chunkGridCoordinate)
@@ -32,7 +32,7 @@ namespace UnityView.ChunkCollision
                 return;
             }
             result.Dispose();
-            colliders.Remove(chunkGridCoordinate);
+            _colliders.Remove(chunkGridCoordinate);
         }
     }
 }

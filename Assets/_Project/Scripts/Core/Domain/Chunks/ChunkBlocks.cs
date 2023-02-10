@@ -2,42 +2,42 @@ using System;
 
 namespace Domain.Chunks
 {
-    internal class ChunkBlocks
+    class ChunkBlocks
     {
-        internal readonly Block[] blocks;
+        readonly Block[] _blocks;
 
         internal ChunkBlocks()
         {
-            blocks = new Block[Chunk.BlocksCount];
+            _blocks = new Block[Chunk.BlocksCount];
         }
 
         internal ChunkBlocks(Block[] blocks)
         {
             if (blocks.Length != Chunk.BlocksCount) throw new ArgumentException("");
-            this.blocks = blocks;
+            _blocks = blocks;
         }
 
         internal Block GetBlock(RelativeCoordinate relativeCoordinate)
         {
-            return blocks[RelativeCoordinateToIndex(relativeCoordinate)];
+            return _blocks[RelativeCoordinateToIndex(relativeCoordinate)];
         }
 
         internal void SetBlock(RelativeCoordinate relativeCoordinate, Block block)
         {
-            blocks[RelativeCoordinateToIndex(relativeCoordinate)] = block;
+            _blocks[RelativeCoordinateToIndex(relativeCoordinate)] = block;
         }
 
-        private int RelativeCoordinateToIndex(RelativeCoordinate rc)
+        static int RelativeCoordinateToIndex(RelativeCoordinate rc)
         {
-            return (rc.x << (Chunk.BlockSideShift * 2)) + (rc.y << Chunk.BlockSideShift) + rc.z;
+            return (rc.X << (Chunk.BlockSideShift * 2)) + (rc.Y << Chunk.BlockSideShift) + rc.Z;
         }
 
         internal ChunkBlocks DeepCopy()
         {
-            var blocksCopy = new Block[blocks.Length];
-            for (int i = 0; i < blocks.Length; i++)
+            var blocksCopy = new Block[_blocks.Length];
+            for (int i = 0; i < _blocks.Length; i++)
             {
-                blocksCopy[i] = blocks[i].DeepCopy();
+                blocksCopy[i] = _blocks[i].DeepCopy();
             }
 
             return new ChunkBlocks(blocksCopy);

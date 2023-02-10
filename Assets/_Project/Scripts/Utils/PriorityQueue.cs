@@ -6,9 +6,9 @@ namespace Utils
 {
     public class PriorityQueue<T> where T : IComparable<T>
     {
-        private readonly T[] _array;
-        private readonly IComparer<T> _comparer;
-        public int Count { get; private set; } = 0;
+        readonly T[] _array;
+        readonly IComparer<T> _comparer;
+        public int Count { get; set; } = 0;
 
         public PriorityQueue(int capacity, IComparer<T> comparer = null)
         {
@@ -21,7 +21,7 @@ namespace Utils
         /// </summary>
         public void Enqueue(T item)
         {
-            _array[this.Count] = item;
+            _array[Count] = item;
             Count += 1;
 
             var n = Count - 1;                  // 末尾(追加した)のノードの番号
@@ -46,7 +46,7 @@ namespace Utils
         /// </summary>
         public T Dequeue()
         {
-            Swap(0, this.Count - 1);            // 先頭要素を末尾にする
+            Swap(0, Count - 1);            // 先頭要素を末尾にする
             Count -= 1;
 
             var parent = 0;                     // 親ノードの番号
@@ -87,13 +87,13 @@ namespace Utils
             }
         }
 
-        private int Compare(T a, T b)
+        int Compare(T a, T b)
         {
             if (_comparer == null) return a.CompareTo(b);
             return _comparer.Compare(a, b);
         }
 
-        private void Swap(int a, int b)
+        void Swap(int a, int b)
         {
             var tmp = _array[a];
             _array[a] = _array[b];

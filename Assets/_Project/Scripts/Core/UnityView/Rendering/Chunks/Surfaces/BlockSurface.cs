@@ -2,19 +2,19 @@ using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal record BlockSurface
+    record BlockSurface
     {
-        private readonly byte surfacesByte;
-        internal byte SurfaceByteDebug => surfacesByte;
+        readonly byte _surfacesByte;
+        internal byte SurfaceByteDebug => _surfacesByte;
 
-        internal readonly bool hasRenderingSurface;
+        internal readonly bool HasRenderingSurface;
 
         internal static readonly BlockSurface Empty = CreateEmpty();
 
         internal BlockSurface()
         {
-            surfacesByte = 0;
-            hasRenderingSurface = false;
+            _surfacesByte = 0;
+            HasRenderingSurface = false;
         }
 
         internal BlockSurface(params Face[] faces)
@@ -25,35 +25,35 @@ namespace UnityView.Rendering.Chunks
                 result += face;
             }
 
-            surfacesByte = result.surfacesByte;
-            hasRenderingSurface = true;
+            _surfacesByte = result._surfacesByte;
+            HasRenderingSurface = true;
         }
 
-        private BlockSurface(byte surfacesByte)
+        BlockSurface(byte surfacesByte)
         {
-            this.surfacesByte = surfacesByte;
-            hasRenderingSurface = surfacesByte > 0;
+            _surfacesByte = surfacesByte;
+            HasRenderingSurface = surfacesByte > 0;
         }
 
-        private static BlockSurface CreateEmpty()
+        static BlockSurface CreateEmpty()
         {
             return new BlockSurface((byte)0);
         }
 
         internal bool Contains(Face face)
         {
-            return (surfacesByte & (byte)face) > 0;
+            return (_surfacesByte & (byte)face) > 0;
         }
 
         public static BlockSurface operator +(BlockSurface renderingSurface, Face face)
         {
-            var result = renderingSurface.surfacesByte | (byte)face;
+            var result = renderingSurface._surfacesByte | (byte)face;
             return new BlockSurface((byte)result);
         }
 
         public static BlockSurface operator -(BlockSurface renderingSurface, Face face)
         {
-            var result = renderingSurface.surfacesByte ^ (byte)face;
+            var result = renderingSurface._surfacesByte ^ (byte)face;
             return new BlockSurface((byte)result);
         }
     }

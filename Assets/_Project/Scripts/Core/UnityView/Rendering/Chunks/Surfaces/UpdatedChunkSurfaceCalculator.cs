@@ -4,15 +4,15 @@ using Domain.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class UpdatedChunkSurfaceCalculator
+    class UpdatedChunkSurfaceCalculator
     {
-        private IChunkProvider chunkProvider;
-        private ChunkSurfaceProvider chunkSurfaceProvider;
+        readonly IChunkProvider _chunkProvider;
+        readonly ChunkSurfaceProvider _chunkSurfaceProvider;
 
         internal UpdatedChunkSurfaceCalculator(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider)
         {
-            this.chunkProvider = chunkProvider;
-            this.chunkSurfaceProvider = chunkSurfaceProvider;
+            _chunkProvider = chunkProvider;
+            _chunkSurfaceProvider = chunkSurfaceProvider;
         }
 
         internal IEnumerable<ChunkSurface> Calculate(BlockGridCoordinate updateCoordinate)
@@ -21,7 +21,7 @@ namespace UnityView.Rendering.Chunks
             var targetBlockSurface = new BlockSurface();
             var targetChunkGridCoordinate = ChunkGridCoordinate.Parse(updateCoordinate);
             var targetRelativeCoordinate = RelativeCoordinate.Parse(updateCoordinate);
-            var targetBlockType = chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate).blockType;
+            var targetBlockType = _chunkProvider.GetChunk(targetChunkGridCoordinate).GetBlock(targetRelativeCoordinate).BlockType;
 
             foreach (var direction in DirectionExt.Array)
             {
@@ -33,7 +33,7 @@ namespace UnityView.Rendering.Chunks
 
                 var adjacentChunkGridCoordinate = ChunkGridCoordinate.Parse(adjacentCoordinate);
                 var adjacentRelativeCoordinate = RelativeCoordinate.Parse(adjacentCoordinate);
-                var adjacentBlockType = chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate).blockType;
+                var adjacentBlockType = _chunkProvider.GetChunk(adjacentChunkGridCoordinate).GetBlock(adjacentRelativeCoordinate).BlockType;
 
                 if (targetBlockType != BlockType.Air)
                 {
@@ -51,7 +51,7 @@ namespace UnityView.Rendering.Chunks
 
                 if (!updatedChunkSurfaces.TryGetValue(adjacentChunkGridCoordinate, out var adjacentChunkSurface))
                 {
-                    adjacentChunkSurface = chunkSurfaceProvider.GetChunkSurface(adjacentChunkGridCoordinate);
+                    adjacentChunkSurface = _chunkSurfaceProvider.GetChunkSurface(adjacentChunkGridCoordinate);
                 }
 
                 var currentSurface = adjacentChunkSurface.GetBlockSurface(adjacentRelativeCoordinate);
@@ -79,7 +79,7 @@ namespace UnityView.Rendering.Chunks
             {
                 if (!updatedChunkSurfaces.TryGetValue(targetChunkGridCoordinate, out var targetChunkSurface))
                 {
-                    targetChunkSurface = chunkSurfaceProvider.GetChunkSurface(targetChunkGridCoordinate);
+                    targetChunkSurface = _chunkSurfaceProvider.GetChunkSurface(targetChunkGridCoordinate);
                 }
 
                 targetChunkSurface.SetBlockSurfaceDirectly(targetRelativeCoordinate, targetBlockSurface);

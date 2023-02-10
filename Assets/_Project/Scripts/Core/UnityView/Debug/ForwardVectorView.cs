@@ -6,13 +6,13 @@ using TMPro;
 
 namespace UnityView.Debug
 {
-    internal class ForwardVectorView : MonoBehaviour
+    class ForwardVectorView : MonoBehaviour
     {
-        [Inject] private PlayerCamera playerCamera;
+        [Inject] PlayerCamera playerCamera;
 
-        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] TextMeshProUGUI text;
 
-        private void Update()
+        void Update()
         {
             var xColor = "black";
             if (playerCamera.Forward.x >= 0.5f) xColor = "red";

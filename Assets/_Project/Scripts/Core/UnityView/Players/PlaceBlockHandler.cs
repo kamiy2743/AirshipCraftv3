@@ -8,49 +8,49 @@ namespace UnityView.Players
 {
     public class PlaceBlockHandler : IInitializable, IDisposable
     {
-        private IInputProvider inputProvider;
-        private FocusedBlockInfoProvider focusedBlockInfoProvider;
+        readonly IInputProvider _inputProvider;
+        readonly FocusedBlockInfoProvider _focusedBlockInfoProvider;
 
-        private Subject<Vector3> _onPlaceBlock = new Subject<Vector3>();
+        readonly Subject<Vector3> _onPlaceBlock = new Subject<Vector3>();
         public IObservable<Vector3> OnPlaceBlock => _onPlaceBlock;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable _disposals = new CompositeDisposable();
 
-        private const float placeBlockInterval = 0.5f;
+        const float PlaceBlockInterval = 0.5f;
 
         internal PlaceBlockHandler(IInputProvider inputProvider, FocusedBlockInfoProvider focusedBlockInfoProvider)
         {
-            this.inputProvider = inputProvider;
-            this.focusedBlockInfoProvider = focusedBlockInfoProvider;
+            _inputProvider = inputProvider;
+            _focusedBlockInfoProvider = focusedBlockInfoProvider;
         }
 
         public void Initialize()
         {
-            var placeBlockStream = Observable.EveryUpdate().Where(_ => inputProvider.PlaceBlock());
-            var stopPlaceBlockStream = Observable.EveryUpdate().Where(_ => !inputProvider.PlaceBlock());
+            var placeBlockStream = Observable.EveryUpdate().Where(_ => _inputProvider.PlaceBlock());
+            var stopPlaceBlockStream = Observable.EveryUpdate().Where(_ => !_inputProvider.PlaceBlock());
 
             FocusedBlockInfo focusedBlockInfo = null;
             placeBlockStream
-                .Where(_ => focusedBlockInfoProvider.TryGetFocusedBlockInfo(out focusedBlockInfo))
-                .ThrottleFirst(TimeSpan.FromSeconds(placeBlockInterval))
+                .Where(_ => _focusedBlockInfoProvider.TryGetFocusedBlockInfo(out focusedBlockInfo))
+                .ThrottleFirst(TimeSpan.FromSeconds(PlaceBlockInterval))
                 .TakeUntil(stopPlaceBlockStream)
                 .Repeat()
                 .Subscribe(_ =>
                 {
-                    var placePosition = focusedBlockInfo.hitPoint;
-                    var hitNormal = focusedBlockInfo.hitNormal;
+                    var placePosition = focusedBlockInfo.HitPoint;
+                    var hitNormal = focusedBlockInfo.HitNormal;
                     if (hitNormal.x < 0) placePosition.x += hitNormal.x;
                     if (hitNormal.y < 0) placePosition.y += hitNormal.y;
                     if (hitNormal.z < 0) placePosition.z += hitNormal.z;
 
                     _onPlaceBlock.OnNext(placePosition);
                 })
-                .AddTo(disposals);
+                .AddTo(_disposals);
         }
 
         public void Dispose()
         {
-            disposals.Dispose();
+            _disposals.Dispose();
         }
     }
 }

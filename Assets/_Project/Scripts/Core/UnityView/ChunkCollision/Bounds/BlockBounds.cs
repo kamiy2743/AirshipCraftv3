@@ -2,15 +2,15 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    internal record BlockBounds
+    record BlockBounds
     {
-        internal readonly float3 center;
-        internal readonly float3 size;
+        internal readonly float3 Center;
+        internal readonly float3 Size;
 
-        internal BlockBounds(float3 center, float3 size)
+        BlockBounds(float3 center, float3 size)
         {
-            this.center = center;
-            this.size = size;
+            Center = center;
+            Size = size;
         }
 
         internal static BlockBounds CreateCubeBounds(float3 pivot)

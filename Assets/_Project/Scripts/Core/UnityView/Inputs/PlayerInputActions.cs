@@ -996,18 +996,18 @@ namespace UnityView.Inputs
         }
 
         // Player
-        private readonly InputActionMap m_Player;
-        private IPlayerActions m_PlayerActionsCallbackInterface;
-        private readonly InputAction m_Player_HorizontalMove;
-        private readonly InputAction m_Player_VerticalMove;
-        private readonly InputAction m_Player_Look;
-        private readonly InputAction m_Player_Jump;
-        private readonly InputAction m_Player_PlaceBlock;
-        private readonly InputAction m_Player_BreakBlock;
-        private readonly InputAction m_Player_InteractBlock;
+        readonly InputActionMap m_Player;
+        IPlayerActions m_PlayerActionsCallbackInterface;
+        readonly InputAction m_Player_HorizontalMove;
+        readonly InputAction m_Player_VerticalMove;
+        readonly InputAction m_Player_Look;
+        readonly InputAction m_Player_Jump;
+        readonly InputAction m_Player_PlaceBlock;
+        readonly InputAction m_Player_BreakBlock;
+        readonly InputAction m_Player_InteractBlock;
         public struct PlayerActions
         {
-            private @PlayerInputActions m_Wrapper;
+            @PlayerInputActions m_Wrapper;
             public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @HorizontalMove => m_Wrapper.m_Player_HorizontalMove;
             public InputAction @VerticalMove => m_Wrapper.m_Player_VerticalMove;
@@ -1077,21 +1077,21 @@ namespace UnityView.Inputs
         public PlayerActions @Player => new PlayerActions(this);
 
         // UI
-        private readonly InputActionMap m_UI;
-        private IUIActions m_UIActionsCallbackInterface;
-        private readonly InputAction m_UI_Navigate;
-        private readonly InputAction m_UI_Submit;
-        private readonly InputAction m_UI_Cancel;
-        private readonly InputAction m_UI_Point;
-        private readonly InputAction m_UI_Click;
-        private readonly InputAction m_UI_ScrollWheel;
-        private readonly InputAction m_UI_MiddleClick;
-        private readonly InputAction m_UI_RightClick;
-        private readonly InputAction m_UI_TrackedDevicePosition;
-        private readonly InputAction m_UI_TrackedDeviceOrientation;
+        readonly InputActionMap m_UI;
+        IUIActions m_UIActionsCallbackInterface;
+        readonly InputAction m_UI_Navigate;
+        readonly InputAction m_UI_Submit;
+        readonly InputAction m_UI_Cancel;
+        readonly InputAction m_UI_Point;
+        readonly InputAction m_UI_Click;
+        readonly InputAction m_UI_ScrollWheel;
+        readonly InputAction m_UI_MiddleClick;
+        readonly InputAction m_UI_RightClick;
+        readonly InputAction m_UI_TrackedDevicePosition;
+        readonly InputAction m_UI_TrackedDeviceOrientation;
         public struct UIActions
         {
-            private @PlayerInputActions m_Wrapper;
+            @PlayerInputActions m_Wrapper;
             public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
             public InputAction @Submit => m_Wrapper.m_UI_Submit;
@@ -1180,7 +1180,7 @@ namespace UnityView.Inputs
             }
         }
         public UIActions @UI => new UIActions(this);
-        private int m_KeyboardMouseSchemeIndex = -1;
+        int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
             get
@@ -1189,7 +1189,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
             }
         }
-        private int m_GamepadSchemeIndex = -1;
+        int m_GamepadSchemeIndex = -1;
         public InputControlScheme GamepadScheme
         {
             get
@@ -1198,7 +1198,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_GamepadSchemeIndex];
             }
         }
-        private int m_TouchSchemeIndex = -1;
+        int m_TouchSchemeIndex = -1;
         public InputControlScheme TouchScheme
         {
             get
@@ -1207,7 +1207,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_TouchSchemeIndex];
             }
         }
-        private int m_JoystickSchemeIndex = -1;
+        int m_JoystickSchemeIndex = -1;
         public InputControlScheme JoystickScheme
         {
             get
@@ -1216,7 +1216,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_JoystickSchemeIndex];
             }
         }
-        private int m_XRSchemeIndex = -1;
+        int m_XRSchemeIndex = -1;
         public InputControlScheme XRScheme
         {
             get

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityView.Inputs
 {
-    internal interface IInputProvider
+    interface IInputProvider
     {
         Vector3 DebugFly();
         bool PlaceBlock();

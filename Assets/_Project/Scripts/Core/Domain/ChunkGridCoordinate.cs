@@ -6,9 +6,9 @@ namespace Domain
 {
     public record ChunkGridCoordinate
     {
-        public readonly int x;
-        public readonly int y;
-        public readonly int z;
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
 
         // TODO ワールド端のチャンクを実装する
         internal const int Max = short.MaxValue - 1;
@@ -21,12 +21,12 @@ namespace Domain
                 throw new ArgumentException($"{x}, {y}, {z}");
             }
 
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
-        private bool IsValid(int x, int y, int z)
+        static bool IsValid(int x, int y, int z)
         {
             if (x > Max || x < Min) return false;
             if (y > Max || y < Min) return false;
@@ -34,7 +34,7 @@ namespace Domain
             return true;
         }
 
-        public static bool TryConstruct(int x, int y, int z, out ChunkGridCoordinate result)
+        static bool TryConstruct(int x, int y, int z, out ChunkGridCoordinate result)
         {
             try
             {
@@ -50,20 +50,20 @@ namespace Domain
 
         public bool TryAdd(int3 value, out ChunkGridCoordinate result)
         {
-            return TryConstruct(this.x + value.x, this.y + value.y, this.z + value.z, out result);
+            return TryConstruct(X + value.x, Y + value.y, Z + value.z, out result);
         }
 
         public float3 ToPivotCoordinate()
         {
-            return new float3(x, y, z) * Chunk.BlockSide;
+            return new float3(X, Y, Z) * Chunk.BlockSide;
         }
 
         public static ChunkGridCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
         {
             return new ChunkGridCoordinate(
-                (short)(blockGridCoordinate.x >> Chunk.BlockSideShift),
-                (short)(blockGridCoordinate.y >> Chunk.BlockSideShift),
-                (short)(blockGridCoordinate.z >> Chunk.BlockSideShift)
+                (short)(blockGridCoordinate.X >> Chunk.BlockSideShift),
+                (short)(blockGridCoordinate.Y >> Chunk.BlockSideShift),
+                (short)(blockGridCoordinate.Z >> Chunk.BlockSideShift)
             );
         }
     }

@@ -5,17 +5,17 @@ using UniRx;
 
 namespace UnityView.Players
 {
-    internal class PlayerChunkProvider : IDisposable
+    class PlayerChunkProvider : IDisposable
     {
-        private Subject<ChunkGridCoordinate> _onPlayerChunkChanged = new Subject<ChunkGridCoordinate>();
+        readonly Subject<ChunkGridCoordinate> _onPlayerChunkChanged = new Subject<ChunkGridCoordinate>();
         internal IObservable<ChunkGridCoordinate> OnPlayerChunkChanged => _onPlayerChunkChanged;
 
-        private Transform playerTransform;
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly Transform _playerTransform;
+        readonly CompositeDisposable _disposals = new CompositeDisposable();
 
         internal PlayerChunkProvider(Transform playerTransform)
         {
-            this.playerTransform = playerTransform;
+            _playerTransform = playerTransform;
 
             var lastPlayerChunk = GetPlayerChunk();
             Observable
@@ -29,17 +29,17 @@ namespace UnityView.Players
                         _onPlayerChunkChanged.OnNext(currentPlayerChunk);
                     }
                 })
-                .AddTo(disposals);
+                .AddTo(_disposals);
         }
 
         internal ChunkGridCoordinate GetPlayerChunk()
         {
-            return ChunkGridCoordinate.Parse(new BlockGridCoordinate(playerTransform.position));
+            return ChunkGridCoordinate.Parse(new BlockGridCoordinate(_playerTransform.position));
         }
 
         public void Dispose()
         {
-            disposals.Dispose();
+            _disposals.Dispose();
         }
     }
 }

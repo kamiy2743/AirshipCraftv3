@@ -5,16 +5,14 @@ using UnityView.Rendering.Chunks;
 
 namespace UnityView.ChunkCollision
 {
-    internal class UpdatedChunkBoundsCalculator
+    class UpdatedChunkBoundsCalculator
     {
         // TODO 仮実装
-        private ChunkSurfaceProvider chunkSurfaceProvider;
-        private ChunkBoundsFactory chunkBoundsFactory;
+        readonly ChunkBoundsFactory _chunkBoundsFactory;
 
-        internal UpdatedChunkBoundsCalculator(ChunkSurfaceProvider chunkSurfaceProvider, ChunkBoundsFactory chunkBoundsFactory)
+        internal UpdatedChunkBoundsCalculator(ChunkBoundsFactory chunkBoundsFactory)
         {
-            this.chunkSurfaceProvider = chunkSurfaceProvider;
-            this.chunkBoundsFactory = chunkBoundsFactory;
+            _chunkBoundsFactory = chunkBoundsFactory;
         }
 
         internal IEnumerable<ChunkBounds> Calculate(BlockGridCoordinate updateCoordinate)
@@ -23,7 +21,7 @@ namespace UnityView.ChunkCollision
             var updatedChunkBounds = new Dictionary<ChunkGridCoordinate, ChunkBounds>(4);
 
             var targetChunkGridCoordinate = ChunkGridCoordinate.Parse(updateCoordinate);
-            updatedChunkBounds.Add(targetChunkGridCoordinate, chunkBoundsFactory.Create(targetChunkGridCoordinate));
+            updatedChunkBounds.Add(targetChunkGridCoordinate, _chunkBoundsFactory.Create(targetChunkGridCoordinate));
 
             foreach (var direction in DirectionExt.Array)
             {
@@ -39,7 +37,7 @@ namespace UnityView.ChunkCollision
                     continue;
                 }
 
-                updatedChunkBounds.Add(adjacentChunkGridCoordinate, chunkBoundsFactory.Create(adjacentChunkGridCoordinate));
+                updatedChunkBounds.Add(adjacentChunkGridCoordinate, _chunkBoundsFactory.Create(adjacentChunkGridCoordinate));
             }
 
             return updatedChunkBounds.Values;

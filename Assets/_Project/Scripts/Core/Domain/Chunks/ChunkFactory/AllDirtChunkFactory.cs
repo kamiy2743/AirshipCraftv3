@@ -1,6 +1,6 @@
 namespace Domain.Chunks
 {
-    internal class AllDirtChunkFactory : IChunkFactory
+    class AllDirtChunkFactory : IChunkFactory
     {
         public Chunk Create(ChunkGridCoordinate chunkGridCoordinate)
         {

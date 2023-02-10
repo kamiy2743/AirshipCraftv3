@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    internal interface IUseable : IItem
+    interface IUseable : IItem
     {
         void Use();
     }

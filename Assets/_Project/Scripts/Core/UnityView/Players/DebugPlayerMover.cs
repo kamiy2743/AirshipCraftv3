@@ -4,16 +4,16 @@ using UnityView.Inputs;
 
 namespace UnityView.Players
 {
-    internal class DebugPlayerMover : MonoBehaviour
+    class DebugPlayerMover : MonoBehaviour
     {
-        [Inject] private IInputProvider inputProvider;
-        [Inject] private PlayerCamera playerCamera;
+        [Inject] IInputProvider _inputProvider;
+        [Inject] PlayerCamera _playerCamera;
 
-        [SerializeField] private float flySpeed;
+        [SerializeField] float flySpeed;
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
-            transform.position += playerCamera.HorizontalRotation * (inputProvider.DebugFly() * flySpeed * Time.fixedDeltaTime);
+            transform.position += _playerCamera.HorizontalRotation * _inputProvider.DebugFly() * (flySpeed * Time.fixedDeltaTime);
         }
     }
 }

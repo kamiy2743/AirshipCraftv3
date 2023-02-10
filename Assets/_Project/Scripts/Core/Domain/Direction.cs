@@ -44,9 +44,9 @@ namespace Domain
                     return int3Ext.PositiveZ;
                 case Direction.BackWard:
                     return int3Ext.NegativeZ;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-
-            throw new Exception("実装漏れ");
         }
 
         public static Direction Flip(this Direction direction)
@@ -65,9 +65,9 @@ namespace Domain
                     return Direction.BackWard;
                 case Direction.BackWard:
                     return Direction.Forward;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-
-            throw new Exception("実装漏れ");
         }
     }
 }

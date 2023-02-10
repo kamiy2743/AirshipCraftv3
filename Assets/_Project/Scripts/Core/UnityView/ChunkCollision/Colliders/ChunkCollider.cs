@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UnityView.ChunkCollision
 {
-    internal class ChunkCollider : MonoBehaviour, IDisposable
+    class ChunkCollider : MonoBehaviour, IDisposable
     {
-        private List<Collider> colliders = new List<Collider>();
+        readonly List<Collider> _colliders = new List<Collider>();
 
         internal void SetBounds(ChunkBounds chunkBounds)
         {
-            transform.position = chunkBounds.chunkGridCoordinate.ToPivotCoordinate();
+            transform.position = chunkBounds.ChunkGridCoordinate.ToPivotCoordinate();
 
-            foreach (var collider in colliders)
+            foreach (var collider in _colliders)
             {
                 Destroy(collider);
             }
@@ -20,10 +20,10 @@ namespace UnityView.ChunkCollision
             foreach (var blockBounds in chunkBounds.BlockBoundsCollection)
             {
                 var collider = gameObject.AddComponent<BoxCollider>();
-                collider.center = blockBounds.center;
-                collider.size = blockBounds.size;
+                collider.center = blockBounds.Center;
+                collider.size = blockBounds.Size;
 
-                colliders.Add(collider);
+                _colliders.Add(collider);
             }
         }
 

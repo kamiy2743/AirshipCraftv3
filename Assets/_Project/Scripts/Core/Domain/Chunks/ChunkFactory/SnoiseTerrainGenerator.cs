@@ -2,23 +2,23 @@ using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
-    internal struct SnoiseTerrainGenerator
+    readonly struct SnoiseTerrainGenerator
     {
-        private readonly float seedX;
-        private readonly float seedY;
-        private readonly float seedZ;
-        private readonly float relief;
+        readonly float _seedX;
+        readonly float _seedY;
+        readonly float _seedZ;
+        readonly float _relief;
 
-        private static float Snoise(float x, float z) => (noise.snoise(new float2(x, z)) + 1) * 0.5f;
-        private static float Snoise(float x, float y, float z) => (noise.snoise(new float3(x, y, z)) + 1) * 0.5f;
+        static float Snoise(float x, float z) => (noise.snoise(new float2(x, z)) + 1) * 0.5f;
+        static float Snoise(float x, float y, float z) => (noise.snoise(new float3(x, y, z)) + 1) * 0.5f;
 
         internal SnoiseTerrainGenerator(uint seed, float relief)
         {
             var random = new Random(seed);
-            seedX = random.NextFloat(0, 1) * seed;
-            seedY = random.NextFloat(0, 1) * seed;
-            seedZ = random.NextFloat(0, 1) * seed;
-            this.relief = relief;
+            _seedX = random.NextFloat(0, 1) * seed;
+            _seedY = random.NextFloat(0, 1) * seed;
+            _seedZ = random.NextFloat(0, 1) * seed;
+            _relief = relief;
         }
 
         internal BlockType GetBlockType(int x, int y, int z)
@@ -27,11 +27,11 @@ namespace Domain.Chunks
             return ForUnderGround(x, y, z);
         }
 
-        private BlockType ForGround(int x, int y, int z)
+        BlockType ForGround(int x, int y, int z)
         {
             var noise1 = Snoise(
-                (x + seedX) * relief,
-                (z + seedZ) * relief);
+                (x + _seedX) * _relief,
+                (z + _seedZ) * _relief);
 
             var noiseY = (int)(noise1 * 16);
 
@@ -40,12 +40,12 @@ namespace Domain.Chunks
             return BlockType.Air;
         }
 
-        private BlockType ForUnderGround(int x, int y, int z)
+        BlockType ForUnderGround(int x, int y, int z)
         {
             var noise = Snoise(
-                (x + seedX) * relief,
-                (y + seedY) * relief,
-                (z + seedZ) * relief);
+                (x + _seedX) * _relief,
+                (y + _seedY) * _relief,
+                (z + _seedZ) * _relief);
 
             if (noise > 0.4f) return BlockType.Stone;
             return BlockType.Air;

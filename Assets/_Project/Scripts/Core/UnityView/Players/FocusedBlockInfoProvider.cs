@@ -4,22 +4,22 @@ using Domain.Chunks;
 
 namespace UnityView.Players
 {
-    internal class FocusedBlockInfoProvider
+    class FocusedBlockInfoProvider
     {
-        private PlayerCamera playerCamera;
-        private IChunkProvider chunkProvider;
+        readonly PlayerCamera _playerCamera;
+        readonly IChunkProvider _chunkProvider;
 
-        private const float MaxFocusDistance = 5;
+        const float MaxFocusDistance = 5;
 
         internal FocusedBlockInfoProvider(PlayerCamera playerCamera, IChunkProvider chunkProvider)
         {
-            this.playerCamera = playerCamera;
-            this.chunkProvider = chunkProvider;
+            _playerCamera = playerCamera;
+            _chunkProvider = chunkProvider;
         }
 
         internal bool TryGetFocusedBlockInfo(out FocusedBlockInfo result)
         {
-            if (!Physics.Raycast(playerCamera.Position, playerCamera.Forward, out var raycastHit, MaxFocusDistance))
+            if (!Physics.Raycast(_playerCamera.Position, _playerCamera.Forward, out var raycastHit, MaxFocusDistance))
             {
                 result = null;
                 return false;
@@ -33,9 +33,9 @@ namespace UnityView.Players
 
             var cgc = ChunkGridCoordinate.Parse(bgc);
             var rc = RelativeCoordinate.Parse(bgc);
-            var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
+            var block = _chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-            result = new FocusedBlockInfo(block.blockType, bgc.ToPivotCoordinate(), raycastHit.point, raycastHit.normal);
+            result = new FocusedBlockInfo(block.BlockType, bgc.ToPivotCoordinate(), raycastHit.point, raycastHit.normal);
             return true;
         }
     }

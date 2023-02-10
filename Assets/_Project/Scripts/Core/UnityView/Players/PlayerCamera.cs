@@ -4,24 +4,24 @@ using Unity.Mathematics;
 
 namespace UnityView.Players
 {
-    internal class PlayerCamera : MonoBehaviour
+    class PlayerCamera : MonoBehaviour
     {
-        [SerializeField] private CinemachineVirtualCamera playerVcam;
+        [SerializeField] CinemachineVirtualCamera playerVcam;
 
-        private CinemachinePOV cinemachinePOV;
-        private Camera cameraMain;
+        CinemachinePOV _cinemachinePov;
+        Camera _cameraMain;
 
-        internal Quaternion HorizontalRotation => Quaternion.Euler(0, cinemachinePOV.m_HorizontalAxis.Value, 0);
-        internal Quaternion VerticalRotation => Quaternion.Euler(cinemachinePOV.m_VerticalAxis.Value, 0, 0);
+        internal Quaternion HorizontalRotation => Quaternion.Euler(0, _cinemachinePov.m_HorizontalAxis.Value, 0);
+        Quaternion VerticalRotation => Quaternion.Euler(_cinemachinePov.m_VerticalAxis.Value, 0, 0);
         internal Vector3 Forward => HorizontalRotation * VerticalRotation * Vector3.forward;
         internal Vector3 Position => playerVcam.transform.position;
 
-        internal float4x4 ViewportMatrix => math.mul(cameraMain.projectionMatrix, cameraMain.worldToCameraMatrix);
+        internal float4x4 ViewportMatrix => math.mul(_cameraMain.projectionMatrix, _cameraMain.worldToCameraMatrix);
 
-        private void Awake()
+        void Awake()
         {
-            cinemachinePOV = playerVcam.GetCinemachineComponent(CinemachineCore.Stage.Aim).GetComponent<CinemachinePOV>();
-            cameraMain = Camera.main;
+            _cinemachinePov = playerVcam.GetCinemachineComponent(CinemachineCore.Stage.Aim).GetComponent<CinemachinePOV>();
+            _cameraMain = Camera.main;
         }
     }
 }

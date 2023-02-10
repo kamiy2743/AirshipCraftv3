@@ -2,13 +2,13 @@ using System;
 
 namespace Presentation
 {
-    internal enum SceneName
+    enum SceneName
     {
         Root,
         World,
     }
 
-    internal static class SceneNameExt
+    static class SceneNameExt
     {
         internal static string ToStringName(this SceneName sceneName)
         {
@@ -18,9 +18,9 @@ namespace Presentation
                     return "RootScene";
                 case SceneName.World:
                     return "WorldScene";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(sceneName), sceneName, null);
             }
-
-            throw new Exception("実装漏れ");
         }
     }
 }

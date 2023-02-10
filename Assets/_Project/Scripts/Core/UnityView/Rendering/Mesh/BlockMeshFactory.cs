@@ -6,18 +6,18 @@ using Domain;
 
 namespace UnityView.Rendering
 {
-    internal class BlockMeshFactory
+    class BlockMeshFactory
     {
-        private SixFaceUVCreator sixFaceUVCreator;
+        readonly SixFaceUVCreator _sixFaceUVCreator;
 
         internal BlockMeshFactory(SixFaceUVCreator blockTextureUVCreator)
         {
-            this.sixFaceUVCreator = blockTextureUVCreator;
+            _sixFaceUVCreator = blockTextureUVCreator;
         }
 
         internal BlockMesh Create(BlockType blockType, Vector3[] vertices, int[] triangles, Vector2[] originalUVs)
         {
-            var uvs = sixFaceUVCreator.Create(blockType, originalUVs);
+            var uvs = _sixFaceUVCreator.Create(blockType, originalUVs);
 
             var value = new MeshData(vertices, triangles, uvs);
 
@@ -33,7 +33,7 @@ namespace UnityView.Rendering
             return new BlockMesh(value, rightFace, leftFace, topFace, bottomFace, frontFace, backFace, otherPart);
         }
 
-        private MeshData ExtractFaceMesh(Face direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        MeshData ExtractFaceMesh(Face direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             var verticesMap = new Dictionary<int, (Vector3, int)>();
             var preTriangles = new List<int>();
@@ -48,25 +48,24 @@ namespace UnityView.Rendering
                 var v2 = vertices[t2];
                 var v3 = vertices[t3];
 
-                if (IsFacePolygon(direction, v1, v2, v3))
+                if (!IsFacePolygon(direction, v1, v2, v3)) continue;
+                
+                if (verticesMap.TryAdd(t1, (v1, verticesMap.Count)))
                 {
-                    if (verticesMap.TryAdd(t1, (v1, verticesMap.Count)))
-                    {
-                        faceUVs.Add(uvs[t1]);
-                    }
-                    if (verticesMap.TryAdd(t2, (v2, verticesMap.Count)))
-                    {
-                        faceUVs.Add(uvs[t2]);
-                    }
-                    if (verticesMap.TryAdd(t3, (v3, verticesMap.Count)))
-                    {
-                        faceUVs.Add(uvs[t3]);
-                    }
-
-                    preTriangles.Add(t1);
-                    preTriangles.Add(t2);
-                    preTriangles.Add(t3);
+                    faceUVs.Add(uvs[t1]);
                 }
+                if (verticesMap.TryAdd(t2, (v2, verticesMap.Count)))
+                {
+                    faceUVs.Add(uvs[t2]);
+                }
+                if (verticesMap.TryAdd(t3, (v3, verticesMap.Count)))
+                {
+                    faceUVs.Add(uvs[t3]);
+                }
+
+                preTriangles.Add(t1);
+                preTriangles.Add(t2);
+                preTriangles.Add(t3);
             }
 
             var faceVertices = verticesMap.Values.Select(value => value.Item1).ToArray();
@@ -75,7 +74,7 @@ namespace UnityView.Rendering
             return new MeshData(faceVertices, faceTriangles, faceUVs.ToArray());
         }
 
-        private bool IsFacePolygon(Face direction, Vector3 v1, Vector3 v2, Vector3 v3)
+        bool IsFacePolygon(Face direction, Vector3 v1, Vector3 v2, Vector3 v3)
         {
             switch (direction)
             {
@@ -91,23 +90,23 @@ namespace UnityView.Rendering
                     return Approximately1(v1.z) && Approximately1(v2.z) && Approximately1(v3.z);
                 case Face.Back:
                     return Approximately0(v1.z) && Approximately0(v2.z) && Approximately0(v3.z);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-
-            throw new Exception("実装漏れ");
         }
 
         // Mathf.Approximately(a, 0)だとfalseを返すことがある
-        private bool Approximately0(float a)
+        static bool Approximately0(float a)
         {
             return a < 0.01f && a > -0.01f;
         }
 
-        private bool Approximately1(float a)
+        static bool Approximately1(float a)
         {
             return a < 1.01f && a > 0.99f;
         }
 
-        private MeshData ExtractOtherPartMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        MeshData ExtractOtherPartMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             var verticesMap = new Dictionary<int, (Vector3, int)>();
             var preTriangles = new List<int>();
@@ -132,25 +131,24 @@ namespace UnityView.Rendering
                     }
                 }
 
-                if (isOtherFace)
+                if (!isOtherFace) continue;
+                
+                if (verticesMap.TryAdd(t1, (v1, verticesMap.Count)))
                 {
-                    if (verticesMap.TryAdd(t1, (v1, verticesMap.Count)))
-                    {
-                        partUVs.Add(uvs[t1]);
-                    }
-                    if (verticesMap.TryAdd(t2, (v2, verticesMap.Count)))
-                    {
-                        partUVs.Add(uvs[t2]);
-                    }
-                    if (verticesMap.TryAdd(t3, (v3, verticesMap.Count)))
-                    {
-                        partUVs.Add(uvs[t3]);
-                    }
-
-                    preTriangles.Add(t1);
-                    preTriangles.Add(t2);
-                    preTriangles.Add(t3);
+                    partUVs.Add(uvs[t1]);
                 }
+                if (verticesMap.TryAdd(t2, (v2, verticesMap.Count)))
+                {
+                    partUVs.Add(uvs[t2]);
+                }
+                if (verticesMap.TryAdd(t3, (v3, verticesMap.Count)))
+                {
+                    partUVs.Add(uvs[t3]);
+                }
+
+                preTriangles.Add(t1);
+                preTriangles.Add(t2);
+                preTriangles.Add(t3);
             }
 
             var partVertices = verticesMap.Values.Select(value => value.Item1).ToArray();

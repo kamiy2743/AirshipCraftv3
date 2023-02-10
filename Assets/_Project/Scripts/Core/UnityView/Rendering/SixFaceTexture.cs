@@ -6,7 +6,7 @@ namespace UnityView.Rendering
 {
     public record SixFaceTexture
     {
-        private Dictionary<Face, Texture2D> textures = new Dictionary<Face, Texture2D>(TextureCount);
+        readonly Dictionary<Face, Texture2D> _textures = new Dictionary<Face, Texture2D>(TextureCount);
 
         internal const int TextureCount = 6;
         internal const int Size = 256;
@@ -19,14 +19,14 @@ namespace UnityView.Rendering
             Texture2D front,
             Texture2D back)
         {
-            textures[Face.Right] = right;
-            textures[Face.Left] = left;
-            textures[Face.Top] = top;
-            textures[Face.Bottom] = bottom;
-            textures[Face.Front] = front;
-            textures[Face.Back] = back;
+            _textures[Face.Right] = right;
+            _textures[Face.Left] = left;
+            _textures[Face.Top] = top;
+            _textures[Face.Bottom] = bottom;
+            _textures[Face.Front] = front;
+            _textures[Face.Back] = back;
         }
 
-        internal Texture2D GetFace(Face face) => textures[face];
+        internal Texture2D GetFace(Face face) => _textures[face];
     }
 }

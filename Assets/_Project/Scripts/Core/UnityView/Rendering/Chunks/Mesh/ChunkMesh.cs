@@ -3,19 +3,19 @@ using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal record ChunkMesh
+    record ChunkMesh
     {
-        internal ChunkGridCoordinate chunkGridCoordinate;
-        internal readonly Vector3[] vertices;
-        internal readonly int[] triangles;
-        internal readonly Vector2[] uvs;
+        internal readonly ChunkGridCoordinate ChunkGridCoordinate;
+        internal readonly Vector3[] Vertices;
+        internal readonly int[] Triangles;
+        internal readonly Vector2[] Uvs;
 
         internal ChunkMesh(ChunkGridCoordinate chunkGridCoordinate, Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
-            this.chunkGridCoordinate = chunkGridCoordinate;
-            this.vertices = vertices;
-            this.triangles = triangles;
-            this.uvs = uvs;
+            ChunkGridCoordinate = chunkGridCoordinate;
+            Vertices = vertices;
+            Triangles = triangles;
+            Uvs = uvs;
         }
     }
 }

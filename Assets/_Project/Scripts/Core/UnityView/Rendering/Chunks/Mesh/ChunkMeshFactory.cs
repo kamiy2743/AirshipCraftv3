@@ -5,23 +5,23 @@ using Domain.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class ChunkMeshFactory
+    class ChunkMeshFactory
     {
-        private IChunkProvider chunkProvider;
-        private ChunkSurfaceProvider chunkSurfaceProvider;
-        private BlockMeshProvider blockMeshProvider;
+        readonly IChunkProvider _chunkProvider;
+        readonly ChunkSurfaceProvider _chunkSurfaceProvider;
+        readonly BlockMeshProvider _blockMeshProvider;
 
         internal ChunkMeshFactory(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider, BlockMeshProvider blockMeshProvider)
         {
-            this.chunkProvider = chunkProvider;
-            this.chunkSurfaceProvider = chunkSurfaceProvider;
-            this.blockMeshProvider = blockMeshProvider;
+            _chunkProvider = chunkProvider;
+            _chunkSurfaceProvider = chunkSurfaceProvider;
+            _blockMeshProvider = blockMeshProvider;
         }
 
         internal ChunkMesh Create(ChunkGridCoordinate chunkGridCoordinate)
         {
-            var chunk = chunkProvider.GetChunk(chunkGridCoordinate);
-            var chunkSurface = chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
+            var chunk = _chunkProvider.GetChunk(chunkGridCoordinate);
+            var chunkSurface = _chunkSurfaceProvider.GetChunkSurface(chunkGridCoordinate);
 
             var vertices = new List<Vector3>();
             var triangles = new List<int>();
@@ -36,13 +36,13 @@ namespace UnityView.Rendering.Chunks
                         var rc = new RelativeCoordinate(x, y, z);
 
                         var blockSurface = chunkSurface.GetBlockSurface(rc);
-                        if (!blockSurface.hasRenderingSurface)
+                        if (!blockSurface.HasRenderingSurface)
                         {
                             continue;
                         }
 
-                        var blockType = chunk.GetBlock(rc).blockType;
-                        var blockMesh = blockMeshProvider.GetBlockMesh(blockType);
+                        var blockType = chunk.GetBlock(rc).BlockType;
+                        var blockMesh = _blockMeshProvider.GetBlockMesh(blockType);
 
                         foreach (var face in FaceExt.Array)
                         {
@@ -53,26 +53,26 @@ namespace UnityView.Rendering.Chunks
 
                             var faceMesh = blockMesh.GetFaceMesh(face);
 
-                            foreach (var t in faceMesh.triangles)
+                            foreach (var t in faceMesh.Triangles)
                             {
                                 triangles.Add(vertices.Count + t);
                             }
-                            foreach (var v in faceMesh.vertices)
+                            foreach (var v in faceMesh.Vertices)
                             {
                                 vertices.Add(v + new Vector3(x, y, z));
                             }
-                            uvs.AddRange(faceMesh.uvs);
+                            uvs.AddRange(faceMesh.Uvs);
                         }
 
-                        foreach (var t in blockMesh.otherPart.triangles)
+                        foreach (var t in blockMesh.OtherPart.Triangles)
                         {
                             triangles.Add(vertices.Count + t);
                         }
-                        foreach (var v in blockMesh.otherPart.vertices)
+                        foreach (var v in blockMesh.OtherPart.Vertices)
                         {
                             vertices.Add(v + new Vector3(x, y, z));
                         }
-                        uvs.AddRange(blockMesh.otherPart.uvs);
+                        uvs.AddRange(blockMesh.OtherPart.Uvs);
                     }
                 }
             }

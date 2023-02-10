@@ -4,7 +4,7 @@ using Infrastructure;
 
 namespace Installers
 {
-    internal class DomainInstaller : MonoInstaller
+    class DomainInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

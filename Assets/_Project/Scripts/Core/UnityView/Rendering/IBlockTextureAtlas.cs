@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    internal interface IBlockTextureAtlas
+    interface IBlockTextureAtlas
     {
         Texture2D GetAtlas();
     }

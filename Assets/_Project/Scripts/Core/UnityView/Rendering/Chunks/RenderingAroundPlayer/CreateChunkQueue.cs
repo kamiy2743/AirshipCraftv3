@@ -5,26 +5,26 @@ using Utils;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class CreateChunkQueue
+    class CreateChunkQueue
     {
-        private PriorityQueue<CreateChunkQueueElement> queue;
-        internal int Count => queue.Count;
+        readonly PriorityQueue<CreateChunkQueueElement> _queue;
+        internal int Count => _queue.Count;
 
         internal CreateChunkQueue(int capacity)
         {
-            queue = new PriorityQueue<CreateChunkQueueElement>(capacity, new CreateChunkQueueElementComparer());
+            _queue = new PriorityQueue<CreateChunkQueueElement>(capacity, new CreateChunkQueueElementComparer());
         }
 
         internal void Enqueue(int distance, ChunkGridCoordinate chunkGridCoordinate)
         {
-            queue.Enqueue(new CreateChunkQueueElement(distance, chunkGridCoordinate));
+            _queue.Enqueue(new CreateChunkQueueElement(distance, chunkGridCoordinate));
         }
 
         internal bool TryDequeue(out ChunkGridCoordinate result)
         {
             try
             {
-                result = queue.Dequeue().chunkGridCoordinate;
+                result = _queue.Dequeue().ChunkGridCoordinate;
                 return true;
             }
             catch
@@ -34,26 +34,26 @@ namespace UnityView.Rendering.Chunks
             }
         }
 
-        private record CreateChunkQueueElement : IComparable<CreateChunkQueueElement>
+        record CreateChunkQueueElement : IComparable<CreateChunkQueueElement>
         {
-            internal readonly int distance;
-            internal readonly ChunkGridCoordinate chunkGridCoordinate;
+            internal readonly int Distance;
+            internal readonly ChunkGridCoordinate ChunkGridCoordinate;
 
             internal CreateChunkQueueElement(int distance, ChunkGridCoordinate chunkGridCoordinate)
             {
-                this.distance = distance;
-                this.chunkGridCoordinate = chunkGridCoordinate;
+                Distance = distance;
+                ChunkGridCoordinate = chunkGridCoordinate;
             }
 
             public int CompareTo(CreateChunkQueueElement other) => 0;
         }
 
-        private class CreateChunkQueueElementComparer : IComparer<CreateChunkQueueElement>
+        class CreateChunkQueueElementComparer : IComparer<CreateChunkQueueElement>
         {
             public int Compare(CreateChunkQueueElement a, CreateChunkQueueElement b)
             {
-                if (a.distance < b.distance) return 1;
-                if (a.distance >= b.distance) return -1;
+                if (a.Distance < b.Distance) return 1;
+                if (a.Distance >= b.Distance) return -1;
                 return 0;
             }
         }

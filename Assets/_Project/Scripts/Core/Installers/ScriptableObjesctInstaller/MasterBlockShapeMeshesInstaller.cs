@@ -5,9 +5,9 @@ using MasterData;
 namespace Installers
 {
     [CreateAssetMenu(fileName = "MasterBlockShapeMeshesInstaller", menuName = "Installers/MasterBlockShapeMeshesInstaller")]
-    internal class MasterBlockShapeMeshesInstaller : ScriptableObjectInstaller<MasterBlockShapeMeshesInstaller>
+    class MasterBlockShapeMeshesInstaller : ScriptableObjectInstaller<MasterBlockShapeMeshesInstaller>
     {
-        [SerializeField] private MasterBlockShapeMeshes instance;
+        [SerializeField] MasterBlockShapeMeshes instance;
 
         public override void InstallBindings()
         {

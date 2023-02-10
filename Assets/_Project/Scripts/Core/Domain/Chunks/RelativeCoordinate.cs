@@ -5,9 +5,9 @@ namespace Domain.Chunks
 {
     public record RelativeCoordinate
     {
-        public readonly int x;
-        public readonly int y;
-        public readonly int z;
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
 
         public const int Max = Chunk.BlockSide - 1;
         public const int Min = 0;
@@ -19,12 +19,12 @@ namespace Domain.Chunks
                 throw new ArgumentException($"{x}, {y}, {z}");
             }
 
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
-        private bool IsValid(int x, int y, int z)
+        static bool IsValid(int x, int y, int z)
         {
             if (x > Max || x < Min) return false;
             if (y > Max || y < Min) return false;
@@ -37,21 +37,21 @@ namespace Domain.Chunks
             return Add(value.x, value.y, value.z);
         }
 
-        internal RelativeCoordinate Add(int x = 0, int y = 0, int z = 0)
+        RelativeCoordinate Add(int x = 0, int y = 0, int z = 0)
         {
             return new RelativeCoordinate(
-                (this.x + x) & Max,
-                (this.y + y) & Max,
-                (this.z + z) & Max
+                (X + x) & Max,
+                (Y + y) & Max,
+                (Z + z) & Max
             );
         }
 
         public static RelativeCoordinate Parse(BlockGridCoordinate blockGridCoordinate)
         {
             return new RelativeCoordinate(
-                blockGridCoordinate.x & Max,
-                blockGridCoordinate.y & Max,
-                blockGridCoordinate.z & Max
+                blockGridCoordinate.X & Max,
+                blockGridCoordinate.Y & Max,
+                blockGridCoordinate.Z & Max
             );
         }
     }

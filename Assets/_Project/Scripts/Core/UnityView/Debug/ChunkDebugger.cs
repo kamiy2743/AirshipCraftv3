@@ -4,21 +4,21 @@ using Domain.Chunks;
 
 namespace UnityView.Debug
 {
-    internal class ChunkDebugger : MonoBehaviour
+    class ChunkDebugger : MonoBehaviour
     {
-        [SerializeField] private Transform player;
+        [SerializeField] Transform player;
         [Space(20)]
-        [SerializeField] private bool drawGizmo = true;
-        [SerializeField, Range(0, 16)] private int drawRadius;
-        [SerializeField] private bool simpleDraw = false;
+        [SerializeField] bool drawGizmo = true;
+        [SerializeField, Range(0, 16)] int drawRadius;
+        [SerializeField] bool simpleDraw = false;
 
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             if (!drawGizmo) return;
             DrawLoadedChunk();
         }
 
-        private void DrawLoadedChunk()
+        void DrawLoadedChunk()
         {
             var pc = GetPlayerChunk(player.position);
             var size = Vector3.one * Chunk.BlockSide;
@@ -54,7 +54,7 @@ namespace UnityView.Debug
             DrawWireCube();
         }
 
-        private Vector3 GetPlayerChunk(Vector3 playerPosition)
+        Vector3 GetPlayerChunk(Vector3 playerPosition)
         {
             return new Vector3(
                 (int)math.floor(playerPosition.x) >> Chunk.BlockSideShift,
@@ -63,7 +63,7 @@ namespace UnityView.Debug
            ;
         }
 
-        private Color GetRadiusColor(int radius)
+        Color GetRadiusColor(int radius)
         {
             var h = (1f / 8f) * Mathf.Repeat(radius, 8);
             return Color.HSVToRGB(h, 1, 1);

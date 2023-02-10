@@ -6,23 +6,23 @@ namespace UnityView.Rendering.Chunks
 {
     public class ChunkSurface
     {
-        public readonly ChunkGridCoordinate chunkGridCoordinate;
-        private Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces = new Dictionary<RelativeCoordinate, BlockSurface>();
+        public readonly ChunkGridCoordinate ChunkGridCoordinate;
+        readonly Dictionary<RelativeCoordinate, BlockSurface> _blockSurfaces = new Dictionary<RelativeCoordinate, BlockSurface>();
 
         internal ChunkSurface(ChunkGridCoordinate chunkGridCoordinate)
         {
-            this.chunkGridCoordinate = chunkGridCoordinate;
+            ChunkGridCoordinate = chunkGridCoordinate;
         }
 
-        private ChunkSurface(ChunkGridCoordinate chunkGridCoordinate, Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces)
+        ChunkSurface(ChunkGridCoordinate chunkGridCoordinate, Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces)
         {
-            this.chunkGridCoordinate = chunkGridCoordinate;
-            this.blockSurfaces = blockSurfaces;
+            ChunkGridCoordinate = chunkGridCoordinate;
+            _blockSurfaces = blockSurfaces;
         }
 
         internal BlockSurface GetBlockSurface(RelativeCoordinate relativeCoordinate)
         {
-            if (blockSurfaces.TryGetValue(relativeCoordinate, out var result))
+            if (_blockSurfaces.TryGetValue(relativeCoordinate, out var result))
             {
                 return result;
             }
@@ -32,18 +32,18 @@ namespace UnityView.Rendering.Chunks
 
         internal void SetBlockSurfaceDirectly(RelativeCoordinate relativeCoordinate, BlockSurface blockSurface)
         {
-            blockSurfaces[relativeCoordinate] = blockSurface;
+            _blockSurfaces[relativeCoordinate] = blockSurface;
         }
 
         public ChunkSurface DeepCopy()
         {
-            var blockSurfacesCopy = new Dictionary<RelativeCoordinate, BlockSurface>(blockSurfaces.Count);
-            foreach (var item in blockSurfaces)
+            var blockSurfacesCopy = new Dictionary<RelativeCoordinate, BlockSurface>(_blockSurfaces.Count);
+            foreach (var item in _blockSurfaces)
             {
                 blockSurfacesCopy[item.Key] = item.Value;
             }
 
-            return new ChunkSurface(chunkGridCoordinate, blockSurfacesCopy);
+            return new ChunkSurface(ChunkGridCoordinate, blockSurfacesCopy);
         }
     }
 }

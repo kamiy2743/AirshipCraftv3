@@ -3,19 +3,19 @@ using Domain;
 
 namespace UnityView.Players
 {
-    internal record FocusedBlockInfo
+    record FocusedBlockInfo
     {
-        internal readonly BlockType blockType;
-        internal readonly Vector3 pivotCoordinate;
-        internal readonly Vector3 hitPoint;
-        internal readonly Vector3 hitNormal;
+        internal readonly BlockType BlockType;
+        internal readonly Vector3 PivotCoordinate;
+        internal readonly Vector3 HitPoint;
+        internal readonly Vector3 HitNormal;
 
         internal FocusedBlockInfo(BlockType blockType, Vector3 pivotCoordinate, Vector3 hitPoint, Vector3 hitNormal)
         {
-            this.blockType = blockType;
-            this.pivotCoordinate = pivotCoordinate;
-            this.hitPoint = hitPoint;
-            this.hitNormal = hitNormal;
+            BlockType = blockType;
+            PivotCoordinate = pivotCoordinate;
+            HitPoint = hitPoint;
+            HitNormal = hitNormal;
         }
     }
 }

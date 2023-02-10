@@ -38,7 +38,7 @@ public class CreateChunkQueueTest
         for (int i = 0; i < length; i++)
         {
             createChunkQueue.TryDequeue(out var cgc);
-            grid[cgc.x + radius, cgc.z + radius] = i;
+            grid[cgc.X + radius, cgc.Z + radius] = i;
         }
 
         for (int z = side - 1; z >= 0; z--)

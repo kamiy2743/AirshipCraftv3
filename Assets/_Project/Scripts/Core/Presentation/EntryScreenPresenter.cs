@@ -6,16 +6,16 @@ using UniRx;
 
 namespace Presentation
 {
-    internal class EntryScreenPresenter : MonoBehaviour
+    class EntryScreenPresenter : MonoBehaviour
     {
-        [Inject] private EnterWorldModel enterWorldModel;
+        [Inject] EnterWorldModel _enterWorldModel;
 
-        [SerializeField] private Button enterWorldButton;
+        [SerializeField] Button enterWorldButton;
 
-        private void Start()
+        void Start()
         {
             enterWorldButton
-                .BindToOnClick(_ => enterWorldModel.EnterWorldAsync().ToObservable().AsUnitObservable())
+                .BindToOnClick(_ => _enterWorldModel.EnterWorldAsync().ToObservable().AsUnitObservable())
                 .AddTo(this);
         }
     }

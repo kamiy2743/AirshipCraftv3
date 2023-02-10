@@ -2,20 +2,20 @@ using System;
 
 namespace Domain.Items
 {
-    internal record Amount : IComparable<Amount>
+    record Amount : IComparable<Amount>
     {
-        private int value;
+        readonly int _value;
 
         internal Amount(int value)
         {
             if (value < 0) throw new ArgumentException();
-            this.value = value;
+            _value = value;
         }
 
         public int CompareTo(Amount other)
         {
-            if (value < other.value) return -1;
-            if (value > other.value) return 1;
+            if (_value < other._value) return -1;
+            if (_value > other._value) return 1;
             return 0;
         }
 
