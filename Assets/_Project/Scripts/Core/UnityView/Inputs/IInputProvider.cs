@@ -1,3 +1,4 @@
+using Domain.Players;
 using UnityEngine;
 
 namespace UnityView.Inputs
@@ -7,5 +8,6 @@ namespace UnityView.Inputs
         Vector3 DebugFly();
         bool PlaceBlock();
         bool BreakBlock();
+        ItemBarScrollType ItemBarScroll();
     }
 }

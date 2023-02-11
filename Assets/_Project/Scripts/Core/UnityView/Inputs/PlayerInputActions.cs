@@ -91,6 +91,15 @@ namespace UnityView.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemBarScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""5516a1ac-1619-4cfc-b558-86d870d3e137"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -333,6 +342,17 @@ namespace UnityView.Inputs
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""InteractBlock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""754d2a06-113d-4d83-aab5-d1b45fb1e6db"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ItemBarScroll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -927,6 +947,7 @@ namespace UnityView.Inputs
             m_Player_PlaceBlock = m_Player.FindAction("PlaceBlock", throwIfNotFound: true);
             m_Player_BreakBlock = m_Player.FindAction("BreakBlock", throwIfNotFound: true);
             m_Player_InteractBlock = m_Player.FindAction("InteractBlock", throwIfNotFound: true);
+            m_Player_ItemBarScroll = m_Player.FindAction("ItemBarScroll", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -996,18 +1017,19 @@ namespace UnityView.Inputs
         }
 
         // Player
-        readonly InputActionMap m_Player;
-        IPlayerActions m_PlayerActionsCallbackInterface;
-        readonly InputAction m_Player_HorizontalMove;
-        readonly InputAction m_Player_VerticalMove;
-        readonly InputAction m_Player_Look;
-        readonly InputAction m_Player_Jump;
-        readonly InputAction m_Player_PlaceBlock;
-        readonly InputAction m_Player_BreakBlock;
-        readonly InputAction m_Player_InteractBlock;
+        private readonly InputActionMap m_Player;
+        private IPlayerActions m_PlayerActionsCallbackInterface;
+        private readonly InputAction m_Player_HorizontalMove;
+        private readonly InputAction m_Player_VerticalMove;
+        private readonly InputAction m_Player_Look;
+        private readonly InputAction m_Player_Jump;
+        private readonly InputAction m_Player_PlaceBlock;
+        private readonly InputAction m_Player_BreakBlock;
+        private readonly InputAction m_Player_InteractBlock;
+        private readonly InputAction m_Player_ItemBarScroll;
         public struct PlayerActions
         {
-            @PlayerInputActions m_Wrapper;
+            private @PlayerInputActions m_Wrapper;
             public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @HorizontalMove => m_Wrapper.m_Player_HorizontalMove;
             public InputAction @VerticalMove => m_Wrapper.m_Player_VerticalMove;
@@ -1016,6 +1038,7 @@ namespace UnityView.Inputs
             public InputAction @PlaceBlock => m_Wrapper.m_Player_PlaceBlock;
             public InputAction @BreakBlock => m_Wrapper.m_Player_BreakBlock;
             public InputAction @InteractBlock => m_Wrapper.m_Player_InteractBlock;
+            public InputAction @ItemBarScroll => m_Wrapper.m_Player_ItemBarScroll;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1046,6 +1069,9 @@ namespace UnityView.Inputs
                     @InteractBlock.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractBlock;
                     @InteractBlock.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractBlock;
                     @InteractBlock.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractBlock;
+                    @ItemBarScroll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
+                    @ItemBarScroll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
+                    @ItemBarScroll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1071,27 +1097,30 @@ namespace UnityView.Inputs
                     @InteractBlock.started += instance.OnInteractBlock;
                     @InteractBlock.performed += instance.OnInteractBlock;
                     @InteractBlock.canceled += instance.OnInteractBlock;
+                    @ItemBarScroll.started += instance.OnItemBarScroll;
+                    @ItemBarScroll.performed += instance.OnItemBarScroll;
+                    @ItemBarScroll.canceled += instance.OnItemBarScroll;
                 }
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
 
         // UI
-        readonly InputActionMap m_UI;
-        IUIActions m_UIActionsCallbackInterface;
-        readonly InputAction m_UI_Navigate;
-        readonly InputAction m_UI_Submit;
-        readonly InputAction m_UI_Cancel;
-        readonly InputAction m_UI_Point;
-        readonly InputAction m_UI_Click;
-        readonly InputAction m_UI_ScrollWheel;
-        readonly InputAction m_UI_MiddleClick;
-        readonly InputAction m_UI_RightClick;
-        readonly InputAction m_UI_TrackedDevicePosition;
-        readonly InputAction m_UI_TrackedDeviceOrientation;
+        private readonly InputActionMap m_UI;
+        private IUIActions m_UIActionsCallbackInterface;
+        private readonly InputAction m_UI_Navigate;
+        private readonly InputAction m_UI_Submit;
+        private readonly InputAction m_UI_Cancel;
+        private readonly InputAction m_UI_Point;
+        private readonly InputAction m_UI_Click;
+        private readonly InputAction m_UI_ScrollWheel;
+        private readonly InputAction m_UI_MiddleClick;
+        private readonly InputAction m_UI_RightClick;
+        private readonly InputAction m_UI_TrackedDevicePosition;
+        private readonly InputAction m_UI_TrackedDeviceOrientation;
         public struct UIActions
         {
-            @PlayerInputActions m_Wrapper;
+            private @PlayerInputActions m_Wrapper;
             public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
             public InputAction @Submit => m_Wrapper.m_UI_Submit;
@@ -1180,7 +1209,7 @@ namespace UnityView.Inputs
             }
         }
         public UIActions @UI => new UIActions(this);
-        int m_KeyboardMouseSchemeIndex = -1;
+        private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
             get
@@ -1189,7 +1218,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
             }
         }
-        int m_GamepadSchemeIndex = -1;
+        private int m_GamepadSchemeIndex = -1;
         public InputControlScheme GamepadScheme
         {
             get
@@ -1198,7 +1227,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_GamepadSchemeIndex];
             }
         }
-        int m_TouchSchemeIndex = -1;
+        private int m_TouchSchemeIndex = -1;
         public InputControlScheme TouchScheme
         {
             get
@@ -1207,7 +1236,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_TouchSchemeIndex];
             }
         }
-        int m_JoystickSchemeIndex = -1;
+        private int m_JoystickSchemeIndex = -1;
         public InputControlScheme JoystickScheme
         {
             get
@@ -1216,7 +1245,7 @@ namespace UnityView.Inputs
                 return asset.controlSchemes[m_JoystickSchemeIndex];
             }
         }
-        int m_XRSchemeIndex = -1;
+        private int m_XRSchemeIndex = -1;
         public InputControlScheme XRScheme
         {
             get
@@ -1234,6 +1263,7 @@ namespace UnityView.Inputs
             void OnPlaceBlock(InputAction.CallbackContext context);
             void OnBreakBlock(InputAction.CallbackContext context);
             void OnInteractBlock(InputAction.CallbackContext context);
+            void OnItemBarScroll(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
