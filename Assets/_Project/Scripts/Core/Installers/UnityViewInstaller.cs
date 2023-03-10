@@ -1,7 +1,6 @@
 using UnityEngine;
 using Zenject;
 using Infrastructure;
-using UnityView;
 using UnityView.Rendering;
 using UnityView.Rendering.Chunks;
 using UnityView.ChunkCollision;
@@ -18,7 +17,6 @@ namespace Installers
         [SerializeField] PlayerCamera playerCamera;
         [SerializeField] FocusedBlockOutline focusedBlockOutline;
         [SerializeField] Material blockMaterial;
-        [SerializeField] ItemBarView itemBarView;
 
         public override void InstallBindings()
         {
@@ -79,8 +77,6 @@ namespace Installers
             Container.Bind<SixFaceUVCreator>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<TextureAtlasApplier>().AsSingle().WithArguments(blockMaterial);
-
-            Container.BindInstance<ItemBarView>(itemBarView).AsSingle();
         }
     }
 }

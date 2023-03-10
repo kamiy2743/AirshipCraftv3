@@ -1,6 +1,5 @@
 using Zenject;
 using Domain.Chunks;
-using Domain.Players;
 using Infrastructure;
 
 namespace Installers
@@ -23,8 +22,6 @@ namespace Installers
                 .Bind<IChunkProvider>()
                 .To<ChunkProvider>()
                 .AsSingle();
-
-            Container.Bind<ItemBar>().AsSingle();
         }
     }
 }

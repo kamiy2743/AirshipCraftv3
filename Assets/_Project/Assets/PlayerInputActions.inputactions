@@ -67,15 +67,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "ItemBarScroll",
-                    "type": "Value",
-                    "id": "5516a1ac-1619-4cfc-b558-86d870d3e137",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -318,17 +309,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "InteractBlock",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "754d2a06-113d-4d83-aab5-d1b45fb1e6db",
-                    "path": "<Mouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "ItemBarScroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

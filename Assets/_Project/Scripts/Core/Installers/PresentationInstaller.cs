@@ -13,8 +13,6 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<PlaceBlockPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<BreakBlockPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<ChunkBlockUpdatePresenter>().AsSingle();
-
-            Container.BindInterfacesTo<ItemBarPresenter>().AsSingle();
         }
     }
 }

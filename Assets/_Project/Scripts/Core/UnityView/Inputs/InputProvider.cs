@@ -1,4 +1,3 @@
-using Domain.Players;
 using UnityEngine;
 
 namespace UnityView.Inputs
@@ -29,15 +28,6 @@ namespace UnityView.Inputs
         public bool BreakBlock()
         {
             return _inputActions.Player.BreakBlock.ReadValue<float>() > 0;
-        }
-
-        public ItemBarScrollType ItemBarScroll()
-        {
-            var x = _inputActions.Player.ItemBarScroll.ReadValue<float>();
-
-            if (x < 0) return ItemBarScrollType.Right;
-            if (x > 0) return ItemBarScrollType.Left;
-            return ItemBarScrollType.None;
         }
     }
 }
