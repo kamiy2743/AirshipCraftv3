@@ -2,6 +2,8 @@ using System;
 using Zenject;
 using UniRx;
 using UseCase;
+using UnityView.Rendering.Chunks;
+using UnityView.ChunkCollision;
 
 namespace Presentation
 {

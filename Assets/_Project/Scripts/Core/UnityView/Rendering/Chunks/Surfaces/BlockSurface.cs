@@ -1,3 +1,5 @@
+using Domain;
+
 namespace UnityView.Rendering.Chunks
 {
     record BlockSurface

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityView.Rendering.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
