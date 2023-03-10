@@ -2,36 +2,36 @@ using System.Collections.Generic;
 
 namespace Domain.Chunks
 {
-    class ChunkProvider : IChunkProvider
+    internal class ChunkProvider : IChunkProvider
     {
-        readonly IChunkFactory _chunkFactory;
-        readonly IChunkRepository _chunkRepository;
+        private IChunkFactory chunkFactory;
+        private IChunkRepository chunkRepository;
 
-        readonly Dictionary<ChunkGridCoordinate, Chunk> _chunkCache = new Dictionary<ChunkGridCoordinate, Chunk>();
+        private Dictionary<ChunkGridCoordinate, Chunk> chunkCache = new Dictionary<ChunkGridCoordinate, Chunk>();
 
         internal ChunkProvider(IChunkFactory chunkFactory, IChunkRepository chunkRepository)
         {
-            _chunkFactory = chunkFactory;
-            _chunkRepository = chunkRepository;
+            this.chunkFactory = chunkFactory;
+            this.chunkRepository = chunkRepository;
         }
 
         public Chunk GetChunk(ChunkGridCoordinate chunkGridCoordinate)
         {
-            if (_chunkCache.TryGetValue(chunkGridCoordinate, out var cache))
+            if (chunkCache.TryGetValue(chunkGridCoordinate, out var cache))
             {
                 return cache;
             }
 
             try
             {
-                var chunk = _chunkRepository.Fetch(chunkGridCoordinate);
-                _chunkCache.Add(chunkGridCoordinate, chunk);
+                var chunk = chunkRepository.Fetch(chunkGridCoordinate);
+                chunkCache.Add(chunkGridCoordinate, chunk);
                 return chunk;
             }
             catch
             {
-                var chunk = _chunkFactory.Create(chunkGridCoordinate);
-                _chunkCache.Add(chunkGridCoordinate, chunk);
+                var chunk = chunkFactory.Create(chunkGridCoordinate);
+                chunkCache.Add(chunkGridCoordinate, chunk);
                 return chunk;
             }
         }

@@ -3,13 +3,13 @@ using Unity.Mathematics;
 
 namespace UnityView.Rendering.Chunks
 {
-    record InSightChecker
+    internal record InSightChecker
     {
-        readonly float4x4 _viewportMatrix;
+        private readonly float4x4 viewportMatrix;
 
         internal InSightChecker(float4x4 viewportMatrix)
         {
-            _viewportMatrix = viewportMatrix;
+            this.viewportMatrix = viewportMatrix;
         }
 
         internal bool Check(Bounds bounds)
@@ -28,7 +28,7 @@ namespace UnityView.Rendering.Chunks
             return false;
         }
 
-        bool PointCheck(float x, float y, float z)
+        private bool PointCheck(float x, float y, float z)
         {
             var viewportPoint = WorldToViewportPoint(x, y, z);
 
@@ -38,7 +38,7 @@ namespace UnityView.Rendering.Chunks
             return true;
         }
 
-        float3 WorldToViewportPoint(float x, float y, float z)
+        private float3 WorldToViewportPoint(float x, float y, float z)
         {
             var viewportPoint = Multiply(x, y, z);
             // x,y,zをwで割る
@@ -50,13 +50,13 @@ namespace UnityView.Rendering.Chunks
         }
 
         // math.mul()よりも速い
-        float4 Multiply(float b1, float b2, float b3)
+        private float4 Multiply(float b1, float b2, float b3)
         {
             return new float4(
-                (_viewportMatrix.c0.x * b1) + (_viewportMatrix.c1.x * b2) + (_viewportMatrix.c2.x * b3) + (_viewportMatrix.c3.x),
-                (_viewportMatrix.c0.y * b1) + (_viewportMatrix.c1.y * b2) + (_viewportMatrix.c2.y * b3) + (_viewportMatrix.c3.y),
-                (_viewportMatrix.c0.z * b1) + (_viewportMatrix.c1.z * b2) + (_viewportMatrix.c2.z * b3) + (_viewportMatrix.c3.z),
-                (_viewportMatrix.c0.w * b1) + (_viewportMatrix.c1.w * b2) + (_viewportMatrix.c2.w * b3) + (_viewportMatrix.c3.w));
+                (viewportMatrix.c0.x * b1) + (viewportMatrix.c1.x * b2) + (viewportMatrix.c2.x * b3) + (viewportMatrix.c3.x),
+                (viewportMatrix.c0.y * b1) + (viewportMatrix.c1.y * b2) + (viewportMatrix.c2.y * b3) + (viewportMatrix.c3.y),
+                (viewportMatrix.c0.z * b1) + (viewportMatrix.c1.z * b2) + (viewportMatrix.c2.z * b3) + (viewportMatrix.c3.z),
+                (viewportMatrix.c0.w * b1) + (viewportMatrix.c1.w * b2) + (viewportMatrix.c2.w * b3) + (viewportMatrix.c3.w));
         }
     }
 }

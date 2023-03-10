@@ -5,24 +5,24 @@ using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    class CreatedChunkRenderers : IDisposable
+    internal class CreatedChunkRenderers : IDisposable
     {
-        readonly Dictionary<ChunkGridCoordinate, ChunkRenderer> _renderers = new Dictionary<ChunkGridCoordinate, ChunkRenderer>();
-        internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => _renderers.Keys.ToList();
+        private Dictionary<ChunkGridCoordinate, ChunkRenderer> renderers = new Dictionary<ChunkGridCoordinate, ChunkRenderer>();
+        internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => renderers.Keys.ToList();
 
         internal void Add(ChunkGridCoordinate chunkGridCoordinate, ChunkRenderer chunkRenderer)
         {
-            _renderers.Add(chunkGridCoordinate, chunkRenderer);
+            renderers.Add(chunkGridCoordinate, chunkRenderer);
         }
 
         internal bool Contains(ChunkGridCoordinate chunkGridCoordinate)
         {
-            return _renderers.ContainsKey(chunkGridCoordinate);
+            return renderers.ContainsKey(chunkGridCoordinate);
         }
 
         internal bool TryGetValue(ChunkGridCoordinate chunkGridCoordinate, out ChunkRenderer result)
         {
-            return _renderers.TryGetValue(chunkGridCoordinate, out result);
+            return renderers.TryGetValue(chunkGridCoordinate, out result);
         }
 
         internal void Dispose(ChunkGridCoordinate chunkGridCoordinate)
@@ -32,12 +32,12 @@ namespace UnityView.Rendering.Chunks
                 return;
             }
             result.Dispose();
-            _renderers.Remove(chunkGridCoordinate);
+            renderers.Remove(chunkGridCoordinate);
         }
 
         public void Dispose()
         {
-            foreach (var renderer in _renderers.Values)
+            foreach (var renderer in renderers.Values)
             {
                 renderer.Dispose();
             }

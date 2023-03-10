@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    interface IBlock : IItem
+    internal interface IBlock : IItem
     {
         void Place();
     }

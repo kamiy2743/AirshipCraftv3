@@ -4,51 +4,51 @@ using UnityView.Rendering.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkRenderer : MonoBehaviour, IDisposable
+    internal class ChunkRenderer : MonoBehaviour, IDisposable
     {
-        [SerializeField] MeshFilter meshFilter;
+        [SerializeField] private MeshFilter meshFilter;
 
-        Mesh _mesh;
+        private UnityEngine.Mesh mesh;
 
         internal void SetMesh(ChunkMesh chunkMesh)
         {
-            if (chunkMesh.Vertices.Length == 0 && _mesh is not null)
+            if (chunkMesh.vertices.Length == 0 && mesh is not null)
             {
-                Destroy(_mesh);
-                _mesh = null;
+                Destroy(mesh);
+                mesh = null;
                 meshFilter.sharedMesh = null;
                 transform.position = Vector3.zero;
                 return;
             }
 
-            if (_mesh is null)
+            if (mesh is null)
             {
-                _mesh = new Mesh();
-                _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-                meshFilter.sharedMesh = _mesh;
+                mesh = new UnityEngine.Mesh();
+                mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+                meshFilter.sharedMesh = mesh;
             }
             else
             {
-                _mesh.Clear();
+                mesh.Clear();
             }
 
-            _mesh.SetVertices(chunkMesh.Vertices);
-            _mesh.SetTriangles(chunkMesh.Triangles, 0);
-            _mesh.SetUVs(0, chunkMesh.Uvs);
-            _mesh.RecalculateNormals();
+            mesh.SetVertices(chunkMesh.vertices);
+            mesh.SetTriangles(chunkMesh.triangles, 0);
+            mesh.SetUVs(0, chunkMesh.uvs);
+            mesh.RecalculateNormals();
 
-            transform.position = chunkMesh.ChunkGridCoordinate.ToPivotCoordinate();
+            transform.position = chunkMesh.chunkGridCoordinate.ToPivotCoordinate();
         }
 
         public void Dispose()
         {
-            if (_mesh is not null)
+            if (mesh is not null)
             {
-                Destroy(_mesh);
+                Destroy(mesh);
             }
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             Dispose();
         }

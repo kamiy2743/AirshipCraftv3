@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    record ItemID
+    internal record ItemID
     {
 
     }

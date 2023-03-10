@@ -3,18 +3,18 @@ using UnityView.Rendering;
 
 namespace UnityView.Players
 {
-    class FocusedBlockOutline : MonoBehaviour
+    internal class FocusedBlockOutline : MonoBehaviour
     {
-        [SerializeField] MeshFilter meshFilter;
+        [SerializeField] private MeshFilter meshFilter;
 
         internal void SetMesh(MeshData meshData)
         {
             var mesh = meshFilter.mesh;
             mesh.Clear();
 
-            mesh.SetVertices(meshData.Vertices);
-            mesh.SetTriangles(meshData.Triangles, 0);
-            mesh.SetUVs(0, meshData.Uvs);
+            mesh.SetVertices(meshData.vertices);
+            mesh.SetTriangles(meshData.triangles, 0);
+            mesh.SetUVs(0, meshData.uvs);
             mesh.RecalculateNormals();
         }
 

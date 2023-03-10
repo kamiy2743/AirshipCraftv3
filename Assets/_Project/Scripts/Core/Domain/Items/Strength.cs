@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    record Strength
+    internal record Strength
     {
 
     }

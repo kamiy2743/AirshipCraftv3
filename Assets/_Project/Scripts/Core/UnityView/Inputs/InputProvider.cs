@@ -2,32 +2,32 @@ using UnityEngine;
 
 namespace UnityView.Inputs
 {
-    class InputSystemInputProvider : IInputProvider
+    internal class InputSystemInputProvider : IInputProvider
     {
-        readonly PlayerInputActions _inputActions;
+        private PlayerInputActions inputActions;
 
         internal InputSystemInputProvider()
         {
-            _inputActions = new PlayerInputActions();
-            _inputActions.Enable();
+            inputActions = new PlayerInputActions();
+            inputActions.Enable();
         }
 
         public Vector3 DebugFly()
         {
-            var horizontal = _inputActions.Player.HorizontalMove.ReadValue<Vector2>();
-            var vertical = _inputActions.Player.VerticalMove.ReadValue<float>();
+            var horizontal = inputActions.Player.HorizontalMove.ReadValue<Vector2>();
+            var vertical = inputActions.Player.VerticalMove.ReadValue<float>();
 
             return new Vector3(horizontal.x, vertical, horizontal.y).normalized;
         }
 
         public bool PlaceBlock()
         {
-            return _inputActions.Player.PlaceBlock.ReadValue<float>() > 0;
+            return inputActions.Player.PlaceBlock.ReadValue<float>() > 0;
         }
 
         public bool BreakBlock()
         {
-            return _inputActions.Player.BreakBlock.ReadValue<float>() > 0;
+            return inputActions.Player.BreakBlock.ReadValue<float>() > 0;
         }
     }
 }

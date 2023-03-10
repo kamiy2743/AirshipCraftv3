@@ -5,9 +5,9 @@ using MasterData;
 namespace Installers
 {
     [CreateAssetMenu(fileName = "MasterBlockTexturesInstaller", menuName = "Installers/MasterBlockTexturesInstaller")]
-    class MasterBlockTexturesInstaller : ScriptableObjectInstaller<MasterBlockTexturesInstaller>
+    internal class MasterBlockTexturesInstaller : ScriptableObjectInstaller<MasterBlockTexturesInstaller>
     {
-        [SerializeField] MasterBlockTextures instance;
+        [SerializeField] private MasterBlockTextures instance;
 
         public override void InstallBindings()
         {

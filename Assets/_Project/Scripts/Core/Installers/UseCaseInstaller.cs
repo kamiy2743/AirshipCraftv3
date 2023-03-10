@@ -3,7 +3,7 @@ using UseCase;
 
 namespace Installers
 {
-    class UseCaseInstaller : MonoInstaller
+    internal class UseCaseInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

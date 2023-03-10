@@ -4,18 +4,18 @@ using UnityView.Rendering.Chunks;
 
 namespace Infrastructure
 {
-    class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
+    internal class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
     {
-        readonly Dictionary<ChunkGridCoordinate, ChunkSurface> _surfaces = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
+        internal Dictionary<ChunkGridCoordinate, ChunkSurface> surfaces = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
 
         public void Store(ChunkSurface chunkSurface)
         {
-            _surfaces[chunkSurface.ChunkGridCoordinate] = chunkSurface.DeepCopy();
+            surfaces[chunkSurface.chunkGridCoordinate] = chunkSurface.DeepCopy();
         }
 
         public ChunkSurface Fetch(ChunkGridCoordinate chunkGridCoordinate)
         {
-            return _surfaces[chunkGridCoordinate].DeepCopy();
+            return surfaces[chunkGridCoordinate].DeepCopy();
         }
     }
 }

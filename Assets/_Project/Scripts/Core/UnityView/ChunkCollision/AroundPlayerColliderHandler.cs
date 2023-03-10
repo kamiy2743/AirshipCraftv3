@@ -5,40 +5,40 @@ using UniRx;
 
 namespace UnityView.ChunkCollision
 {
-    class AroundPlayerColliderHandler : IInitializable, IDisposable
+    internal class AroundPlayerColliderHandler : IInitializable, IDisposable
     {
-        readonly AroundPlayerColliderCreator _aroundPlayerColliderCreator;
-        readonly OutOfRangeColliderDisposer _outOfRangeColliderDisposer;
-        readonly PlayerChunkProvider _playerChunkProvider;
+        private AroundPlayerColliderCreator aroundPlayerColliderCreator;
+        private OutOfRangeColliderDisposer outOfRangeColliderDisposer;
+        private PlayerChunkProvider playerChunkProvider;
 
-        readonly CompositeDisposable _disposals = new CompositeDisposable();
+        private CompositeDisposable disposals = new CompositeDisposable();
 
-        const int ColliderRadius = 1;
+        private const int ColliderRadius = 1;
 
         internal AroundPlayerColliderHandler(AroundPlayerColliderCreator aroundPlayerColliderCreator, OutOfRangeColliderDisposer outOfRangeColliderDisposer, PlayerChunkProvider playerChunkProvider)
         {
-            _aroundPlayerColliderCreator = aroundPlayerColliderCreator;
-            _outOfRangeColliderDisposer = outOfRangeColliderDisposer;
-            _playerChunkProvider = playerChunkProvider;
+            this.aroundPlayerColliderCreator = aroundPlayerColliderCreator;
+            this.outOfRangeColliderDisposer = outOfRangeColliderDisposer;
+            this.playerChunkProvider = playerChunkProvider;
         }
 
         public void Initialize()
         {
-            _aroundPlayerColliderCreator.Execute(_playerChunkProvider.GetPlayerChunk(), ColliderRadius);
+            aroundPlayerColliderCreator.Execute(playerChunkProvider.GetPlayerChunk(), ColliderRadius);
 
-            _playerChunkProvider
+            playerChunkProvider
                 .OnPlayerChunkChanged
                 .Subscribe(playerChunk =>
                 {
-                    _outOfRangeColliderDisposer.Execute(playerChunk, ColliderRadius);
-                    _aroundPlayerColliderCreator.Execute(playerChunk, ColliderRadius);
+                    outOfRangeColliderDisposer.Execute(playerChunk, ColliderRadius);
+                    aroundPlayerColliderCreator.Execute(playerChunk, ColliderRadius);
                 })
-                .AddTo(_disposals);
+                .AddTo(disposals);
         }
 
         public void Dispose()
         {
-            _disposals.Dispose();
+            disposals.Dispose();
         }
     }
 }

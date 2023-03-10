@@ -4,8 +4,8 @@ namespace Domain.Chunks
 {
     public class Chunk : IEquatable<Chunk>
     {
-        public readonly ChunkGridCoordinate ChunkGridCoordinate;
-        readonly ChunkBlocks _blocks;
+        public readonly ChunkGridCoordinate chunkGridCoordinate;
+        private readonly ChunkBlocks blocks;
 
         public const int BlockSideShift = 4;
         public const int BlockSide = 1 << BlockSideShift;
@@ -13,23 +13,23 @@ namespace Domain.Chunks
 
         internal Chunk(ChunkGridCoordinate chunkGridCoordinate, ChunkBlocks blocks)
         {
-            ChunkGridCoordinate = chunkGridCoordinate;
-            _blocks = blocks;
+            this.chunkGridCoordinate = chunkGridCoordinate;
+            this.blocks = blocks;
         }
 
         public Block GetBlock(RelativeCoordinate relativeCoordinate)
         {
-            return _blocks.GetBlock(relativeCoordinate);
+            return blocks.GetBlock(relativeCoordinate);
         }
 
         public void SetBlock(RelativeCoordinate relativeCoordinate, Block block)
         {
-            _blocks.SetBlock(relativeCoordinate, block);
+            blocks.SetBlock(relativeCoordinate, block);
         }
 
         public Chunk DeepCopy()
         {
-            return new Chunk(ChunkGridCoordinate, _blocks.DeepCopy());
+            return new Chunk(chunkGridCoordinate, blocks.DeepCopy());
         }
 
         public override bool Equals(object obj)
@@ -39,12 +39,12 @@ namespace Domain.Chunks
 
         public bool Equals(Chunk other)
         {
-            return other != null && ChunkGridCoordinate == other.ChunkGridCoordinate;
+            return this.chunkGridCoordinate == other.chunkGridCoordinate;
         }
 
         public override int GetHashCode()
         {
-            return ChunkGridCoordinate.GetHashCode();
+            return chunkGridCoordinate.GetHashCode();
         }
     }
 }

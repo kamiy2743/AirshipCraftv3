@@ -3,7 +3,7 @@ using Presentation;
 
 namespace Installers
 {
-    class PresentationInstaller : MonoInstaller
+    internal class PresentationInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

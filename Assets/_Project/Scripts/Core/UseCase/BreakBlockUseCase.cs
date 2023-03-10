@@ -6,18 +6,18 @@ namespace UseCase
 {
     public class BreakBlockUseCase
     {
-        readonly ChunkBlockSetter _chunkBlockSetter;
+        private ChunkBlockSetter chunkBlockSetter;
 
         internal BreakBlockUseCase(ChunkBlockSetter chunkBlockSetter)
         {
-            _chunkBlockSetter = chunkBlockSetter;
+            this.chunkBlockSetter = chunkBlockSetter;
         }
 
         public void BreakBlock(float3 position)
         {
             if (BlockGridCoordinate.TryParse(position, out var breakCoordinate))
             {
-                _chunkBlockSetter.SetBlock(breakCoordinate, new Block(BlockType.Air));
+                chunkBlockSetter.SetBlock(breakCoordinate, new Block(BlockType.Air));
             }
         }
     }

@@ -5,19 +5,19 @@ using UnityView.Rendering;
 
 namespace UnityView.Players
 {
-    class FocusedBlockViewer : IInitializable, IDisposable
+    internal class FocusedBlockViewer : IInitializable, IDisposable
     {
-        readonly FocusedBlockInfoProvider _focusedBlockInfoProvider;
-        readonly BlockMeshProvider _blockMeshProvider;
-        readonly FocusedBlockOutline _focusedBlockOutline;
+        private FocusedBlockInfoProvider focusedBlockInfoProvider;
+        private BlockMeshProvider blockMeshProvider;
+        private FocusedBlockOutline focusedBlockOutline;
 
-        readonly CompositeDisposable _disposals = new CompositeDisposable();
+        private CompositeDisposable disposals = new CompositeDisposable();
 
         internal FocusedBlockViewer(FocusedBlockInfoProvider focusedBlockInfoProvider, BlockMeshProvider blockMeshProvider, FocusedBlockOutline focusedBlockOutline)
         {
-            _focusedBlockInfoProvider = focusedBlockInfoProvider;
-            _blockMeshProvider = blockMeshProvider;
-            _focusedBlockOutline = focusedBlockOutline;
+            this.focusedBlockInfoProvider = focusedBlockInfoProvider;
+            this.blockMeshProvider = blockMeshProvider;
+            this.focusedBlockOutline = focusedBlockOutline;
         }
 
         public void Initialize()
@@ -26,23 +26,23 @@ namespace UnityView.Players
                 .EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    if (!_focusedBlockInfoProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
+                    if (!focusedBlockInfoProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
                     {
-                        _focusedBlockOutline.SetVisible(false);
+                        focusedBlockOutline.SetVisible(false);
                         return;
                     }
 
-                    var blockMesh = _blockMeshProvider.GetBlockMesh(focusedBlockInfo.BlockType);
-                    _focusedBlockOutline.SetMesh(blockMesh.Value);
-                    _focusedBlockOutline.SetVisible(true);
-                    _focusedBlockOutline.SetPivot(focusedBlockInfo.PivotCoordinate);
+                    var blockMesh = blockMeshProvider.GetBlockMesh(focusedBlockInfo.blockType);
+                    focusedBlockOutline.SetMesh(blockMesh.value);
+                    focusedBlockOutline.SetVisible(true);
+                    focusedBlockOutline.SetPivot(focusedBlockInfo.pivotCoordinate);
                 })
-                .AddTo(_disposals);
+                .AddTo(disposals);
         }
 
         public void Dispose()
         {
-            _disposals.Dispose();
+            disposals.Dispose();
         }
     }
 }

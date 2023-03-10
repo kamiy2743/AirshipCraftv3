@@ -3,24 +3,24 @@ using Unity.Mathematics;
 
 namespace UnityView.Rendering.Chunks
 {
-    class OutOfRangeChunkDisposer
+    internal class OutOfRangeChunkDisposer
     {
-        readonly CreatedChunkRenderers _createdChunkRenderers;
+        private CreatedChunkRenderers createdChunkRenderers;
 
         internal OutOfRangeChunkDisposer(CreatedChunkRenderers createdChunkRenderers)
         {
-            _createdChunkRenderers = createdChunkRenderers;
+            this.createdChunkRenderers = createdChunkRenderers;
         }
 
         internal void Execute(ChunkGridCoordinate playerChunk, int maxRenderingRadius)
         {
-            foreach (var cgc in _createdChunkRenderers.CreatedCoordinatesDeepCopy)
+            foreach (var cgc in createdChunkRenderers.CreatedCoordinatesDeepCopy)
             {
-                if (math.distance(cgc.X, playerChunk.X) > maxRenderingRadius ||
-                    math.distance(cgc.Y, playerChunk.Y) > maxRenderingRadius ||
-                    math.distance(cgc.Z, playerChunk.Z) > maxRenderingRadius)
+                if (math.distance(cgc.x, playerChunk.x) > maxRenderingRadius ||
+                    math.distance(cgc.y, playerChunk.y) > maxRenderingRadius ||
+                    math.distance(cgc.z, playerChunk.z) > maxRenderingRadius)
                 {
-                    _createdChunkRenderers.Dispose(cgc);
+                    createdChunkRenderers.Dispose(cgc);
                 }
             }
         }

@@ -3,10 +3,10 @@ using Domain.Items;
 
 namespace Domain.Inventories
 {
-    class Slot
+    internal class Slot
     {
-        IItem _item;
-        Amount _amount;
+        private IItem item;
+        private Amount amount;
 
         internal void SetItem(IItem item, Amount amount)
         {
@@ -15,8 +15,8 @@ namespace Domain.Inventories
                 throw new Exception($"max amount is {item.GetMaxAmount()}, but given {amount}");
             }
 
-            _item = item;
-            _amount = amount;
+            this.item = item;
+            this.amount = amount;
         }
     }
 }

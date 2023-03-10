@@ -7,26 +7,26 @@ namespace UseCase
 {
     public class ChunkBlockSetter
     {
-        readonly IChunkRepository _chunkRepository;
-        readonly IChunkProvider _chunkProvider;
+        private IChunkRepository chunkRepository;
+        private IChunkProvider chunkProvider;
 
-        readonly Subject<BlockGridCoordinate> _onBlockUpdated = new Subject<BlockGridCoordinate>();
+        private Subject<BlockGridCoordinate> _onBlockUpdated = new Subject<BlockGridCoordinate>();
         public IObservable<BlockGridCoordinate> OnBlockUpdated => _onBlockUpdated;
 
         internal ChunkBlockSetter(IChunkRepository chunkRepository, IChunkProvider chunkProvider)
         {
-            _chunkRepository = chunkRepository;
-            _chunkProvider = chunkProvider;
+            this.chunkRepository = chunkRepository;
+            this.chunkProvider = chunkProvider;
         }
 
         internal void SetBlock(BlockGridCoordinate coordinate, Block block)
         {
             var cgc = ChunkGridCoordinate.Parse(coordinate);
             var rc = RelativeCoordinate.Parse(coordinate);
-            var chunk = _chunkProvider.GetChunk(cgc);
+            var chunk = chunkProvider.GetChunk(cgc);
 
             chunk.SetBlock(rc, block);
-            _chunkRepository.Store(chunk);
+            chunkRepository.Store(chunk);
 
             _onBlockUpdated.OnNext(coordinate);
         }

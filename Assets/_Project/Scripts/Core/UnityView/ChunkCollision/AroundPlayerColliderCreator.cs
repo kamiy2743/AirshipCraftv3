@@ -3,17 +3,17 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    class AroundPlayerColliderCreator
+    internal class AroundPlayerColliderCreator
     {
-        readonly CreatedColliders _createdColliders;
-        readonly ChunkColliderFactory _chunkColliderFactory;
-        readonly ChunkBoundsFactory _chunkBoundsFactory;
+        private CreatedColliders createdColliders;
+        private ChunkColliderFactory chunkColliderFactory;
+        private ChunkBoundsFactory chunkBoundsFactory;
 
         internal AroundPlayerColliderCreator(CreatedColliders createdColliders, ChunkColliderFactory chunkColliderFactory, ChunkBoundsFactory chunkBoundsFactory)
         {
-            _createdColliders = createdColliders;
-            _chunkColliderFactory = chunkColliderFactory;
-            _chunkBoundsFactory = chunkBoundsFactory;
+            this.createdColliders = createdColliders;
+            this.chunkColliderFactory = chunkColliderFactory;
+            this.chunkBoundsFactory = chunkBoundsFactory;
         }
 
         internal void Execute(ChunkGridCoordinate playerChunk, int radius)
@@ -29,16 +29,16 @@ namespace UnityView.ChunkCollision
                             continue;
                         }
 
-                        if (_createdColliders.Contains(cgc))
+                        if (createdColliders.Contains(cgc))
                         {
                             continue;
                         }
 
-                        var chunkCollider = _chunkColliderFactory.Create();
-                        var chunkBounds = _chunkBoundsFactory.Create(cgc);
+                        var chunkCollider = chunkColliderFactory.Create();
+                        var chunkBounds = chunkBoundsFactory.Create(cgc);
                         chunkCollider.SetBounds(chunkBounds);
 
-                        _createdColliders.Add(cgc, chunkCollider);
+                        createdColliders.Add(cgc, chunkCollider);
                     }
                 }
             }

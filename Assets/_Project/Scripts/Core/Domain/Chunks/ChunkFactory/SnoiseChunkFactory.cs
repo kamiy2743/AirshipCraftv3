@@ -1,17 +1,17 @@
+using Unity.Jobs;
 using Unity.Burst;
 using Unity.Collections;
-using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
-    class SnoiseChunkFactory : IChunkFactory
+    internal class SnoiseChunkFactory : IChunkFactory
     {
-        readonly SnoiseTerrainGenerator _snoiseTerrainGenerator;
+        private SnoiseTerrainGenerator snoiseTerrainGenerator;
 
         internal SnoiseChunkFactory()
         {
-            _snoiseTerrainGenerator = new SnoiseTerrainGenerator(128, 0.01f);
+            snoiseTerrainGenerator = new SnoiseTerrainGenerator(128, 0.01f);
         }
 
         public Chunk Create(ChunkGridCoordinate chunkGridCoordinate)
@@ -20,25 +20,25 @@ namespace Domain.Chunks
 
             var job = new CreateTerrainJob
             {
-                Pivot = (int3)pivot,
-                Generator = _snoiseTerrainGenerator,
-                Result = new NativeArray<Block>(Chunk.BlocksCount, Allocator.TempJob)
+                pivot = (int3)pivot,
+                generator = snoiseTerrainGenerator,
+                result = new NativeArray<Block>(Chunk.BlocksCount, Allocator.TempJob)
             };
 
             job.Schedule().Complete();
 
-            var blocks = new ChunkBlocks(job.Result.ToArray());
-            job.Result.Dispose();
+            var blocks = new ChunkBlocks(job.result.ToArray());
+            job.result.Dispose();
 
             return new Chunk(chunkGridCoordinate, blocks);
         }
 
         [BurstCompile]
-        struct CreateTerrainJob : IJob
+        private unsafe struct CreateTerrainJob : IJob
         {
-            [ReadOnly] internal int3 Pivot;
-            [ReadOnly] internal SnoiseTerrainGenerator Generator;
-            internal NativeArray<Block> Result;
+            [ReadOnly] internal int3 pivot;
+            [ReadOnly] internal SnoiseTerrainGenerator generator;
+            internal NativeArray<Block> result;
 
             public void Execute()
             {
@@ -50,8 +50,8 @@ namespace Domain.Chunks
                     {
                         for (int z = 0; z < Chunk.BlockSide; z++)
                         {
-                            var blockType = Generator.GetBlockType(Pivot.x + x, Pivot.y + y, Pivot.z + z);
-                            Result[seek] = new Block(blockType);
+                            var blockType = generator.GetBlockType(pivot.x + x, pivot.y + y, pivot.z + z);
+                            result[seek] = new Block(blockType);
                             seek++;
                         }
                     }

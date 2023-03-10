@@ -7,9 +7,9 @@ using UnityView.Rendering;
 namespace MasterData
 {
     [CreateAssetMenu(fileName = "MasterBlockTextures", menuName = "ScriptableObjects/MasterBlockTextures")]
-    class MasterBlockTextures : ScriptableObject, IDisposable
+    internal class MasterBlockTextures : ScriptableObject, IDisposable
     {
-        [SerializeField] List<Asset_3D_Blocks_3_0_Texture> _asset_3D_Blocks_3_0_Textures;
+        [SerializeField] private List<Asset_3D_Blocks_3_0_Texture> _asset_3D_Blocks_3_0_Textures;
         internal IReadOnlyList<Asset_3D_Blocks_3_0_Texture> Asset_3D_Blocks_3_0_Textures => _asset_3D_Blocks_3_0_Textures;
 
         public void Dispose()

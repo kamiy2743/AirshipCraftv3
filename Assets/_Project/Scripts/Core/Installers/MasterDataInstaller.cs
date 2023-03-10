@@ -4,7 +4,7 @@ using UnityView.Rendering;
 
 namespace Installers
 {
-    class MasterDataInstaller : MonoInstaller
+    internal class MasterDataInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

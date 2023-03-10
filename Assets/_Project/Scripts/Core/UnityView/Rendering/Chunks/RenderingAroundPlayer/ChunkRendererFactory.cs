@@ -3,10 +3,10 @@ using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkRendererFactory : MonoBehaviour
+    internal class ChunkRendererFactory : MonoBehaviour
     {
-        [SerializeField] ChunkRenderer chunkRendererPrefab;
-        [SerializeField] Transform parent;
+        [SerializeField] private ChunkRenderer chunkRendererPrefab;
+        [SerializeField] private Transform parent;
 
         internal ChunkRenderer Create()
         {

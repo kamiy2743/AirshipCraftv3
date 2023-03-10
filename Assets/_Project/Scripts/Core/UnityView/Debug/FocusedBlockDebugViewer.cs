@@ -5,17 +5,17 @@ using TMPro;
 
 namespace UnityView.Debug
 {
-    class FocusedBlockDebugViewer : MonoBehaviour
+    internal class FocusedBlockDebugViewer : MonoBehaviour
     {
-        [Inject] FocusedBlockInfoProvider focusedBlockInfoProvider;
+        [Inject] private FocusedBlockInfoProvider focusedBlockInfoProvider;
 
-        [SerializeField] TextMeshProUGUI text;
+        [SerializeField] private TextMeshProUGUI text;
 
-        void Update()
+        private void Update()
         {
             if (focusedBlockInfoProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
             {
-                text.text = $"Focused: {focusedBlockInfo.PivotCoordinate}, {focusedBlockInfo.BlockType}";
+                text.text = $"Focused: {focusedBlockInfo.pivotCoordinate}, {focusedBlockInfo.blockType}";
             }
             else
             {

@@ -3,24 +3,24 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    class OutOfRangeColliderDisposer
+    internal class OutOfRangeColliderDisposer
     {
-        readonly CreatedColliders _createdColliders;
+        private CreatedColliders createdColliders;
 
         internal OutOfRangeColliderDisposer(CreatedColliders createdColliders)
         {
-            _createdColliders = createdColliders;
+            this.createdColliders = createdColliders;
         }
 
         internal void Execute(ChunkGridCoordinate playerChunk, int radius)
         {
-            foreach (var cgc in _createdColliders.CreatedCoordinatesDeepCopy)
+            foreach (var cgc in createdColliders.CreatedCoordinatesDeepCopy)
             {
-                if (math.distance(cgc.X, playerChunk.X) > radius ||
-                    math.distance(cgc.Y, playerChunk.Y) > radius ||
-                    math.distance(cgc.Z, playerChunk.Z) > radius)
+                if (math.distance(cgc.x, playerChunk.x) > radius ||
+                    math.distance(cgc.y, playerChunk.y) > radius ||
+                    math.distance(cgc.z, playerChunk.z) > radius)
                 {
-                    _createdColliders.Dispose(cgc);
+                    createdColliders.Dispose(cgc);
                 }
             }
         }

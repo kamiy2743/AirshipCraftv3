@@ -9,19 +9,19 @@ using UnityView.Players;
 
 namespace UnityView.Rendering.Chunks
 {
-    class InSightChunkCreator
+    internal class InSightChunkCreator
     {
-        readonly ChunkRendererFactory _chunkRendererFactory;
-        readonly ChunkMeshFactory _chunkMeshFactory;
-        readonly CreatedChunkRenderers _createdChunkRenderers;
-        readonly PlayerCamera _playerCamera;
+        private ChunkRendererFactory chunkRendererFactory;
+        private ChunkMeshFactory chunkMeshFactory;
+        private CreatedChunkRenderers createdChunkRenderers;
+        private PlayerCamera playerCamera;
 
         internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshFactory chunkMeshFactory, CreatedChunkRenderers createdChunkRenderers, PlayerCamera playerCamera)
         {
-            _chunkRendererFactory = chunkRendererFactory;
-            _chunkMeshFactory = chunkMeshFactory;
-            _createdChunkRenderers = createdChunkRenderers;
-            _playerCamera = playerCamera;
+            this.chunkRendererFactory = chunkRendererFactory;
+            this.chunkMeshFactory = chunkMeshFactory;
+            this.createdChunkRenderers = createdChunkRenderers;
+            this.playerCamera = playerCamera;
         }
 
         internal async UniTask ExecuteAsync(ChunkGridCoordinate playerChunk, int maxRenderingRadius, CancellationToken ct)
@@ -43,20 +43,20 @@ namespace UnityView.Rendering.Chunks
                     var cgc = item.Item1;
                     var mesh = item.Item2;
 
-                    var chunkRenderer = _chunkRendererFactory.Create();
+                    var chunkRenderer = chunkRendererFactory.Create();
                     chunkRenderer.SetMesh(mesh);
-                    _createdChunkRenderers.Add(cgc, chunkRenderer);
+                    createdChunkRenderers.Add(cgc, chunkRenderer);
                 }
             }
         }
 
-        async UniTask CreateMeshesTask(
+        private async UniTask CreateMeshesTask(
             ChunkGridCoordinate playerChunk,
             int maxRenderingRadius,
             Queue<(ChunkGridCoordinate, ChunkMesh)> createdMeshes,
             CancellationToken ct)
         {
-            var inSightChecker = new InSightChecker(_playerCamera.ViewportMatrix);
+            var inSightChecker = new InSightChecker(playerCamera.ViewportMatrix);
             var createChunkQueue = new CreateChunkQueue((int)math.pow(maxRenderingRadius * 2 + 1, 3));
 
             await UniTask.SwitchToThreadPool();
@@ -72,7 +72,7 @@ namespace UnityView.Rendering.Chunks
                             continue;
                         }
 
-                        if (_createdChunkRenderers.Contains(cgc))
+                        if (createdChunkRenderers.Contains(cgc))
                         {
                             continue;
                         }
@@ -95,14 +95,14 @@ namespace UnityView.Rendering.Chunks
                     break;
                 }
 
-                var mesh = _chunkMeshFactory.Create(cgc);
+                var mesh = chunkMeshFactory.Create(cgc);
                 createdMeshes.Enqueue((cgc, mesh));
             }
 
             await UniTask.SwitchToMainThread();
         }
 
-        Bounds CalcBounds(ChunkGridCoordinate cgc)
+        private Bounds CalcBounds(ChunkGridCoordinate cgc)
         {
             var size = Vector3.one * Chunk.BlockSide;
             var center = (Vector3)cgc.ToPivotCoordinate() + (size * 0.5f);

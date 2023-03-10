@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace UnityView.ChunkCollision
 {
-    class ChunkColliderFactory : MonoBehaviour
+    internal class ChunkColliderFactory : MonoBehaviour
     {
-        [SerializeField] ChunkCollider chunkColliderPrefab;
-        [SerializeField] Transform parent;
+        [SerializeField] private ChunkCollider chunkColliderPrefab;
+        [SerializeField] private Transform parent;
 
         internal ChunkCollider Create()
         {

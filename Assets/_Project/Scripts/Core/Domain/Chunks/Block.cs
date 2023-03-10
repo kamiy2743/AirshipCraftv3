@@ -1,17 +1,17 @@
 namespace Domain.Chunks
 {
-    public readonly struct Block
+    public struct Block
     {
-        public readonly BlockType BlockType;
+        public readonly BlockType blockType;
 
         public Block(BlockType blockType)
         {
-            BlockType = blockType;
+            this.blockType = blockType;
         }
 
         internal Block DeepCopy()
         {
-            return new Block(BlockType);
+            return new Block(blockType);
         }
     }
 }

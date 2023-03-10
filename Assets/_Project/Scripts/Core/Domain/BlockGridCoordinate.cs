@@ -6,12 +6,12 @@ namespace Domain
 {
     public record BlockGridCoordinate
     {
-        public readonly int X;
-        public readonly int Y;
-        public readonly int Z;
+        public readonly int x;
+        public readonly int y;
+        public readonly int z;
 
-        const int Max = ChunkGridCoordinate.Max * Chunk.BlockSide;
-        const int Min = ChunkGridCoordinate.Min * Chunk.BlockSide;
+        private const int Max = ChunkGridCoordinate.Max * Chunk.BlockSide;
+        private const int Min = ChunkGridCoordinate.Min * Chunk.BlockSide;
 
         public BlockGridCoordinate(float3 value) : this((int)math.floor(value.x), (int)math.floor(value.y), (int)math.floor(value.z)) { }
         internal BlockGridCoordinate(int x, int y, int z)
@@ -21,12 +21,12 @@ namespace Domain
                 throw new ArgumentException($"{x}, {y}, {z}");
             }
 
-            X = x;
-            Y = y;
-            Z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
-        static bool IsValid(int x, int y, int z)
+        private bool IsValid(int x, int y, int z)
         {
             if (x > Max || x < Min) return false;
             if (y > Max || y < Min) return false;
@@ -38,7 +38,7 @@ namespace Domain
         {
             try
             {
-                result = new BlockGridCoordinate(X + value.x, Y + value.y, Z + value.z);
+                result = new BlockGridCoordinate(this.x + value.x, this.y + value.y, this.z + value.z);
                 return true;
             }
             catch
@@ -50,7 +50,7 @@ namespace Domain
 
         public float3 ToPivotCoordinate()
         {
-            return new float3(X, Y, Z);
+            return new float3(x, y, z);
         }
 
         public static bool TryParse(float3 value, out BlockGridCoordinate result)

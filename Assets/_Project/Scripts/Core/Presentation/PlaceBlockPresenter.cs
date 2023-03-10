@@ -6,33 +6,33 @@ using UseCase;
 
 namespace Presentation
 {
-    class PlaceBlockPresenter : IInitializable, IDisposable
+    internal class PlaceBlockPresenter : IInitializable, IDisposable
     {
-        readonly PlaceBlockHandler _placeBlockHandler;
-        readonly PlaceBlockUseCase _placeBlockUseCase;
+        private PlaceBlockHandler placeBlockHandler;
+        private PlaceBlockUseCase placeBlockUseCase;
 
-        readonly CompositeDisposable _disposals = new CompositeDisposable();
+        private CompositeDisposable disposals = new CompositeDisposable();
 
         internal PlaceBlockPresenter(PlaceBlockHandler placeBlockHandler, PlaceBlockUseCase placeBlockUseCase)
         {
-            _placeBlockHandler = placeBlockHandler;
-            _placeBlockUseCase = placeBlockUseCase;
+            this.placeBlockHandler = placeBlockHandler;
+            this.placeBlockUseCase = placeBlockUseCase;
         }
 
         public void Initialize()
         {
-            _placeBlockHandler
+            placeBlockHandler
                 .OnPlaceBlock
                 .Subscribe(placePosition =>
                 {
-                    _placeBlockUseCase.PlaceBlock(placePosition, Domain.BlockType.Stone);
+                    placeBlockUseCase.PlaceBlock(placePosition, Domain.BlockType.Stone);
                 })
-                .AddTo(_disposals);
+                .AddTo(disposals);
         }
 
         public void Dispose()
         {
-            _disposals.Dispose();
+            disposals.Dispose();
         }
     }
 }

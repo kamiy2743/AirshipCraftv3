@@ -1,17 +1,17 @@
 namespace UnityView.ChunkCollision
 {
-    class ChunkColliderUpdater
+    internal class ChunkColliderUpdater
     {
-        readonly CreatedColliders _createdColliders;
+        private CreatedColliders createdColliders;
 
         internal ChunkColliderUpdater(CreatedColliders createdColliders)
         {
-            _createdColliders = createdColliders;
+            this.createdColliders = createdColliders;
         }
 
         internal void Update(ChunkBounds chunkBounds)
         {
-            if (!_createdColliders.TryGetValue(chunkBounds.ChunkGridCoordinate, out var chunkCollider))
+            if (!createdColliders.TryGetValue(chunkBounds.chunkGridCoordinate, out var chunkCollider))
             {
                 return;
             }

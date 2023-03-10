@@ -4,18 +4,18 @@ using UnityView.Rendering;
 
 namespace MasterData
 {
-    class BlockShapeMeshProvider : IBlockShapeMeshProvider
+    internal class BlockShapeMeshProvider : IBlockShapeMeshProvider
     {
-        readonly MasterBlockShapeMeshes _masterBlockShapeMeshes;
+        private MasterBlockShapeMeshes masterBlockShapeMeshes;
 
         internal BlockShapeMeshProvider(MasterBlockShapeMeshes masterBlockShapeMeshes)
         {
-            _masterBlockShapeMeshes = masterBlockShapeMeshes;
+            this.masterBlockShapeMeshes = masterBlockShapeMeshes;
         }
 
         public Mesh GetMesh(BlockShape blockShape)
         {
-            return _masterBlockShapeMeshes.BlockShapeMeshes[blockShape];
+            return masterBlockShapeMeshes.BlockShapeMeshes[blockShape];
         }
     }
 }

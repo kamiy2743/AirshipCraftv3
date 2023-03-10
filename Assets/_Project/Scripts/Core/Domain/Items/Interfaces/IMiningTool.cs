@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    interface IMiningTool : IItem
+    internal interface IMiningTool : IItem
     {
         MiningSpeed GetMiningSpeed();
         void UseDurability();

@@ -4,21 +4,21 @@ using Domain.Chunks;
 
 namespace UnityView.ChunkCollision
 {
-    class ChunkBounds
+    internal class ChunkBounds
     {
-        internal readonly ChunkGridCoordinate ChunkGridCoordinate;
+        internal readonly ChunkGridCoordinate chunkGridCoordinate;
 
-        readonly Dictionary<RelativeCoordinate, BlockBounds> _boundsDictionary = new Dictionary<RelativeCoordinate, BlockBounds>();
-        internal IReadOnlyCollection<BlockBounds> BlockBoundsCollection => _boundsDictionary.Values;
+        private Dictionary<RelativeCoordinate, BlockBounds> boundsDictionary = new Dictionary<RelativeCoordinate, BlockBounds>();
+        internal IReadOnlyCollection<BlockBounds> BlockBoundsCollection => boundsDictionary.Values;
 
         internal ChunkBounds(ChunkGridCoordinate chunkGridCoordinate)
         {
-            ChunkGridCoordinate = chunkGridCoordinate;
+            this.chunkGridCoordinate = chunkGridCoordinate;
         }
 
         internal void SetBlockBoundsDirectly(RelativeCoordinate relativeCoordinate, BlockBounds bounds)
         {
-            _boundsDictionary[relativeCoordinate] = bounds;
+            boundsDictionary[relativeCoordinate] = bounds;
         }
     }
 }

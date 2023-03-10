@@ -4,15 +4,15 @@ using Cysharp.Threading.Tasks;
 
 namespace Presentation
 {
-    class EnterWorldModel
+    internal class EnterWorldModel
     {
-        [Inject] SceneLoader _sceneLoader;
-        [Inject] EnterWorldUseCase _enterWorldUseCase;
+        [Inject] private SceneLoader sceneLoader;
+        [Inject] private EnterWorldUseCase enterWorldUseCase;
 
         internal async UniTask EnterWorldAsync()
         {
-            await _sceneLoader.LoadSceneAsync(SceneName.World);
-            _enterWorldUseCase.EnterWorld();
+            await sceneLoader.LoadSceneAsync(SceneName.World);
+            enterWorldUseCase.EnterWorld();
         }
     }
 }

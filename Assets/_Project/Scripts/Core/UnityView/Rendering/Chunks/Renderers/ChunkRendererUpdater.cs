@@ -3,18 +3,18 @@ using UnityView.Rendering.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkRendererUpdater
+    internal class ChunkRendererUpdater
     {
-        readonly CreatedChunkRenderers _createdChunkRenderers;
+        private CreatedChunkRenderers createdChunkRenderers;
 
         internal ChunkRendererUpdater(CreatedChunkRenderers createdChunkRenderers)
         {
-            _createdChunkRenderers = createdChunkRenderers;
+            this.createdChunkRenderers = createdChunkRenderers;
         }
 
         internal void Update(ChunkMesh chunkMesh)
         {
-            if (!_createdChunkRenderers.TryGetValue(chunkMesh.ChunkGridCoordinate, out var chunkRenderer))
+            if (!createdChunkRenderers.TryGetValue(chunkMesh.chunkGridCoordinate, out var chunkRenderer))
             {
                 return;
             }

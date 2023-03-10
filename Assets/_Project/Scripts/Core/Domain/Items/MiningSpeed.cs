@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    record MiningSpeed
+    internal record MiningSpeed
     {
 
     }

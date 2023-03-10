@@ -3,39 +3,39 @@ using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkSurfaceProvider
+    internal class ChunkSurfaceProvider
     {
-        readonly IChunkSurfaceRepository _chunkSurfaceRepository;
-        readonly ChunkSurfaceFactory _chunkSurfaceFactory;
+        private IChunkSurfaceRepository chunkSurfaceRepository;
+        private ChunkSurfaceFactory chunkSurfaceFactory;
 
-        readonly Dictionary<ChunkGridCoordinate, ChunkSurface> _surfaceCache = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
+        private Dictionary<ChunkGridCoordinate, ChunkSurface> surfaceCache = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
 
         internal ChunkSurfaceProvider(IChunkSurfaceRepository chunkSurfaceRepository, ChunkSurfaceFactory chunkSurfaceFactory)
         {
-            _chunkSurfaceRepository = chunkSurfaceRepository;
-            _chunkSurfaceFactory = chunkSurfaceFactory;
+            this.chunkSurfaceRepository = chunkSurfaceRepository;
+            this.chunkSurfaceFactory = chunkSurfaceFactory;
         }
 
         internal ChunkSurface GetChunkSurface(ChunkGridCoordinate chunkGridCoordinate)
         {
-            if (_surfaceCache.TryGetValue(chunkGridCoordinate, out var cache))
+            if (surfaceCache.TryGetValue(chunkGridCoordinate, out var cache))
             {
                 return cache;
             }
 
             try
             {
-                var surface = _chunkSurfaceRepository.Fetch(chunkGridCoordinate);
+                var surface = chunkSurfaceRepository.Fetch(chunkGridCoordinate);
 
-                _surfaceCache.Add(chunkGridCoordinate, surface);
+                surfaceCache.Add(chunkGridCoordinate, surface);
                 return surface;
             }
             catch
             {
-                var surface = _chunkSurfaceFactory.Create(chunkGridCoordinate);
-                _chunkSurfaceRepository.Store(surface);
+                var surface = chunkSurfaceFactory.Create(chunkGridCoordinate);
+                chunkSurfaceRepository.Store(surface);
 
-                _surfaceCache.Add(chunkGridCoordinate, surface);
+                surfaceCache.Add(chunkGridCoordinate, surface);
                 return surface;
             }
         }

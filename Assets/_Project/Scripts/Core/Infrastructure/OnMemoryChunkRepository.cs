@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 namespace Infrastructure
 {
-    class OnMemoryChunkRepository : IChunkRepository
+    internal class OnMemoryChunkRepository : IChunkRepository
     {
-        readonly Dictionary<ChunkGridCoordinate, Chunk> _chunks = new Dictionary<ChunkGridCoordinate, Chunk>();
+        internal Dictionary<ChunkGridCoordinate, Chunk> chunks = new Dictionary<ChunkGridCoordinate, Chunk>();
 
         public void Store(Chunk chunk)
         {
-            _chunks[chunk.ChunkGridCoordinate] = chunk.DeepCopy();
+            chunks[chunk.chunkGridCoordinate] = chunk.DeepCopy();
         }
 
         public Chunk Fetch(ChunkGridCoordinate chunkGridCoordinate)
         {
-            return _chunks[chunkGridCoordinate].DeepCopy();
+            return chunks[chunkGridCoordinate].DeepCopy();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Domain
 
     public static class BlockTypeExt
     {
-        static BlockType[] _array;
+        private static BlockType[] _array;
         public static BlockType[] Array => _array ??= Enum.GetValues(typeof(BlockType)).Cast<BlockType>().ToArray();
     }
 }

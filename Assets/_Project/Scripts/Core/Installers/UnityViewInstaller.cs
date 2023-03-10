@@ -9,14 +9,14 @@ using UnityView.Players;
 
 namespace Installers
 {
-    class UnityViewInstaller : MonoInstaller
+    internal class UnityViewInstaller : MonoInstaller
     {
-        [SerializeField] ChunkRendererFactory chunkRendererFactory;
-        [SerializeField] ChunkColliderFactory chunkColliderFactory;
-        [SerializeField] Transform playerTransform;
-        [SerializeField] PlayerCamera playerCamera;
-        [SerializeField] FocusedBlockOutline focusedBlockOutline;
-        [SerializeField] Material blockMaterial;
+        [SerializeField] private ChunkRendererFactory chunkRendererFactory;
+        [SerializeField] private ChunkColliderFactory chunkColliderFactory;
+        [SerializeField] private Transform playerTransform;
+        [SerializeField] private PlayerCamera playerCamera;
+        [SerializeField] private FocusedBlockOutline focusedBlockOutline;
+        [SerializeField] private Material blockMaterial;
 
         public override void InstallBindings()
         {

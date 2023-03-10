@@ -7,18 +7,19 @@ using Domain;
 namespace MasterData
 {
     [CreateAssetMenu(fileName = "MasterBlockShapeMeshes", menuName = "ScriptableObjects/MasterBlockShapeMeshes")]
-    class MasterBlockShapeMeshes : ScriptableObject
+    internal class MasterBlockShapeMeshes : ScriptableObject
     {
-        [SerializeField] List<BlockShapeMeshRecord> meshes;
+        [SerializeField] private List<BlockShapeMeshRecord> meshes;
 
         internal IReadOnlyDictionary<BlockShape, Mesh> BlockShapeMeshes => _blockShapeMeshes ??= meshes.ToDictionary(v => v.blockShape, v => v.mesh);
-        Dictionary<BlockShape, Mesh> _blockShapeMeshes;
+        private Dictionary<BlockShape, Mesh> _blockShapeMeshes;
 
         [Serializable]
-        record BlockShapeMeshRecord
+        private record BlockShapeMeshRecord
         {
             public BlockShape blockShape;
             public Mesh mesh;
         }
     }
+
 }

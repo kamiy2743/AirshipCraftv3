@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    interface IWeapon : IItem
+    internal interface IWeapon : IItem
     {
         Strength GetStrength();
         void UseDurability();

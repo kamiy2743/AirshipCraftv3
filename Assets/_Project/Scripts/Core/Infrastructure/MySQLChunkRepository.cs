@@ -3,7 +3,7 @@ using Domain.Chunks;
 
 namespace Infrastructure
 {
-    class MySqlChunkRepository : IChunkRepository
+    internal class MySQLChunkRepository : IChunkRepository
     {
         public void Store(Chunk chunk)
         {

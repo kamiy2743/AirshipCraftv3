@@ -6,33 +6,33 @@ using UseCase;
 
 namespace Presentation
 {
-    class BreakBlockPresenter : IInitializable, IDisposable
+    internal class BreakBlockPresenter : IInitializable, IDisposable
     {
-        readonly BreakBlockHandler _breakBlockHandler;
-        readonly BreakBlockUseCase _breakBlockUseCase;
+        private BreakBlockHandler breakBlockHandler;
+        private BreakBlockUseCase breakBlockUseCase;
 
-        readonly CompositeDisposable _disposals = new CompositeDisposable();
+        private CompositeDisposable disposals = new CompositeDisposable();
 
         internal BreakBlockPresenter(BreakBlockHandler breakBlockHandler, BreakBlockUseCase breakBlockUseCase)
         {
-            _breakBlockHandler = breakBlockHandler;
-            _breakBlockUseCase = breakBlockUseCase;
+            this.breakBlockHandler = breakBlockHandler;
+            this.breakBlockUseCase = breakBlockUseCase;
         }
 
         public void Initialize()
         {
-            _breakBlockHandler
+            breakBlockHandler
                 .OnBreakBlock
                 .Subscribe(breakPosition =>
                 {
-                    _breakBlockUseCase.BreakBlock(breakPosition);
+                    breakBlockUseCase.BreakBlock(breakPosition);
                 })
-                .AddTo(_disposals);
+                .AddTo(disposals);
         }
 
         public void Dispose()
         {
-            _disposals.Dispose();
+            disposals.Dispose();
         }
     }
 }

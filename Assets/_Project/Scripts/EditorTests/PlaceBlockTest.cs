@@ -28,7 +28,7 @@ public class PlaceBlockTest
         var rc = RelativeCoordinate.Parse(bgc);
         var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-        Assert.AreEqual(BlockType.Grass, block.BlockType);
+        Assert.AreEqual(BlockType.Grass, block.blockType);
     }
 
     [Test]
@@ -48,6 +48,6 @@ public class PlaceBlockTest
         var rc = RelativeCoordinate.Parse(bgc);
         var block = chunkProvider.GetChunk(cgc).GetBlock(rc);
 
-        Assert.AreEqual(BlockType.Dirt, block.BlockType);
+        Assert.AreEqual(BlockType.Dirt, block.blockType);
     }
 }
