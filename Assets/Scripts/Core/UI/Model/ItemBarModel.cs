@@ -1,8 +1,7 @@
 using System;
 using ACv3.Domain.Inventories;
-using ACv3.Utils;
 using UniRx;
-using UnityEngine;
+using Unity.Mathematics;
 
 namespace ACv3.UI.Model
 {
@@ -23,7 +22,7 @@ namespace ACv3.UI.Model
                 value++;
             }
 
-            selectedSlotID.Value = new ItemBarSlotId(MyMath.Repeat(value, ItemBarSlotId.Min, ItemBarSlotId.Max));
+            selectedSlotID.Value = new ItemBarSlotId(math.clamp(value, ItemBarSlotId.Min, ItemBarSlotId.Max));
         }
     }
 }

@@ -36,6 +36,6 @@ namespace ACv3.UnityView.Inputs
 
         public IObservable<ItemBarScrollDirection> OnItemBarScroll => inputActions.Player.ItemBarScroll.AsObservable()
             .Select(context => context.ReadValue<float>())
-            .Select(value => value < 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right);
+            .Select(value => value > 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right);
     }
 }

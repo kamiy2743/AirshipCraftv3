@@ -3,7 +3,6 @@ using ACv3.UI.Model;
 using ACv3.UI.View;
 using ACv3.UnityView.Inputs;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace ACv3.UI.Presenter
@@ -26,6 +25,8 @@ namespace ACv3.UI.Presenter
         
         void IInitializable.Initialize()
         {
+            view.Initialize();
+            
             inputProvider.OnItemBarScroll
                 .Subscribe(model.Scroll)
                 .AddTo(disposable);
