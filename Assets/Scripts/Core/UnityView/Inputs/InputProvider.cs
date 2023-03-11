@@ -1,3 +1,7 @@
+using System;
+using ACv3.Domain.Inventories;
+using ACv3.Extensions;
+using UniRx;
 using UnityEngine;
 
 namespace ACv3.UnityView.Inputs
@@ -29,5 +33,9 @@ namespace ACv3.UnityView.Inputs
         {
             return inputActions.Player.BreakBlock.ReadValue<float>() > 0;
         }
+
+        public IObservable<ItemBarScrollDirection> OnItemBarScroll => inputActions.Player.ItemBarScroll.AsObservable()
+            .Select(context => context.ReadValue<float>())
+            .Select(value => value < 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right);
     }
 }
