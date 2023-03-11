@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityView.Inputs;
+using ACv3.UnityView.Inputs;
 using Zenject;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     class DebugPlayerMover : MonoBehaviour
     {

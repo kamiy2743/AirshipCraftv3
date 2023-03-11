@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Presentation
+namespace ACv3.Presentation
 {
     class EntryScreenPresenter : MonoBehaviour
     {

@@ -1,10 +1,10 @@
 using System;
 using UniRx;
-using UnityView.Players;
-using UseCase;
+using ACv3.UnityView.Players;
+using ACv3.UseCase;
 using Zenject;
 
-namespace Presentation
+namespace ACv3.Presentation
 {
     public class BreakBlockPresenter : IInitializable, IDisposable
     {

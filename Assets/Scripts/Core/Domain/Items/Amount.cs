@@ -1,6 +1,6 @@
 using System;
 
-namespace Domain.Items
+namespace ACv3.Domain.Items
 {
     record Amount : IComparable<Amount>
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UseCase
+namespace ACv3.UseCase
 {
     public class EnterWorldUseCase
     {

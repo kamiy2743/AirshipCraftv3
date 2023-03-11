@@ -1,9 +1,9 @@
 using System;
-using Domain;
+using ACv3.Domain;
 using UniRx;
 using UnityEngine;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     public class PlayerChunkProvider : IDisposable
     {

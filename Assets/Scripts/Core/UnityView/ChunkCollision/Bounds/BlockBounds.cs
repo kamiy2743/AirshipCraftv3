@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     record BlockBounds
     {

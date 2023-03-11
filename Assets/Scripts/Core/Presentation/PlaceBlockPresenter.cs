@@ -1,11 +1,11 @@
 using System;
-using Domain;
+using ACv3.Domain;
 using UniRx;
-using UnityView.Players;
-using UseCase;
+using ACv3.UnityView.Players;
+using ACv3.UseCase;
 using Zenject;
 
-namespace Presentation
+namespace ACv3.Presentation
 {
     public class PlaceBlockPresenter : IInitializable, IDisposable
     {

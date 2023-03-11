@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
 
-namespace UnityView.Rendering
+namespace ACv3.UnityView.Rendering
 {
     public class BlockMeshProvider
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityView.Inputs
+namespace ACv3.UnityView.Inputs
 {
     public interface IInputProvider
     {

@@ -1,7 +1,7 @@
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     record ChunkMesh
     {

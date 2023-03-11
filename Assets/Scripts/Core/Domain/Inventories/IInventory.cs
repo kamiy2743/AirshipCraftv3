@@ -1,4 +1,4 @@
-namespace Domain.Inventories
+namespace ACv3.Domain.Inventories
 {
     interface IInventory
     {

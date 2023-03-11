@@ -1,4 +1,4 @@
-namespace Domain.Chunks
+namespace ACv3.Domain.Chunks
 {
     public interface IChunkFactory
     {

@@ -1,8 +1,8 @@
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
-using UnityView.Rendering;
+using ACv3.UnityView.Rendering;
 
-namespace MasterData
+namespace ACv3.MasterData
 {
     public class BlockShapeMeshProvider : IBlockShapeMeshProvider
     {

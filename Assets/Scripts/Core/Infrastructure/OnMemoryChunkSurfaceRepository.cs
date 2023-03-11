@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Domain;
-using UnityView.Rendering.Chunks;
+using ACv3.Domain;
+using ACv3.UnityView.Rendering.Chunks;
 
-namespace Infrastructure
+namespace ACv3.Infrastructure
 {
     public class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
     {

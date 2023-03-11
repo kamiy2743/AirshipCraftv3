@@ -1,7 +1,7 @@
-using Domain;
+using ACv3.Domain;
 using Unity.Mathematics;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class AroundPlayerColliderCreator
     {

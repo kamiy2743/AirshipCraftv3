@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Domain
+namespace ACv3.Domain
 {
     public enum BlockType
     {

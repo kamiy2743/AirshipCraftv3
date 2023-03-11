@@ -1,9 +1,9 @@
 using System;
 using UniRx;
-using UnityView.Players;
+using ACv3.UnityView.Players;
 using Zenject;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class AroundPlayerColliderHandler : IInitializable, IDisposable
     {

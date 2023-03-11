@@ -3,7 +3,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-namespace Domain.Chunks
+namespace ACv3.Domain.Chunks
 {
     public class SnoiseChunkFactory : IChunkFactory
     {

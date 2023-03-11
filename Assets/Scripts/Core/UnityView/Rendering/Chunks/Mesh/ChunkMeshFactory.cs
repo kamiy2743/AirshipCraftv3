@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 using UnityEngine;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     public class ChunkMeshFactory
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Domain;
-using Utils;
+using ACv3.Domain;
+using ACv3.Utils;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     class CreateChunkQueue
     {

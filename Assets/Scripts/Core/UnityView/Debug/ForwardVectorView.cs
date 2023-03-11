@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
-using UnityView.Players;
+using ACv3.UnityView.Players;
 using Zenject;
 
-namespace UnityView.Debug
+namespace ACv3.UnityView.Debug
 {
     class ForwardVectorView : MonoBehaviour
     {

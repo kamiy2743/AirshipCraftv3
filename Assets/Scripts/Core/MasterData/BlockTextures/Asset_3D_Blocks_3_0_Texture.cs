@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
-using UnityView.Rendering;
+using ACv3.UnityView.Rendering;
 
-namespace MasterData
+namespace ACv3.MasterData
 {
     [Serializable]
     record Asset_3D_Blocks_3_0_Texture : IDisposable

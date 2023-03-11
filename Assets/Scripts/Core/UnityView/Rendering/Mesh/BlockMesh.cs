@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace UnityView.Rendering
+namespace ACv3.UnityView.Rendering
 {
     record BlockMesh
     {

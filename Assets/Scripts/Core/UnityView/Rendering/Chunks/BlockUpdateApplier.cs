@@ -1,6 +1,6 @@
-using Domain;
+using ACv3.Domain;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     public class BlockUpdateApplier
     {

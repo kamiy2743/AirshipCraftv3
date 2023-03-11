@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace UnityView.Rendering
+namespace ACv3.UnityView.Rendering
 {
     public class TextureAtlasApplier : IInitializable
     {

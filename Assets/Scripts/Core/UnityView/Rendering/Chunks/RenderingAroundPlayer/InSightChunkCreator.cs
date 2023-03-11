@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityView.Players;
+using ACv3.UnityView.Players;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     public class InSightChunkCreator
     {

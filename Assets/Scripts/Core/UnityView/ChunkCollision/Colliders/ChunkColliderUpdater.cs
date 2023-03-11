@@ -1,4 +1,4 @@
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class ChunkColliderUpdater
     {

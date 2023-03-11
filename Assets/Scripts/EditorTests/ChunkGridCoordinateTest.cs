@@ -4,8 +4,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 
 public class ChunkGridCoordinateTest
 {

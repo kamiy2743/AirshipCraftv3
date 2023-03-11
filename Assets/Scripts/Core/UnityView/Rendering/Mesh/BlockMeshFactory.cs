@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
 
-namespace UnityView.Rendering
+namespace ACv3.UnityView.Rendering
 {
     public class BlockMeshFactory
     {

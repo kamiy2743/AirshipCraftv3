@@ -1,9 +1,9 @@
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 using Unity.Mathematics;
-using UnityView.Rendering.Chunks;
+using ACv3.UnityView.Rendering.Chunks;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class ChunkBoundsFactory
     {

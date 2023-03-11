@@ -1,9 +1,9 @@
 using System;
 using UniRx;
-using UnityView.Rendering;
+using ACv3.UnityView.Rendering;
 using Zenject;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     public class FocusedBlockViewer : IInitializable, IDisposable
     {

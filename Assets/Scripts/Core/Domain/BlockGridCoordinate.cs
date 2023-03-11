@@ -1,8 +1,8 @@
 using System;
-using Domain.Chunks;
+using ACv3.Domain.Chunks;
 using Unity.Mathematics;
 
-namespace Domain
+namespace ACv3.Domain
 {
     public record BlockGridCoordinate
     {

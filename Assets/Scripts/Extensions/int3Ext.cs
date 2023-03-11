@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-namespace Extensions
+namespace ACv3.Extensions
 {
     public static class int3Ext
     {

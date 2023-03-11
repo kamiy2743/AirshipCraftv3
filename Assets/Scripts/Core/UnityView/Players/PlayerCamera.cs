@@ -2,7 +2,7 @@ using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     public class PlayerCamera : MonoBehaviour
     {

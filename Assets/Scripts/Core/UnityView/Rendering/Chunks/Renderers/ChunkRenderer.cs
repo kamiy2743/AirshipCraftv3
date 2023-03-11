@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     class ChunkRenderer : MonoBehaviour, IDisposable
     {

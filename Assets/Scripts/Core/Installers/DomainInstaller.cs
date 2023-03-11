@@ -1,8 +1,8 @@
-using Domain.Chunks;
-using Infrastructure;
+using ACv3.Domain.Chunks;
+using ACv3.Infrastructure;
 using Zenject;
 
-namespace Installers
+namespace ACv3.Installers
 {
     class DomainInstaller : MonoInstaller
     {

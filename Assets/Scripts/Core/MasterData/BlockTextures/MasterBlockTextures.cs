@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MasterData
+namespace ACv3.MasterData
 {
     [CreateAssetMenu(fileName = "MasterBlockTextures", menuName = "ScriptableObjects/MasterBlockTextures")]
    public class MasterBlockTextures : ScriptableObject, IDisposable

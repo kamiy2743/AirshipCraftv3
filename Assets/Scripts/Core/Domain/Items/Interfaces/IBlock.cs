@@ -1,4 +1,4 @@
-namespace Domain.Items
+namespace ACv3.Domain.Items
 {
     interface IBlock : IItem
     {

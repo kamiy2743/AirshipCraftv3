@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class ChunkColliderFactory : MonoBehaviour
     {

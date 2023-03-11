@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Domain;
-using UnityView.Rendering.Chunks;
+using ACv3.Domain;
+using ACv3.UnityView.Rendering.Chunks;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class UpdatedChunkBoundsCalculator
     {

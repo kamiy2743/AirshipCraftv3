@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Domain.Items;
+using ACv3.Domain.Items;
 
-namespace Domain.Inventories
+namespace ACv3.Domain.Inventories
 {
     class PlayerInventory : IInventory
     {

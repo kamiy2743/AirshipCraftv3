@@ -1,8 +1,8 @@
-using MasterData;
+using ACv3.MasterData;
 using UnityEngine;
 using Zenject;
 
-namespace Installers
+namespace ACv3.Installers
 {
     [CreateAssetMenu(fileName = "MasterBlockShapeMeshesInstaller", menuName = "Installers/MasterBlockShapeMeshesInstaller")]
     class MasterBlockShapeMeshesInstaller : ScriptableObjectInstaller<MasterBlockShapeMeshesInstaller>

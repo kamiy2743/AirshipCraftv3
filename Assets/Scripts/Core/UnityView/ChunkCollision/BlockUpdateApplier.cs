@@ -1,6 +1,6 @@
-using Domain;
+using ACv3.Domain;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class BlockUpdateApplier
     {

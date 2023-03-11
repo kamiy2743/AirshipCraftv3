@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityView.Rendering;
+using ACv3.UnityView.Rendering;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     public class FocusedBlockOutline : MonoBehaviour
     {

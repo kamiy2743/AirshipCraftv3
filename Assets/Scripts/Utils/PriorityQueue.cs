@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Utils
+namespace ACv3.Utils
 {
     public class PriorityQueue<T> where T : IComparable<T>
     {

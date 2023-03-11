@@ -1,8 +1,8 @@
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 using UnityEngine;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     public class FocusedBlockInfoProvider
     {

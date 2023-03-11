@@ -1,4 +1,4 @@
-namespace Domain
+namespace ACv3.Domain
 {
     public enum BlockShape
     {

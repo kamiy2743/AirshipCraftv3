@@ -1,6 +1,6 @@
 using System;
 
-namespace Domain.Chunks
+namespace ACv3.Domain.Chunks
 {
     class ChunkBlocks
     {

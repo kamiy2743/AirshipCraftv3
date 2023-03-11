@@ -1,8 +1,8 @@
-using Domain.Chunks;
+using ACv3.Domain.Chunks;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace UnityView.Debug
+namespace ACv3.UnityView.Debug
 {
     class ChunkDebugger : MonoBehaviour
     {

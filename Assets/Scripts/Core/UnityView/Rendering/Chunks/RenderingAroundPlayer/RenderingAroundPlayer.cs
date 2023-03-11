@@ -2,10 +2,10 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UniRx;
-using UnityView.Players;
+using ACv3.UnityView.Players;
 using Zenject;
 
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     public class RenderingAroundPlayer : IInitializable, IDisposable
     {

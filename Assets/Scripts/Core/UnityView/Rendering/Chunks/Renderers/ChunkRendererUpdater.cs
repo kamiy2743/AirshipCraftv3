@@ -1,4 +1,4 @@
-namespace UnityView.Rendering.Chunks
+namespace ACv3.UnityView.Rendering.Chunks
 {
     public class ChunkRendererUpdater
     {

@@ -1,9 +1,9 @@
 using System;
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 using UniRx;
 
-namespace UseCase
+namespace ACv3.UseCase
 {
     public class ChunkBlockSetter
     {

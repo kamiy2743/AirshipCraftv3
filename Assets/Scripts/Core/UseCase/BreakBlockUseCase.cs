@@ -1,8 +1,8 @@
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 using Unity.Mathematics;
 
-namespace UseCase
+namespace ACv3.UseCase
 {
     public class BreakBlockUseCase
     {

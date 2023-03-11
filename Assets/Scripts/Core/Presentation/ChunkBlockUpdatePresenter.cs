@@ -1,10 +1,10 @@
 using System;
 using UniRx;
-using UnityView.Rendering.Chunks;
-using UseCase;
+using ACv3.UnityView.Rendering.Chunks;
+using ACv3.UseCase;
 using Zenject;
 
-namespace Presentation
+namespace ACv3.Presentation
 {
     public class ChunkBlockUpdatePresenter : IInitializable, IDisposable
     {

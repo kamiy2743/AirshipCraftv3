@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
 
-namespace MasterData
+namespace ACv3.MasterData
 {
     [CreateAssetMenu(fileName = "MasterBlockShapeMeshes", menuName = "ScriptableObjects/MasterBlockShapeMeshes")]
     public class MasterBlockShapeMeshes : ScriptableObject

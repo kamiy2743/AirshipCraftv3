@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using ACv3.Domain;
 
-namespace UnityView.ChunkCollision
+namespace ACv3.UnityView.ChunkCollision
 {
     public class CreatedColliders
     {

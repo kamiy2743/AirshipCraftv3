@@ -1,7 +1,7 @@
-using UseCase;
+using ACv3.UseCase;
 using Zenject;
 
-namespace Installers
+namespace ACv3.Installers
 {
     class UseCaseInstaller : MonoInstaller
     {

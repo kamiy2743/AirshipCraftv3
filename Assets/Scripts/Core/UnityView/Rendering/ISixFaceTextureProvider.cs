@@ -1,6 +1,6 @@
-using Domain;
+using ACv3.Domain;
 
-namespace UnityView.Rendering
+namespace ACv3.UnityView.Rendering
 {
     public interface ISixFaceTextureProvider
     {

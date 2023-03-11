@@ -1,7 +1,7 @@
-using Domain;
+using ACv3.Domain;
 using UnityEngine;
 
-namespace UnityView.Players
+namespace ACv3.UnityView.Players
 {
     record FocusedBlockInfo
     {

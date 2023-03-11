@@ -1,14 +1,14 @@
-using Infrastructure;
+using ACv3.Infrastructure;
 using UnityEngine;
-using UnityView.ChunkCollision;
-using UnityView.Inputs;
-using UnityView.Players;
-using UnityView.Rendering;
-using UnityView.Rendering.Chunks;
+using ACv3.UnityView.ChunkCollision;
+using ACv3.UnityView.Inputs;
+using ACv3.UnityView.Players;
+using ACv3.UnityView.Rendering;
+using ACv3.UnityView.Rendering.Chunks;
 using Zenject;
-using BlockUpdateApplier = UnityView.Rendering.Chunks.BlockUpdateApplier;
+using BlockUpdateApplier = ACv3.UnityView.Rendering.Chunks.BlockUpdateApplier;
 
-namespace Installers
+namespace ACv3.Installers
 {
     class UnityViewInstaller : MonoInstaller
     {

@@ -1,8 +1,8 @@
-using MasterData;
-using UnityView.Rendering;
+using ACv3.MasterData;
+using ACv3.UnityView.Rendering;
 using Zenject;
 
-namespace Installers
+namespace ACv3.Installers
 {
     class MasterDataInstaller : MonoInstaller
     {

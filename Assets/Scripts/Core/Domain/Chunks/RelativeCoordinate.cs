@@ -1,7 +1,7 @@
 using System;
 using Unity.Mathematics;
 
-namespace Domain.Chunks
+namespace ACv3.Domain.Chunks
 {
     public record RelativeCoordinate
     {

@@ -4,8 +4,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using UnityView.Rendering.Chunks;
-using Domain;
+using ACv3.UnityView.Rendering.Chunks;
+using ACv3.Domain;
 using Unity.Mathematics;
 
 public class CreateChunkQueueTest

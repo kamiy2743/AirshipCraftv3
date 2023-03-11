@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Domain;
-using UnityView.Rendering;
+using ACv3.Domain;
+using ACv3.UnityView.Rendering;
 
-namespace MasterData
+namespace ACv3.MasterData
 {
     public class SixFaceTextureProvider : ISixFaceTextureProvider
     {

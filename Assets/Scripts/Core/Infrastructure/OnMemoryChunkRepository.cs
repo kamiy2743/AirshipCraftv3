@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Domain;
-using Domain.Chunks;
+using ACv3.Domain;
+using ACv3.Domain.Chunks;
 
-namespace Infrastructure
+namespace ACv3.Infrastructure
 {
     public class OnMemoryChunkRepository : IChunkRepository
     {

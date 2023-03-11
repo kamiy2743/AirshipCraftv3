@@ -1,8 +1,8 @@
 using System;
-using Extensions;
+using ACv3.Extensions;
 using Unity.Mathematics;
 
-namespace Domain
+namespace ACv3.Domain
 {
     public enum Direction
     {

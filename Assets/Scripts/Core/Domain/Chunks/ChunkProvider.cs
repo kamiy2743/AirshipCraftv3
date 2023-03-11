@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Domain.Chunks
+namespace ACv3.Domain.Chunks
 {
     public class ChunkProvider : IChunkProvider
     {
