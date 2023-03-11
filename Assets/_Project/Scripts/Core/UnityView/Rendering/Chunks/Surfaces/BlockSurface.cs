@@ -1,10 +1,8 @@
-using Domain;
-
 namespace UnityView.Rendering.Chunks
 {
-    internal record BlockSurface
+    record BlockSurface
     {
-        private readonly byte surfacesByte;
+        readonly byte surfacesByte;
         internal byte SurfaceByteDebug => surfacesByte;
 
         internal readonly bool hasRenderingSurface;
@@ -29,13 +27,13 @@ namespace UnityView.Rendering.Chunks
             hasRenderingSurface = true;
         }
 
-        private BlockSurface(byte surfacesByte)
+        BlockSurface(byte surfacesByte)
         {
             this.surfacesByte = surfacesByte;
             hasRenderingSurface = surfacesByte > 0;
         }
 
-        private static BlockSurface CreateEmpty()
+        static BlockSurface CreateEmpty()
         {
             return new BlockSurface((byte)0);
         }

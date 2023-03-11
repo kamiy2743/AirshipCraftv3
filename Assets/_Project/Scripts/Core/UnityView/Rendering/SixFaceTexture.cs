@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Domain;
 
 namespace UnityView.Rendering
 {
     public record SixFaceTexture
     {
-        private Dictionary<Face, Texture2D> textures = new Dictionary<Face, Texture2D>(TextureCount);
+        readonly Dictionary<Face, Texture2D> textures = new(TextureCount);
 
         internal const int TextureCount = 6;
         internal const int Size = 256;

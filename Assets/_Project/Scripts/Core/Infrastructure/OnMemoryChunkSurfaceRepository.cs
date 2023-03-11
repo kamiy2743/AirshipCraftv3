@@ -4,9 +4,9 @@ using UnityView.Rendering.Chunks;
 
 namespace Infrastructure
 {
-    internal class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
+    class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
     {
-        internal Dictionary<ChunkGridCoordinate, ChunkSurface> surfaces = new Dictionary<ChunkGridCoordinate, ChunkSurface>();
+        internal Dictionary<ChunkGridCoordinate, ChunkSurface> surfaces = new();
 
         public void Store(ChunkSurface chunkSurface)
         {

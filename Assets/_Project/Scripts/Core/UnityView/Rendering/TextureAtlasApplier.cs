@@ -3,10 +3,10 @@ using Zenject;
 
 namespace UnityView.Rendering
 {
-    internal class TextureAtlasApplier : IInitializable
+    class TextureAtlasApplier : IInitializable
     {
-        private Material blockMaterial;
-        private IBlockTextureAtlas blockTextureAtlas;
+        readonly Material blockMaterial;
+        readonly IBlockTextureAtlas blockTextureAtlas;
 
         internal TextureAtlasApplier(Material blockMaterial, IBlockTextureAtlas blockTextureAtlas)
         {

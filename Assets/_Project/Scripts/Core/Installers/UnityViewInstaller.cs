@@ -1,22 +1,23 @@
-using UnityEngine;
-using Zenject;
 using Infrastructure;
-using UnityView.Rendering;
-using UnityView.Rendering.Chunks;
+using UnityEngine;
 using UnityView.ChunkCollision;
 using UnityView.Inputs;
 using UnityView.Players;
+using UnityView.Rendering;
+using UnityView.Rendering.Chunks;
+using Zenject;
+using BlockUpdateApplier = UnityView.Rendering.Chunks.BlockUpdateApplier;
 
 namespace Installers
 {
-    internal class UnityViewInstaller : MonoInstaller
+    class UnityViewInstaller : MonoInstaller
     {
-        [SerializeField] private ChunkRendererFactory chunkRendererFactory;
-        [SerializeField] private ChunkColliderFactory chunkColliderFactory;
-        [SerializeField] private Transform playerTransform;
-        [SerializeField] private PlayerCamera playerCamera;
-        [SerializeField] private FocusedBlockOutline focusedBlockOutline;
-        [SerializeField] private Material blockMaterial;
+        [SerializeField] ChunkRendererFactory chunkRendererFactory;
+        [SerializeField] ChunkColliderFactory chunkColliderFactory;
+        [SerializeField] Transform playerTransform;
+        [SerializeField] PlayerCamera playerCamera;
+        [SerializeField] FocusedBlockOutline focusedBlockOutline;
+        [SerializeField] Material blockMaterial;
 
         public override void InstallBindings()
         {
@@ -32,7 +33,7 @@ namespace Installers
             Container.Bind<BlockMeshFactory>().AsSingle();
             Container.Bind<ChunkMeshFactory>().AsSingle();
 
-            Container.Bind<UnityView.Rendering.Chunks.BlockUpdateApplier>().AsSingle();
+            Container.Bind<BlockUpdateApplier>().AsSingle();
             Container.Bind<UpdatedChunkSurfaceCalculator>().AsSingle();
             Container.Bind<ChunkRendererUpdater>().AsSingle();
             Container.BindInterfacesAndSelfTo<CreatedChunkRenderers>().AsSingle();

@@ -1,13 +1,13 @@
-using Unity.Jobs;
 using Unity.Burst;
 using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
-    internal class SnoiseChunkFactory : IChunkFactory
+    class SnoiseChunkFactory : IChunkFactory
     {
-        private SnoiseTerrainGenerator snoiseTerrainGenerator;
+        readonly SnoiseTerrainGenerator snoiseTerrainGenerator;
 
         internal SnoiseChunkFactory()
         {
@@ -34,7 +34,7 @@ namespace Domain.Chunks
         }
 
         [BurstCompile]
-        private unsafe struct CreateTerrainJob : IJob
+        struct CreateTerrainJob : IJob
         {
             [ReadOnly] internal int3 pivot;
             [ReadOnly] internal SnoiseTerrainGenerator generator;

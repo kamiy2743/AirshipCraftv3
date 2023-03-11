@@ -2,7 +2,7 @@ using System;
 
 namespace Domain.Chunks
 {
-    internal class ChunkBlocks
+    class ChunkBlocks
     {
         internal readonly Block[] blocks;
 
@@ -27,7 +27,7 @@ namespace Domain.Chunks
             blocks[RelativeCoordinateToIndex(relativeCoordinate)] = block;
         }
 
-        private int RelativeCoordinateToIndex(RelativeCoordinate rc)
+        int RelativeCoordinateToIndex(RelativeCoordinate rc)
         {
             return (rc.x << (Chunk.BlockSideShift * 2)) + (rc.y << Chunk.BlockSideShift) + rc.z;
         }

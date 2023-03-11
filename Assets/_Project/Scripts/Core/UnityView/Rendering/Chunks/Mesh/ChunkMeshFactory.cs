@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using UnityEngine;
 using Domain;
 using Domain.Chunks;
+using UnityEngine;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class ChunkMeshFactory
+    class ChunkMeshFactory
     {
-        private IChunkProvider chunkProvider;
-        private ChunkSurfaceProvider chunkSurfaceProvider;
-        private BlockMeshProvider blockMeshProvider;
+        readonly IChunkProvider chunkProvider;
+        readonly ChunkSurfaceProvider chunkSurfaceProvider;
+        readonly BlockMeshProvider blockMeshProvider;
 
         internal ChunkMeshFactory(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider, BlockMeshProvider blockMeshProvider)
         {

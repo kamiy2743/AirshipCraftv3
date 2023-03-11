@@ -1,22 +1,16 @@
 using System.Collections.Generic;
-using UnityEngine;
 using Domain;
+using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    internal class BlockMeshProvider
+    class BlockMeshProvider
     {
-        private BlockMeshFactory blockMeshFactory;
-        private IBlockShapeMeshProvider blockShapeMeshProvider;
-
-        private BlockMesh air;
-        private Dictionary<BlockType, BlockMesh> blockMeshes = new Dictionary<BlockType, BlockMesh>();
+        readonly BlockMesh air;
+        readonly Dictionary<BlockType, BlockMesh> blockMeshes = new();
 
         internal BlockMeshProvider(BlockMeshFactory blockMeshFactory, IBlockShapeMeshProvider blockShapeMeshProvider)
         {
-            this.blockMeshFactory = blockMeshFactory;
-            this.blockShapeMeshProvider = blockShapeMeshProvider;
-
             air = blockMeshFactory.Create(BlockType.Air, new Vector3[0], new int[0], new Vector2[0]);
 
             foreach (var blockType in BlockTypeExt.Array)

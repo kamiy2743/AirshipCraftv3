@@ -1,12 +1,11 @@
 using UnityEngine;
-using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class ChunkRendererFactory : MonoBehaviour
+    class ChunkRendererFactory : MonoBehaviour
     {
-        [SerializeField] private ChunkRenderer chunkRendererPrefab;
-        [SerializeField] private Transform parent;
+        [SerializeField] ChunkRenderer chunkRendererPrefab;
+        [SerializeField] Transform parent;
 
         internal ChunkRenderer Create()
         {

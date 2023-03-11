@@ -1,9 +1,9 @@
-using Zenject;
 using UseCase;
+using Zenject;
 
 namespace Installers
 {
-    internal class UseCaseInstaller : MonoInstaller
+    class UseCaseInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

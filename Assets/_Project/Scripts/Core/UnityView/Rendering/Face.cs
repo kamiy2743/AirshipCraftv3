@@ -17,8 +17,7 @@ namespace UnityView.Rendering
     {
         public const int ElemCount = 6;
 
-        public static readonly Face[] Array = new Face[]
-        {
+        public static readonly Face[] Array = {
             Face.Right,
             Face.Left,
             Face.Top,

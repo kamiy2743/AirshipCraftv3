@@ -1,14 +1,14 @@
 using System;
 using UnityEngine;
-using UnityView.Rendering.Chunks;
+using UnityEngine.Rendering;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class ChunkRenderer : MonoBehaviour, IDisposable
+    class ChunkRenderer : MonoBehaviour, IDisposable
     {
-        [SerializeField] private MeshFilter meshFilter;
+        [SerializeField] MeshFilter meshFilter;
 
-        private UnityEngine.Mesh mesh;
+        Mesh mesh;
 
         internal void SetMesh(ChunkMesh chunkMesh)
         {
@@ -23,8 +23,8 @@ namespace UnityView.Rendering.Chunks
 
             if (mesh is null)
             {
-                mesh = new UnityEngine.Mesh();
-                mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+                mesh = new Mesh();
+                mesh.indexFormat = IndexFormat.UInt32;
                 meshFilter.sharedMesh = mesh;
             }
             else
@@ -48,7 +48,7 @@ namespace UnityView.Rendering.Chunks
             }
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             Dispose();
         }

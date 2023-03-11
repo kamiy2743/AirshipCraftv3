@@ -1,24 +1,22 @@
 using System;
 using System.Threading;
-using UnityEngine;
-using UniRx;
-using Zenject;
-using Domain;
-using UnityView.Players;
 using Cysharp.Threading.Tasks;
+using UniRx;
+using UnityView.Players;
+using Zenject;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class RenderingAroundPlayer : IInitializable, IDisposable
+    class RenderingAroundPlayer : IInitializable, IDisposable
     {
-        private InSightChunkCreator inSightChunkCreator;
-        private OutOfRangeChunkDisposer outOfRangeChunkDisposer;
-        private PlayerChunkProvider playerChunkProvider;
+        readonly InSightChunkCreator inSightChunkCreator;
+        readonly OutOfRangeChunkDisposer outOfRangeChunkDisposer;
+        readonly PlayerChunkProvider playerChunkProvider;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
-        private CancellationTokenSource cts;
+        readonly CompositeDisposable disposals = new();
+        CancellationTokenSource cts;
 
-        private const int MaxRenderingRadius = 16;
+        const int MaxRenderingRadius = 16;
 
         internal RenderingAroundPlayer(InSightChunkCreator inSightChunkCreator, OutOfRangeChunkDisposer outOfRangeChunkDisposer, PlayerChunkProvider playerChunkProvider)
         {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace UnityView.ChunkCollision
 {
-    internal class ChunkCollider : MonoBehaviour, IDisposable
+    class ChunkCollider : MonoBehaviour, IDisposable
     {
-        private List<Collider> colliders = new List<Collider>();
+        readonly List<Collider> colliders = new();
 
         internal void SetBounds(ChunkBounds chunkBounds)
         {

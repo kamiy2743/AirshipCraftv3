@@ -1,17 +1,17 @@
 using System;
-using UnityEngine;
 using Domain;
 using UniRx;
+using UnityEngine;
 
 namespace UnityView.Players
 {
-    internal class PlayerChunkProvider : IDisposable
+    class PlayerChunkProvider : IDisposable
     {
-        private Subject<ChunkGridCoordinate> _onPlayerChunkChanged = new Subject<ChunkGridCoordinate>();
+        readonly Subject<ChunkGridCoordinate> _onPlayerChunkChanged = new();
         internal IObservable<ChunkGridCoordinate> OnPlayerChunkChanged => _onPlayerChunkChanged;
 
-        private Transform playerTransform;
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly Transform playerTransform;
+        readonly CompositeDisposable disposals = new();
 
         internal PlayerChunkProvider(Transform playerTransform)
         {

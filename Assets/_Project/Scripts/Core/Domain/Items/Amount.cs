@@ -2,9 +2,9 @@ using System;
 
 namespace Domain.Items
 {
-    internal record Amount : IComparable<Amount>
+    record Amount : IComparable<Amount>
     {
-        private int value;
+        readonly int value;
 
         internal Amount(int value)
         {

@@ -1,8 +1,8 @@
 namespace UnityView.ChunkCollision
 {
-    internal class ChunkColliderUpdater
+    class ChunkColliderUpdater
     {
-        private CreatedColliders createdColliders;
+        readonly CreatedColliders createdColliders;
 
         internal ChunkColliderUpdater(CreatedColliders createdColliders)
         {

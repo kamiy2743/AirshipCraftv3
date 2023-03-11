@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
-using Domain;
 
 namespace UnityView.Rendering
 {
-    internal record BlockMesh
+    record BlockMesh
     {
         internal readonly MeshData value;
-        private Dictionary<Face, MeshData> faceMeshes;
+        readonly Dictionary<Face, MeshData> faceMeshes;
         internal readonly MeshData otherPart;
 
         internal BlockMesh(
@@ -23,13 +21,15 @@ namespace UnityView.Rendering
             this.value = value;
             this.otherPart = otherPart;
 
-            faceMeshes = new Dictionary<Face, MeshData>(FaceExt.ElemCount);
-            faceMeshes[Face.Right] = rightFace;
-            faceMeshes[Face.Left] = leftFace;
-            faceMeshes[Face.Top] = topFace;
-            faceMeshes[Face.Bottom] = bottomFace;
-            faceMeshes[Face.Front] = frontFace;
-            faceMeshes[Face.Back] = backFace;
+            faceMeshes = new Dictionary<Face, MeshData>(FaceExt.ElemCount)
+            {
+                [Face.Right] = rightFace,
+                [Face.Left] = leftFace,
+                [Face.Top] = topFace,
+                [Face.Bottom] = bottomFace,
+                [Face.Front] = frontFace,
+                [Face.Back] = backFace
+            };
         }
 
         internal MeshData GetFaceMesh(Face face) => faceMeshes[face];

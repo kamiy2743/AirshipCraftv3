@@ -1,14 +1,14 @@
 using Domain;
 using Domain.Chunks;
-using UnityView.Rendering.Chunks;
 using Unity.Mathematics;
+using UnityView.Rendering.Chunks;
 
 namespace UnityView.ChunkCollision
 {
-    internal class ChunkBoundsFactory
+    class ChunkBoundsFactory
     {
         // TODO 仮実装
-        private ChunkSurfaceProvider chunkSurfaceProvider;
+        readonly ChunkSurfaceProvider chunkSurfaceProvider;
 
         internal ChunkBoundsFactory(ChunkSurfaceProvider chunkSurfaceProvider)
         {

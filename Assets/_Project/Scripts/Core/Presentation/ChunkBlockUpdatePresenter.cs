@@ -1,22 +1,21 @@
 using System;
-using Zenject;
 using UniRx;
-using UseCase;
 using UnityView.Rendering.Chunks;
-using UnityView.ChunkCollision;
+using UseCase;
+using Zenject;
 
 namespace Presentation
 {
-    internal class ChunkBlockUpdatePresenter : IInitializable, IDisposable
+    class ChunkBlockUpdatePresenter : IInitializable, IDisposable
     {
-        private ChunkBlockSetter chunkBlockSetter;
+        readonly ChunkBlockSetter chunkBlockSetter;
         // TODO クラス名変更
-        private UnityView.Rendering.Chunks.BlockUpdateApplier blockUpdateApplier_render;
-        private UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision;
+        readonly BlockUpdateApplier blockUpdateApplier_render;
+        readonly UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
-        internal ChunkBlockUpdatePresenter(ChunkBlockSetter chunkBlockSetter, UnityView.Rendering.Chunks.BlockUpdateApplier blockUpdateApplier_render, UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision)
+        internal ChunkBlockUpdatePresenter(ChunkBlockSetter chunkBlockSetter, BlockUpdateApplier blockUpdateApplier_render, UnityView.ChunkCollision.BlockUpdateApplier blockUpdateApplier_collision)
         {
             this.chunkBlockSetter = chunkBlockSetter;
             this.blockUpdateApplier_render = blockUpdateApplier_render;

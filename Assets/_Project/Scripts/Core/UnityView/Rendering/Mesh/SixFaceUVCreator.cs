@@ -1,12 +1,12 @@
 using System.Linq;
-using UnityEngine;
 using Domain;
+using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    internal class SixFaceUVCreator
+    class SixFaceUVCreator
     {
-        private SixFaceTextureAtlas sixFaceTextureAtlas;
+        readonly SixFaceTextureAtlas sixFaceTextureAtlas;
 
         internal SixFaceUVCreator(SixFaceTextureAtlas sixFaceTextureAtlas)
         {
@@ -15,8 +15,8 @@ namespace UnityView.Rendering
 
         internal Vector2[] Create(BlockType blockType, Vector2[] originalUVs)
         {
-            var toUVScale = (float)SixFaceTexture.Size / (float)sixFaceTextureAtlas.Size;
-            var pivot = (Vector2)sixFaceTextureAtlas.GetPivot(blockType) / (float)SixFaceTexture.Size * toUVScale;
+            var toUVScale = SixFaceTexture.Size / (float)sixFaceTextureAtlas.Size;
+            var pivot = (Vector2)sixFaceTextureAtlas.GetPivot(blockType) / SixFaceTexture.Size * toUVScale;
 
             return originalUVs
                 .Select(uv =>

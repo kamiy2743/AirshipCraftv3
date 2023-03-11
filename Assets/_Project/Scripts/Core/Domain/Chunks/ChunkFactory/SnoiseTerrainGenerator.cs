@@ -2,15 +2,15 @@ using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
-    internal struct SnoiseTerrainGenerator
+    readonly struct SnoiseTerrainGenerator
     {
-        private readonly float seedX;
-        private readonly float seedY;
-        private readonly float seedZ;
-        private readonly float relief;
+        readonly float seedX;
+        readonly float seedY;
+        readonly float seedZ;
+        readonly float relief;
 
-        private static float Snoise(float x, float z) => (noise.snoise(new float2(x, z)) + 1) * 0.5f;
-        private static float Snoise(float x, float y, float z) => (noise.snoise(new float3(x, y, z)) + 1) * 0.5f;
+        static float Snoise(float x, float z) => (noise.snoise(new float2(x, z)) + 1) * 0.5f;
+        static float Snoise(float x, float y, float z) => (noise.snoise(new float3(x, y, z)) + 1) * 0.5f;
 
         internal SnoiseTerrainGenerator(uint seed, float relief)
         {
@@ -27,7 +27,7 @@ namespace Domain.Chunks
             return ForUnderGround(x, y, z);
         }
 
-        private BlockType ForGround(int x, int y, int z)
+        BlockType ForGround(int x, int y, int z)
         {
             var noise1 = Snoise(
                 (x + seedX) * relief,
@@ -40,7 +40,7 @@ namespace Domain.Chunks
             return BlockType.Air;
         }
 
-        private BlockType ForUnderGround(int x, int y, int z)
+        BlockType ForUnderGround(int x, int y, int z)
         {
             var noise = Snoise(
                 (x + seedX) * relief,

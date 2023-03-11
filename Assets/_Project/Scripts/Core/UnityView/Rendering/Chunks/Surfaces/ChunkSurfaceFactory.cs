@@ -3,9 +3,9 @@ using Domain.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class ChunkSurfaceFactory
+    class ChunkSurfaceFactory
     {
-        private IChunkProvider chunkProvider;
+        readonly IChunkProvider chunkProvider;
 
         internal ChunkSurfaceFactory(IChunkProvider chunkProvider)
         {
@@ -49,7 +49,7 @@ namespace UnityView.Rendering.Chunks
             return chunkSurface;
         }
 
-        private Block GetAdjacentBlock(Direction direction, RelativeCoordinate rc, Context context)
+        Block GetAdjacentBlock(Direction direction, RelativeCoordinate rc, Context context)
         {
             var adjacentRelativeCoordinate = rc.Add(direction.ToInt3());
 
@@ -78,15 +78,15 @@ namespace UnityView.Rendering.Chunks
             return context.TargetChunk.GetBlock(adjacentRelativeCoordinate);
         }
 
-        private class Context
+        class Context
         {
-            internal Chunk TargetChunk;
-            internal Chunk RightChunk;
-            internal Chunk LeftChunk;
-            internal Chunk TopChunk;
-            internal Chunk BottomChunk;
-            internal Chunk ForwardChunk;
-            internal Chunk BackwardChunk;
+            internal readonly Chunk TargetChunk;
+            internal readonly Chunk RightChunk;
+            internal readonly Chunk LeftChunk;
+            internal readonly Chunk TopChunk;
+            internal readonly Chunk BottomChunk;
+            internal readonly Chunk ForwardChunk;
+            internal readonly Chunk BackwardChunk;
 
             internal Context(ChunkGridCoordinate targetChunkGridCoordinate, IChunkProvider chunkProvider)
             {
@@ -99,7 +99,7 @@ namespace UnityView.Rendering.Chunks
                 BackwardChunk = GetAdjacentChunk(Direction.BackWard, targetChunkGridCoordinate, chunkProvider);
             }
 
-            private Chunk GetAdjacentChunk(Direction direction, ChunkGridCoordinate source, IChunkProvider chunkProvider)
+            Chunk GetAdjacentChunk(Direction direction, ChunkGridCoordinate source, IChunkProvider chunkProvider)
             {
                 if (!source.TryAdd(direction.ToInt3(), out var adjacentChunkGridCoordinate))
                 {

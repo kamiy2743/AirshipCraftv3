@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using Domain;
-using UnityView.Rendering;
 using UnityView.Rendering.Chunks;
 
 namespace UnityView.ChunkCollision
 {
-    internal class UpdatedChunkBoundsCalculator
+    class UpdatedChunkBoundsCalculator
     {
         // TODO 仮実装
-        private ChunkSurfaceProvider chunkSurfaceProvider;
-        private ChunkBoundsFactory chunkBoundsFactory;
+        ChunkSurfaceProvider chunkSurfaceProvider;
+        readonly ChunkBoundsFactory chunkBoundsFactory;
 
         internal UpdatedChunkBoundsCalculator(ChunkSurfaceProvider chunkSurfaceProvider, ChunkBoundsFactory chunkBoundsFactory)
         {

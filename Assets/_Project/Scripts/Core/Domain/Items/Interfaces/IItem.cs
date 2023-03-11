@@ -1,6 +1,6 @@
 namespace Domain.Items
 {
-    internal interface IItem
+    interface IItem
     {
         ItemID GetItemID();
         Amount GetMaxAmount();

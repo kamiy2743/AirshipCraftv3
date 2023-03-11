@@ -1,18 +1,18 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using Domain;
+using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    internal class BlockMeshFactory
+    class BlockMeshFactory
     {
-        private SixFaceUVCreator sixFaceUVCreator;
+        readonly SixFaceUVCreator sixFaceUVCreator;
 
         internal BlockMeshFactory(SixFaceUVCreator blockTextureUVCreator)
         {
-            this.sixFaceUVCreator = blockTextureUVCreator;
+            sixFaceUVCreator = blockTextureUVCreator;
         }
 
         internal BlockMesh Create(BlockType blockType, Vector3[] vertices, int[] triangles, Vector2[] originalUVs)
@@ -33,7 +33,7 @@ namespace UnityView.Rendering
             return new BlockMesh(value, rightFace, leftFace, topFace, bottomFace, frontFace, backFace, otherPart);
         }
 
-        private MeshData ExtractFaceMesh(Face direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        MeshData ExtractFaceMesh(Face direction, Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             var verticesMap = new Dictionary<int, (Vector3, int)>();
             var preTriangles = new List<int>();
@@ -75,7 +75,7 @@ namespace UnityView.Rendering
             return new MeshData(faceVertices, faceTriangles, faceUVs.ToArray());
         }
 
-        private bool IsFacePolygon(Face direction, Vector3 v1, Vector3 v2, Vector3 v3)
+        bool IsFacePolygon(Face direction, Vector3 v1, Vector3 v2, Vector3 v3)
         {
             switch (direction)
             {
@@ -97,17 +97,17 @@ namespace UnityView.Rendering
         }
 
         // Mathf.Approximately(a, 0)だとfalseを返すことがある
-        private bool Approximately0(float a)
+        bool Approximately0(float a)
         {
             return a < 0.01f && a > -0.01f;
         }
 
-        private bool Approximately1(float a)
+        bool Approximately1(float a)
         {
             return a < 1.01f && a > 0.99f;
         }
 
-        private MeshData ExtractOtherPartMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
+        MeshData ExtractOtherPartMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs)
         {
             var verticesMap = new Dictionary<int, (Vector3, int)>();
             var preTriangles = new List<int>();

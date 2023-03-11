@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace UnityView.Inputs
 {
-    internal class InputSystemInputProvider : IInputProvider
+    class InputSystemInputProvider : IInputProvider
     {
-        private PlayerInputActions inputActions;
+        readonly PlayerInputActions inputActions;
 
         internal InputSystemInputProvider()
         {

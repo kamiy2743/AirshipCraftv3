@@ -1,9 +1,9 @@
-using UnityEngine;
 using Domain;
+using UnityEngine;
 
 namespace UnityView.Players
 {
-    internal record FocusedBlockInfo
+    record FocusedBlockInfo
     {
         internal readonly BlockType blockType;
         internal readonly Vector3 pivotCoordinate;

@@ -1,17 +1,18 @@
 using System;
-using UnityView.Players;
+using Domain;
 using UniRx;
-using Zenject;
+using UnityView.Players;
 using UseCase;
+using Zenject;
 
 namespace Presentation
 {
-    internal class PlaceBlockPresenter : IInitializable, IDisposable
+    class PlaceBlockPresenter : IInitializable, IDisposable
     {
-        private PlaceBlockHandler placeBlockHandler;
-        private PlaceBlockUseCase placeBlockUseCase;
+        readonly PlaceBlockHandler placeBlockHandler;
+        readonly PlaceBlockUseCase placeBlockUseCase;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
         internal PlaceBlockPresenter(PlaceBlockHandler placeBlockHandler, PlaceBlockUseCase placeBlockUseCase)
         {
@@ -25,7 +26,7 @@ namespace Presentation
                 .OnPlaceBlock
                 .Subscribe(placePosition =>
                 {
-                    placeBlockUseCase.PlaceBlock(placePosition, Domain.BlockType.Stone);
+                    placeBlockUseCase.PlaceBlock(placePosition, BlockType.Stone);
                 })
                 .AddTo(disposals);
         }

@@ -1,6 +1,6 @@
 using System;
-using Unity.Mathematics;
 using Domain.Chunks;
+using Unity.Mathematics;
 
 namespace Domain
 {
@@ -10,8 +10,8 @@ namespace Domain
         public readonly int y;
         public readonly int z;
 
-        private const int Max = ChunkGridCoordinate.Max * Chunk.BlockSide;
-        private const int Min = ChunkGridCoordinate.Min * Chunk.BlockSide;
+        const int Max = ChunkGridCoordinate.Max * Chunk.BlockSide;
+        const int Min = ChunkGridCoordinate.Min * Chunk.BlockSide;
 
         public BlockGridCoordinate(float3 value) : this((int)math.floor(value.x), (int)math.floor(value.y), (int)math.floor(value.z)) { }
         internal BlockGridCoordinate(int x, int y, int z)
@@ -26,7 +26,7 @@ namespace Domain
             this.z = z;
         }
 
-        private bool IsValid(int x, int y, int z)
+        bool IsValid(int x, int y, int z)
         {
             if (x > Max || x < Min) return false;
             if (y > Max || y < Min) return false;
@@ -38,7 +38,7 @@ namespace Domain
         {
             try
             {
-                result = new BlockGridCoordinate(this.x + value.x, this.y + value.y, this.z + value.z);
+                result = new BlockGridCoordinate(x + value.x, y + value.y, z + value.z);
                 return true;
             }
             catch

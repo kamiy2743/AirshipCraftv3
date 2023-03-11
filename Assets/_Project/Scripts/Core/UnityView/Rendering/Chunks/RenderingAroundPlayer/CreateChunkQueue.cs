@@ -5,9 +5,9 @@ using Utils;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class CreateChunkQueue
+    class CreateChunkQueue
     {
-        private PriorityQueue<CreateChunkQueueElement> queue;
+        readonly PriorityQueue<CreateChunkQueueElement> queue;
         internal int Count => queue.Count;
 
         internal CreateChunkQueue(int capacity)
@@ -34,7 +34,7 @@ namespace UnityView.Rendering.Chunks
             }
         }
 
-        private record CreateChunkQueueElement : IComparable<CreateChunkQueueElement>
+        record CreateChunkQueueElement : IComparable<CreateChunkQueueElement>
         {
             internal readonly int distance;
             internal readonly ChunkGridCoordinate chunkGridCoordinate;
@@ -48,7 +48,7 @@ namespace UnityView.Rendering.Chunks
             public int CompareTo(CreateChunkQueueElement other) => 0;
         }
 
-        private class CreateChunkQueueElementComparer : IComparer<CreateChunkQueueElement>
+        class CreateChunkQueueElementComparer : IComparer<CreateChunkQueueElement>
         {
             public int Compare(CreateChunkQueueElement a, CreateChunkQueueElement b)
             {

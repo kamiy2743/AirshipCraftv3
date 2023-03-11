@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 namespace Domain.Chunks
 {
-    internal class ChunkProvider : IChunkProvider
+    class ChunkProvider : IChunkProvider
     {
-        private IChunkFactory chunkFactory;
-        private IChunkRepository chunkRepository;
+        readonly IChunkFactory chunkFactory;
+        readonly IChunkRepository chunkRepository;
 
-        private Dictionary<ChunkGridCoordinate, Chunk> chunkCache = new Dictionary<ChunkGridCoordinate, Chunk>();
+        readonly Dictionary<ChunkGridCoordinate, Chunk> chunkCache = new();
 
         internal ChunkProvider(IChunkFactory chunkFactory, IChunkRepository chunkRepository)
         {

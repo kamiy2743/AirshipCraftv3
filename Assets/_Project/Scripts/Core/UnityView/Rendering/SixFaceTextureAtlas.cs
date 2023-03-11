@@ -1,12 +1,12 @@
 using System;
-using UnityEngine;
 using Domain;
+using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    internal record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
+    record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
     {
-        private Texture2D texture;
+        readonly Texture2D texture;
         internal int Size => texture.width;
 
         internal SixFaceTextureAtlas(ISixFaceTextureProvider sixFaceTextureProvider)
@@ -35,7 +35,7 @@ namespace UnityView.Rendering
         }
 
         // ブロックのテクスチャを整列して並べられて、かつ2にべき乗のサイズを計算する
-        private int CalcTextureSize()
+        int CalcTextureSize()
         {
             var x = Mathf.CeilToInt(Mathf.Log(BlockTypeExt.Array.Length, SixFaceTexture.TextureCount));
             var y = Mathf.CeilToInt(Mathf.Log(SixFaceTexture.Size * SixFaceTexture.TextureCount * x, 2));

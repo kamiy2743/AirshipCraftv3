@@ -1,6 +1,6 @@
 namespace Domain.Inventories
 {
-    internal interface IInventory
+    interface IInventory
     {
 
     }

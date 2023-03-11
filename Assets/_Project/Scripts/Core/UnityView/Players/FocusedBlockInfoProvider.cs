@@ -1,15 +1,15 @@
-using UnityEngine;
 using Domain;
 using Domain.Chunks;
+using UnityEngine;
 
 namespace UnityView.Players
 {
-    internal class FocusedBlockInfoProvider
+    class FocusedBlockInfoProvider
     {
-        private PlayerCamera playerCamera;
-        private IChunkProvider chunkProvider;
+        readonly PlayerCamera playerCamera;
+        readonly IChunkProvider chunkProvider;
 
-        private const float MaxFocusDistance = 5;
+        const float MaxFocusDistance = 5;
 
         internal FocusedBlockInfoProvider(PlayerCamera playerCamera, IChunkProvider chunkProvider)
         {

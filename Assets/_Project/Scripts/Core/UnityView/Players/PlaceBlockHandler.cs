@@ -1,22 +1,22 @@
 using System;
-using UnityEngine;
 using UniRx;
-using Zenject;
+using UnityEngine;
 using UnityView.Inputs;
+using Zenject;
 
 namespace UnityView.Players
 {
     public class PlaceBlockHandler : IInitializable, IDisposable
     {
-        private IInputProvider inputProvider;
-        private FocusedBlockInfoProvider focusedBlockInfoProvider;
+        readonly IInputProvider inputProvider;
+        readonly FocusedBlockInfoProvider focusedBlockInfoProvider;
 
-        private Subject<Vector3> _onPlaceBlock = new Subject<Vector3>();
+        readonly Subject<Vector3> _onPlaceBlock = new();
         public IObservable<Vector3> OnPlaceBlock => _onPlaceBlock;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
-        private const float placeBlockInterval = 0.5f;
+        const float placeBlockInterval = 0.5f;
 
         internal PlaceBlockHandler(IInputProvider inputProvider, FocusedBlockInfoProvider focusedBlockInfoProvider)
         {

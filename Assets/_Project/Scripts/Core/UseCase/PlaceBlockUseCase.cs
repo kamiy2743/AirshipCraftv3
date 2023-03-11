@@ -1,12 +1,12 @@
-using Unity.Mathematics;
 using Domain;
 using Domain.Chunks;
+using Unity.Mathematics;
 
 namespace UseCase
 {
     public class PlaceBlockUseCase
     {
-        private ChunkBlockSetter chunkBlockSetter;
+        readonly ChunkBlockSetter chunkBlockSetter;
 
         internal PlaceBlockUseCase(ChunkBlockSetter chunkBlockSetter)
         {

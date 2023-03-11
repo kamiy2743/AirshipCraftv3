@@ -4,10 +4,10 @@ using Domain.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class UpdatedChunkSurfaceCalculator
+    class UpdatedChunkSurfaceCalculator
     {
-        private IChunkProvider chunkProvider;
-        private ChunkSurfaceProvider chunkSurfaceProvider;
+        readonly IChunkProvider chunkProvider;
+        readonly ChunkSurfaceProvider chunkSurfaceProvider;
 
         internal UpdatedChunkSurfaceCalculator(IChunkProvider chunkProvider, ChunkSurfaceProvider chunkSurfaceProvider)
         {

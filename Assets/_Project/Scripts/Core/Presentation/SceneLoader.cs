@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Presentation
 {
-    internal class SceneLoader
+    class SceneLoader
     {
         internal async UniTask LoadSceneAsync(SceneName sceneName)
         {

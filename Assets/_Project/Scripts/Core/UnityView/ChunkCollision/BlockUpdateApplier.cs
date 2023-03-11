@@ -4,8 +4,8 @@ namespace UnityView.ChunkCollision
 {
     public class BlockUpdateApplier
     {
-        private UpdatedChunkBoundsCalculator updatedChunkBoundsCalculator;
-        private ChunkColliderUpdater chunkColliderUpdater;
+        readonly UpdatedChunkBoundsCalculator updatedChunkBoundsCalculator;
+        readonly ChunkColliderUpdater chunkColliderUpdater;
 
         internal BlockUpdateApplier(UpdatedChunkBoundsCalculator updatedChunkBoundsCalculator, ChunkColliderUpdater chunkColliderUpdater)
         {

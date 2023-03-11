@@ -1,11 +1,11 @@
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal record InSightChecker
+    record InSightChecker
     {
-        private readonly float4x4 viewportMatrix;
+        readonly float4x4 viewportMatrix;
 
         internal InSightChecker(float4x4 viewportMatrix)
         {
@@ -28,7 +28,7 @@ namespace UnityView.Rendering.Chunks
             return false;
         }
 
-        private bool PointCheck(float x, float y, float z)
+        bool PointCheck(float x, float y, float z)
         {
             var viewportPoint = WorldToViewportPoint(x, y, z);
 
@@ -38,7 +38,7 @@ namespace UnityView.Rendering.Chunks
             return true;
         }
 
-        private float3 WorldToViewportPoint(float x, float y, float z)
+        float3 WorldToViewportPoint(float x, float y, float z)
         {
             var viewportPoint = Multiply(x, y, z);
             // x,y,zをwで割る
@@ -50,7 +50,7 @@ namespace UnityView.Rendering.Chunks
         }
 
         // math.mul()よりも速い
-        private float4 Multiply(float b1, float b2, float b3)
+        float4 Multiply(float b1, float b2, float b3)
         {
             return new float4(
                 (viewportMatrix.c0.x * b1) + (viewportMatrix.c1.x * b2) + (viewportMatrix.c2.x * b3) + (viewportMatrix.c3.x),

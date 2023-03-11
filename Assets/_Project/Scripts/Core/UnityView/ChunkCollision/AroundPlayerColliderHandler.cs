@@ -1,19 +1,19 @@
 using System;
-using Zenject;
-using UnityView.Players;
 using UniRx;
+using UnityView.Players;
+using Zenject;
 
 namespace UnityView.ChunkCollision
 {
-    internal class AroundPlayerColliderHandler : IInitializable, IDisposable
+    class AroundPlayerColliderHandler : IInitializable, IDisposable
     {
-        private AroundPlayerColliderCreator aroundPlayerColliderCreator;
-        private OutOfRangeColliderDisposer outOfRangeColliderDisposer;
-        private PlayerChunkProvider playerChunkProvider;
+        readonly AroundPlayerColliderCreator aroundPlayerColliderCreator;
+        readonly OutOfRangeColliderDisposer outOfRangeColliderDisposer;
+        readonly PlayerChunkProvider playerChunkProvider;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
-        private const int ColliderRadius = 1;
+        const int ColliderRadius = 1;
 
         internal AroundPlayerColliderHandler(AroundPlayerColliderCreator aroundPlayerColliderCreator, OutOfRangeColliderDisposer outOfRangeColliderDisposer, PlayerChunkProvider playerChunkProvider)
         {

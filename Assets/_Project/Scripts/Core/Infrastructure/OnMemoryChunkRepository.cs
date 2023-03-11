@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using Domain;
 using Domain.Chunks;
-using System.Collections.Generic;
 
 namespace Infrastructure
 {
-    internal class OnMemoryChunkRepository : IChunkRepository
+    class OnMemoryChunkRepository : IChunkRepository
     {
-        internal Dictionary<ChunkGridCoordinate, Chunk> chunks = new Dictionary<ChunkGridCoordinate, Chunk>();
+        internal Dictionary<ChunkGridCoordinate, Chunk> chunks = new();
 
         public void Store(Chunk chunk)
         {

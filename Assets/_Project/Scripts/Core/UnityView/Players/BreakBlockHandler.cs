@@ -1,22 +1,22 @@
 using System;
-using UnityEngine;
 using UniRx;
-using Zenject;
+using UnityEngine;
 using UnityView.Inputs;
+using Zenject;
 
 namespace UnityView.Players
 {
     public class BreakBlockHandler : IInitializable, IDisposable
     {
-        private IInputProvider inputProvider;
-        private FocusedBlockInfoProvider focusedBlockInfoProvider;
+        readonly IInputProvider inputProvider;
+        readonly FocusedBlockInfoProvider focusedBlockInfoProvider;
 
-        private Subject<Vector3> _onBreakBlock = new Subject<Vector3>();
+        readonly Subject<Vector3> _onBreakBlock = new();
         public IObservable<Vector3> OnBreakBlock => _onBreakBlock;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
-        private const float breakBlockInterval = 0.5f;
+        const float breakBlockInterval = 0.5f;
 
         internal BreakBlockHandler(IInputProvider inputProvider, FocusedBlockInfoProvider focusedBlockInfoProvider)
         {

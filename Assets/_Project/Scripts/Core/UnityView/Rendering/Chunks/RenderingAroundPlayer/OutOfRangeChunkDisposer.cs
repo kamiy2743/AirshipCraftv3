@@ -3,9 +3,9 @@ using Unity.Mathematics;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class OutOfRangeChunkDisposer
+    class OutOfRangeChunkDisposer
     {
-        private CreatedChunkRenderers createdChunkRenderers;
+        readonly CreatedChunkRenderers createdChunkRenderers;
 
         internal OutOfRangeChunkDisposer(CreatedChunkRenderers createdChunkRenderers)
         {

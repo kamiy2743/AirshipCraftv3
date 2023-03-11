@@ -4,9 +4,9 @@ using Domain.Items;
 
 namespace Domain.Inventories
 {
-    internal class PlayerInventory : IInventory
+    class PlayerInventory : IInventory
     {
-        private Dictionary<PlayerInventorySlotID, Slot> slots;
+        readonly Dictionary<PlayerInventorySlotID, Slot> slots;
 
         internal const int LineCount = 4;
         internal const int RowCount = 9;
@@ -22,10 +22,10 @@ namespace Domain.Inventories
         }
     }
 
-    internal record PlayerInventorySlotID
+    record PlayerInventorySlotID
     {
-        private int line;
-        private int row;
+        int line;
+        int row;
 
         internal PlayerInventorySlotID(int line, int row)
         {

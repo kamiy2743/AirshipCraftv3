@@ -1,18 +1,18 @@
+using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Cysharp.Threading.Tasks;
-using UniRx;
 
 namespace Presentation
 {
-    internal class EntryScreenPresenter : MonoBehaviour
+    class EntryScreenPresenter : MonoBehaviour
     {
-        [Inject] private EnterWorldModel enterWorldModel;
+        [Inject] EnterWorldModel enterWorldModel;
 
-        [SerializeField] private Button enterWorldButton;
+        [SerializeField] Button enterWorldButton;
 
-        private void Start()
+        void Start()
         {
             enterWorldButton
                 .BindToOnClick(_ => enterWorldModel.EnterWorldAsync().ToObservable().AsUnitObservable())

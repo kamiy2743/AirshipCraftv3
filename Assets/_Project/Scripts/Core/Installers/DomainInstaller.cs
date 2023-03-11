@@ -1,10 +1,10 @@
-using Zenject;
 using Domain.Chunks;
 using Infrastructure;
+using Zenject;
 
 namespace Installers
 {
-    internal class DomainInstaller : MonoInstaller
+    class DomainInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

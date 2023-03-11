@@ -3,11 +3,11 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    internal class AroundPlayerColliderCreator
+    class AroundPlayerColliderCreator
     {
-        private CreatedColliders createdColliders;
-        private ChunkColliderFactory chunkColliderFactory;
-        private ChunkBoundsFactory chunkBoundsFactory;
+        readonly CreatedColliders createdColliders;
+        readonly ChunkColliderFactory chunkColliderFactory;
+        readonly ChunkBoundsFactory chunkBoundsFactory;
 
         internal AroundPlayerColliderCreator(CreatedColliders createdColliders, ChunkColliderFactory chunkColliderFactory, ChunkBoundsFactory chunkBoundsFactory)
         {

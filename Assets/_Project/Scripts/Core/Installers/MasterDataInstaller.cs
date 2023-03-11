@@ -1,10 +1,10 @@
-using Zenject;
 using MasterData;
 using UnityView.Rendering;
+using Zenject;
 
 namespace Installers
 {
-    internal class MasterDataInstaller : MonoInstaller
+    class MasterDataInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

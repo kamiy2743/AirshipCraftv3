@@ -1,9 +1,9 @@
-using UnityEngine;
 using Domain;
+using UnityEngine;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal record ChunkMesh
+    record ChunkMesh
     {
         internal ChunkGridCoordinate chunkGridCoordinate;
         internal readonly Vector3[] vertices;

@@ -7,14 +7,14 @@ namespace UnityView.Rendering.Chunks
     public class ChunkSurface
     {
         public readonly ChunkGridCoordinate chunkGridCoordinate;
-        private Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces = new Dictionary<RelativeCoordinate, BlockSurface>();
+        readonly Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces = new();
 
         internal ChunkSurface(ChunkGridCoordinate chunkGridCoordinate)
         {
             this.chunkGridCoordinate = chunkGridCoordinate;
         }
 
-        private ChunkSurface(ChunkGridCoordinate chunkGridCoordinate, Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces)
+        ChunkSurface(ChunkGridCoordinate chunkGridCoordinate, Dictionary<RelativeCoordinate, BlockSurface> blockSurfaces)
         {
             this.chunkGridCoordinate = chunkGridCoordinate;
             this.blockSurfaces = blockSurfaces;

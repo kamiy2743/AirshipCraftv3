@@ -2,13 +2,13 @@ using System;
 
 namespace Presentation
 {
-    internal enum SceneName
+    enum SceneName
     {
         Root,
         World,
     }
 
-    internal static class SceneNameExt
+    static class SceneNameExt
     {
         internal static string ToStringName(this SceneName sceneName)
         {

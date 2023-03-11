@@ -2,7 +2,7 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    internal record BlockBounds
+    record BlockBounds
     {
         internal readonly float3 center;
         internal readonly float3 size;

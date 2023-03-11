@@ -1,11 +1,8 @@
-using Domain;
-using UnityView.Rendering.Chunks;
-
 namespace UnityView.Rendering.Chunks
 {
-    internal class ChunkRendererUpdater
+    class ChunkRendererUpdater
     {
-        private CreatedChunkRenderers createdChunkRenderers;
+        readonly CreatedChunkRenderers createdChunkRenderers;
 
         internal ChunkRendererUpdater(CreatedChunkRenderers createdChunkRenderers)
         {

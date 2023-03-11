@@ -4,10 +4,10 @@ namespace UnityView.Rendering.Chunks
 {
     public class BlockUpdateApplier
     {
-        private UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator;
-        private ChunkRendererUpdater chunkRendererUpdater;
-        private ChunkMeshFactory chunkMeshFactory;
-        private IChunkSurfaceRepository chunkSurfaceRepository;
+        readonly UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator;
+        readonly ChunkRendererUpdater chunkRendererUpdater;
+        readonly ChunkMeshFactory chunkMeshFactory;
+        readonly IChunkSurfaceRepository chunkSurfaceRepository;
 
         internal BlockUpdateApplier(UpdatedChunkSurfaceCalculator updatedChunkSurfaceCalculator, ChunkRendererUpdater chunkRendererUpdater, ChunkMeshFactory chunkMeshFactory, IChunkSurfaceRepository chunkSurfaceRepository)
         {

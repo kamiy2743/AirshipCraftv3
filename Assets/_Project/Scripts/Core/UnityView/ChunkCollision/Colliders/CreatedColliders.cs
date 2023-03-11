@@ -1,12 +1,12 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Domain;
 
 namespace UnityView.ChunkCollision
 {
-    internal class CreatedColliders
+    class CreatedColliders
     {
-        private Dictionary<ChunkGridCoordinate, ChunkCollider> colliders = new Dictionary<ChunkGridCoordinate, ChunkCollider>();
+        readonly Dictionary<ChunkGridCoordinate, ChunkCollider> colliders = new();
         internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => colliders.Keys.ToList();
 
         internal void Add(ChunkGridCoordinate chunkGridCoordinate, ChunkCollider collider)

@@ -1,17 +1,17 @@
 using System;
-using Zenject;
 using UniRx;
 using UnityView.Rendering;
+using Zenject;
 
 namespace UnityView.Players
 {
-    internal class FocusedBlockViewer : IInitializable, IDisposable
+    class FocusedBlockViewer : IInitializable, IDisposable
     {
-        private FocusedBlockInfoProvider focusedBlockInfoProvider;
-        private BlockMeshProvider blockMeshProvider;
-        private FocusedBlockOutline focusedBlockOutline;
+        readonly FocusedBlockInfoProvider focusedBlockInfoProvider;
+        readonly BlockMeshProvider blockMeshProvider;
+        readonly FocusedBlockOutline focusedBlockOutline;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
         internal FocusedBlockViewer(FocusedBlockInfoProvider focusedBlockInfoProvider, BlockMeshProvider blockMeshProvider, FocusedBlockOutline focusedBlockOutline)
         {

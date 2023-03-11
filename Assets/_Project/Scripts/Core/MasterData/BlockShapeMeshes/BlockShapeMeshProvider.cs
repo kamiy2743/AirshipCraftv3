@@ -1,12 +1,12 @@
-using UnityEngine;
 using Domain;
+using UnityEngine;
 using UnityView.Rendering;
 
 namespace MasterData
 {
-    internal class BlockShapeMeshProvider : IBlockShapeMeshProvider
+    class BlockShapeMeshProvider : IBlockShapeMeshProvider
     {
-        private MasterBlockShapeMeshes masterBlockShapeMeshes;
+        readonly MasterBlockShapeMeshes masterBlockShapeMeshes;
 
         internal BlockShapeMeshProvider(MasterBlockShapeMeshes masterBlockShapeMeshes)
         {

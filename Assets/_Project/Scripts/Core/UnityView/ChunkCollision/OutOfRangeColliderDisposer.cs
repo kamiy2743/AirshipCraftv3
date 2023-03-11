@@ -3,9 +3,9 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    internal class OutOfRangeColliderDisposer
+    class OutOfRangeColliderDisposer
     {
-        private CreatedColliders createdColliders;
+        readonly CreatedColliders createdColliders;
 
         internal OutOfRangeColliderDisposer(CreatedColliders createdColliders)
         {

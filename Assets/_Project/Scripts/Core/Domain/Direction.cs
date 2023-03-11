@@ -1,6 +1,6 @@
 using System;
-using Unity.Mathematics;
 using Extensions;
+using Unity.Mathematics;
 
 namespace Domain
 {
@@ -18,8 +18,7 @@ namespace Domain
     {
         public const int ElemCount = 6;
 
-        public static readonly Direction[] Array = new Direction[]
-        {
+        public static readonly Direction[] Array = {
             Direction.Right,
             Direction.Left,
             Direction.Up,

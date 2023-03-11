@@ -1,6 +1,6 @@
 using System;
-using Unity.Mathematics;
 using Domain.Chunks;
+using Unity.Mathematics;
 
 namespace Domain
 {
@@ -26,7 +26,7 @@ namespace Domain
             this.z = z;
         }
 
-        private bool IsValid(int x, int y, int z)
+        bool IsValid(int x, int y, int z)
         {
             if (x > Max || x < Min) return false;
             if (y > Max || y < Min) return false;
@@ -50,7 +50,7 @@ namespace Domain
 
         public bool TryAdd(int3 value, out ChunkGridCoordinate result)
         {
-            return TryConstruct(this.x + value.x, this.y + value.y, this.z + value.z, out result);
+            return TryConstruct(x + value.x, y + value.y, z + value.z, out result);
         }
 
         public float3 ToPivotCoordinate()

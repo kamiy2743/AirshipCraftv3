@@ -6,7 +6,7 @@ namespace UseCase
 {
     public class BreakBlockUseCase
     {
-        private ChunkBlockSetter chunkBlockSetter;
+        readonly ChunkBlockSetter chunkBlockSetter;
 
         internal BreakBlockUseCase(ChunkBlockSetter chunkBlockSetter)
         {

@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Domain;
+using UnityEngine;
 using UnityView.Rendering;
 
 namespace MasterData
 {
     [Serializable]
-    internal record Asset_3D_Blocks_3_0_Texture : IDisposable
+    record Asset_3D_Blocks_3_0_Texture : IDisposable
     {
         public BlockType blockType;
         public Texture2D texture;
 
-        private int size => texture.width / 2;
-        private List<Texture> createdTextures = new List<Texture>();
+        int size => texture.width / 2;
+        List<Texture> createdTextures = new();
 
         public SixFaceTexture ToSixFaceTexture()
         {
@@ -37,7 +37,7 @@ namespace MasterData
             );
         }
 
-        private Texture2D CreateTexture(Color[] pixels)
+        Texture2D CreateTexture(Color[] pixels)
         {
             var texture = new Texture2D(size, size);
 

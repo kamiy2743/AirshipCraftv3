@@ -5,7 +5,7 @@ namespace Domain.Chunks
     public class Chunk : IEquatable<Chunk>
     {
         public readonly ChunkGridCoordinate chunkGridCoordinate;
-        private readonly ChunkBlocks blocks;
+        readonly ChunkBlocks blocks;
 
         public const int BlockSideShift = 4;
         public const int BlockSide = 1 << BlockSideShift;
@@ -39,7 +39,7 @@ namespace Domain.Chunks
 
         public bool Equals(Chunk other)
         {
-            return this.chunkGridCoordinate == other.chunkGridCoordinate;
+            return chunkGridCoordinate == other.chunkGridCoordinate;
         }
 
         public override int GetHashCode()

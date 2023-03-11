@@ -1,13 +1,13 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class CreatedChunkRenderers : IDisposable
+    class CreatedChunkRenderers : IDisposable
     {
-        private Dictionary<ChunkGridCoordinate, ChunkRenderer> renderers = new Dictionary<ChunkGridCoordinate, ChunkRenderer>();
+        readonly Dictionary<ChunkGridCoordinate, ChunkRenderer> renderers = new();
         internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => renderers.Keys.ToList();
 
         internal void Add(ChunkGridCoordinate chunkGridCoordinate, ChunkRenderer chunkRenderer)

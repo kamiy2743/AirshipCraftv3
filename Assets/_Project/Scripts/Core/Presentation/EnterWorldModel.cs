@@ -1,13 +1,13 @@
-using Zenject;
-using UseCase;
 using Cysharp.Threading.Tasks;
+using UseCase;
+using Zenject;
 
 namespace Presentation
 {
-    internal class EnterWorldModel
+    class EnterWorldModel
     {
-        [Inject] private SceneLoader sceneLoader;
-        [Inject] private EnterWorldUseCase enterWorldUseCase;
+        [Inject] SceneLoader sceneLoader;
+        [Inject] EnterWorldUseCase enterWorldUseCase;
 
         internal async UniTask EnterWorldAsync()
         {

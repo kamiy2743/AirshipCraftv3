@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    internal record MeshData
+    record MeshData
     {
         internal readonly Vector3[] vertices;
         internal readonly int[] triangles;

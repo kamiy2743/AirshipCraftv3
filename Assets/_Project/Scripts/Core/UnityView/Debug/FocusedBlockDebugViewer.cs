@@ -1,17 +1,17 @@
-using UnityEngine;
-using Zenject;
-using UnityView.Players;
 using TMPro;
+using UnityEngine;
+using UnityView.Players;
+using Zenject;
 
 namespace UnityView.Debug
 {
-    internal class FocusedBlockDebugViewer : MonoBehaviour
+    class FocusedBlockDebugViewer : MonoBehaviour
     {
-        [Inject] private FocusedBlockInfoProvider focusedBlockInfoProvider;
+        [Inject] FocusedBlockInfoProvider focusedBlockInfoProvider;
 
-        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] TextMeshProUGUI text;
 
-        private void Update()
+        void Update()
         {
             if (focusedBlockInfoProvider.TryGetFocusedBlockInfo(out var focusedBlockInfo))
             {

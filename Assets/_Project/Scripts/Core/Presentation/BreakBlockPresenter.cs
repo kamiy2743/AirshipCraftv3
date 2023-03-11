@@ -1,17 +1,17 @@
 using System;
-using UnityView.Players;
 using UniRx;
-using Zenject;
+using UnityView.Players;
 using UseCase;
+using Zenject;
 
 namespace Presentation
 {
-    internal class BreakBlockPresenter : IInitializable, IDisposable
+    class BreakBlockPresenter : IInitializable, IDisposable
     {
-        private BreakBlockHandler breakBlockHandler;
-        private BreakBlockUseCase breakBlockUseCase;
+        readonly BreakBlockHandler breakBlockHandler;
+        readonly BreakBlockUseCase breakBlockUseCase;
 
-        private CompositeDisposable disposals = new CompositeDisposable();
+        readonly CompositeDisposable disposals = new();
 
         internal BreakBlockPresenter(BreakBlockHandler breakBlockHandler, BreakBlockUseCase breakBlockUseCase)
         {

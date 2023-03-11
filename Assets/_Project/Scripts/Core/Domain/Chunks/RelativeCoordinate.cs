@@ -24,7 +24,7 @@ namespace Domain.Chunks
             this.z = z;
         }
 
-        private bool IsValid(int x, int y, int z)
+        bool IsValid(int x, int y, int z)
         {
             if (x > Max || x < Min) return false;
             if (y > Max || y < Min) return false;

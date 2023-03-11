@@ -3,10 +3,10 @@ using Domain.Items;
 
 namespace Domain.Inventories
 {
-    internal class Slot
+    class Slot
     {
-        private IItem item;
-        private Amount amount;
+        IItem item;
+        Amount amount;
 
         internal void SetItem(IItem item, Amount amount)
         {

@@ -1,20 +1,20 @@
-using System.Threading;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Domain;
 using Domain.Chunks;
 using Unity.Mathematics;
-using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityView.Players;
 
 namespace UnityView.Rendering.Chunks
 {
-    internal class InSightChunkCreator
+    class InSightChunkCreator
     {
-        private ChunkRendererFactory chunkRendererFactory;
-        private ChunkMeshFactory chunkMeshFactory;
-        private CreatedChunkRenderers createdChunkRenderers;
-        private PlayerCamera playerCamera;
+        readonly ChunkRendererFactory chunkRendererFactory;
+        readonly ChunkMeshFactory chunkMeshFactory;
+        readonly CreatedChunkRenderers createdChunkRenderers;
+        readonly PlayerCamera playerCamera;
 
         internal InSightChunkCreator(ChunkRendererFactory chunkRendererFactory, ChunkMeshFactory chunkMeshFactory, CreatedChunkRenderers createdChunkRenderers, PlayerCamera playerCamera)
         {
@@ -50,7 +50,7 @@ namespace UnityView.Rendering.Chunks
             }
         }
 
-        private async UniTask CreateMeshesTask(
+        async UniTask CreateMeshesTask(
             ChunkGridCoordinate playerChunk,
             int maxRenderingRadius,
             Queue<(ChunkGridCoordinate, ChunkMesh)> createdMeshes,
@@ -102,7 +102,7 @@ namespace UnityView.Rendering.Chunks
             await UniTask.SwitchToMainThread();
         }
 
-        private Bounds CalcBounds(ChunkGridCoordinate cgc)
+        Bounds CalcBounds(ChunkGridCoordinate cgc)
         {
             var size = Vector3.one * Chunk.BlockSide;
             var center = (Vector3)cgc.ToPivotCoordinate() + (size * 0.5f);
