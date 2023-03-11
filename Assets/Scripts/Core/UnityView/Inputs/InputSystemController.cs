@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace ACv3.UnityView.Inputs
 {
-    public class InputSystemInputProvider : IInputProvider
+    public class InputSystemController : IInputController
     {
         readonly PlayerInputActions inputActions;
 
-        internal InputSystemInputProvider()
+        internal InputSystemController()
         {
             inputActions = new PlayerInputActions();
             inputActions.Enable();

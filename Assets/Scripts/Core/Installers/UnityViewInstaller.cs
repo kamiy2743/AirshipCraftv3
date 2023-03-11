@@ -63,8 +63,8 @@ namespace ACv3.Installers
             Container.BindInstance(playerCamera).AsSingle();
 
             Container
-                .Bind<IInputProvider>()
-                .To<InputSystemInputProvider>()
+                .Bind<IInputController>()
+                .To<InputSystemController>()
                 .AsSingle();
 
             Container.Bind<FocusedBlockInfoProvider>().AsSingle();

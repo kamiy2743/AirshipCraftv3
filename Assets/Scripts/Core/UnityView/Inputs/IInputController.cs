@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ACv3.UnityView.Inputs
 {
-    public interface IInputProvider
+    public interface IInputController
     {
         Vector3 DebugFly();
         bool PlaceBlock();

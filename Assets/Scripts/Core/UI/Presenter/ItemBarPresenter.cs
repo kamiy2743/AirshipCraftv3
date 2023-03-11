@@ -11,23 +11,23 @@ namespace ACv3.UI.Presenter
     {
         readonly ItemBarModel model;
         readonly ItemBarView view;
-        readonly IInputProvider inputProvider;
+        readonly IInputController inputController;
         
         readonly CompositeDisposable disposable = new();
 
         [Inject]
-        ItemBarPresenter(ItemBarModel model, ItemBarView view, IInputProvider inputProvider)
+        ItemBarPresenter(ItemBarModel model, ItemBarView view, IInputController inputController)
         {
             this.model = model;
             this.view = view;
-            this.inputProvider = inputProvider;
+            this.inputController = inputController;
         }
         
         void IInitializable.Initialize()
         {
             view.Initialize();
             
-            inputProvider.OnItemBarScroll
+            inputController.OnItemBarScroll
                 .Subscribe(model.Scroll)
                 .AddTo(disposable);
             

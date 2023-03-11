@@ -8,7 +8,7 @@ namespace ACv3.UnityView.Players
 {
     public class PlaceBlockHandler : IInitializable, IDisposable
     {
-        readonly IInputProvider inputProvider;
+        readonly IInputController inputController;
         readonly FocusedBlockInfoProvider focusedBlockInfoProvider;
 
         readonly Subject<Vector3> _onPlaceBlock = new();
@@ -18,16 +18,16 @@ namespace ACv3.UnityView.Players
 
         const float placeBlockInterval = 0.5f;
 
-        internal PlaceBlockHandler(IInputProvider inputProvider, FocusedBlockInfoProvider focusedBlockInfoProvider)
+        internal PlaceBlockHandler(IInputController inputController, FocusedBlockInfoProvider focusedBlockInfoProvider)
         {
-            this.inputProvider = inputProvider;
+            this.inputController = inputController;
             this.focusedBlockInfoProvider = focusedBlockInfoProvider;
         }
 
         public void Initialize()
         {
-            var placeBlockStream = Observable.EveryUpdate().Where(_ => inputProvider.PlaceBlock());
-            var stopPlaceBlockStream = Observable.EveryUpdate().Where(_ => !inputProvider.PlaceBlock());
+            var placeBlockStream = Observable.EveryUpdate().Where(_ => inputController.PlaceBlock());
+            var stopPlaceBlockStream = Observable.EveryUpdate().Where(_ => !inputController.PlaceBlock());
 
             FocusedBlockInfo focusedBlockInfo = null;
             placeBlockStream

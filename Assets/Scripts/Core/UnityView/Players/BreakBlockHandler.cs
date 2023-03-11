@@ -8,7 +8,7 @@ namespace ACv3.UnityView.Players
 {
     public class BreakBlockHandler : IInitializable, IDisposable
     {
-        readonly IInputProvider inputProvider;
+        readonly IInputController inputController;
         readonly FocusedBlockInfoProvider focusedBlockInfoProvider;
 
         readonly Subject<Vector3> _onBreakBlock = new();
@@ -18,16 +18,16 @@ namespace ACv3.UnityView.Players
 
         const float breakBlockInterval = 0.5f;
 
-        internal BreakBlockHandler(IInputProvider inputProvider, FocusedBlockInfoProvider focusedBlockInfoProvider)
+        internal BreakBlockHandler(IInputController inputController, FocusedBlockInfoProvider focusedBlockInfoProvider)
         {
-            this.inputProvider = inputProvider;
+            this.inputController = inputController;
             this.focusedBlockInfoProvider = focusedBlockInfoProvider;
         }
 
         public void Initialize()
         {
-            var breakBlockStream = Observable.EveryUpdate().Where(_ => inputProvider.BreakBlock());
-            var stopBreakBlockStream = Observable.EveryUpdate().Where(_ => !inputProvider.BreakBlock());
+            var breakBlockStream = Observable.EveryUpdate().Where(_ => inputController.BreakBlock());
+            var stopBreakBlockStream = Observable.EveryUpdate().Where(_ => !inputController.BreakBlock());
 
             FocusedBlockInfo focusedBlockInfo = null;
             breakBlockStream

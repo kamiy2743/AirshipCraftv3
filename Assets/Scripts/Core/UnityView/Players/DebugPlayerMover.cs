@@ -6,14 +6,14 @@ namespace ACv3.UnityView.Players
 {
     class DebugPlayerMover : MonoBehaviour
     {
-        [Inject] IInputProvider inputProvider;
+        [Inject] IInputController inputController;
         [Inject] PlayerCamera playerCamera;
 
         [SerializeField] float flySpeed;
 
         void FixedUpdate()
         {
-            transform.position += playerCamera.HorizontalRotation * inputProvider.DebugFly() * (flySpeed * Time.fixedDeltaTime);
+            transform.position += playerCamera.HorizontalRotation * inputController.DebugFly() * (flySpeed * Time.fixedDeltaTime);
         }
     }
 }
