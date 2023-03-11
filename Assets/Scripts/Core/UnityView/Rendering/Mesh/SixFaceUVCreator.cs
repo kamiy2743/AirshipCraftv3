@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    class SixFaceUVCreator
+    public class SixFaceUVCreator
     {
         readonly SixFaceTextureAtlas sixFaceTextureAtlas;
 

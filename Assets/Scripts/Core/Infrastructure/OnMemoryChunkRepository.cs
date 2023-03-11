@@ -4,7 +4,7 @@ using Domain.Chunks;
 
 namespace Infrastructure
 {
-    class OnMemoryChunkRepository : IChunkRepository
+    public class OnMemoryChunkRepository : IChunkRepository
     {
         internal Dictionary<ChunkGridCoordinate, Chunk> chunks = new();
 

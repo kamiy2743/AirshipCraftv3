@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Presentation
 {
-    class PlaceBlockPresenter : IInitializable, IDisposable
+    public class PlaceBlockPresenter : IInitializable, IDisposable
     {
         readonly PlaceBlockHandler placeBlockHandler;
         readonly PlaceBlockUseCase placeBlockUseCase;

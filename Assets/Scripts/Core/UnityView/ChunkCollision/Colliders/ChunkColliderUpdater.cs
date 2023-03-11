@@ -1,6 +1,6 @@
 namespace UnityView.ChunkCollision
 {
-    class ChunkColliderUpdater
+    public class ChunkColliderUpdater
     {
         readonly CreatedColliders createdColliders;
 

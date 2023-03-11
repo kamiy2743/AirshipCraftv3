@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 namespace Domain.Chunks
 {
-    class SnoiseChunkFactory : IChunkFactory
+    public class SnoiseChunkFactory : IChunkFactory
     {
         readonly SnoiseTerrainGenerator snoiseTerrainGenerator;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
+    public record SixFaceTextureAtlas : IBlockTextureAtlas, IDisposable
     {
         readonly Texture2D texture;
         internal int Size => texture.width;

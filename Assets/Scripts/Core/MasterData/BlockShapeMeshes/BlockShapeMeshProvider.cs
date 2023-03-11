@@ -4,7 +4,7 @@ using UnityView.Rendering;
 
 namespace MasterData
 {
-    class BlockShapeMeshProvider : IBlockShapeMeshProvider
+    public class BlockShapeMeshProvider : IBlockShapeMeshProvider
     {
         readonly MasterBlockShapeMeshes masterBlockShapeMeshes;
 

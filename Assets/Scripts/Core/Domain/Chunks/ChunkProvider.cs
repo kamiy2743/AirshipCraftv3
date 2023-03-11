@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Domain.Chunks
 {
-    class ChunkProvider : IChunkProvider
+    public class ChunkProvider : IChunkProvider
     {
         readonly IChunkFactory chunkFactory;
         readonly IChunkRepository chunkRepository;

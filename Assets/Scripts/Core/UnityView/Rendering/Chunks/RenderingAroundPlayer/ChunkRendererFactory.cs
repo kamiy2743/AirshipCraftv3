@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkRendererFactory : MonoBehaviour
+    public class ChunkRendererFactory : MonoBehaviour
     {
         [SerializeField] ChunkRenderer chunkRendererPrefab;
         [SerializeField] Transform parent;

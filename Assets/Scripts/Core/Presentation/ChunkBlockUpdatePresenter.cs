@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Presentation
 {
-    class ChunkBlockUpdatePresenter : IInitializable, IDisposable
+    public class ChunkBlockUpdatePresenter : IInitializable, IDisposable
     {
         readonly ChunkBlockSetter chunkBlockSetter;
         // TODO クラス名変更

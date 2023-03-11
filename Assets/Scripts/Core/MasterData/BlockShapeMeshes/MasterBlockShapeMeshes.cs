@@ -7,7 +7,7 @@ using UnityEngine;
 namespace MasterData
 {
     [CreateAssetMenu(fileName = "MasterBlockShapeMeshes", menuName = "ScriptableObjects/MasterBlockShapeMeshes")]
-    class MasterBlockShapeMeshes : ScriptableObject
+    public class MasterBlockShapeMeshes : ScriptableObject
     {
         [SerializeField] List<BlockShapeMeshRecord> meshes;
 

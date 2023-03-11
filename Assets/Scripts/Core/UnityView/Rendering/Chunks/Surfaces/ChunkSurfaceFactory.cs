@@ -3,7 +3,7 @@ using Domain.Chunks;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkSurfaceFactory
+    public class ChunkSurfaceFactory
     {
         readonly IChunkProvider chunkProvider;
 

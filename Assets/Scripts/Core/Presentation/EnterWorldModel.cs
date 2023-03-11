@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Presentation
 {
-    class EnterWorldModel
+    public class EnterWorldModel
     {
         [Inject] SceneLoader sceneLoader;
         [Inject] EnterWorldUseCase enterWorldUseCase;

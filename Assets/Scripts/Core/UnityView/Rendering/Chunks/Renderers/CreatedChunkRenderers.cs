@@ -5,7 +5,7 @@ using Domain;
 
 namespace UnityView.Rendering.Chunks
 {
-    class CreatedChunkRenderers : IDisposable
+    public class CreatedChunkRenderers : IDisposable
     {
         readonly Dictionary<ChunkGridCoordinate, ChunkRenderer> renderers = new();
         internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => renderers.Keys.ToList();

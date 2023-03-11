@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityView.Players
 {
-    class PlayerChunkProvider : IDisposable
+    public class PlayerChunkProvider : IDisposable
     {
         readonly Subject<ChunkGridCoordinate> _onPlayerChunkChanged = new();
         internal IObservable<ChunkGridCoordinate> OnPlayerChunkChanged => _onPlayerChunkChanged;
@@ -13,7 +13,7 @@ namespace UnityView.Players
         readonly Transform playerTransform;
         readonly CompositeDisposable disposals = new();
 
-        internal PlayerChunkProvider(Transform playerTransform)
+        public PlayerChunkProvider(Transform playerTransform)
         {
             this.playerTransform = playerTransform;
 

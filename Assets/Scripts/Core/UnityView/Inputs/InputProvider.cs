@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityView.Inputs
 {
-    class InputSystemInputProvider : IInputProvider
+    public class InputSystemInputProvider : IInputProvider
     {
         readonly PlayerInputActions inputActions;
 

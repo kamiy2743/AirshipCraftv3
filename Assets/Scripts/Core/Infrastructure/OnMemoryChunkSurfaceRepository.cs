@@ -4,7 +4,7 @@ using UnityView.Rendering.Chunks;
 
 namespace Infrastructure
 {
-    class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
+    public class OnMemoryChunkSurfaceRepository : IChunkSurfaceRepository
     {
         internal Dictionary<ChunkGridCoordinate, ChunkSurface> surfaces = new();
 

@@ -5,7 +5,7 @@ using Zenject;
 
 namespace UnityView.ChunkCollision
 {
-    class AroundPlayerColliderHandler : IInitializable, IDisposable
+    public class AroundPlayerColliderHandler : IInitializable, IDisposable
     {
         readonly AroundPlayerColliderCreator aroundPlayerColliderCreator;
         readonly OutOfRangeColliderDisposer outOfRangeColliderDisposer;

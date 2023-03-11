@@ -4,7 +4,7 @@ using Domain;
 
 namespace UnityView.ChunkCollision
 {
-    class CreatedColliders
+    public class CreatedColliders
     {
         readonly Dictionary<ChunkGridCoordinate, ChunkCollider> colliders = new();
         internal List<ChunkGridCoordinate> CreatedCoordinatesDeepCopy => colliders.Keys.ToList();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityView.Players
 {
-    class PlayerCamera : MonoBehaviour
+    public class PlayerCamera : MonoBehaviour
     {
         [SerializeField] CinemachineVirtualCamera playerVcam;
 

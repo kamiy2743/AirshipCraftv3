@@ -7,7 +7,7 @@ using Zenject;
 
 namespace UnityView.Rendering.Chunks
 {
-    class RenderingAroundPlayer : IInitializable, IDisposable
+    public class RenderingAroundPlayer : IInitializable, IDisposable
     {
         readonly InSightChunkCreator inSightChunkCreator;
         readonly OutOfRangeChunkDisposer outOfRangeChunkDisposer;

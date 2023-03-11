@@ -45,14 +45,14 @@ namespace Installers
 
             Container.BindInterfacesAndSelfTo<RenderingAroundPlayer>().AsSingle();
             Container.Bind<InSightChunkCreator>().AsSingle();
-            Container.BindInstance<ChunkRendererFactory>(chunkRendererFactory).AsSingle();
+            Container.BindInstance(chunkRendererFactory).AsSingle();
             Container.Bind<OutOfRangeChunkDisposer>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<AroundPlayerColliderHandler>().AsSingle();
             Container.Bind<AroundPlayerColliderCreator>().AsSingle();
             Container.Bind<OutOfRangeColliderDisposer>().AsSingle();
             Container.Bind<CreatedColliders>().AsSingle();
-            Container.BindInstance<ChunkColliderFactory>(chunkColliderFactory).AsSingle();
+            Container.BindInstance(chunkColliderFactory).AsSingle();
             Container.Bind<ChunkBoundsFactory>().AsSingle();
 
             // TODO Installerを分けたい
@@ -60,7 +60,7 @@ namespace Installers
             Container.Bind<UpdatedChunkBoundsCalculator>().AsSingle();
             Container.Bind<ChunkColliderUpdater>().AsSingle();
 
-            Container.BindInstance<PlayerCamera>(playerCamera).AsSingle();
+            Container.BindInstance(playerCamera).AsSingle();
 
             Container
                 .Bind<IInputProvider>()
@@ -69,7 +69,7 @@ namespace Installers
 
             Container.Bind<FocusedBlockInfoProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<FocusedBlockViewer>().AsSingle();
-            Container.BindInstance<FocusedBlockOutline>(focusedBlockOutline).AsSingle();
+            Container.BindInstance(focusedBlockOutline).AsSingle();
 
             Container.BindInterfacesAndSelfTo<PlaceBlockHandler>().AsSingle();
             Container.BindInterfacesAndSelfTo<BreakBlockHandler>().AsSingle();

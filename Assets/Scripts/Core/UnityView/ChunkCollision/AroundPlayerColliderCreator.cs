@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    class AroundPlayerColliderCreator
+    public class AroundPlayerColliderCreator
     {
         readonly CreatedColliders createdColliders;
         readonly ChunkColliderFactory chunkColliderFactory;

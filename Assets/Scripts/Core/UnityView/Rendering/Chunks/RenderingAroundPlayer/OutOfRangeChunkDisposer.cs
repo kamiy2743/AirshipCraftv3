@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace UnityView.Rendering.Chunks
 {
-    class OutOfRangeChunkDisposer
+    public class  OutOfRangeChunkDisposer
     {
         readonly CreatedChunkRenderers createdChunkRenderers;
 

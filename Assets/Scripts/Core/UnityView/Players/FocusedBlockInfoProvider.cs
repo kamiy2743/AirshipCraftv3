@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityView.Players
 {
-    class FocusedBlockInfoProvider
+    public class FocusedBlockInfoProvider
     {
         readonly PlayerCamera playerCamera;
         readonly IChunkProvider chunkProvider;

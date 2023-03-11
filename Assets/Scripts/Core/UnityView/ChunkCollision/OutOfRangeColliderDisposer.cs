@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace UnityView.ChunkCollision
 {
-    class OutOfRangeColliderDisposer
+    public class OutOfRangeColliderDisposer
     {
         readonly CreatedColliders createdColliders;
 

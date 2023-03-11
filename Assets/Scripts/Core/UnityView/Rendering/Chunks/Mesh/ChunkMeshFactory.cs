@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkMeshFactory
+    public class ChunkMeshFactory
     {
         readonly IChunkProvider chunkProvider;
         readonly ChunkSurfaceProvider chunkSurfaceProvider;

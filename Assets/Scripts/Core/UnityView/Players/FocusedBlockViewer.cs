@@ -5,7 +5,7 @@ using Zenject;
 
 namespace UnityView.Players
 {
-    class FocusedBlockViewer : IInitializable, IDisposable
+    public class FocusedBlockViewer : IInitializable, IDisposable
     {
         readonly FocusedBlockInfoProvider focusedBlockInfoProvider;
         readonly BlockMeshProvider blockMeshProvider;

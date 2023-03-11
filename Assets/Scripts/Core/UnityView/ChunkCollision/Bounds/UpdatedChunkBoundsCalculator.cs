@@ -4,7 +4,7 @@ using UnityView.Rendering.Chunks;
 
 namespace UnityView.ChunkCollision
 {
-    class UpdatedChunkBoundsCalculator
+    public class UpdatedChunkBoundsCalculator
     {
         // TODO 仮実装
         ChunkSurfaceProvider chunkSurfaceProvider;

@@ -4,7 +4,7 @@ using UnityView.Rendering;
 
 namespace MasterData
 {
-    class SixFaceTextureProvider : ISixFaceTextureProvider
+    public class SixFaceTextureProvider : ISixFaceTextureProvider
     {
         readonly Dictionary<BlockType, SixFaceTexture> textures = new();
 

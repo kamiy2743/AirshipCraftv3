@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    class BlockMeshFactory
+    public class BlockMeshFactory
     {
         readonly SixFaceUVCreator sixFaceUVCreator;
 

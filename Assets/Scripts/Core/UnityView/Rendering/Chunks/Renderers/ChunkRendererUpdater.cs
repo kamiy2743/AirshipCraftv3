@@ -1,6 +1,6 @@
 namespace UnityView.Rendering.Chunks
 {
-    class ChunkRendererUpdater
+    public class ChunkRendererUpdater
     {
         readonly CreatedChunkRenderers createdChunkRenderers;
 

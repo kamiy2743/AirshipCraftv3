@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityView.Rendering
 {
-    class BlockMeshProvider
+    public class BlockMeshProvider
     {
         readonly BlockMesh air;
         readonly Dictionary<BlockType, BlockMesh> blockMeshes = new();

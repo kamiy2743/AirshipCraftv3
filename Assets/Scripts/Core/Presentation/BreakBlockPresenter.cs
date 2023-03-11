@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Presentation
 {
-    class BreakBlockPresenter : IInitializable, IDisposable
+    public class BreakBlockPresenter : IInitializable, IDisposable
     {
         readonly BreakBlockHandler breakBlockHandler;
         readonly BreakBlockUseCase breakBlockUseCase;

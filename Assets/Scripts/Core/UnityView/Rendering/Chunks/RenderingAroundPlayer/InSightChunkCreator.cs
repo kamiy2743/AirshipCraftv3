@@ -9,7 +9,7 @@ using UnityView.Players;
 
 namespace UnityView.Rendering.Chunks
 {
-    class InSightChunkCreator
+    public class InSightChunkCreator
     {
         readonly ChunkRendererFactory chunkRendererFactory;
         readonly ChunkMeshFactory chunkMeshFactory;

@@ -3,7 +3,7 @@ using UnityView.Rendering;
 
 namespace UnityView.Players
 {
-    class FocusedBlockOutline : MonoBehaviour
+    public class FocusedBlockOutline : MonoBehaviour
     {
         [SerializeField] MeshFilter meshFilter;
 

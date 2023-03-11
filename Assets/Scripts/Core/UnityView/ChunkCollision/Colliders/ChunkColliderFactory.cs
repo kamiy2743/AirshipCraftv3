@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityView.ChunkCollision
 {
-    class ChunkColliderFactory : MonoBehaviour
+    public class ChunkColliderFactory : MonoBehaviour
     {
         [SerializeField] ChunkCollider chunkColliderPrefab;
         [SerializeField] Transform parent;
