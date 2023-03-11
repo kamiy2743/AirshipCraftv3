@@ -1,6 +1,6 @@
 {
-    "name": "Utils",
-    "rootNamespace": "Utils",
+    "name": "ACv3.Utils",
+    "rootNamespace": "",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

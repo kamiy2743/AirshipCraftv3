@@ -1,15 +1,10 @@
 {
-    "name": "Installers",
-    "rootNamespace": "Installers",
+    "name": "ACv3.Infrastructure",
+    "rootNamespace": "",
     "references": [
         "GUID:1f960f244651a154cae14322eb7769d4",
-        "GUID:1be5d3ab91052c64dae355ae658caf04",
-        "GUID:4646f6d7dfa87fa47bd7d9f803064c48",
         "GUID:fd7eeb2169756f04abc07f19555fdb29",
-        "GUID:8c85115166f24b54587e4634a18ee680",
-        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
-        "GUID:4307f53044263cf4b835bd812fc161a4",
-        "GUID:79073ae2011884743af3b214a4acf8a2"
+        "GUID:8c85115166f24b54587e4634a18ee680"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

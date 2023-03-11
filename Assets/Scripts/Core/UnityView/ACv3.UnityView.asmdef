@@ -1,6 +1,6 @@
 {
-    "name": "UnityView",
-    "rootNamespace": "UnityView",
+    "name": "ACv3.UnityView",
+    "rootNamespace": "",
     "references": [
         "GUID:8c85115166f24b54587e4634a18ee680",
         "GUID:d8b63aba1907145bea998dd612889d6b",

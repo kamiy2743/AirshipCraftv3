@@ -1,6 +1,6 @@
 {
-    "name": "Presentation",
-    "rootNamespace": "Presentation",
+    "name": "ACv3.Presentation",
+    "rootNamespace": "",
     "references": [
         "GUID:1f960f244651a154cae14322eb7769d4",
         "GUID:fd7eeb2169756f04abc07f19555fdb29",
