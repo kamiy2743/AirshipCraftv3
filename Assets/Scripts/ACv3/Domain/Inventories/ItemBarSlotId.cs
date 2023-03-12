@@ -18,7 +18,7 @@ namespace ACv3.Domain.Inventories
         }
 
         public int ToInt() => value;
-        public static ItemBarSlotId CreateMin() => new(Min);
+        public static ItemBarSlotId Default() => new(Min);
         
         public override string ToString() => $"ItemBarSlotId: {value}";
     }

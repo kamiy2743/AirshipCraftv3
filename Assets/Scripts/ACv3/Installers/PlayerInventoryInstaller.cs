@@ -6,15 +6,15 @@ using Zenject;
 
 namespace ACv3.Installers
 {
-    class ItemBarInstaller : MonoInstaller
+    class PlayerInventoryInstaller : MonoInstaller
     {
-        [SerializeField] ItemBarView itemBarView;
+        [SerializeField] PlayerInventoryView itemBarView;
 
         public override void InstallBindings()
         {
-            Container.Bind<ItemBarModel>().AsSingle();
+            Container.Bind<PlayerInventoryModel>().AsSingle();
             Container.BindInstance(itemBarView).AsSingle();
-            Container.BindInterfacesTo<ItemBarPresenter>().AsSingle();
+            Container.BindInterfacesTo<PlayerInventoryPresenter>().AsSingle();
         }
     }
 }

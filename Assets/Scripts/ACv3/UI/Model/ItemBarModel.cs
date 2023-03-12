@@ -7,7 +7,7 @@ namespace ACv3.UI.Model
 {
     public class ItemBarModel
     {
-        readonly ReactiveProperty<ItemBarSlotId> selectedSlotID = new(ItemBarSlotId.CreateMin());
+        readonly ReactiveProperty<ItemBarSlotId> selectedSlotID = new(ItemBarSlotId.Default());
         public IObservable<ItemBarSlotId> SelectedSlotIDAsObservable => selectedSlotID;
 
         public void Scroll(ItemBarScrollDirection scrollDirection)

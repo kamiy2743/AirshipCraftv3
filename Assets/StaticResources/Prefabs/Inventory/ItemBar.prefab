@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4793085431403872675}
   - component: {fileID: 9013317905432391386}
   - component: {fileID: 3643119968858077560}
+  - component: {fileID: 8900808992311184052}
+  - component: {fileID: 5036033834373221004}
   m_Layer: 5
   m_Name: ItemBar
   m_TagString: Untagged
@@ -70,7 +72,6 @@ MonoBehaviour:
   - {fileID: 992340450035567708}
   - {fileID: 7751575042413239915}
   - {fileID: 8867743109732116316}
-  selectedOutline: {fileID: 0}
 --- !u!114 &9013317905432391386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,6 +112,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &8900808992311184052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5470910016032200494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 5036033834373221004}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &5036033834373221004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5470910016032200494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6fdcea6614e6c846b178b7710fa3b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemBarView: {fileID: 4793085431403872675}
 --- !u!1001 &1550594940594364117
 PrefabInstance:
   m_ObjectHideFlags: 0
