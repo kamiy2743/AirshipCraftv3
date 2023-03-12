@@ -1,8 +1,8 @@
 namespace ACv3.Domain.Items
 {
-    interface IItem
+    public interface IItem
     {
-        ItemID GetItemID();
-        Amount GetMaxAmount();
+        public ItemID ItemID { get; }
+        public Amount MaxAmount { get; }
     }
 }

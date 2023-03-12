@@ -1,22 +1,23 @@
-using System;
 using ACv3.Domain.Items;
+using UnityEngine.Assertions;
 
 namespace ACv3.Domain.Inventories
 {
-    class Slot
+    public record Slot
     {
-        IItem item;
-        Amount amount;
+        readonly IItem item;
+        public readonly Amount Amount;
 
-        internal void SetItem(IItem item, Amount amount)
+        Slot(IItem item, Amount amount)
         {
-            if (amount > item.GetMaxAmount())
-            {
-                throw new Exception($"max amount is {item.GetMaxAmount()}, but given {amount}");
-            }
-
+            Assert.IsTrue(amount <= item.MaxAmount);
             this.item = item;
-            this.amount = amount;
+            Amount = amount;
+        }
+
+        public static Slot Empty()
+        {
+            return new Slot(new EmptyItem(), new Amount(0));
         }
     }
 }

@@ -9,6 +9,7 @@ namespace ACv3.Domain.Inventories
 
         const int LineMin = 0;
         const int LineMax = 3;
+        public const int LineCount = 4;
         
         const int RowMin = 0;
         const int RowMax = 8;

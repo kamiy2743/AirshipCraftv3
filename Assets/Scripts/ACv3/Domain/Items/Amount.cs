@@ -2,11 +2,11 @@ using System;
 
 namespace ACv3.Domain.Items
 {
-    record Amount : IComparable<Amount>
+    public record Amount : IComparable<Amount>
     {
         readonly int value;
 
-        internal Amount(int value)
+        public Amount(int value)
         {
             if (value < 0) throw new ArgumentException();
             this.value = value;
@@ -19,6 +19,11 @@ namespace ACv3.Domain.Items
             return 0;
         }
 
+        public string ToStringValue()
+        {
+            return value.ToString();
+        }
+
         public static bool operator >(Amount a, Amount b)
         {
             return a.CompareTo(b) > 0;
@@ -27,6 +32,16 @@ namespace ACv3.Domain.Items
         public static bool operator <(Amount a, Amount b)
         {
             return a.CompareTo(b) < 0;
+        }
+        
+        public static bool operator >=(Amount a, Amount b)
+        {
+            return a.CompareTo(b) >= 0;
+        }
+
+        public static bool operator <=(Amount a, Amount b)
+        {
+            return a.CompareTo(b) <= 0;
         }
     }
 }

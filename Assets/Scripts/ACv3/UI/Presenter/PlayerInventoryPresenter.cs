@@ -1,4 +1,5 @@
 using System;
+using ACv3.Domain.Inventories;
 using ACv3.Extensions;
 using ACv3.UI.Model;
 using ACv3.UI.View;
@@ -33,6 +34,7 @@ namespace ACv3.UI.Presenter
                 {
                     model.SetIsSelected(true);
                     model.SetSelectedSlotId(slotId);
+                    model.SetSlot(slotId, Slot.Empty());
                 })
                 .AddTo(disposable);
 
@@ -93,6 +95,13 @@ namespace ACv3.UI.Presenter
                     {
                         view.Hide();
                     }
+                })
+                .AddTo(disposable);
+
+            model.OnUpdateSlot
+                .Subscribe(value =>
+                {
+                    view.SetItem(value.slotId, null, value.slot.Amount);
                 })
                 .AddTo(disposable);
         }

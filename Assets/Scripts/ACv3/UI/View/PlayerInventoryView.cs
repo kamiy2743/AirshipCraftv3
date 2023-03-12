@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ACv3.Domain.Inventories;
+using ACv3.Domain.Items;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -66,6 +67,11 @@ namespace ACv3.UI.View
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void SetItem(PlayerInventorySlotId slotId, Texture2D texture, Amount amount)
+        {
+            slotViews[slotId].SetItem(texture, amount);
         }
         
         [Serializable]
