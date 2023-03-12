@@ -1,4 +1,21 @@
 {
-	"name": "ACv3.UI.Presenter",
-	"references":[ "GUID:4ce890f5194b64442a9b4c533190e310", "GUID:559cab7cb463dcb40a1c67ee0ed27c35", "GUID:560b04d1a97f54a4e82edc0cbbb69285", "GUID:8c85115166f24b54587e4634a18ee680", "GUID:1f960f244651a154cae14322eb7769d4" ]
+    "name": "ACv3.UI.Presenter",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4ce890f5194b64442a9b4c533190e310",
+        "GUID:559cab7cb463dcb40a1c67ee0ed27c35",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:8c85115166f24b54587e4634a18ee680",
+        "GUID:1f960f244651a154cae14322eb7769d4",
+        "GUID:6952e04e3e8558b44afba6aa6eac7df8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

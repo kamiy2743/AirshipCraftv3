@@ -100,6 +100,24 @@ namespace ACv3.UnityView.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""OpenPlayerInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""096c05df-2a2d-4081-87c2-7e787cbdc507"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CloseInvenotry"",
+                    ""type"": ""Button"",
+                    ""id"": ""d2ab6b3d-ae10-4451-add5-70f9ebe8bcbd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -353,6 +371,39 @@ namespace ACv3.UnityView.Inputs
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""ItemBarScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""371e988f-0e0f-40aa-8f09-3440907870f9"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""OpenPlayerInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b1ca55f-e65a-486c-89b4-9e0fedd00a6d"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CloseInvenotry"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""af70a873-e478-4a6b-a4c6-c9be4ad5e6c0"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CloseInvenotry"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -948,6 +999,8 @@ namespace ACv3.UnityView.Inputs
             m_Player_BreakBlock = m_Player.FindAction("BreakBlock", throwIfNotFound: true);
             m_Player_InteractBlock = m_Player.FindAction("InteractBlock", throwIfNotFound: true);
             m_Player_ItemBarScroll = m_Player.FindAction("ItemBarScroll", throwIfNotFound: true);
+            m_Player_OpenPlayerInventory = m_Player.FindAction("OpenPlayerInventory", throwIfNotFound: true);
+            m_Player_CloseInvenotry = m_Player.FindAction("CloseInvenotry", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1027,6 +1080,8 @@ namespace ACv3.UnityView.Inputs
         private readonly InputAction m_Player_BreakBlock;
         private readonly InputAction m_Player_InteractBlock;
         private readonly InputAction m_Player_ItemBarScroll;
+        private readonly InputAction m_Player_OpenPlayerInventory;
+        private readonly InputAction m_Player_CloseInvenotry;
         public struct PlayerActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1039,6 +1094,8 @@ namespace ACv3.UnityView.Inputs
             public InputAction @BreakBlock => m_Wrapper.m_Player_BreakBlock;
             public InputAction @InteractBlock => m_Wrapper.m_Player_InteractBlock;
             public InputAction @ItemBarScroll => m_Wrapper.m_Player_ItemBarScroll;
+            public InputAction @OpenPlayerInventory => m_Wrapper.m_Player_OpenPlayerInventory;
+            public InputAction @CloseInvenotry => m_Wrapper.m_Player_CloseInvenotry;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1072,6 +1129,12 @@ namespace ACv3.UnityView.Inputs
                     @ItemBarScroll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
                     @ItemBarScroll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
                     @ItemBarScroll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
+                    @OpenPlayerInventory.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerInventory;
+                    @OpenPlayerInventory.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerInventory;
+                    @OpenPlayerInventory.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerInventory;
+                    @CloseInvenotry.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
+                    @CloseInvenotry.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
+                    @CloseInvenotry.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1100,6 +1163,12 @@ namespace ACv3.UnityView.Inputs
                     @ItemBarScroll.started += instance.OnItemBarScroll;
                     @ItemBarScroll.performed += instance.OnItemBarScroll;
                     @ItemBarScroll.canceled += instance.OnItemBarScroll;
+                    @OpenPlayerInventory.started += instance.OnOpenPlayerInventory;
+                    @OpenPlayerInventory.performed += instance.OnOpenPlayerInventory;
+                    @OpenPlayerInventory.canceled += instance.OnOpenPlayerInventory;
+                    @CloseInvenotry.started += instance.OnCloseInvenotry;
+                    @CloseInvenotry.performed += instance.OnCloseInvenotry;
+                    @CloseInvenotry.canceled += instance.OnCloseInvenotry;
                 }
             }
         }
@@ -1264,6 +1333,8 @@ namespace ACv3.UnityView.Inputs
             void OnBreakBlock(InputAction.CallbackContext context);
             void OnInteractBlock(InputAction.CallbackContext context);
             void OnItemBarScroll(InputAction.CallbackContext context);
+            void OnOpenPlayerInventory(InputAction.CallbackContext context);
+            void OnCloseInvenotry(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

@@ -12,5 +12,12 @@ namespace ACv3.Extensions
                 h => action.performed += h,
                 h => action.performed -= h);
         }
+
+        public static IObservable<Unit> TriggeredAsObservable(this InputAction action)
+        {
+            return action.AsObservable()
+                .Select(x => x.ReadValueAsButton())
+                .AsUnitObservable();
+        }
     }
 }

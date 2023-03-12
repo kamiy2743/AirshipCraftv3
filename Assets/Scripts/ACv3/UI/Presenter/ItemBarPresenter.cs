@@ -27,7 +27,7 @@ namespace ACv3.UI.Presenter
         {
             view.Initialize();
             
-            inputController.OnItemBarScroll
+            inputController.OnItemBarScroll()
                 .Subscribe(model.Scroll)
                 .AddTo(disposable);
             

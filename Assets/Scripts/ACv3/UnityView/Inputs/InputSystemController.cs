@@ -10,13 +10,13 @@ namespace ACv3.UnityView.Inputs
     {
         readonly PlayerInputActions inputActions;
 
-        internal InputSystemController()
+        InputSystemController()
         {
             inputActions = new PlayerInputActions();
             inputActions.Enable();
         }
 
-        public Vector3 DebugFly()
+        Vector3 IInputController.DebugFly()
         {
             var horizontal = inputActions.Player.HorizontalMove.ReadValue<Vector2>();
             var vertical = inputActions.Player.VerticalMove.ReadValue<float>();
@@ -24,18 +24,21 @@ namespace ACv3.UnityView.Inputs
             return new Vector3(horizontal.x, vertical, horizontal.y).normalized;
         }
 
-        public bool PlaceBlock()
+        bool IInputController.PlaceBlock()
         {
             return inputActions.Player.PlaceBlock.ReadValue<float>() > 0;
         }
 
-        public bool BreakBlock()
+        bool IInputController.BreakBlock()
         {
             return inputActions.Player.BreakBlock.ReadValue<float>() > 0;
         }
 
-        public IObservable<ItemBarScrollDirection> OnItemBarScroll => inputActions.Player.ItemBarScroll.AsObservable()
+        IObservable<ItemBarScrollDirection> IInputController.OnItemBarScroll() => inputActions.Player.ItemBarScroll.AsObservable()
             .Select(context => context.ReadValue<float>())
             .Select(value => value > 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right);
+
+        IObservable<Unit> IInputController.OnOpenPlayerInventoryRequested() => inputActions.Player.OpenPlayerInventory.TriggeredAsObservable();
+        IObservable<Unit> IInputController.OnCloseInventoryRequested() => inputActions.Player.CloseInvenotry.TriggeredAsObservable();
     }
 }

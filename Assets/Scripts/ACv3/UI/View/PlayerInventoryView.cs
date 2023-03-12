@@ -56,6 +56,17 @@ namespace ACv3.UI.View
                 slotView.SetSelected(false);
             }
         }
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+            DeselectSlot();
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
         
         [Serializable]
         record PlayerInventorySlots
