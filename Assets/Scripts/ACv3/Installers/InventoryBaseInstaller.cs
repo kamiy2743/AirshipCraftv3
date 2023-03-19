@@ -10,6 +10,7 @@ namespace ACv3.Installers
         {
             Container.Bind<InventoryBroker>().AsSingle();
             Container.Bind<InventoryStateController>().AsSingle();
+            Container.BindInterfacesTo<GrabInventoryItemService>().AsSingle();
             Container.BindInterfacesTo<InventoryInputHandler>().AsSingle();
         }
     }

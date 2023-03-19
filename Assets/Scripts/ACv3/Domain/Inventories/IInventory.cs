@@ -1,3 +1,6 @@
+using System;
+using UniRx;
+
 namespace ACv3.Domain.Inventories
 {
     public interface IInventory
@@ -6,5 +9,7 @@ namespace ACv3.Domain.Inventories
 
         void Open();
         void Close();
+
+        IObservable<Unit> OnSlotClicked();
     }
 }

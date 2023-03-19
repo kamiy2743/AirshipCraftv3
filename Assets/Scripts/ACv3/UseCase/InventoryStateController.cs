@@ -6,7 +6,6 @@ namespace ACv3.UseCase
     public class InventoryStateController
     {
         readonly InventoryBroker inventoryBroker;
-        
         public bool IsOpened { get; private set; } = false;
 
         [Inject]

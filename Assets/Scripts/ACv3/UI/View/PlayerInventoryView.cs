@@ -16,9 +16,11 @@ namespace ACv3.UI.View
 
         readonly Subject<PlayerInventorySlotId> onCursorSlotSubject = new();
         readonly Subject<Unit> onUnCursorSlotSubject = new();
+        readonly Subject<PlayerInventorySlotId> onClickSlotSubject = new();
 
         public IObservable<PlayerInventorySlotId> OnCursorSlot => onCursorSlotSubject;
         public IObservable<Unit> OnUnCursorSlot => onUnCursorSlotSubject;
+        public IObservable<PlayerInventorySlotId> OnClickSlot => onClickSlotSubject;
 
         public void Initialize()
         {
@@ -38,6 +40,10 @@ namespace ACv3.UI.View
                 
                 slotView.GetComponent<ObservablePointerExitTrigger>().OnPointerExitAsObservable()
                     .Subscribe(_ => onUnCursorSlotSubject.OnNext(Unit.Default))
+                    .AddTo(this);
+                
+                slotView.GetComponent<ObservablePointerClickTrigger>().OnPointerClickAsObservable()
+                    .Subscribe(_ => onClickSlotSubject.OnNext(slotId))
                     .AddTo(this);
             }
         }

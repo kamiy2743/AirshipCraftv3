@@ -38,6 +38,10 @@ namespace ACv3.UI.Presenter
                 .Subscribe(_ => model.SetIsSelected(false))
                 .AddTo(disposable);
 
+            view.OnClickSlot
+                .Subscribe(slotId => model.InvokeSlotClickedEvent())
+                .AddTo(disposable);
+
             model.IsSelected
                 .CombineLatest(model.SelectedSlotId, (isSelected, slotId) => (isSelected, slotId))
                 .Subscribe(value =>
