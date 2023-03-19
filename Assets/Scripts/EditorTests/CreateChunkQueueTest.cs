@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using ACv3.UnityView.Rendering.Chunks;
+using ACv3.Presentation.Rendering.Chunks;
 using ACv3.Domain;
 using Unity.Mathematics;
 

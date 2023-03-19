@@ -4,8 +4,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using ACv3.UnityView.Rendering;
-using ACv3.UnityView.Rendering.Chunks;
+using ACv3.Presentation.Rendering;
+using ACv3.Presentation.Rendering.Chunks;
 
 public class BlockSurfaceTest
 {

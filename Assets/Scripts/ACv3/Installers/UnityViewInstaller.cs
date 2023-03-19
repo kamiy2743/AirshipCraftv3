@@ -1,12 +1,12 @@
 using ACv3.Infrastructure;
 using UnityEngine;
-using ACv3.UnityView.ChunkCollision;
-using ACv3.UnityView.Inputs;
-using ACv3.UnityView.Players;
-using ACv3.UnityView.Rendering;
-using ACv3.UnityView.Rendering.Chunks;
+using ACv3.Presentation.ChunkCollision;
+using ACv3.Presentation.Inputs;
+using ACv3.Presentation.Players;
+using ACv3.Presentation.Rendering;
+using ACv3.Presentation.Rendering.Chunks;
 using Zenject;
-using BlockUpdateApplier = ACv3.UnityView.Rendering.Chunks.BlockUpdateApplier;
+using BlockUpdateApplier = ACv3.Presentation.Rendering.Chunks.BlockUpdateApplier;
 
 namespace ACv3.Installers
 {
@@ -56,7 +56,7 @@ namespace ACv3.Installers
             Container.Bind<ChunkBoundsFactory>().AsSingle();
 
             // TODO Installerを分けたい
-            Container.Bind<UnityView.ChunkCollision.BlockUpdateApplier>().AsSingle();
+            Container.Bind<Presentation.ChunkCollision.BlockUpdateApplier>().AsSingle();
             Container.Bind<UpdatedChunkBoundsCalculator>().AsSingle();
             Container.Bind<ChunkColliderUpdater>().AsSingle();
 

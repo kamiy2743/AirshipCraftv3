@@ -2,9 +2,9 @@
     "name": "ACv3.MasterData",
     "rootNamespace": "",
     "references": [
-        "GUID:1f960f244651a154cae14322eb7769d4",
         "GUID:8c85115166f24b54587e4634a18ee680",
-        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:4646f6d7dfa87fa47bd7d9f803064c48"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
