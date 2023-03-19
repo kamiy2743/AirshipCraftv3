@@ -6,25 +6,25 @@ namespace ACv3.UseCase
     public class InventoryService
     {
         readonly Dictionary<InventoryId, IInventory> inventories = new();
+        public bool IsOpened { get; private set; } = false;
 
-        public void AddInventory(IInventory inventory)
+        public void AddInventory(IInventory inventory) => inventories.Add(inventory.Id, inventory);
+        public void RemoveInventory(InventoryId id) => inventories.Remove(id);
+
+        public void Open(InventoryId id)
         {
-            inventories.Add(inventory.Id, inventory);
+            inventories[id].Open();
+            IsOpened = true;
         }
 
-        public void RemoveInventory(InventoryId id)
+        public void InventoryClose()
         {
-            inventories.Remove(id);
-        }
-
-        public void OpenRequest(InventoryId id)
-        {
-            inventories[id].OpenRequest();
-        }
-
-        public void CloseRequest(InventoryId id)
-        {
-            inventories[id].CloseRequest();
+            foreach (var inventory in inventories.Values)
+            {
+                inventory.Close();
+            }
+            
+            IsOpened = false;
         }
     }
 }

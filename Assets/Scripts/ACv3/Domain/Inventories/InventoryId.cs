@@ -4,9 +4,11 @@ namespace ACv3.Domain.Inventories
     {
         readonly string id;
 
-        public InventoryId(string id)
+        InventoryId(string id)
         {
             this.id = id;
         }
+
+        public static InventoryId PlayerInventoryId => new("PlayerInventoryId");
     }
 }

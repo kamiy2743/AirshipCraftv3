@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace ACv3.Presentation.Inputs
 {
+    // TODO PlayerInputHandlerからしか使用されないようにする
     public interface IInputController
     {
         Vector3 DebugFly();

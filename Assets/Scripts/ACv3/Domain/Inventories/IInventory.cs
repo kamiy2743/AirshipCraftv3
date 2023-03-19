@@ -4,7 +4,7 @@ namespace ACv3.Domain.Inventories
     {
         InventoryId Id { get; }
 
-        void OpenRequest();
-        void CloseRequest();
+        void Open();
+        void Close();
     }
 }

@@ -1,9 +1,7 @@
 using System;
 using ACv3.Domain.Inventories;
-using ACv3.Extensions;
 using ACv3.UI.Model;
 using ACv3.UI.View;
-using ACv3.Presentation.Inputs;
 using UniRx;
 using Zenject;
 
@@ -13,16 +11,13 @@ namespace ACv3.UI.Presenter
     {
         readonly PlayerInventoryView view;
         readonly PlayerInventoryModel model;
-        readonly IInputController inputController;
-
         readonly CompositeDisposable disposable = new();
 
         [Inject]
-        PlayerInventoryPresenter(PlayerInventoryView view, PlayerInventoryModel model, IInputController inputController)
+        PlayerInventoryPresenter(PlayerInventoryView view, PlayerInventoryModel model)
         {
             this.view = view;
             this.model = model;
-            this.inputController = inputController;
         }
         
         void IInitializable.Initialize()
@@ -42,8 +37,8 @@ namespace ACv3.UI.Presenter
                 .Subscribe(_ => model.SetIsSelected(false))
                 .AddTo(disposable);
 
-            model.IsSelectedAsObservable
-                .CombineLatest(model.SelectedSlotIdAsObservable, (isSelected, slotId) => (isSelected, slotId))
+            model.IsSelected
+                .CombineLatest(model.SelectedSlotId, (isSelected, slotId) => (isSelected, slotId))
                 .Subscribe(value =>
                 {
                     if (value.isSelected)
@@ -56,33 +51,6 @@ namespace ACv3.UI.Presenter
                     }
                 })
                 .AddTo(disposable);
-            
-            ObservableExt.SmartAny(
-                    inputController.OnOpenPlayerInventoryRequested(),
-                    inputController.OnCloseInventoryRequested())
-                .Subscribe(winType  => 
-                {
-                    if (winType == ObservableExt.WinType.Left)
-                    {
-                        model.Open();
-                        return;
-                    }
-                    
-                    if (winType == ObservableExt.WinType.Right)
-                    {
-                        model.Close();
-                        return;
-                    }
-                    
-                    if (model.IsOpened.Value)
-                    {
-                        model.Close();
-                    }
-                    else
-                    {
-                        model.Open();
-                    }
-                });
 
             model.IsOpened
                 .Subscribe(isOpened =>
