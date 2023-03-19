@@ -8,7 +8,8 @@ namespace ACv3.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<InventoryService>().AsSingle();
+            Container.Bind<InventoryBroker>().AsSingle();
+            Container.Bind<InventoryStateController>().AsSingle();
             Container.BindInterfacesTo<InventoryInputHandler>().AsSingle();
         }
     }

@@ -9,7 +9,7 @@ namespace ACv3.UI.Model
     public class PlayerInventoryModel : IInventory
     {
         InventoryId IInventory.Id => InventoryId.PlayerInventoryId;
-        readonly InventoryService inventoryService;
+        readonly InventoryBroker inventoryBroker;
 
         readonly ReactiveDictionary<PlayerInventorySlotId, Slot> slots = new();
         public IObservable<(PlayerInventorySlotId slotId, Slot slot)> OnUpdateSlot =>
@@ -25,14 +25,14 @@ namespace ACv3.UI.Model
         public IReadOnlyReactiveProperty<PlayerInventorySlotId> SelectedSlotId => selectedSlotId;
         
         [Inject]
-        PlayerInventoryModel(InventoryService inventoryService)
+        PlayerInventoryModel(InventoryBroker inventoryBroker)
         {
-            this.inventoryService = inventoryService;
+            this.inventoryBroker = inventoryBroker;
         }
 
         public void Initialize()
         {
-            inventoryService.AddInventory(this);
+            inventoryBroker.AddInventory(this);
             
             for (int line = 0; line < PlayerInventorySlotId.LineCount; line++)
             {

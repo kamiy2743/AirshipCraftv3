@@ -11,14 +11,14 @@ namespace ACv3.Presentation
     public class InventoryInputHandler : IInitializable, IDisposable
     {
         readonly IInputController inputController;
-        readonly InventoryService inventoryService;
+        readonly InventoryStateController inventoryStateController;
         readonly CompositeDisposable disposable = new();
 
         [Inject]
-        InventoryInputHandler(IInputController inputController, InventoryService inventoryService)
+        InventoryInputHandler(IInputController inputController, InventoryStateController inventoryStateController)
         {
             this.inputController = inputController;
-            this.inventoryService = inventoryService;
+            this.inventoryStateController = inventoryStateController;
         }
 
         void IInitializable.Initialize()
@@ -28,26 +28,25 @@ namespace ACv3.Presentation
                     inputController.OnCloseInventoryRequested())
                 .Subscribe(winType =>
                 {
-                    UnityEngine.Debug.Log(winType);
                     if (winType == ObservableExt.WinType.Left)
                     {
-                        inventoryService.Open(InventoryId.PlayerInventoryId);
+                        inventoryStateController.Open(InventoryId.PlayerInventoryId);
                         return;
                     }
 
                     if (winType == ObservableExt.WinType.Right)
                     {
-                        inventoryService.InventoryClose();
+                        inventoryStateController.InventoryClose();
                         return;
                     }
 
-                    if (inventoryService.IsOpened)
+                    if (inventoryStateController.IsOpened)
                     {
-                        inventoryService.InventoryClose();
+                        inventoryStateController.InventoryClose();
                     }
                     else
                     {
-                        inventoryService.Open(InventoryId.PlayerInventoryId);
+                        inventoryStateController.Open(InventoryId.PlayerInventoryId);
                     }
                 })
                 .AddTo(disposable);
