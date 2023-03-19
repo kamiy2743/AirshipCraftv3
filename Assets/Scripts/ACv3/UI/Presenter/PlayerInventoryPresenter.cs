@@ -22,6 +22,7 @@ namespace ACv3.UI.Presenter
         
         void IInitializable.Initialize()
         {
+            model.Initialize();
             view.Initialize();
 
             view.OnCursorSlot
