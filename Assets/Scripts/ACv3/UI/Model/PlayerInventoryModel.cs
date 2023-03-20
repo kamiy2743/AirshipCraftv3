@@ -12,8 +12,15 @@ namespace ACv3.UI.Model
         readonly InventoryBroker inventoryBroker;
 
         readonly ReactiveDictionary<PlayerInventorySlotId, Slot> slots = new();
-        public IObservable<(PlayerInventorySlotId slotId, Slot slot)> OnUpdateSlot =>
-            slots.ObserveReplace().Select(e => (e.Key, e.NewValue));
+        public IObservable<(PlayerInventorySlotId slotId, Slot slot)> OnUpdateSlot
+        {
+            get
+            {
+                return Observable.Merge(
+                    slots.ObserveReplace().Select(e => (e.Key, e.NewValue)),
+                    slots.ObserveAdd().Select(e => (e.Key, e.Value)));
+            }
+        }
 
         readonly ReactiveProperty<bool> isOpened = new(false);
         public IReadOnlyReactiveProperty<bool> IsOpened => isOpened.DistinctUntilChanged().ToReadOnlyReactiveProperty();

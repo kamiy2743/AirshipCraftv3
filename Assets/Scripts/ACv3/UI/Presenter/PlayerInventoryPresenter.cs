@@ -1,5 +1,4 @@
 using System;
-using ACv3.Domain.Inventories;
 using ACv3.UI.Model;
 using ACv3.UI.View;
 using UniRx;
@@ -22,15 +21,11 @@ namespace ACv3.UI.Presenter
         
         void IInitializable.Initialize()
         {
-            model.Initialize();
-            view.Initialize();
-
             view.OnCursorSlot
                 .Subscribe(slotId =>
                 {
                     model.SetIsSelected(true);
                     model.SetSelectedSlotId(slotId);
-                    model.SetSlot(slotId, Slot.Empty());
                 })
                 .AddTo(disposable);
 
@@ -77,6 +72,9 @@ namespace ACv3.UI.Presenter
                     view.SetItem(value.slotId, null, value.slot.Amount, value.slot.Item.ItemId.RawString());
                 })
                 .AddTo(disposable);
+            
+            view.Initialize();
+            model.Initialize();
         }
 
         void IDisposable.Dispose()
