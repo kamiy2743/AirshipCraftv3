@@ -13,7 +13,8 @@ namespace ACv3.UseCase
         readonly Dictionary<InventoryId, IDisposable> disposableDictionary = new();
         readonly CompositeDisposable compositeDisposable = new();
 
-        bool isGrabbing { get; set; } = false;
+        readonly ReactiveProperty<GrabbingInventoryItem> grabbingItem = new(GrabbingInventoryItem.Empty());
+        public IReadOnlyReactiveProperty<GrabbingInventoryItem> GrabbingItem => grabbingItem.DistinctUntilChanged().ToReadOnlyReactiveProperty();
 
         [Inject]
         GrabInventoryItemService(InventoryBroker inventoryBroker)
@@ -48,13 +49,13 @@ namespace ACv3.UseCase
             var disposable = inventory.OnSlotClicked()
                 .Subscribe(slotId =>
                 {
-                    if (isGrabbing)
+                    if (grabbingItem.Value == GrabbingInventoryItem.Empty())
                     {
-                        GrabEnd(slotId);
+                        GrabStart(slotId);
                     }
                     else
                     {
-                        GrabStart(slotId);
+                        GrabEnd(slotId);
                     }
                 }); 
             disposableDictionary.Add(id, disposable);
@@ -64,13 +65,23 @@ namespace ACv3.UseCase
         void GrabStart(GlobalInventorySlotId slotId)
         {
             Debug.Log("grab start: " + slotId);
-            isGrabbing = true;
+            
+            var slot = inventoryBroker.GetInventory(slotId.InventoryId).GetSlot(slotId);
+            var item = new GrabbingInventoryItem(slot);
+            if (item == GrabbingInventoryItem.Empty()) return;
+            grabbingItem.Value = item;
+            
+            inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, Slot.Empty());
         }
 
         void GrabEnd(GlobalInventorySlotId slotId)
         {
             Debug.Log("grab end: " + slotId);
-            isGrabbing = false;
+            
+            var slot = new Slot(grabbingItem.Value.Item, grabbingItem.Value.Amount, grabbingItem.Value.Texture);
+            inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, slot);
+            
+            grabbingItem.Value = GrabbingInventoryItem.Empty();
         }
 
         void IDisposable.Dispose()

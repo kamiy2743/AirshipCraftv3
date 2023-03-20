@@ -13,5 +13,6 @@ namespace ACv3.Domain.Items
         public override string ToString() => $"ItemId: {id}";
 
         public static ItemId Empty => new ItemId("Empty");
+        public static ItemId Dirt => new ItemId("Dirt");
     }
 }

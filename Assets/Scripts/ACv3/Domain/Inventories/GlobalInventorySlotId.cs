@@ -1,19 +1,16 @@
-using UnityEngine.Assertions;
-
 namespace ACv3.Domain.Inventories
 {
     public record GlobalInventorySlotId
     {
-        readonly InventoryId inventoryId;
-        readonly IInventorySlotId slotId;
+        public readonly InventoryId InventoryId;
+        public readonly int RawValue;
 
-        public GlobalInventorySlotId(InventoryId inventoryId, IInventorySlotId slotId)
+        public GlobalInventorySlotId(InventoryId inventoryId, int rawValue)
         {
-            Assert.IsTrue(inventoryId == slotId.InventoryId);
-            this.inventoryId = inventoryId;
-            this.slotId = slotId;
+            InventoryId = inventoryId;
+            RawValue = rawValue;
         }
 
-        public override string ToString() => inventoryId.ToString() + " => " + slotId.ToString();
+        public override string ToString() => $"{InventoryId} => RawValue: {RawValue}";
     }
 }

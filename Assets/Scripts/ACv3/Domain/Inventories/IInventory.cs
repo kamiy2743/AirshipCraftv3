@@ -10,5 +10,8 @@ namespace ACv3.Domain.Inventories
         void Close();
 
         IObservable<GlobalInventorySlotId> OnSlotClicked();
+
+        Slot GetSlot(GlobalInventorySlotId slotId);
+        void SetSlot(GlobalInventorySlotId slotId, Slot slot);
     }
 }

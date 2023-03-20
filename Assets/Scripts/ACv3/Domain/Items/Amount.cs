@@ -12,6 +12,8 @@ namespace ACv3.Domain.Items
             this.value = value;
         }
 
+        public static Amount Empty() => new Amount(0);
+
         public int CompareTo(Amount other)
         {
             if (value < other.value) return -1;
@@ -19,10 +21,8 @@ namespace ACv3.Domain.Items
             return 0;
         }
 
-        public string ToStringValue()
-        {
-            return value.ToString();
-        }
+        public string RawString() => value.ToString();
+        public override string ToString() => $"Amount: {value}";
 
         public static bool operator >(Amount a, Amount b)
         {

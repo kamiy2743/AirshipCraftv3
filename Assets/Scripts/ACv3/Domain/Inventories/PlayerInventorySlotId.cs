@@ -2,10 +2,8 @@ using UnityEngine.Assertions;
 
 namespace ACv3.Domain.Inventories
 {
-    public record PlayerInventorySlotId : IInventorySlotId
+    public record PlayerInventorySlotId
     {
-        InventoryId IInventorySlotId.InventoryId => InventoryId.PlayerInventory;
-        
         readonly int line;
         readonly int row;
 
@@ -34,6 +32,19 @@ namespace ACv3.Domain.Inventories
         public override string ToString()
         {
             return $"PlayerInventorySlotId: {line}, {row}";
+        }
+
+        public GlobalInventorySlotId ToGlobalInventorySlotId() 
+        {
+            return new GlobalInventorySlotId(InventoryId.PlayerInventory, line * RowCount + row);
+        }
+
+        public static PlayerInventorySlotId FromGlobalInventorySlotId(GlobalInventorySlotId globalInventorySlotId)
+        {
+            var rawValue = globalInventorySlotId.RawValue;
+            var line = rawValue / RowCount;
+            var row = rawValue % RowCount;
+            return new PlayerInventorySlotId(line, row);
         }
     }
 }

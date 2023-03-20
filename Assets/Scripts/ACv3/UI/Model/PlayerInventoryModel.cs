@@ -1,5 +1,6 @@
 using System;
 using ACv3.Domain.Inventories;
+using ACv3.Domain.Items;
 using ACv3.UseCase;
 using UniRx;
 using Zenject;
@@ -50,16 +51,21 @@ namespace ACv3.UI.Model
                     slots.Add(new PlayerInventorySlotId(line, row), Slot.Empty());
                 }
             }
+            
+            // デバッグ
+            slots[new PlayerInventorySlotId(0, 0)] = new Slot(new Dirt(), new Amount(24), null);
         }
 
         void IInventory.Open() => isOpened.Value = true;
         void IInventory.Close() => isOpened.Value = false;
 
-        public void InvokeSlotClickedEvent(PlayerInventorySlotId slotId) => slotClickedSubject.OnNext(new GlobalInventorySlotId(InventoryId.PlayerInventory, slotId));
+        public void InvokeSlotClickedEvent(PlayerInventorySlotId slotId) => slotClickedSubject.OnNext(slotId.ToGlobalInventorySlotId());
         IObservable<GlobalInventorySlotId> IInventory.OnSlotClicked() => slotClickedSubject;
-        
-        public void SetIsSelected(bool isSelected) => this.isSelected.Value = isSelected; 
+
+        public void SetIsSelected(bool isSelected) => this.isSelected.Value = isSelected;
         public void SetSelectedSlotId(PlayerInventorySlotId slotId) => selectedSlotId.Value = slotId;
-        public void SetSlot(PlayerInventorySlotId slotId, Slot slot) => slots[slotId] = slot;
+
+        Slot IInventory.GetSlot(GlobalInventorySlotId slotId) => slots[PlayerInventorySlotId.FromGlobalInventorySlotId(slotId)];
+        void IInventory.SetSlot(GlobalInventorySlotId slotId, Slot slot) => slots[PlayerInventorySlotId.FromGlobalInventorySlotId(slotId)] = slot;
     }
 }
