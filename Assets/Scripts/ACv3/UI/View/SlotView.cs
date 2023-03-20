@@ -8,13 +8,14 @@ namespace ACv3.UI.View
     {
         [SerializeField] GameObject selectedOutline;
         [SerializeField] TextMeshProUGUI amountText;
+        [SerializeField] TextMeshProUGUI debugItemIdText;
 
         public void SetSelected(bool isSelected)
         {
             selectedOutline.SetActive(isSelected);
         }
 
-        public void SetItem(Texture2D texture, Amount amount)
+        public void SetItem(Texture2D texture, Amount amount, string debugItemId)
         {
             if (amount > new Amount(1))
             {
@@ -24,6 +25,8 @@ namespace ACv3.UI.View
             {
                 amountText.text = "";
             }
+
+            debugItemIdText.text = debugItemId;
         }
     }
 }

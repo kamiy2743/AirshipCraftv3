@@ -5,13 +5,13 @@ namespace ACv3.Domain.Inventories
 {
     public record Slot
     {
-        readonly IItem item;
+        public readonly IItem Item;
         public readonly Amount Amount;
 
         Slot(IItem item, Amount amount)
         {
             Assert.IsTrue(amount <= item.MaxAmount);
-            this.item = item;
+            Item = item;
             Amount = amount;
         }
 

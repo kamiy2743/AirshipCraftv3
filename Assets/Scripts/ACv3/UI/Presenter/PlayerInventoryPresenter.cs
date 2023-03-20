@@ -74,7 +74,7 @@ namespace ACv3.UI.Presenter
             model.OnUpdateSlot
                 .Subscribe(value =>
                 {
-                    view.SetItem(value.slotId, null, value.slot.Amount);
+                    view.SetItem(value.slotId, null, value.slot.Amount, value.slot.Item.ItemId.RawString());
                 })
                 .AddTo(disposable);
         }

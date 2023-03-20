@@ -75,9 +75,9 @@ namespace ACv3.UI.View
             gameObject.SetActive(false);
         }
 
-        public void SetItem(PlayerInventorySlotId slotId, Texture2D texture, Amount amount)
+        public void SetItem(PlayerInventorySlotId slotId, Texture2D texture, Amount amount, string debugItemId)
         {
-            slotViews[slotId].SetItem(texture, amount);
+            slotViews[slotId].SetItem(texture, amount, debugItemId);
         }
         
         [Serializable]
