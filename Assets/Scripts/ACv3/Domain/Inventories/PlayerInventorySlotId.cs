@@ -15,24 +15,21 @@ namespace ACv3.Domain.Inventories
         const int RowMax = 8;
         public const int RowCount = 9;
 
+        const int EmptyLine = int.MinValue;
+        const int EmptyRow = int.MinValue;
+
         public PlayerInventorySlotId(int line, int row)
         {
-            Assert.IsTrue(line >= LineMin && line <= LineMax);
-            Assert.IsTrue(row >= RowMin && row <= RowMax);
+            Assert.IsTrue((line >= LineMin && line <= LineMax) || line == EmptyLine);
+            Assert.IsTrue((row >= RowMin && row <= RowMax) || row == EmptyRow);
             
             this.line = line;
             this.row = row;
         }
 
-        public static PlayerInventorySlotId Default()
-        {
-            return new PlayerInventorySlotId(LineMin, RowMin);
-        }
+        public static PlayerInventorySlotId Empty() => new(EmptyLine, EmptyRow);
 
-        public override string ToString()
-        {
-            return $"PlayerInventorySlotId: {line}, {row}";
-        }
+        public override string ToString() => $"PlayerInventorySlotId: {line}, {row}";
 
         public GlobalInventorySlotId ToGlobalInventorySlotId() 
         {

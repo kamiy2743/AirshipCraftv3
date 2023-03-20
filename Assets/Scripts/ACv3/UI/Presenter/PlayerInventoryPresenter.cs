@@ -1,4 +1,5 @@
 using System;
+using ACv3.Domain.Inventories;
 using ACv3.UI.Model;
 using ACv3.UI.View;
 using UniRx;
@@ -22,28 +23,23 @@ namespace ACv3.UI.Presenter
         void IInitializable.Initialize()
         {
             view.OnCursorSlot
-                .Subscribe(slotId =>
-                {
-                    model.SetIsSelected(true);
-                    model.SetSelectedSlotId(slotId);
-                })
+                .Subscribe(slotId => model.SetSelectedSlotId(slotId))
                 .AddTo(disposable);
 
             view.OnUnCursorSlot
-                .Subscribe(_ => model.SetIsSelected(false))
+                .Subscribe(_ => model.SetSelectedSlotId(PlayerInventorySlotId.Empty()))
                 .AddTo(disposable);
 
             view.OnClickSlot
                 .Subscribe(slotId => model.InvokeSlotClickedEvent(slotId))
                 .AddTo(disposable);
 
-            model.IsSelected
-                .CombineLatest(model.SelectedSlotId, (isSelected, slotId) => (isSelected, slotId))
-                .Subscribe(value =>
+            model.SelectedSlotId
+                .Subscribe(slotId =>
                 {
-                    if (value.isSelected)
+                    if (slotId != PlayerInventorySlotId.Empty())
                     {
-                        view.SetSelectedSlot(value.slotId);
+                        view.SetSelectedSlot(slotId);
                     }
                     else
                     {

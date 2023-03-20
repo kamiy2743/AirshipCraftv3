@@ -26,10 +26,7 @@ namespace ACv3.UI.Model
         readonly ReactiveProperty<bool> isOpened = new(false);
         public IReadOnlyReactiveProperty<bool> IsOpened => isOpened.DistinctUntilChanged().ToReadOnlyReactiveProperty();
         
-        readonly ReactiveProperty<bool> isSelected = new(false);
-        public IReadOnlyReactiveProperty<bool> IsSelected => isOpened;
-        
-        readonly ReactiveProperty<PlayerInventorySlotId> selectedSlotId = new(PlayerInventorySlotId.Default());
+        readonly ReactiveProperty<PlayerInventorySlotId> selectedSlotId = new(PlayerInventorySlotId.Empty());
         public IReadOnlyReactiveProperty<PlayerInventorySlotId> SelectedSlotId => selectedSlotId;
 
         readonly Subject<GlobalInventorySlotId> slotClickedSubject = new();
@@ -58,13 +55,12 @@ namespace ACv3.UI.Model
 
         void IInventory.Open() => isOpened.Value = true;
         void IInventory.Close() => isOpened.Value = false;
+        
+        public void SetSelectedSlotId(PlayerInventorySlotId slotId) => selectedSlotId.Value = slotId;
 
         public void InvokeSlotClickedEvent(PlayerInventorySlotId slotId) => slotClickedSubject.OnNext(slotId.ToGlobalInventorySlotId());
         IObservable<GlobalInventorySlotId> IInventory.OnSlotClicked() => slotClickedSubject;
-
-        public void SetIsSelected(bool isSelected) => this.isSelected.Value = isSelected;
-        public void SetSelectedSlotId(PlayerInventorySlotId slotId) => selectedSlotId.Value = slotId;
-
+        
         Slot IInventory.GetSlot(GlobalInventorySlotId slotId) => slots[PlayerInventorySlotId.FromGlobalInventorySlotId(slotId)];
         void IInventory.SetSlot(GlobalInventorySlotId slotId, Slot slot) => slots[PlayerInventorySlotId.FromGlobalInventorySlotId(slotId)] = slot;
     }
