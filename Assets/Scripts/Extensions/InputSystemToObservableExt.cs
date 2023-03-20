@@ -17,7 +17,9 @@ namespace ACv3.Extensions
         {
             return action.AsObservable()
                 .Select(x => x.ReadValueAsButton())
-                .AsUnitObservable();
+                .AsUnitObservable()
+                .Publish()
+                .RefCount();
         }
     }
 }

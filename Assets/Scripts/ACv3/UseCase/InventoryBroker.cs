@@ -15,7 +15,7 @@ namespace ACv3.UseCase
         public IInventory GetInventory(InventoryId id) => inventories[id];
         public void RemoveInventory(InventoryId id) => inventories.Remove(id);
 
-        public IObservable<(InventoryId id, IInventory inventory)> ObserveAdd() => inventories.ObserveAdd().Select(e => (e.Key, e.Value));
-        public IObservable<InventoryId> ObserveRemove() => inventories.ObserveRemove().Select(e => e.Key);
+        public IObservable<(InventoryId id, IInventory inventory)> ObserveAdd() => inventories.ObserveAdd().Select(e => (e.Key, e.Value)).Publish().RefCount();
+        public IObservable<InventoryId> ObserveRemove() => inventories.ObserveRemove().Select(e => e.Key).Publish().RefCount();
     }
 }

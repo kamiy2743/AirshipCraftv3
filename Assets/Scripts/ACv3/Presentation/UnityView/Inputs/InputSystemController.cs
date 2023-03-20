@@ -36,7 +36,9 @@ namespace ACv3.Presentation.Inputs
 
         IObservable<ItemBarScrollDirection> IInputController.OnItemBarScroll() => inputActions.Player.ItemBarScroll.AsObservable()
             .Select(context => context.ReadValue<float>())
-            .Select(value => value > 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right);
+            .Select(value => value > 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right)
+            .Publish()
+            .RefCount();
 
         IObservable<Unit> IInputController.OnOpenPlayerInventoryRequested() => inputActions.Player.OpenPlayerInventory.TriggeredAsObservable();
         IObservable<Unit> IInputController.OnCloseInventoryRequested() => inputActions.Player.CloseInvenotry.TriggeredAsObservable();
