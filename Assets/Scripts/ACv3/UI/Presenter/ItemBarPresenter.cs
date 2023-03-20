@@ -31,7 +31,7 @@ namespace ACv3.UI.Presenter
                 .Subscribe(model.Scroll)
                 .AddTo(disposable);
             
-            model.SelectedSlotIDAsObservable
+            model.SelectedSlotIdAsObservable
                 .Subscribe(view.SetSelectedSlot)
                 .AddTo(disposable);
         }

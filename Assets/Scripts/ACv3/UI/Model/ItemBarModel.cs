@@ -7,12 +7,12 @@ namespace ACv3.UI.Model
 {
     public class ItemBarModel
     {
-        readonly ReactiveProperty<ItemBarSlotId> selectedSlotID = new(ItemBarSlotId.Default());
-        public IObservable<ItemBarSlotId> SelectedSlotIDAsObservable => selectedSlotID;
+        readonly ReactiveProperty<ItemBarSlotId> selectedSlotId = new(ItemBarSlotId.Default());
+        public IObservable<ItemBarSlotId> SelectedSlotIdAsObservable => selectedSlotId;
 
         public void Scroll(ItemBarScrollDirection scrollDirection)
         {
-            var value = selectedSlotID.Value.ToInt();
+            var value = selectedSlotId.Value.ToInt();
             if (scrollDirection == ItemBarScrollDirection.Left)
             {
                 value--;
@@ -22,7 +22,7 @@ namespace ACv3.UI.Model
                 value++;
             }
 
-            selectedSlotID.Value = new ItemBarSlotId(math.clamp(value, ItemBarSlotId.Min, ItemBarSlotId.Max));
+            selectedSlotId.Value = new ItemBarSlotId(math.clamp(value, ItemBarSlotId.Min, ItemBarSlotId.Max));
         }
     }
 }
