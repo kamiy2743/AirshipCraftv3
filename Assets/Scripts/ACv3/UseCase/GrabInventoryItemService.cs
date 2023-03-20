@@ -13,7 +13,7 @@ namespace ACv3.UseCase
         readonly Dictionary<InventoryId, IDisposable> disposableDictionary = new();
         readonly CompositeDisposable compositeDisposable = new();
 
-        public bool isGrabbing { get; private set; } = false;
+        bool isGrabbing { get; set; } = false;
 
         [Inject]
         GrabInventoryItemService(InventoryBroker inventoryBroker)
@@ -46,30 +46,30 @@ namespace ACv3.UseCase
         void Setup(InventoryId id, IInventory inventory)
         { 
             var disposable = inventory.OnSlotClicked()
-                .Subscribe(_ =>
+                .Subscribe(slotId =>
                 {
                     if (isGrabbing)
                     {
-                        GrabEnd();
+                        GrabEnd(slotId);
                     }
                     else
                     {
-                        GrabStart();
+                        GrabStart(slotId);
                     }
                 }); 
             disposableDictionary.Add(id, disposable);
             compositeDisposable.Add(disposable);
         }
         
-        void GrabStart()
+        void GrabStart(GlobalInventorySlotId slotId)
         {
-            Debug.Log("grab start");
+            Debug.Log("grab start: " + slotId);
             isGrabbing = true;
         }
 
-        void GrabEnd()
+        void GrabEnd(GlobalInventorySlotId slotId)
         {
-            Debug.Log("grab end");
+            Debug.Log("grab end: " + slotId);
             isGrabbing = false;
         }
 

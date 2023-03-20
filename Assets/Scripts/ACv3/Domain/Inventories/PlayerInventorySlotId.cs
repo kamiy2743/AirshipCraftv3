@@ -2,8 +2,10 @@ using UnityEngine.Assertions;
 
 namespace ACv3.Domain.Inventories
 {
-    public record PlayerInventorySlotId
+    public record PlayerInventorySlotId : IInventorySlotId
     {
+        InventoryId IInventorySlotId.InventoryId => InventoryId.PlayerInventory;
+        
         readonly int line;
         readonly int row;
 

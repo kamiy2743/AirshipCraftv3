@@ -9,6 +9,8 @@ namespace ACv3.Domain.Inventories
             this.id = id;
         }
 
-        public static InventoryId PlayerInventoryId => new("PlayerInventoryId");
+        public override string ToString() => $"InventoryId: {id}";
+
+        public static InventoryId PlayerInventory => new("PlayerInventory");
     }
 }

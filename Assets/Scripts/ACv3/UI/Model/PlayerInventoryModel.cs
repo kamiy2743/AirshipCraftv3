@@ -8,7 +8,7 @@ namespace ACv3.UI.Model
 {
     public class PlayerInventoryModel : IInventory
     {
-        InventoryId IInventory.Id => InventoryId.PlayerInventoryId;
+        InventoryId IInventory.Id => InventoryId.PlayerInventory;
         readonly InventoryBroker inventoryBroker;
 
         readonly ReactiveDictionary<PlayerInventorySlotId, Slot> slots = new();
@@ -24,7 +24,7 @@ namespace ACv3.UI.Model
         readonly ReactiveProperty<PlayerInventorySlotId> selectedSlotId = new(PlayerInventorySlotId.Default());
         public IReadOnlyReactiveProperty<PlayerInventorySlotId> SelectedSlotId => selectedSlotId;
 
-        readonly Subject<Unit> slotClickedSubject = new();
+        readonly Subject<GlobalInventorySlotId> slotClickedSubject = new();
 
         [Inject]
         PlayerInventoryModel(InventoryBroker inventoryBroker)
@@ -48,8 +48,8 @@ namespace ACv3.UI.Model
         void IInventory.Open() => isOpened.Value = true;
         void IInventory.Close() => isOpened.Value = false;
 
-        public void InvokeSlotClickedEvent() => slotClickedSubject.OnNext(Unit.Default);
-        IObservable<Unit> IInventory.OnSlotClicked() => slotClickedSubject;
+        public void InvokeSlotClickedEvent(PlayerInventorySlotId slotId) => slotClickedSubject.OnNext(new GlobalInventorySlotId(InventoryId.PlayerInventory, slotId));
+        IObservable<GlobalInventorySlotId> IInventory.OnSlotClicked() => slotClickedSubject;
         
         public void SetIsSelected(bool isSelected) => this.isSelected.Value = isSelected; 
         public void SetSelectedSlotId(PlayerInventorySlotId slotId) => selectedSlotId.Value = slotId;

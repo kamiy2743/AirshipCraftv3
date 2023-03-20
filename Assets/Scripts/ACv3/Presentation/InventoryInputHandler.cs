@@ -30,7 +30,7 @@ namespace ACv3.Presentation
                 {
                     if (winType == ObservableExt.WinType.Left)
                     {
-                        inventoryStateController.Open(InventoryId.PlayerInventoryId);
+                        inventoryStateController.Open(InventoryId.PlayerInventory);
                         return;
                     }
 
@@ -46,7 +46,7 @@ namespace ACv3.Presentation
                     }
                     else
                     {
-                        inventoryStateController.Open(InventoryId.PlayerInventoryId);
+                        inventoryStateController.Open(InventoryId.PlayerInventory);
                     }
                 })
                 .AddTo(disposable);

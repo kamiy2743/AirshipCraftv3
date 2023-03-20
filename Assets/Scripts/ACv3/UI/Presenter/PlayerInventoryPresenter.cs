@@ -39,7 +39,7 @@ namespace ACv3.UI.Presenter
                 .AddTo(disposable);
 
             view.OnClickSlot
-                .Subscribe(slotId => model.InvokeSlotClickedEvent())
+                .Subscribe(slotId => model.InvokeSlotClickedEvent(slotId))
                 .AddTo(disposable);
 
             model.IsSelected
