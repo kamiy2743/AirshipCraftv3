@@ -50,7 +50,7 @@ namespace ACv3.UI.Model
             }
             
             // デバッグ
-            slots[new PlayerInventorySlotId(0, 0)] = new Slot(new Dirt(), new Amount(24), null);
+            slots[new PlayerInventorySlotId(0, 0)] = new Slot(new Dirt(), new Amount(24));
         }
 
         void IInventory.Open() => isOpened.Value = true;

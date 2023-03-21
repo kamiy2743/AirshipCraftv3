@@ -67,7 +67,7 @@ namespace ACv3.UI.Presenter
                 {
                     view.SetItem(
                         value.slotId, 
-                        value.slot.Texture, 
+                        null, 
                         value.slot.Amount, 
                         value.slot.Item.ItemId.RawString());
                 })
