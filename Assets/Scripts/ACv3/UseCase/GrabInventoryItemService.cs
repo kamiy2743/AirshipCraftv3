@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ACv3.Domain.Inventories;
+using ACv3.Domain.Items;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -66,22 +67,44 @@ namespace ACv3.UseCase
         {
             Debug.Log("grab start: " + slotId);
             
-            var slot = inventoryBroker.GetInventory(slotId.InventoryId).GetSlot(slotId);
-            var item = new GrabbingInventoryItem(slot.Item);
-            if (item == GrabbingInventoryItem.Empty) return;
-            grabbingItem.Value = item;
+            var inventory = inventoryBroker.GetInventory(slotId.InventoryId);
             
-            inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, Slot.Empty);
+            var slot = inventory.GetSlot(slotId);
+            if (slot.Item == StackItem.Empty)
+            {
+                return;
+            }
+            
+            grabbingItem.Value = new GrabbingInventoryItem(slot.Item);
+            inventory.SetSlot(slotId, Slot.Empty);
         }
 
         void GrabEnd(GlobalInventorySlotId slotId)
         {
             Debug.Log("grab end: " + slotId);
+
+            var inventory = inventoryBroker.GetInventory(slotId.InventoryId);
             
-            var slot = new Slot(grabbingItem.Value.Item);
-            inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, slot);
-            
-            grabbingItem.Value = GrabbingInventoryItem.Empty;
+            var placeSlot = inventory.GetSlot(slotId);
+            if (placeSlot.Item == StackItem.Empty)
+            {
+                inventory.SetSlot(slotId, new Slot(grabbingItem.Value.Item));
+                grabbingItem.Value = GrabbingInventoryItem.Empty;
+                return;
+            }
+
+            var placedItem = placeSlot.Item;
+            var (primaryItem, subItem) = placedItem.Merge(grabbingItem.Value.Item);
+            inventory.SetSlot(slotId, new Slot(primaryItem));
+
+            if (subItem == StackItem.Empty)
+            {
+                grabbingItem.Value = GrabbingInventoryItem.Empty;
+            }
+            else
+            {
+                grabbingItem.Value = new GrabbingInventoryItem(subItem);
+            }
         }
 
         void IDisposable.Dispose()

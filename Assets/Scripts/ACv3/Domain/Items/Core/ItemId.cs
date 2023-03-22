@@ -14,5 +14,6 @@ namespace ACv3.Domain.Items
 
         public static ItemId Empty => new("Empty");
         public static ItemId Dirt => new("Dirt");
+        public static ItemId Stone => new("Stone");
     }
 }

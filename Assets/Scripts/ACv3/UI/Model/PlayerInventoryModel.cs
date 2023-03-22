@@ -53,6 +53,9 @@ namespace ACv3.UI.Model
             slots[new PlayerInventorySlotId(0, 0)] = new Slot(new StackItem(new Dirt(), new Amount(24)));
             slots[new PlayerInventorySlotId(1, 4)] = new Slot(new StackItem(new Dirt(), new Amount(45)));
             slots[new PlayerInventorySlotId(3, 6)] = new Slot(new StackItem(new Dirt(), new Amount(80)));
+            slots[new PlayerInventorySlotId(1, 5)] = new Slot(new StackItem(new Stone(), new Amount(24)));
+            slots[new PlayerInventorySlotId(2, 3)] = new Slot(new StackItem(new Stone(), new Amount(45)));
+            slots[new PlayerInventorySlotId(3, 2)] = new Slot(new StackItem(new Stone(), new Amount(80)));
         }
 
         void IInventory.Open() => isOpened.Value = true;
