@@ -27,7 +27,7 @@ namespace ACv3.UI.Presenter
                 .AddTo(disposable);
 
             view.OnUnCursorSlot
-                .Subscribe(_ => model.SetSelectedSlotId(PlayerInventorySlotId.Empty()))
+                .Subscribe(_ => model.SetSelectedSlotId(PlayerInventorySlotId.Empty))
                 .AddTo(disposable);
 
             view.OnClickSlot
@@ -37,7 +37,7 @@ namespace ACv3.UI.Presenter
             model.SelectedSlotId
                 .Subscribe(slotId =>
                 {
-                    if (slotId != PlayerInventorySlotId.Empty())
+                    if (slotId != PlayerInventorySlotId.Empty)
                     {
                         view.SetSelectedSlot(slotId);
                     }

@@ -15,6 +15,6 @@ namespace ACv3.Domain.Inventories
             Amount = amount;
         }
 
-        public static Slot Empty() => new(new EmptyItem(), Amount.Empty());
+        public static Slot Empty => new(new EmptyItem(), Amount.Empty);
     }
 }

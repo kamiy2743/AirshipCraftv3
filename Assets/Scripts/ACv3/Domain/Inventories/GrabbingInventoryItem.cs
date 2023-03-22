@@ -13,6 +13,6 @@ namespace ACv3.Domain.Inventories
             Amount = amount;
         }
 
-        public static GrabbingInventoryItem Empty() => new(new EmptyItem(), Amount.Empty());
+        public static GrabbingInventoryItem Empty => new(new EmptyItem(), Amount.Empty);
     }
 }

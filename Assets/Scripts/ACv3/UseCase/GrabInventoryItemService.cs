@@ -13,7 +13,7 @@ namespace ACv3.UseCase
         readonly Dictionary<InventoryId, IDisposable> disposableDictionary = new();
         readonly CompositeDisposable compositeDisposable = new();
 
-        readonly ReactiveProperty<GrabbingInventoryItem> grabbingItem = new(GrabbingInventoryItem.Empty());
+        readonly ReactiveProperty<GrabbingInventoryItem> grabbingItem = new(GrabbingInventoryItem.Empty);
         public IReadOnlyReactiveProperty<GrabbingInventoryItem> GrabbingItem => grabbingItem.DistinctUntilChanged().ToReadOnlyReactiveProperty();
 
         [Inject]
@@ -49,7 +49,7 @@ namespace ACv3.UseCase
             var disposable = inventory.OnSlotClicked()
                 .Subscribe(slotId =>
                 {
-                    if (grabbingItem.Value == GrabbingInventoryItem.Empty())
+                    if (grabbingItem.Value == GrabbingInventoryItem.Empty)
                     {
                         GrabStart(slotId);
                     }
@@ -68,10 +68,10 @@ namespace ACv3.UseCase
             
             var slot = inventoryBroker.GetInventory(slotId.InventoryId).GetSlot(slotId);
             var item = new GrabbingInventoryItem(slot.Item, slot.Amount);
-            if (item == GrabbingInventoryItem.Empty()) return;
+            if (item == GrabbingInventoryItem.Empty) return;
             grabbingItem.Value = item;
             
-            inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, Slot.Empty());
+            inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, Slot.Empty);
         }
 
         void GrabEnd(GlobalInventorySlotId slotId)
@@ -81,7 +81,7 @@ namespace ACv3.UseCase
             var slot = new Slot(grabbingItem.Value.Item, grabbingItem.Value.Amount);
             inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, slot);
             
-            grabbingItem.Value = GrabbingInventoryItem.Empty();
+            grabbingItem.Value = GrabbingInventoryItem.Empty;
         }
 
         void IDisposable.Dispose()

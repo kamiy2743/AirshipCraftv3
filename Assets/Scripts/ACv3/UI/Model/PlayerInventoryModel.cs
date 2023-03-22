@@ -26,7 +26,7 @@ namespace ACv3.UI.Model
         readonly ReactiveProperty<bool> isOpened = new(false);
         public IReadOnlyReactiveProperty<bool> IsOpened => isOpened.DistinctUntilChanged().ToReadOnlyReactiveProperty();
         
-        readonly ReactiveProperty<PlayerInventorySlotId> selectedSlotId = new(PlayerInventorySlotId.Empty());
+        readonly ReactiveProperty<PlayerInventorySlotId> selectedSlotId = new(PlayerInventorySlotId.Empty);
         public IReadOnlyReactiveProperty<PlayerInventorySlotId> SelectedSlotId => selectedSlotId;
 
         readonly Subject<GlobalInventorySlotId> slotClickedSubject = new();
@@ -45,7 +45,7 @@ namespace ACv3.UI.Model
             {
                 for (int row = 0; row < PlayerInventorySlotId.RowCount; row++)
                 {
-                    slots.Add(new PlayerInventorySlotId(line, row), Slot.Empty());
+                    slots.Add(new PlayerInventorySlotId(line, row), Slot.Empty);
                 }
             }
             

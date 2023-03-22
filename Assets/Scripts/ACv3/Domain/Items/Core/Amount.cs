@@ -12,7 +12,7 @@ namespace ACv3.Domain.Items
             this.value = value;
         }
         
-        public static Amount Empty() => new(0);
+        public static Amount Empty => new(0);
 
         public string RawString() => value.ToString();
         public override string ToString() => $"Amount: {value}";

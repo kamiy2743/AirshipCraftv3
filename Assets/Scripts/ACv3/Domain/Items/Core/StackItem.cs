@@ -6,7 +6,7 @@ namespace ACv3.Domain.Items
         public readonly Amount Amount;
         public ItemId ItemId => item.ItemId;
 
-        public static StackItem Empty => new(new EmptyItem(), Amount.Empty());
+        public static StackItem Empty => new(new EmptyItem(), Amount.Empty);
 
         public StackItem(IItem item, Amount amount)
         {
