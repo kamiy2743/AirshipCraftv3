@@ -68,7 +68,7 @@ namespace ACv3.UI.Presenter
                     view.SetItem(
                         value.slotId, 
                         null, 
-                        value.slot.Amount, 
+                        value.slot.Item.Amount, 
                         value.slot.Item.ItemId.RawString());
                 })
                 .AddTo(disposable);

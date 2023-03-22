@@ -4,15 +4,13 @@ namespace ACv3.Domain.Inventories
 {
     public record GrabbingInventoryItem
     {
-        public readonly IItem Item;
-        public readonly Amount Amount;
+        public readonly StackItem Item;
 
-        public GrabbingInventoryItem(IItem item, Amount amount)
+        public GrabbingInventoryItem(StackItem item)
         {
             Item = item;
-            Amount = amount;
         }
 
-        public static GrabbingInventoryItem Empty => new(new EmptyItem(), Amount.Empty);
+        public static GrabbingInventoryItem Empty => new(StackItem.Empty);
     }
 }

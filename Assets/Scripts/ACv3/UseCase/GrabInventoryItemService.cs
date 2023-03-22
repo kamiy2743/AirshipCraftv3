@@ -67,7 +67,7 @@ namespace ACv3.UseCase
             Debug.Log("grab start: " + slotId);
             
             var slot = inventoryBroker.GetInventory(slotId.InventoryId).GetSlot(slotId);
-            var item = new GrabbingInventoryItem(slot.Item, slot.Amount);
+            var item = new GrabbingInventoryItem(slot.Item);
             if (item == GrabbingInventoryItem.Empty) return;
             grabbingItem.Value = item;
             
@@ -78,7 +78,7 @@ namespace ACv3.UseCase
         {
             Debug.Log("grab end: " + slotId);
             
-            var slot = new Slot(grabbingItem.Value.Item, grabbingItem.Value.Amount);
+            var slot = new Slot(grabbingItem.Value.Item);
             inventoryBroker.GetInventory(slotId.InventoryId).SetSlot(slotId, slot);
             
             grabbingItem.Value = GrabbingInventoryItem.Empty;

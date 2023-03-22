@@ -1,3 +1,5 @@
+using UnityEngine.Assertions;
+
 namespace ACv3.Domain.Items
 {
     public record StackItem
@@ -10,6 +12,7 @@ namespace ACv3.Domain.Items
 
         public StackItem(IItem item, Amount amount)
         {
+            Assert.IsTrue(amount <= item.MaxAmount);
             this.item = item;
             Amount = amount;
         }
