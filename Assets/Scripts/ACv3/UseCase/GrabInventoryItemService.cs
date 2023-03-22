@@ -92,9 +92,8 @@ namespace ACv3.UseCase
                 grabbingItem.Value = GrabbingInventoryItem.Empty;
                 return;
             }
-
-            var placedItem = placeSlot.Item;
-            var (primaryItem, subItem) = placedItem.Merge(grabbingItem.Value.Item);
+            
+            var (primaryItem, subItem) = grabbingItem.Value.Item.Merge(placeSlot.Item);
             inventory.SetSlot(slotId, new Slot(primaryItem));
 
             if (subItem == StackItem.Empty)
