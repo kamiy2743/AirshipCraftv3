@@ -37,7 +37,7 @@ namespace ACv3.UI.Presenter
             model.SelectedSlotId
                 .Subscribe(slotId =>
                 {
-                    if (slotId != PlayerInventorySlotId.Empty)
+                    if (!slotId.IsEmpty)
                     {
                         view.SetSelectedSlot(slotId);
                     }

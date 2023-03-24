@@ -12,5 +12,6 @@ namespace ACv3.Domain.Inventories
         }
 
         public static Slot Empty => new(StackItem.Empty);
+        public bool IsEmpty => this == Empty;
     }
 }

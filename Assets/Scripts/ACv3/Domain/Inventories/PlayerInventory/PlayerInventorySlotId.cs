@@ -28,6 +28,7 @@ namespace ACv3.Domain.Inventories
         }
 
         public static PlayerInventorySlotId Empty => new(EmptyLine, EmptyRow);
+        public bool IsEmpty => this == Empty;
 
         public override string ToString() => $"PlayerInventorySlotId: {line}, {row}";
 

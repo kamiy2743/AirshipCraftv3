@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ACv3.Domain.Inventories;
-using ACv3.Domain.Items;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -71,7 +70,7 @@ namespace ACv3.UseCase
             var inventory = inventoryBroker.GetInventory(slotId.InventoryId);
             
             var slot = inventory.GetSlot(slotId);
-            if (slot.Item == StackItem.Empty)
+            if (slot.IsEmpty)
             {
                 return;
             }
@@ -87,7 +86,7 @@ namespace ACv3.UseCase
             var inventory = inventoryBroker.GetInventory(slotId.InventoryId);
             
             var placeSlot = inventory.GetSlot(slotId);
-            if (placeSlot.Item == StackItem.Empty)
+            if (placeSlot.IsEmpty)
             {
                 inventory.SetSlot(slotId, new Slot(grabbingItem.Value.Item));
                 grabbingItem.Value = GrabbingInventoryItem.Empty;
@@ -97,7 +96,7 @@ namespace ACv3.UseCase
             var (primaryItem, subItem) = grabbingItem.Value.Item.Merge(placeSlot.Item);
             inventory.SetSlot(slotId, new Slot(primaryItem));
 
-            if (subItem == StackItem.Empty)
+            if (subItem.IsEmpty)
             {
                 grabbingItem.Value = GrabbingInventoryItem.Empty;
             }

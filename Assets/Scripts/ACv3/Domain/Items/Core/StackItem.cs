@@ -9,6 +9,7 @@ namespace ACv3.Domain.Items
         public ItemId ItemId => item.ItemId;
 
         public static StackItem Empty => new(new EmptyItem(), Amount.Empty);
+        public bool IsEmpty => this == Empty;
 
         public StackItem(IItem item, Amount amount)
         {
