@@ -1,7 +1,9 @@
 using System;
+using ACv3.Domain.Inventories;
 using ACv3.UI.Model;
 using ACv3.UI.View;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace ACv3.UI.Presenter
@@ -22,8 +24,19 @@ namespace ACv3.UI.Presenter
 
         void IInitializable.Initialize()
         {
-            model.GetGrabbingItem()
-                .Subscribe(grabbingItem => view.SetItem(null, grabbingItem.Item.Amount, grabbingItem.Item.ItemId.RawString()))
+            model.GrabbingItem()
+                .Subscribe(grabbingItem =>
+                {
+                    if (grabbingItem != GrabbingInventoryItem.Empty)
+                    {
+                        view.SetActive(true);
+                        view.SetItem(null, grabbingItem.Item.Amount, grabbingItem.Item.ItemId.RawString());
+                    }
+                    else
+                    {
+                        view.SetActive(false);
+                    }
+                })
                 .AddTo(disposable);
 
             model.PointerPosition()

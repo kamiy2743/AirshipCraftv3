@@ -19,7 +19,7 @@ namespace ACv3.UI.Model
             this.inputController = inputController;
         }
 
-        public IReadOnlyReactiveProperty<GrabbingInventoryItem> GetGrabbingItem() => grabInventoryItemService.GrabbingItem;
+        public IReadOnlyReactiveProperty<GrabbingInventoryItem> GrabbingItem() => grabInventoryItemService.GrabbingItem;
         public IReadOnlyReactiveProperty<Vector2> PointerPosition() => inputController.PointerPosition();
     }
 }
