@@ -27,7 +27,7 @@ namespace ACv3.UI.Presenter
             model.GrabbingItem()
                 .Subscribe(grabbingItem =>
                 {
-                    if (grabbingItem != GrabbingInventoryItem.Empty)
+                    if (!grabbingItem.IsEmpty)
                     {
                         view.SetActive(true);
                         view.SetItem(null, grabbingItem.Item.Amount, grabbingItem.Item.ItemId.RawString());

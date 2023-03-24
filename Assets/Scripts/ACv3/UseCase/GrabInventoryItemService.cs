@@ -51,7 +51,7 @@ namespace ACv3.UseCase
             var disposable = inventory.OnSlotClicked()
                 .Subscribe(slotId =>
                 {
-                    if (grabbingItem.Value == GrabbingInventoryItem.Empty)
+                    if (grabbingItem.Value.IsEmpty)
                     {
                         GrabStart(slotId);
                     }
