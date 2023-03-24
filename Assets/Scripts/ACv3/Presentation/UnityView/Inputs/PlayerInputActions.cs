@@ -118,6 +118,15 @@ namespace ACv3.Presentation.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PointerPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""eb3d03fb-9f83-4e18-a02c-1d2f24c5f8af"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -404,6 +413,17 @@ namespace ACv3.Presentation.Inputs
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""CloseInvenotry"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""33fc69e7-e3b3-460b-b91f-b227b70eb839"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""PointerPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1001,6 +1021,7 @@ namespace ACv3.Presentation.Inputs
             m_Player_ItemBarScroll = m_Player.FindAction("ItemBarScroll", throwIfNotFound: true);
             m_Player_OpenPlayerInventory = m_Player.FindAction("OpenPlayerInventory", throwIfNotFound: true);
             m_Player_CloseInvenotry = m_Player.FindAction("CloseInvenotry", throwIfNotFound: true);
+            m_Player_PointerPosition = m_Player.FindAction("PointerPosition", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1082,6 +1103,7 @@ namespace ACv3.Presentation.Inputs
         private readonly InputAction m_Player_ItemBarScroll;
         private readonly InputAction m_Player_OpenPlayerInventory;
         private readonly InputAction m_Player_CloseInvenotry;
+        private readonly InputAction m_Player_PointerPosition;
         public struct PlayerActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1096,6 +1118,7 @@ namespace ACv3.Presentation.Inputs
             public InputAction @ItemBarScroll => m_Wrapper.m_Player_ItemBarScroll;
             public InputAction @OpenPlayerInventory => m_Wrapper.m_Player_OpenPlayerInventory;
             public InputAction @CloseInvenotry => m_Wrapper.m_Player_CloseInvenotry;
+            public InputAction @PointerPosition => m_Wrapper.m_Player_PointerPosition;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1135,6 +1158,9 @@ namespace ACv3.Presentation.Inputs
                     @CloseInvenotry.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
                     @CloseInvenotry.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
                     @CloseInvenotry.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
+                    @PointerPosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPointerPosition;
+                    @PointerPosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPointerPosition;
+                    @PointerPosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPointerPosition;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1169,6 +1195,9 @@ namespace ACv3.Presentation.Inputs
                     @CloseInvenotry.started += instance.OnCloseInvenotry;
                     @CloseInvenotry.performed += instance.OnCloseInvenotry;
                     @CloseInvenotry.canceled += instance.OnCloseInvenotry;
+                    @PointerPosition.started += instance.OnPointerPosition;
+                    @PointerPosition.performed += instance.OnPointerPosition;
+                    @PointerPosition.canceled += instance.OnPointerPosition;
                 }
             }
         }
@@ -1335,6 +1364,7 @@ namespace ACv3.Presentation.Inputs
             void OnItemBarScroll(InputAction.CallbackContext context);
             void OnOpenPlayerInventory(InputAction.CallbackContext context);
             void OnCloseInvenotry(InputAction.CallbackContext context);
+            void OnPointerPosition(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

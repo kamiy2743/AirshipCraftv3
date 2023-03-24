@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace ACv3.Presentation.Inputs
 {
-    // TODO PlayerInputHandlerからしか使用されないようにする
     public interface IInputController
     {
         Vector3 DebugFly();
@@ -17,5 +16,7 @@ namespace ACv3.Presentation.Inputs
 
         public IObservable<Unit> OnOpenPlayerInventoryRequested();
         public IObservable<Unit> OnCloseInventoryRequested();
+
+        public IReadOnlyReactiveProperty<Vector2> PointerPosition();
     }
 }

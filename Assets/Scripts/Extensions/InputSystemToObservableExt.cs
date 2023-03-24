@@ -12,6 +12,14 @@ namespace ACv3.Extensions
                 h => action.performed += h,
                 h => action.performed -= h);
         }
+        
+        public static IObservable<T> AsObservable<T>(this InputAction action) where T : struct
+        {
+            return action.AsObservable()
+                .Select(context => context.ReadValue<T>())
+                .Publish()
+                .RefCount();
+        }
 
         public static IObservable<Unit> TriggeredAsObservable(this InputAction action)
         {

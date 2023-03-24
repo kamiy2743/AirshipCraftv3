@@ -34,13 +34,14 @@ namespace ACv3.Presentation.Inputs
             return inputActions.Player.BreakBlock.ReadValue<float>() > 0;
         }
 
-        IObservable<ItemBarScrollDirection> IInputController.OnItemBarScroll() => inputActions.Player.ItemBarScroll.AsObservable()
-            .Select(context => context.ReadValue<float>())
+        IObservable<ItemBarScrollDirection> IInputController.OnItemBarScroll() => inputActions.Player.ItemBarScroll.AsObservable<float>()
             .Select(value => value > 0 ? ItemBarScrollDirection.Left : ItemBarScrollDirection.Right)
             .Publish()
             .RefCount();
 
         IObservable<Unit> IInputController.OnOpenPlayerInventoryRequested() => inputActions.Player.OpenPlayerInventory.TriggeredAsObservable();
         IObservable<Unit> IInputController.OnCloseInventoryRequested() => inputActions.Player.CloseInvenotry.TriggeredAsObservable();
+
+        IReadOnlyReactiveProperty<Vector2> IInputController.PointerPosition() => inputActions.Player.PointerPosition.AsObservable<Vector2>().ToReadOnlyReactiveProperty();
     }
 }
