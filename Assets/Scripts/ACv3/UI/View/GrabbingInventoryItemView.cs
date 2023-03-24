@@ -10,6 +10,7 @@ namespace ACv3.UI.View
         [SerializeField] TextMeshProUGUI debugItemIdText;
 
         public void SetActive(bool isActive) => gameObject.SetActive(isActive);
+        public void SetPosition(Vector2 position) => transform.position = position;
         
         public void SetItem(Texture2D texture, Amount amount, string debugItemId)
         {

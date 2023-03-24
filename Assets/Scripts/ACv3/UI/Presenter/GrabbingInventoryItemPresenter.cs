@@ -25,6 +25,10 @@ namespace ACv3.UI.Presenter
             model.GetGrabbingItem()
                 .Subscribe(grabbingItem => view.SetItem(null, grabbingItem.Item.Amount, grabbingItem.Item.ItemId.RawString()))
                 .AddTo(disposable);
+
+            model.PointerPosition()
+                .Subscribe(view.SetPosition)
+                .AddTo(disposable);
         }
 
         void IDisposable.Dispose()
