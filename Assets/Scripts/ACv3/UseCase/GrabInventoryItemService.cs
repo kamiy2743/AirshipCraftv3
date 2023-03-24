@@ -8,6 +8,7 @@ using Zenject;
 
 namespace ACv3.UseCase
 {
+    // UseCaseがHotなクラスなのは何かおかしい
     public class GrabInventoryItemService : IInitializable, IDisposable
     {
         readonly InventoryBroker inventoryBroker;
