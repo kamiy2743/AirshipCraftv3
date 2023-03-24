@@ -1,9 +1,7 @@
 using System;
-using ACv3.Domain.Inventories;
 using ACv3.UI.Model;
 using ACv3.UI.View;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace ACv3.UI.Presenter
