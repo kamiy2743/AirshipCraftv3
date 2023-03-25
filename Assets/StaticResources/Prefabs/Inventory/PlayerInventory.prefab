@@ -298,8 +298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8157824154758684849}
   - component: {fileID: 8693500654413826215}
-  - component: {fileID: 8782360166746017035}
-  - component: {fileID: 3614535886024317287}
+  - component: {fileID: 4766215427496114301}
   - component: {fileID: 1722329265705603499}
   - component: {fileID: 764676203367722065}
   m_Layer: 5
@@ -383,7 +382,7 @@ MonoBehaviour:
     - {fileID: 7681035187338535154}
     - {fileID: 5168267196677283799}
     - {fileID: 4402486826564817575}
---- !u!114 &8782360166746017035
+--- !u!114 &4766215427496114301
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -400,7 +399,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 7
+  m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -409,20 +408,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &3614535886024317287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8157824154758684848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
 --- !u!114 &1722329265705603499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -478,7 +463,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8687762271668641930}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -531,6 +516,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -653,6 +646,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -773,6 +774,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -895,6 +904,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_1
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1015,6 +1032,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1137,6 +1162,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1257,6 +1290,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1379,6 +1420,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_8
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1499,6 +1548,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1621,6 +1678,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1741,6 +1806,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1863,6 +1936,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_7
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1983,6 +2064,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2105,6 +2194,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_2
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -2225,6 +2322,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2347,6 +2452,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_1
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -2467,6 +2580,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2589,6 +2710,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_3
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -2709,6 +2838,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2831,6 +2968,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_6
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -2951,6 +3096,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3073,6 +3226,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_6
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -3193,6 +3354,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3315,6 +3484,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_5
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -3435,6 +3612,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3557,6 +3742,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_8
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -3677,6 +3870,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3799,6 +4000,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_1
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -3919,6 +4128,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4041,6 +4258,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_2
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -4161,6 +4386,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4283,6 +4516,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_2
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -4403,6 +4644,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4525,6 +4774,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_5
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -4646,6 +4903,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSlot_2
       objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -4766,6 +5031,14 @@ PrefabInstance:
     - target: {fileID: 3172189585674777099, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_Name
       value: InteractableSlot_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764264128383072369, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8093631865948337348, guid: 127a1f2c191032a4c99b65c43f48ec62, type: 3}
       propertyPath: m_SizeDelta.x
