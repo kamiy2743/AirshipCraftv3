@@ -12,7 +12,7 @@ namespace ACv3.UI.View
     {
         [SerializeField] PlayerInventorySlots slots;
 
-        readonly Dictionary<PlayerInventorySlotId, SlotView> slotViews = new();
+        readonly Dictionary<PlayerInventorySlotId, InteractableSlotView> slotViews = new();
 
         readonly Subject<PlayerInventorySlotId> onCursorSlotSubject = new();
         readonly Subject<Unit> onUnCursorSlotSubject = new();
@@ -29,20 +29,20 @@ namespace ACv3.UI.View
             for (int i = 0; i < PlayerInventorySlotId.RowCount; i++) SetUp(2, i, slots.line2[i]);
             for (int i = 0; i < PlayerInventorySlotId.RowCount; i++) SetUp(3, i, slots.line3[i]);
 
-            void SetUp(int line, int row, SlotView slotView)
+            void SetUp(int line, int row, InteractableSlotView slotView)
             {
                 var slotId = new PlayerInventorySlotId(line, row);
                 slotViews[slotId] = slotView;
                 
-                slotView.GetComponent<ObservablePointerEnterTrigger>().OnPointerEnterAsObservable()
+                slotView.OnCursored
                     .Subscribe(_ => onCursorSlotSubject.OnNext(slotId))
                     .AddTo(this);
                 
-                slotView.GetComponent<ObservablePointerExitTrigger>().OnPointerExitAsObservable()
+                slotView.OnUnCursored
                     .Subscribe(_ => onUnCursorSlotSubject.OnNext(Unit.Default))
                     .AddTo(this);
                 
-                slotView.GetComponent<ObservablePointerClickTrigger>().OnPointerClickAsObservable()
+                slotView.OnClocked
                     .Subscribe(_ => onClickSlotSubject.OnNext(slotId))
                     .AddTo(this);
             }
@@ -83,10 +83,10 @@ namespace ACv3.UI.View
         [Serializable]
         record PlayerInventorySlots
         {
-            public SlotView[] line0;
-            public SlotView[] line1;
-            public SlotView[] line2;
-            public SlotView[] line3;
+            public InteractableSlotView[] line0;
+            public InteractableSlotView[] line1;
+            public InteractableSlotView[] line2;
+            public InteractableSlotView[] line3;
         }
     }
 }

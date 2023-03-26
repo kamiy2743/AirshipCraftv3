@@ -22100,7 +22100,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5230430146405275467}
-  - component: {fileID: 4685385809022648157}
   - component: {fileID: 4630095499082005233}
   - component: {fileID: 3334528559629821521}
   m_Layer: 5
@@ -22131,59 +22130,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4685385809022648157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5230430146405275466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1d5356d987745059a93d22f1fa3e8c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots:
-    line0:
-    - {fileID: 533852502174392929}
-    - {fileID: 3246326871967799631}
-    - {fileID: 7143950542941789369}
-    - {fileID: 6890317853524139828}
-    - {fileID: 3244643779096048099}
-    - {fileID: 1975112754786148238}
-    - {fileID: 6260307925663237576}
-    - {fileID: 2551878697404653270}
-    - {fileID: 5139754827868309138}
-    line1:
-    - {fileID: 402095270508995059}
-    - {fileID: 9105363232816250028}
-    - {fileID: 3323558348022421185}
-    - {fileID: 4786876644088292146}
-    - {fileID: 5510876119025587852}
-    - {fileID: 8043488968318185617}
-    - {fileID: 1367706854758906107}
-    - {fileID: 126958010058316047}
-    - {fileID: 4987292505934452892}
-    line2:
-    - {fileID: 1966878613172264791}
-    - {fileID: 3868127461348642050}
-    - {fileID: 8638432480543301603}
-    - {fileID: 6963712484965640810}
-    - {fileID: 6752426248108091402}
-    - {fileID: 8036077955539324047}
-    - {fileID: 2054987930256534717}
-    - {fileID: 9010729711678000905}
-    - {fileID: 587601969211198752}
-    line3:
-    - {fileID: 1160074753784146663}
-    - {fileID: 1583998724596982237}
-    - {fileID: 9130599321604771882}
-    - {fileID: 943145698953032847}
-    - {fileID: 6139161838307903067}
-    - {fileID: 5438308196077791212}
-    - {fileID: 5996777751818000136}
-    - {fileID: 9086310184410015789}
-    - {fileID: 340187973532165469}
 --- !u!114 &4630095499082005233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22223,8 +22169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 0}
+  _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
