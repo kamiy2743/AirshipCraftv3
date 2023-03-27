@@ -11,6 +11,9 @@ namespace ACv3.Domain.Inventories
             RawValue = rawValue;
         }
 
+        public static GlobalInventorySlotId Empty => new(InventoryId.Empty, int.MinValue);
+        public bool IsEmpty => this == Empty;
+
         public override string ToString() => $"{InventoryId} => RawValue: {RawValue}";
     }
 }

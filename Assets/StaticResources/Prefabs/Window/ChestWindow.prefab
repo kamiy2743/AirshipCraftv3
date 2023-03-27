@@ -22103,7 +22103,7 @@ GameObject:
   - component: {fileID: 4630095499082005233}
   - component: {fileID: 3334528559629821521}
   m_Layer: 5
-  m_Name: ChestInventory
+  m_Name: ChestWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using ACv3.Domain.Inventories;
 using ACv3.Domain.Items;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 
 namespace ACv3.UI.View
 {
-    public class PlayerInventoryView : MonoBehaviour
+    public class PlayerWindowView : MonoBehaviour
     {
         [SerializeField] PlayerInventorySlots slots;
 
@@ -64,13 +63,13 @@ namespace ACv3.UI.View
             }
         }
 
-        public void Show()
+        public void Open()
         {
             gameObject.SetActive(true);
             DeselectSlot();
         }
 
-        public void Hide()
+        public void Close()
         {
             gameObject.SetActive(false);
         }

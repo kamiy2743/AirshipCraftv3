@@ -15,7 +15,7 @@ namespace ACv3.Domain.Items
         public static Amount Empty => new(0);
         public bool IsEmpty => this == Empty;
 
-        public string RawString() => value.ToString();
+        public string DisplayString() => value.ToString();
         public override string ToString() => $"Amount: {value}";
 
         public static Amount operator +(Amount a, Amount b) => new(a.value + b.value);

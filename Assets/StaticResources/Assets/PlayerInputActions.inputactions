@@ -78,7 +78,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "OpenPlayerInventory",
+                    "name": "OpenPlayerWindow",
                     "type": "Button",
                     "id": "096c05df-2a2d-4081-87c2-7e787cbdc507",
                     "expectedControlType": "Button",
@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CloseInvenotry",
+                    "name": "CloseWindow",
                     "type": "Button",
                     "id": "d2ab6b3d-ae10-4451-add5-70f9ebe8bcbd",
                     "expectedControlType": "Button",
@@ -366,7 +366,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "OpenPlayerInventory",
+                    "action": "OpenPlayerWindow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -377,7 +377,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "CloseInvenotry",
+                    "action": "CloseWindow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -388,7 +388,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "CloseInvenotry",
+                    "action": "CloseWindow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -41,5 +41,12 @@ namespace ACv3.Extensions
             Right,
             Same
         }
+
+        public static IObservable<T> AsReplayObservable<T>(this IObservable<T> source)
+        {
+            var connectable = source.Replay();
+            connectable.Connect();
+            return connectable;
+        }
     }
 }

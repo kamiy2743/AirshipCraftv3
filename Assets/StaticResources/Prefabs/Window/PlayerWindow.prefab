@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 1722329265705603499}
   - component: {fileID: 764676203367722065}
   m_Layer: 5
-  m_Name: PlayerInventory
+  m_Name: PlayerWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc2c8894c39a43878e703df13cb1a4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemBarView: {fileID: 8693500654413826215}
+  playerWindowView: {fileID: 8693500654413826215}
 --- !u!1 &8687762271668641930
 GameObject:
   m_ObjectHideFlags: 0

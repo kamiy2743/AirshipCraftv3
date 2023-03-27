@@ -14,8 +14,8 @@ namespace ACv3.Presentation.Inputs
 
         public IObservable<ItemBarScrollDirection> OnItemBarScroll();
 
-        public IObservable<Unit> OnOpenPlayerInventoryRequested();
-        public IObservable<Unit> OnCloseInventoryRequested();
+        public IObservable<Unit> OnOpenPlayerWindowRequested();
+        public IObservable<Unit> OnCloseWindowRequested();
 
         public IReadOnlyReactiveProperty<Vector2> PointerPosition();
     }

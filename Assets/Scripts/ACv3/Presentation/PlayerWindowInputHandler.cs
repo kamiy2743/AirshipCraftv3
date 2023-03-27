@@ -1,52 +1,52 @@
 using System;
-using ACv3.Domain.Inventories;
+using ACv3.Domain.Windows;
 using ACv3.Extensions;
 using ACv3.Presentation.Inputs;
-using ACv3.UseCase;
+using ACv3.UseCase.Window;
 using UniRx;
 using Zenject;
 
 namespace ACv3.Presentation
 {
-    public class InventoryInputHandler : IInitializable, IDisposable
+    public class PlayerWindowInputHandler : IInitializable, IDisposable
     {
         readonly IInputController inputController;
-        readonly InventoryStateController inventoryStateController;
+        readonly WindowService windowService;
         readonly CompositeDisposable disposable = new();
 
         [Inject]
-        InventoryInputHandler(IInputController inputController, InventoryStateController inventoryStateController)
+        PlayerWindowInputHandler(IInputController inputController, WindowService windowService)
         {
             this.inputController = inputController;
-            this.inventoryStateController = inventoryStateController;
+            this.windowService = windowService;
         }
 
         void IInitializable.Initialize()
         {
             ObservableExt.SmartAny(
-                    inputController.OnOpenPlayerInventoryRequested(),
-                    inputController.OnCloseInventoryRequested())
+                    inputController.OnOpenPlayerWindowRequested(),
+                    inputController.OnCloseWindowRequested())
                 .Subscribe(winType =>
                 {
                     if (winType == ObservableExt.WinType.Left)
                     {
-                        inventoryStateController.Open(InventoryId.PlayerInventory);
+                        windowService.Open(WindowId.PlayerWindow);
                         return;
                     }
 
                     if (winType == ObservableExt.WinType.Right)
                     {
-                        inventoryStateController.InventoryClose();
+                        windowService.CloseAll();
                         return;
                     }
 
-                    if (inventoryStateController.IsOpened)
+                    if (windowService.IsOpened(WindowId.PlayerWindow))
                     {
-                        inventoryStateController.InventoryClose();
+                        windowService.CloseAll();
                     }
                     else
                     {
-                        inventoryStateController.Open(InventoryId.PlayerInventory);
+                        windowService.Open(WindowId.PlayerWindow);
                     }
                 })
                 .AddTo(disposable);

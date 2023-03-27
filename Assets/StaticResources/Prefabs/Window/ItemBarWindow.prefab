@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 3310788818194341323}
   - component: {fileID: 2140853977513749761}
   m_Layer: 0
-  m_Name: ItemBarInventory
+  m_Name: ItemBarWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

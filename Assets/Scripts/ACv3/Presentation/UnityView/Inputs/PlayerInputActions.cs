@@ -102,7 +102,7 @@ namespace ACv3.Presentation.Inputs
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""OpenPlayerInventory"",
+                    ""name"": ""OpenPlayerWindow"",
                     ""type"": ""Button"",
                     ""id"": ""096c05df-2a2d-4081-87c2-7e787cbdc507"",
                     ""expectedControlType"": ""Button"",
@@ -111,7 +111,7 @@ namespace ACv3.Presentation.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CloseInvenotry"",
+                    ""name"": ""CloseWindow"",
                     ""type"": ""Button"",
                     ""id"": ""d2ab6b3d-ae10-4451-add5-70f9ebe8bcbd"",
                     ""expectedControlType"": ""Button"",
@@ -390,7 +390,7 @@ namespace ACv3.Presentation.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""OpenPlayerInventory"",
+                    ""action"": ""OpenPlayerWindow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -401,7 +401,7 @@ namespace ACv3.Presentation.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""CloseInvenotry"",
+                    ""action"": ""CloseWindow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -412,7 +412,7 @@ namespace ACv3.Presentation.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""CloseInvenotry"",
+                    ""action"": ""CloseWindow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1019,8 +1019,8 @@ namespace ACv3.Presentation.Inputs
             m_Player_BreakBlock = m_Player.FindAction("BreakBlock", throwIfNotFound: true);
             m_Player_InteractBlock = m_Player.FindAction("InteractBlock", throwIfNotFound: true);
             m_Player_ItemBarScroll = m_Player.FindAction("ItemBarScroll", throwIfNotFound: true);
-            m_Player_OpenPlayerInventory = m_Player.FindAction("OpenPlayerInventory", throwIfNotFound: true);
-            m_Player_CloseInvenotry = m_Player.FindAction("CloseInvenotry", throwIfNotFound: true);
+            m_Player_OpenPlayerWindow = m_Player.FindAction("OpenPlayerWindow", throwIfNotFound: true);
+            m_Player_CloseWindow = m_Player.FindAction("CloseWindow", throwIfNotFound: true);
             m_Player_PointerPosition = m_Player.FindAction("PointerPosition", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1101,8 +1101,8 @@ namespace ACv3.Presentation.Inputs
         private readonly InputAction m_Player_BreakBlock;
         private readonly InputAction m_Player_InteractBlock;
         private readonly InputAction m_Player_ItemBarScroll;
-        private readonly InputAction m_Player_OpenPlayerInventory;
-        private readonly InputAction m_Player_CloseInvenotry;
+        private readonly InputAction m_Player_OpenPlayerWindow;
+        private readonly InputAction m_Player_CloseWindow;
         private readonly InputAction m_Player_PointerPosition;
         public struct PlayerActions
         {
@@ -1116,8 +1116,8 @@ namespace ACv3.Presentation.Inputs
             public InputAction @BreakBlock => m_Wrapper.m_Player_BreakBlock;
             public InputAction @InteractBlock => m_Wrapper.m_Player_InteractBlock;
             public InputAction @ItemBarScroll => m_Wrapper.m_Player_ItemBarScroll;
-            public InputAction @OpenPlayerInventory => m_Wrapper.m_Player_OpenPlayerInventory;
-            public InputAction @CloseInvenotry => m_Wrapper.m_Player_CloseInvenotry;
+            public InputAction @OpenPlayerWindow => m_Wrapper.m_Player_OpenPlayerWindow;
+            public InputAction @CloseWindow => m_Wrapper.m_Player_CloseWindow;
             public InputAction @PointerPosition => m_Wrapper.m_Player_PointerPosition;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
@@ -1152,12 +1152,12 @@ namespace ACv3.Presentation.Inputs
                     @ItemBarScroll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
                     @ItemBarScroll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
                     @ItemBarScroll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItemBarScroll;
-                    @OpenPlayerInventory.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerInventory;
-                    @OpenPlayerInventory.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerInventory;
-                    @OpenPlayerInventory.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerInventory;
-                    @CloseInvenotry.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
-                    @CloseInvenotry.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
-                    @CloseInvenotry.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseInvenotry;
+                    @OpenPlayerWindow.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerWindow;
+                    @OpenPlayerWindow.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerWindow;
+                    @OpenPlayerWindow.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenPlayerWindow;
+                    @CloseWindow.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseWindow;
+                    @CloseWindow.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseWindow;
+                    @CloseWindow.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseWindow;
                     @PointerPosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPointerPosition;
                     @PointerPosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPointerPosition;
                     @PointerPosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPointerPosition;
@@ -1189,12 +1189,12 @@ namespace ACv3.Presentation.Inputs
                     @ItemBarScroll.started += instance.OnItemBarScroll;
                     @ItemBarScroll.performed += instance.OnItemBarScroll;
                     @ItemBarScroll.canceled += instance.OnItemBarScroll;
-                    @OpenPlayerInventory.started += instance.OnOpenPlayerInventory;
-                    @OpenPlayerInventory.performed += instance.OnOpenPlayerInventory;
-                    @OpenPlayerInventory.canceled += instance.OnOpenPlayerInventory;
-                    @CloseInvenotry.started += instance.OnCloseInvenotry;
-                    @CloseInvenotry.performed += instance.OnCloseInvenotry;
-                    @CloseInvenotry.canceled += instance.OnCloseInvenotry;
+                    @OpenPlayerWindow.started += instance.OnOpenPlayerWindow;
+                    @OpenPlayerWindow.performed += instance.OnOpenPlayerWindow;
+                    @OpenPlayerWindow.canceled += instance.OnOpenPlayerWindow;
+                    @CloseWindow.started += instance.OnCloseWindow;
+                    @CloseWindow.performed += instance.OnCloseWindow;
+                    @CloseWindow.canceled += instance.OnCloseWindow;
                     @PointerPosition.started += instance.OnPointerPosition;
                     @PointerPosition.performed += instance.OnPointerPosition;
                     @PointerPosition.canceled += instance.OnPointerPosition;
@@ -1362,8 +1362,8 @@ namespace ACv3.Presentation.Inputs
             void OnBreakBlock(InputAction.CallbackContext context);
             void OnInteractBlock(InputAction.CallbackContext context);
             void OnItemBarScroll(InputAction.CallbackContext context);
-            void OnOpenPlayerInventory(InputAction.CallbackContext context);
-            void OnCloseInvenotry(InputAction.CallbackContext context);
+            void OnOpenPlayerWindow(InputAction.CallbackContext context);
+            void OnCloseWindow(InputAction.CallbackContext context);
             void OnPointerPosition(InputAction.CallbackContext context);
         }
         public interface IUIActions

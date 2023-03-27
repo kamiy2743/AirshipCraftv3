@@ -32,14 +32,17 @@ namespace ACv3.Domain.Inventories
 
         public override string ToString() => $"PlayerInventorySlotId: {line}, {row}";
 
-        public GlobalInventorySlotId ToGlobalInventorySlotId() 
+        public static implicit operator GlobalInventorySlotId(PlayerInventorySlotId slotId)
         {
-            return new GlobalInventorySlotId(InventoryId.PlayerInventory, line * RowCount + row);
+            if (slotId.IsEmpty) return GlobalInventorySlotId.Empty;
+            return new GlobalInventorySlotId(InventoryId.PlayerInventory, slotId.line * RowCount + slotId.row);
         }
 
-        public static PlayerInventorySlotId FromGlobalInventorySlotId(GlobalInventorySlotId globalInventorySlotId)
+        public static implicit operator PlayerInventorySlotId(GlobalInventorySlotId slotId)
         {
-            var rawValue = globalInventorySlotId.RawValue;
+            if (slotId.IsEmpty) return Empty;
+            
+            var rawValue = slotId.RawValue;
             var line = rawValue / RowCount;
             var row = rawValue % RowCount;
             return new PlayerInventorySlotId(line, row);

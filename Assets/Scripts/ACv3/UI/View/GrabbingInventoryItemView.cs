@@ -16,7 +16,7 @@ namespace ACv3.UI.View
         {
             if (amount > new Amount(1))
             {
-                amountText.text = amount.RawString();
+                amountText.text = amount.DisplayString();
             }
             else
             {

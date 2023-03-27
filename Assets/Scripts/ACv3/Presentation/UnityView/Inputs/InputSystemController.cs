@@ -39,8 +39,8 @@ namespace ACv3.Presentation.Inputs
             .Publish()
             .RefCount();
 
-        IObservable<Unit> IInputController.OnOpenPlayerInventoryRequested() => inputActions.Player.OpenPlayerInventory.TriggeredAsObservable();
-        IObservable<Unit> IInputController.OnCloseInventoryRequested() => inputActions.Player.CloseInvenotry.TriggeredAsObservable();
+        IObservable<Unit> IInputController.OnOpenPlayerWindowRequested() => inputActions.Player.OpenPlayerWindow.TriggeredAsObservable();
+        IObservable<Unit> IInputController.OnCloseWindowRequested() => inputActions.Player.CloseWindow.TriggeredAsObservable();
 
         IReadOnlyReactiveProperty<Vector2> IInputController.PointerPosition() => inputActions.Player.PointerPosition.AsObservable<Vector2>().ToReadOnlyReactiveProperty();
     }
